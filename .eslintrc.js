@@ -33,6 +33,11 @@ module.exports = {
       parserOptions: {
         project: ['./tsconfig.json'],
       },
+      rules: {
+        '@typescript-eslint/no-floating-promises': 'warn',
+        '@typescript-eslint/no-unsafe-assignment': 'warn',
+        '@typescript-eslint/no-explicit-any': 'warn',
+      },
     },
   ],
   parserOptions: {
