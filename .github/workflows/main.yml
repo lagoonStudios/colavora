@@ -1,21 +1,38 @@
-name: CI
-on:
-  push:
-    branches:
-      - "develop"
-
+name: Caching with yarn
+on: push
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
-        with:
-          version: latest
-      - uses: actions/setup-node@v4
-        with:
-          node-version: latest
-          cache: "pnpm"
+      - uses: actions/checkout@v3
 
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run lint && pnpm run test:ci
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Cache node modules
+        id: cache-yarn
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: $ {{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}\-${{ hashFiles('**/yarn.lock') }}
+          restore-keys:
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-yarn.outputs.cache-hit != 'true' }}
+        name: List the state of node modules
+        continue-on-error: true
+        run: yarn list
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: lint
+        run: yarn run lint
+
+      - name: test
+        run: yarn run test:ci
