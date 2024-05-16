@@ -40,7 +40,7 @@
     "zustand": "4.5.2"
   },
   "devDependencies": {
-    "@babel/core": "7.20.0",
+    "@babel/core": "7.24.5",
     "@types/react": "~18.2.45",
     "@typescript-eslint/eslint-plugin": "7.9.0",
     "@typescript-eslint/parser": "7.9.0",
