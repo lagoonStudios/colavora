@@ -8,12 +8,11 @@ module.exports = {
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
-    'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:react/recommended',
     'prettier',
   ],
+  plugins: ['react', 'react-hooks', '@typescript-eslint', 'prettier'],
+  parser: '@typescript-eslint/parser',
   overrides: [
     {
       env: {
@@ -24,6 +23,22 @@ module.exports = {
         sourceType: 'script',
       },
     },
+    {
+      files: ['*.ts', '*.tsx'],
+      extends: [
+        'plugin:@typescript-eslint/eslint-recommended',
+        'plugin:@typescript-eslint/recommended',
+        'plugin:@typescript-eslint/recommended-requiring-type-checking',
+      ],
+      parserOptions: {
+        project: ['./tsconfig.json'],
+      },
+      rules: {
+        '@typescript-eslint/no-floating-promises': 'warn',
+        '@typescript-eslint/no-unsafe-assignment': 'warn',
+        '@typescript-eslint/no-explicit-any': 'warn',
+      },
+    },
   ],
   parserOptions: {
     ecmaVersion: 'latest',
@@ -32,7 +47,6 @@ module.exports = {
       jsx: true,
     },
   },
-  plugins: ['react', 'react-hooks', '@typescript-eslint', 'prettier'],
   settings: {
     react: {
       version: 'detect',
