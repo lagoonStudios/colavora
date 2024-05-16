@@ -4,18 +4,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/checkout@v4
         
       - name: Cache node modules
-        id: cache-yarn
+        id: cache-npm
         uses: actions/cache@v3
         env:
           cache-name: cache-node-modules
-        with:
+        with:  
           path: ~/.npm
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
