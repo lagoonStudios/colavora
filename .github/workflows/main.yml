@@ -9,30 +9,30 @@ jobs:
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
-
+        
       - name: Cache node modules
         id: cache-yarn
         uses: actions/cache@v3
         env:
           cache-name: cache-node-modules
         with:
-          path: $ {{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-build-${{ env.cache-name }}\-${{ hashFiles('**/yarn.lock') }}
-          restore-keys:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - if: ${{ steps.cache-yarn.outputs.cache-hit != 'true' }}
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
         name: List the state of node modules
         continue-on-error: true
-        run: yarn list
+        run: npm list
 
       - name: Install dependencies
-        run: yarn install
+        run: npm install
 
       - name: lint
-        run: yarn run lint
+        run: npm run lint
 
       - name: test
-        run: yarn run test:ci
+        run: npm run test:ci
