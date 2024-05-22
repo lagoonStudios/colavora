@@ -1,23 +1,27 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import React from 'react';
-import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
+import { useTranslation } from 'react-i18next';
+import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { ExternalLink } from './ExternalLink';
 import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 
 import Colors from '@/constants/Colors';
+import { useDefaultLanguage } from '@/hooks';
+import { storeLanguageData } from '@/utils';
 
 export default function EditScreenInfo({ path }: { path: string }) {
   const { t } = useTranslation();
   const languages = [
     { label: 'English', value: 'en' },
     { label: 'Español', value: 'es' },
-
     // Add more languages as needed
   ];
+
+  // Set a defalut language stored in the async storage
+  useDefaultLanguage();
+
   return (
     <View>
       <View style={styles.getStartedContainer}>
@@ -52,7 +56,8 @@ export default function EditScreenInfo({ path }: { path: string }) {
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => {
-                void i18next.changeLanguage(item.value);
+                i18next.changeLanguage(item.value);
+                storeLanguageData(item.value);
               }}
               style={styles.language}
             >
