@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
 
 import { ExternalLink } from './ExternalLink';
 import { MonoText } from './StyledText';
@@ -8,6 +11,13 @@ import { Text, View } from './Themed';
 import Colors from '@/constants/Colors';
 
 export default function EditScreenInfo({ path }: { path: string }) {
+  const { t } = useTranslation();
+  const languages = [
+    { label: 'English', value: 'en' },
+    { label: 'Español', value: 'es' },
+
+    // Add more languages as needed
+  ];
   return (
     <View>
       <View style={styles.getStartedContainer}>
@@ -32,11 +42,24 @@ export default function EditScreenInfo({ path }: { path: string }) {
           lightColor="rgba(0,0,0,0.8)"
           darkColor="rgba(255,255,255,0.8)"
         >
-          Change any of the text, save the file, and your app will automatically update.
+          {t('DEFAULT')}
         </Text>
       </View>
 
       <View style={styles.helpContainer}>
+        <FlatList
+          data={languages}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => {
+                void i18next.changeLanguage(item.value);
+              }}
+              style={styles.language}
+            >
+              <Text>{item.label}</Text>
+            </TouchableOpacity>
+          )}
+        />
         <ExternalLink
           style={styles.helpLink}
           href="https://docs.expo.io/get-started/create-a-new-app/#opening-the-app-on-your-phonetablet"
@@ -53,6 +76,7 @@ export default function EditScreenInfo({ path }: { path: string }) {
 const styles = StyleSheet.create({
   getStartedContainer: {
     alignItems: 'center',
+    justifyContent: 'center',
     marginHorizontal: 50,
   },
   homeScreenFilename: {
@@ -77,5 +101,13 @@ const styles = StyleSheet.create({
   },
   helpLinkText: {
     textAlign: 'center',
+  },
+  language: {
+    padding: 10,
+    backgroundColor: 'gray',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    color: 'black',
+    marginVertical: 10,
   },
 });
