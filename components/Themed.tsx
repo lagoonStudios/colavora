@@ -8,7 +8,7 @@ import React from "react";
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "./useColorScheme";
 
-type ThemeProps = {
+export type ThemeProps = {
   lightColor?: string;
   darkColor?: string;
 };
