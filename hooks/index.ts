@@ -1,3 +1,3 @@
-import useDefaultLanguage from './language';
+import useDefaultLanguage from "./language";
 
 export { useDefaultLanguage };
