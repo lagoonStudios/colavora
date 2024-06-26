@@ -1,21 +1,21 @@
-import React from 'react';
-import i18next from 'i18next';
-import { useTranslation } from 'react-i18next';
-import { FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import React from "react";
+import i18next from "i18next";
+import { useTranslation } from "react-i18next";
+import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 
-import { ExternalLink } from './ExternalLink';
-import { MonoText } from './StyledText';
-import { Text, View } from './Themed';
+import { ExternalLink } from "./ExternalLink";
+import { MonoText } from "./StyledText";
+import { Text, View } from "./Themed";
 
-import Colors from '@/constants/Colors';
-import { useDefaultLanguage } from '@/hooks';
-import { storeLanguageData } from '@/utils';
+import Colors from "@/constants/Colors";
+import { useDefaultLanguage } from "@/hooks";
+import { storeLanguageData } from "@/utils";
 
 export default function EditScreenInfo({ path }: { path: string }) {
   const { t } = useTranslation();
   const languages = [
-    { label: 'English', value: 'en' },
-    { label: 'Español', value: 'es' },
+    { label: "English", value: "en" },
+    { label: "Español", value: "es" },
     // Add more languages as needed
   ];
 
@@ -46,7 +46,7 @@ export default function EditScreenInfo({ path }: { path: string }) {
           lightColor="rgba(0,0,0,0.8)"
           darkColor="rgba(255,255,255,0.8)"
         >
-          {t('DEFAULT')}
+          {t("DEFAULT")}
         </Text>
       </View>
 
@@ -80,8 +80,8 @@ export default function EditScreenInfo({ path }: { path: string }) {
 
 const styles = StyleSheet.create({
   getStartedContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginHorizontal: 50,
   },
   homeScreenFilename: {
@@ -94,25 +94,25 @@ const styles = StyleSheet.create({
   getStartedText: {
     fontSize: 17,
     lineHeight: 24,
-    textAlign: 'center',
+    textAlign: "center",
   },
   helpContainer: {
     marginTop: 15,
     marginHorizontal: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   helpLink: {
     paddingVertical: 15,
   },
   helpLinkText: {
-    textAlign: 'center',
+    textAlign: "center",
   },
   language: {
     padding: 10,
-    backgroundColor: 'gray',
+    backgroundColor: "gray",
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    color: 'black',
+    borderBottomColor: "#ccc",
+    color: "black",
     marginVertical: 10,
   },
 });
