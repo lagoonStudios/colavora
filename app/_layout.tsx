@@ -54,6 +54,11 @@ function RootLayoutNav() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+        {/* TODO - Make manifests counter dynamic */}
+        <Stack.Screen
+          name="ManifestsList/index"
+          options={{ headerShown: true, title: "Manifests (26)" }}
+        />
       </Stack>
     </ThemeProvider>
   );
