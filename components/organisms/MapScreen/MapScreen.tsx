@@ -1,9 +1,12 @@
-import { mapStyle } from "@/constants/mapStyle";
+import { View } from "react-native";
 import React, { useRef } from "react";
-import { StyleSheet, View, Dimensions } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 
-export function MapScreen() {
+import { mapStyle } from "@/constants/mapStyle";
+
+import { styles } from "./MapScreen.styles";
+
+export default function MapScreen() {
   const mapRef = useRef<MapView | null>(null);
   return (
     <View style={styles.container}>
@@ -21,20 +24,7 @@ export function MapScreen() {
         showsMyLocationButton
         showsUserLocation
         ref={mapRef}
-      ></MapView>
+      />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "black",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  mapStyle: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
-  },
-});

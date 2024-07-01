@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
-import { MapScreen } from "@/components/organisms/map";
+import MapScreen from "@/components/organisms/MapScreen";
 
 export default function TabOneScreen() {
   return (
