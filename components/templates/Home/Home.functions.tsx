@@ -11,10 +11,10 @@ export function useHomeData() {
   useEffect(() => {
     setLoading(true);
     setData([
-      { counter: '20/35', description: 'Deliveries for today' },
-      { counter: '26', description: 'Delivery manifest' },
-      { counter: '3', description: 'Pickupt for today' },
-      { counter: '0', description: 'Pickup manifest' },
+      { counter: '20/35', description: 'Deliveries for today', route: '/ManifestsList' },
+      { counter: '26', description: 'Delivery manifest', route: '/ManifestsList' },
+      { counter: '3', description: 'Pickupt for today', route: '/ManifestsList' },
+      { counter: '0', description: 'Pickup manifest', route: '/ManifestsList' },
     ]);
     setTimeout(() => {
       setLoading(false);
