@@ -3,15 +3,15 @@ import { View, StyleSheet, ViewStyle } from 'react-native';
 import { ThemeProps, useThemeColor } from '../Themed';
 
 interface CardProps extends ThemeProps {
-  styles?: ViewStyle;
+  style?: ViewStyle;
   children: React.ReactNode;
 }
 
 export default function Card(props: CardProps) {
-  const { styles, children, lightColor, darkColor } = props;
+  const { style, children, lightColor, darkColor } = props;
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
 
-  return <View style={[{ backgroundColor }, defaultStyles.card, styles]}>{children}</View>;
+  return <View style={[{ backgroundColor }, defaultStyles.card, style]}>{children}</View>;
 }
 
 const defaultStyles = StyleSheet.create({
