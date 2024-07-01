@@ -11,7 +11,7 @@ export default function Card(props: CardProps) {
   const { style, children, lightColor, darkColor } = props;
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
 
-  return <View style={[{ backgroundColor }, defaultStyles.card, style]}>{children}</View>;
+  return <View style={[defaultStyles.card, { backgroundColor }, style]}>{children}</View>;
 }
 
 const defaultStyles = StyleSheet.create({
