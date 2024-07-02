@@ -4,7 +4,7 @@ import DropDownPicker, { LanguageType } from "react-native-dropdown-picker";
 
 import { useColorScheme } from "@/components/useColorScheme";
 
-import { SearchProps, SearchTheme } from "./search.types";
+import { SearchProps, SearchTheme } from "./Search.types";
 
 // To create a custom theme, see the documentation template: https://github.com/hossein-zare/react-native-dropdown-picker/blob/5.x/src/themes/light/index.js
 /**
@@ -12,7 +12,8 @@ import { SearchProps, SearchTheme } from "./search.types";
  *
  * @see {@link https://hossein-zare.github.io/react-native-dropdown-picker-website/docs | Documentation}
  */
-export default function Search(props: SearchProps) {
+export default function Search<T>(props: SearchProps<T>) {
+  //Update folders
   const { ...otherProps } = props;
   const { i18n } = useTranslation();
   const theme = useColorScheme();
