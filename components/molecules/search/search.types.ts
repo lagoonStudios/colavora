@@ -1,5 +1,5 @@
-import { DropDownPickerProps } from 'react-native-dropdown-picker';
+import { DropDownPickerProps } from "react-native-dropdown-picker";
 
-export type SearchProps = DropDownPickerProps<any>;
+export type SearchProps<T> = DropDownPickerProps<T>;
 
-export type SearchTheme = 'LIGHT' | 'DARK';
+export type SearchTheme = "LIGHT" | "DARK";
