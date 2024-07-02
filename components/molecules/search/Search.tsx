@@ -1,10 +1,10 @@
-import { useTranslation } from 'react-i18next';
-import React, { useEffect, useState } from 'react';
-import DropDownPicker, { LanguageType } from 'react-native-dropdown-picker';
+import { useTranslation } from "react-i18next";
+import React, { useEffect, useState } from "react";
+import DropDownPicker, { LanguageType } from "react-native-dropdown-picker";
 
-import { useColorScheme } from '@/components/useColorScheme';
+import { useColorScheme } from "@/components/useColorScheme";
 
-import { SearchProps, SearchTheme } from './search.types';
+import { SearchProps, SearchTheme } from "./search.types";
 
 // To create a custom theme, see the documentation template: https://github.com/hossein-zare/react-native-dropdown-picker/blob/5.x/src/themes/light/index.js
 /**
@@ -16,15 +16,15 @@ export default function Search(props: SearchProps) {
   const { ...otherProps } = props;
   const { i18n } = useTranslation();
   const theme = useColorScheme();
-  const [pickerTheme, setPickerTheme] = useState<SearchTheme>('LIGHT');
+  const [pickerTheme, setPickerTheme] = useState<SearchTheme>("LIGHT");
 
   useEffect(() => {
     switch (theme) {
-      case 'dark':
-        setPickerTheme('DARK');
+      case "dark":
+        setPickerTheme("DARK");
         break;
       default:
-        setPickerTheme('LIGHT');
+        setPickerTheme("LIGHT");
         break;
     }
   }, [theme]);
