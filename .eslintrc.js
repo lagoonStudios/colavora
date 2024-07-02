@@ -32,6 +32,7 @@ module.exports = {
       ],
       parserOptions: {
         project: ["./tsconfig.json"],
+        project: ["./tsconfig.json"],
       },
       rules: {
         "@typescript-eslint/no-floating-promises": "off",
@@ -42,6 +43,8 @@ module.exports = {
     },
   ],
   parserOptions: {
+    ecmaVersion: "latest",
+    sourceType: "module",
     ecmaVersion: "latest",
     sourceType: "module",
     ecmaFeatures: {
