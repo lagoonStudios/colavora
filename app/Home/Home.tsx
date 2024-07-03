@@ -21,7 +21,11 @@ export default function Home() {
       <Pressable>
         <Card style={styles.item}>
           <Text style={styles.description}>{item.description}</Text>
-          {loading ? <Text>Loading...</Text> : <Text style={styles.counter}>{item.counter}</Text>}
+          {loading ? (
+            <Text>Loading...</Text>
+          ) : (
+            <Text style={styles.counter}>{item.counter}</Text>
+          )}
         </Card>
       </Pressable>
     </Link>

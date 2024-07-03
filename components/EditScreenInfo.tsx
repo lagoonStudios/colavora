@@ -3,11 +3,9 @@ import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 
-import { ExternalLink } from "./ExternalLink";
 import { MonoText } from "./StyledText";
 import { Text, View } from "./Themed";
 
-import Colors from "@constants/Colors";
 import { useDefaultLanguage } from "@/hooks";
 import { storeLanguageData } from "@/utils";
 

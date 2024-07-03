@@ -3,7 +3,11 @@ import { useFonts } from "expo-font";
 import React, { useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
 import "react-native-reanimated";
 import "@/lang/i18n";
 
