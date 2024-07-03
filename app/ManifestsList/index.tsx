@@ -1,1 +1,1 @@
-export { default } from './ManifestsList';
+export { default } from "./ManifestsList";

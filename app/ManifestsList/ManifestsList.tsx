@@ -1,13 +1,13 @@
-import React from 'react';
-import { FlatList, Pressable } from 'react-native';
+import React from "react";
+import { FlatList, Pressable } from "react-native";
 
-import { Text } from '@components/Themed';
-import ManifestListItem from '@molecules/ManifestListItem';
-import { ManifestListItemProps } from '@molecules/ManifestListItem/ManifestListItem.types';
+import { Text } from "@components/Themed";
+import ManifestListItem from "@molecules/ManifestListItem";
+import { ManifestListItemProps } from "@molecules/ManifestListItem/ManifestListItem.types";
 
-import { styles } from './ManifestsList.styles';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useManifestsListData } from './ManifestsList.functions';
+import { styles } from "./ManifestsList.styles";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useManifestsListData } from "./ManifestsList.functions";
 
 export default function ManifestsList() {
   // --- Hooks -----------------------------------------------------------------

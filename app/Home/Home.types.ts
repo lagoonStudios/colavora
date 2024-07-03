@@ -1,5 +1,5 @@
 export interface HomeItem {
-    description: string;
-    counter: string;
-    route: string;
+  description: string;
+  counter: string;
+  route: string;
 }
