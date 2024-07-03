@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
-import { ThemeProps, useThemeColor } from '../Themed';
+import React from "react";
+import { View, StyleSheet, ViewStyle } from "react-native";
+import { ThemeProps, useThemeColor } from "../Themed";
 
 interface CardProps extends ThemeProps {
   style?: ViewStyle;
@@ -9,7 +9,7 @@ interface CardProps extends ThemeProps {
 
 export default function Card(props: CardProps) {
   const { style, children, lightColor, darkColor } = props;
-  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, "background");
 
   return <View style={[defaultStyles.card, { backgroundColor }, style]}>{children}</View>;
 }
