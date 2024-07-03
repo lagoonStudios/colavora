@@ -1,5 +1,5 @@
 export interface ManifestListItemProps {
-    code: string;
-    date: string;
-    count: number;
+  code: string;
+  date: string;
+  count: number;
 }

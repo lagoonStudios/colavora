@@ -1,6 +1,6 @@
 import React from "react";
 import Home from "../Home";
 
-export default function TabOneScreen() {
+export default function HomeScreen() {
   return <Home />;
 }

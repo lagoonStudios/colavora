@@ -1,11 +1,11 @@
-import React from 'react';
-import Card from '@atoms/Card';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import React from "react";
+import Card from "@atoms/Card";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-import { Text, View } from '@components/Themed';
+import { Text, View } from "@components/Themed";
 
-import { styles } from './ManifestListItem.styles';
-import { ManifestListItemProps } from './ManifestListItem.types';
+import { styles } from "./ManifestListItem.styles";
+import { ManifestListItemProps } from "./ManifestListItem.types";
 
 export default function ManifestListItem(props: ManifestListItemProps) {
   const { code, date, count } = props;
