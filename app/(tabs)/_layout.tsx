@@ -35,12 +35,7 @@ export default function TabLayout() {
           headerTitleStyle: { display: "none" },
           headerStyle: { height: 110 },
           tabBarIcon: ({ color }) => (
-            <FontAwesome
-              name="home"
-              color={color}
-              size={28}
-              style={{ marginBottom: -3 }}
-            />
+            <FontAwesome name="home" color={color} size={28} style={{ marginBottom: -3 }} />
           ),
           headerRight: () => (
             <Link href="/" asChild>
@@ -80,12 +75,7 @@ export default function TabLayout() {
           title: "Profile",
           tabBarShowLabel: false,
           tabBarIcon: ({ color }) => (
-            <AntDesign
-              name="user"
-              color={color}
-              size={28}
-              style={{ marginBottom: -3 }}
-            />
+            <AntDesign name="user" color={color} size={28} style={{ marginBottom: -3 }} />
           ),
         }}
       />
