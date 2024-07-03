@@ -1,5 +1,10 @@
 import React from "react";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import {
+  SimpleLineIcons,
+  AntDesign,
+  FontAwesome,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { Link, Tabs } from "expo-router";
 import { Pressable } from "react-native";
 
@@ -8,12 +13,6 @@ import { useColorScheme } from "@components/useColorScheme";
 import { useClientOnlyValue } from "@components/useClientOnlyValue";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>["name"];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -31,13 +30,16 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="home" color={color} size={28} style={{ marginBottom: -3 }} />
+          ),
           headerRight: () => (
-            <Link href="/modal" asChild>
+            <Link href="/" asChild>
               <Pressable>
                 {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
+                  <SimpleLineIcons
+                    name="login"
                     size={25}
                     color={Colors[colorScheme ?? "light"].text}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
@@ -49,10 +51,28 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="manifests"
         options={{
-          title: "Tab Two",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Manifests",
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="truck-fast-outline"
+              color={color}
+              size={28}
+              style={{ marginBottom: -3 }}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="user" color={color} size={28} style={{ marginBottom: -3 }} />
+          ),
         }}
       />
     </Tabs>
