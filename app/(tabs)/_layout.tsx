@@ -11,6 +11,7 @@ import { Pressable } from "react-native";
 import Colors from "@constants/Colors";
 import { useColorScheme } from "@components/useColorScheme";
 import { useClientOnlyValue } from "@components/useClientOnlyValue";
+import LoggedHeader from "@organisms/LoggedHeader";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 
@@ -31,8 +32,15 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarShowLabel: false,
+          headerTitleStyle: { display: "none" },
+          headerStyle: { height: 110 },
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="home" color={color} size={28} style={{ marginBottom: -3 }} />
+            <FontAwesome
+              name="home"
+              color={color}
+              size={28}
+              style={{ marginBottom: -3 }}
+            />
           ),
           headerRight: () => (
             <Link href="/" asChild>
@@ -48,6 +56,7 @@ export default function TabLayout() {
               </Pressable>
             </Link>
           ),
+          headerLeft: () => <LoggedHeader />,
         }}
       />
       <Tabs.Screen
@@ -71,7 +80,12 @@ export default function TabLayout() {
           title: "Profile",
           tabBarShowLabel: false,
           tabBarIcon: ({ color }) => (
-            <AntDesign name="user" color={color} size={28} style={{ marginBottom: -3 }} />
+            <AntDesign
+              name="user"
+              color={color}
+              size={28}
+              style={{ marginBottom: -3 }}
+            />
           ),
         }}
       />
