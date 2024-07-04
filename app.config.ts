@@ -5,12 +5,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   slug: "colavora",
   ...config,
   ios: {
+    bundleIdentifier: process.env.EXPO_PUBLIC_BUNDLE_IDENTIFIER,
     supportsTablet: true,
     config: {
       googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_CLOUD_API_KEY,
     },
   },
   android: {
+    package: process.env.EXPO_PUBLIC_BUNDLE_IDENTIFIER,
     adaptiveIcon: {
       foregroundImage: "./assets/images/adaptive-icon.png",
       backgroundColor: "#ffffff",
@@ -21,4 +23,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     },
   },
+  plugins: [
+    "expo-router",
+    [
+      "react-native-auth0",
+      {
+        domain: process.env.EXPO_PUBLIC_AUTH0_DOMAIN,
+      },
+    ],
+  ],
 });
