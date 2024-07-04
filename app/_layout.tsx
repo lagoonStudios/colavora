@@ -3,11 +3,17 @@ import { useFonts } from "expo-font";
 import React, { useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
 import "react-native-reanimated";
 import "@/lang/i18n";
 
 import { useColorScheme } from "@components/useColorScheme";
+import AuthProvider from "@/providers/Auth";
+import { useAuth0Config } from "@hooks/Auth";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -27,19 +33,20 @@ export default function RootLayout() {
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
   });
-
+  const { loading: authLoading, error: authError } = useAuth0Config();
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
-  }, [error]);
+    if (authError) throw authError;
+  }, [error, authError]);
 
   useEffect(() => {
-    if (loaded) {
+    if (loaded && !authLoading) {
       void SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [loaded, authLoading]);
 
-  if (!loaded) {
+  if (!loaded && !authLoading) {
     return null;
   }
 
@@ -47,17 +54,20 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  const { domain: AuthDomain, clientId: authClientId } = useAuth0Config();
   const colorScheme = useColorScheme();
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="ManifestsList/index"
-          options={{ headerShown: true, title: "Manifests (26)" }}
-        />
-      </Stack>
+      <AuthProvider domain={AuthDomain} clientId={authClientId}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="ManifestsList/index"
+            options={{ headerShown: true, title: "Manifests (26)" }}
+          />
+        </Stack>
+      </AuthProvider>
     </ThemeProvider>
   );
 }
