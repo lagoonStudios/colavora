@@ -1,11 +1,12 @@
 {
   "expo": {
+    "owner": "eagerlink",
     "name": "colavora",
     "slug": "colavora",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "com.eagerlink.colavora",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -13,12 +14,14 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
+      "bundleIdentifier": "",
       "supportsTablet": true,
       "config": {
         "googleMapsApiKey": ""
       }
     },
     "android": {
+      "package": "",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -34,9 +37,14 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-router"],
+    "plugins": [],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "75fb4599-653d-4f62-930a-41961b8550fa"
+      }
     }
   }
 }
