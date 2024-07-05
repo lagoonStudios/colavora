@@ -29,37 +29,42 @@ export const unstable_settings = {
 void SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
+  const [fontsLoaded, fontsError] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
   });
-  const { loading: authLoading, error: authError } = useAuth0Config();
+  const {
+    loaded: authLoaded,
+    error: authError,
+    domain: authDomain,
+    clientId: authClientId,
+  } = useAuth0Config();
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
-    if (error) throw error;
+    if (fontsError) throw fontsError;
     if (authError) throw authError;
-  }, [error, authError]);
+  }, [fontsError, authError]);
 
   useEffect(() => {
-    if (loaded && !authLoading) {
+    if (fontsLoaded && authLoaded) {
       void SplashScreen.hideAsync();
     }
-  }, [loaded, authLoading]);
+  }, [fontsLoaded, authLoaded]);
 
-  if (!loaded && !authLoading) {
+  if (!fontsLoaded || !authLoaded) {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return <RootLayoutNav authDomain={authDomain} authClientId={authClientId} />;
 }
 
-function RootLayoutNav() {
-  const { domain: AuthDomain, clientId: authClientId } = useAuth0Config();
+function RootLayoutNav(props: { authDomain: string; authClientId: string }) {
+  const { authDomain, authClientId } = props;
   const colorScheme = useColorScheme();
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <AuthProvider domain={AuthDomain} clientId={authClientId}>
+      <AuthProvider domain={authDomain} clientId={authClientId}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
