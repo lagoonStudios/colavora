@@ -56,7 +56,9 @@ module.exports = {
   rules: {
     "prettier/prettier": [
       "error",
-      {},
+      {
+        doubleQuote: true,
+      },
       {
         usePrettierrc: false,
       },
