@@ -19,4 +19,8 @@ export const styles = StyleSheet.create({
     width: 100,
     height: 100,
   },
+  button: {
+    maxWidth: 200,
+    width: "50%",
+  },
 });

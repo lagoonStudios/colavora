@@ -3,6 +3,7 @@
     "DEFAULT": "Change any of the text, save the file, and your app will automatically update.",
     "USERNAME": "Username",
     "PASSWORD": "Password",
-    "POWERED_BY": "Powered by EagerLink"
+    "POWERED_BY": "Powered by EagerLink",
+    "LOGIN": "Login"
   }
 }
