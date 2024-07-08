@@ -23,7 +23,11 @@ export default function ManifestsList() {
   // --- END: Data and handlers ------------------------------------------------
   return (
     <SafeAreaView style={styles.container}>
-      {loading ? <Text>Loading...</Text> : <FlatList data={data} renderItem={renderItem} />}
+      {loading ? (
+        <Text>Loading...</Text>
+      ) : (
+        <FlatList data={data} renderItem={renderItem} />
+      )}
     </SafeAreaView>
   );
 }
