@@ -1,20 +1,70 @@
-const tintColorLight = "#2f95dc";
-const tintColorDark = "#fff";
+// const tintColorLight = "#2f95dc";
+// const tintColorDark = "#fff";
 /* const tintColorGray = "#dddddd"; */
 
 export default {
   light: {
-    text: "#000",
-    background: "#fff",
-    tint: tintColorLight,
-    tabIconDefault: "#ccc",
-    tabIconSelected: tintColorLight,
+    text: {
+      default: "#000",
+      contrast: "#fff",
+      shade: "#000000",
+      tint: "#1a1a1a",
+    },
+    danger: {
+      default: "#ff0000",
+      contrast: "#000000",
+      shade: "#e00000",
+      tint: "#ff0000",
+    },
+    primary: {
+      default: "#03204B",
+      contrast: "#fff",
+      shade: "#031c42",
+      tint: "#1c365d",
+    },
+    background: {
+      default: "#fff",
+      contrast: "#000000",
+      shade: "#e0e0e0",
+      tint: "#ffffff",
+    },
+    backgroundSecondary: {
+      default: "#FAFBFC",
+      contrast: "#000000",
+      shade: "#dcddde",
+      tint: "#fbfbfc",
+    },
   },
   dark: {
-    text: "#fff",
-    background: "#000",
-    tint: tintColorDark,
-    tabIconDefault: "#ccc",
-    tabIconSelected: tintColorDark,
+    text: {
+      default: "#000",
+      contrast: "#fff",
+      shade: "#000000",
+      tint: "#1a1a1a",
+    },
+    danger: {
+      default: "#ff0000",
+      contrast: "#000000",
+      shade: "#e00000",
+      tint: "#ff0000",
+    },
+    primary: {
+      default: "#03204B",
+      contrast: "#fff",
+      shade: "#031c42",
+      tint: "#1c365d",
+    },
+    background: {
+      default: "#fff",
+      contrast: "#000000",
+      shade: "#e0e0e0",
+      tint: "#ffffff",
+    },
+    backgroundSecondary: {
+      default: "#FAFBFC",
+      contrast: "#000000",
+      shade: "#dcddde",
+      tint: "#fbfbfc",
+    },
   },
 };
