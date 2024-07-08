@@ -1,5 +1,8 @@
 {
   "translation": {
-    "DEFAULT": "Cambie cualquier texto, guarde el archivo y su aplicación se actualizará automáticamente."
+    "DEFAULT": "Cambie cualquier texto, guarde el archivo y su aplicación se actualizará automáticamente.",
+    "USERNAME": "Nombre de usuario",
+    "PASSWORD": "Contraseña",
+    "POWERED_BY": "Powered by EagerLink"
   }
 }
