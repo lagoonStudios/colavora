@@ -1,30 +1,38 @@
 import React from "react";
-import { Pressable, PressableProps, TextStyle } from "react-native";
+import { Pressable, PressableProps, TextStyle, ViewStyle } from "react-native";
+
+import { Text, ThemeProps, View, useThemeColor } from "@components/Themed";
+
 import { styles } from "./Button.styles";
-import { Text, ThemeProps, useThemeColor } from "@components/Themed";
 
 type ButtonProps = ThemeProps &
   PressableProps & {
     label: string;
     labelStyle?: TextStyle;
+    containerStyle?: ViewStyle;
   };
 
 export default function Button(props: ButtonProps) {
-  const { style, lightColor, darkColor, label, labelStyle } = props;
+  const { style, lightColor, darkColor, label, labelStyle, containerStyle } =
+    props;
   const primaryColor = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "primary",
+    "primary"
   );
   return (
-    <Pressable
-      style={[
-        {
-          backgroundColor: primaryColor,
-        },
-        styles.button,
-      ]}
-    >
-      <Text style={styles.label}>Button</Text>
-    </Pressable>
+    <View style={[styles.container, styles.buttonShadow, containerStyle]}>
+      <Pressable
+        style={[
+          {
+            backgroundColor: primaryColor.default,
+          },
+          styles.button,
+          styles.buttonShadow,
+          style,
+        ]}
+      >
+        <Text style={[styles.label, labelStyle]}>{label}</Text>
+      </Pressable>
+    </View>
   );
 }

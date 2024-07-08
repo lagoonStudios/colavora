@@ -23,7 +23,7 @@ export default function Login() {
           label={t("PASSWORD")}
         />
       </View>
-      <Button />
+      <Button label={t("LOGIN")} containerStyle={styles.button} />
       <Text>{t("POWERED_BY")}</Text>
     </View>
   );
