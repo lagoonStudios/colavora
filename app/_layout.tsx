@@ -65,12 +65,9 @@ function RootLayoutNav(props: { authDomain: string; authClientId: string }) {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <AuthProvider domain={authDomain} clientId={authClientId}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="ManifestsList/index"
-            options={{ headerShown: true, title: "Manifests (26)" }}
-          />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(no-auth)" />
+          <Stack.Screen name="(auth)" />
         </Stack>
       </AuthProvider>
     </ThemeProvider>
