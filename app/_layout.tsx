@@ -44,7 +44,6 @@ export default function RootLayout() {
     if (fontsError) throw fontsError;
     if (authError) throw authError;
   }, [fontsError, authError]);
-
   useEffect(() => {
     if (fontsLoaded && authLoaded) {
       void SplashScreen.hideAsync();

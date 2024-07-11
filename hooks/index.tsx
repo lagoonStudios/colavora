@@ -1,4 +1,3 @@
 import useDefaultLanguage from "./language";
-
-export * as Auth from "./Auth";
+export { default as useAuth } from "./Auth";
 export { useDefaultLanguage };

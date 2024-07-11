@@ -21,6 +21,7 @@
       "@hooks/*": ["./hooks/*"],
       "@utils/*": ["./utils/*"],
       "@assets/*": ["./assets/*"],
+      "@stores/*": ["./stores/*"],
       "@/*": ["./*"]
     }
   },

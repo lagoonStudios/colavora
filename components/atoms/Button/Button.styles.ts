@@ -25,7 +25,6 @@ export const styles = StyleSheet.create({
         justifyContent: "center",
     },
     label: {
-        color: "#fff",
         fontWeight: "600",
         fontSize: 18,
     },
