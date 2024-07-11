@@ -31,8 +31,11 @@ export default function LoginButton(props: LoginButtonProps) {
 
   return (
     <>
-      {loading && <ActivityIndicator />}
-      <Button onPress={onSubmit} label={t("LOGIN")} disabled={loading} />
+      {loading ? (
+        <ActivityIndicator />
+      ) : (
+        <Button onPress={onSubmit} label={t("LOGIN")} disabled={loading} />
+      )}
     </>
   );
 }
