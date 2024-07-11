@@ -1,14 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Redirect, Stack } from "expo-router";
-import { useAuth } from "@hooks/Auth";
+import useAuth from "@hooks/Auth";
 
 export default function AuthLayout() {
-  const { user } = useAuth();
-  useEffect(() => {
-    console.log("user from auth", { user });
-  }, [user]);
+  const { isLoggedIn } = useAuth();
 
-  if (user == null) {
+  if (isLoggedIn === false) {
     return <Redirect href="(no-auth)/Login" />;
   }
 

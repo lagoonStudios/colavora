@@ -7,6 +7,7 @@ import {
   Text as DefaultText,
   View as DefaultView,
   SafeAreaView as DefaultSafeArea,
+  ActivityIndicator as DefaultActivityIndicator,
 } from "react-native";
 import React from "react";
 
@@ -26,10 +27,12 @@ export type Theme = {
 export type TextProps = ThemeProps & DefaultText["props"];
 export type ViewProps = ThemeProps & DefaultView["props"];
 export type SafeAreaProps = ThemeProps & DefaultSafeArea["props"];
+export type ActivityIndicatorProps = ThemeProps &
+  DefaultActivityIndicator["props"];
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
-  colorName: keyof typeof Colors.light,
+  colorName: keyof typeof Colors.light
 ): Theme {
   const theme = useColorScheme() ?? "light";
   const colorFromProps = props[theme];
@@ -50,7 +53,7 @@ export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const { tint: color } = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "text",
+    "text"
   );
 
   return <DefaultText style={[{ color }, style]} {...otherProps} />;
@@ -60,7 +63,7 @@ export function View(props: ViewProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const { default: backgroundColor } = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "background",
+    "background"
   );
 
   return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;
@@ -69,10 +72,22 @@ export function SafeAreaView(props: ViewProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const { default: backgroundColor } = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "background",
+    "background"
   );
 
   return (
     <DefaultSafeArea style={[{ backgroundColor }, style]} {...otherProps} />
+  );
+}
+
+export function ActivityIndicator(props: ActivityIndicatorProps) {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const { default: color } = useThemeColor(
+    { light: lightColor, dark: darkColor },
+    "primary"
+  );
+
+  return (
+    <DefaultActivityIndicator color={color} style={[style]} {...otherProps} />
   );
 }
