@@ -4,6 +4,14 @@
     "USERNAME": "Username",
     "PASSWORD": "Password",
     "POWERED_BY": "Powered by EagerLink",
-    "LOGIN": "Login"
+    "LOGIN": "Login",
+    "ERRORS": {
+      "ERROR": "Error",
+      "USER_NOT_CREATED": "User not created",
+      "INVALID_GRANT": "Username or password incorrect",
+      "NO_TOKEN": "No token",
+      "INVALID_TOKEN": "Invalid token",
+      "UNKNOWN": "Something went wrong"
+    }
   }
 }

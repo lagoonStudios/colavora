@@ -1,8 +1,7 @@
-import { ERROR_CODE } from "@constants/Errors";
 import { AuthContext } from "@stores/AuthContext";
 import { useContext, useEffect, useState } from "react";
-import { Alert } from "react-native";
 import Auth0 from "react-native-auth0";
+import handleErrorMessage from "./ErrorMessage";
 
 const CONNECTION = "Username-Password-Authentication";
 const AUDIENCE = `https://${process.env.EXPO_PUBLIC_AUTH0_DOMAIN}/api/v2/`;
@@ -44,11 +43,6 @@ export function useAuth0Config() {
   return { domain, clientId, loaded, error };
 }
 
-// export function useUser() {
-//   const { user } = useAuth0();
-//   return user;
-// }
-
 export default function useAuth() {
   const { token, isLoggedIn, saveToken, logout } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
@@ -64,18 +58,6 @@ export default function useAuth() {
 
     try {
       setLoading(true);
-      console.log("login:", { userName, password });
-      // const user = await auth.auth.createUser({
-      //   connection: CONNECTION,
-      //   name: userName,
-      //   email: userName,
-      //   password,
-      // });
-      // console.log("login:", { user });
-
-      // if (!user?.Id) {
-      //   throw new Error(ERROR_CODE.USER_NOT_CREATED);
-      // }
 
       const { accessToken } = await auth.auth.passwordRealm({
         username: userName,
@@ -86,11 +68,7 @@ export default function useAuth() {
 
       saveToken(accessToken);
     } catch (error) {
-      console.error("Error loged in:", { error });
-      Alert.alert(
-        "Sign in failed",
-        "We couldn't sign you in. Please try again."
-      );
+      handleErrorMessage({ error });
     } finally {
       setLoading(false);
     }
@@ -108,49 +86,3 @@ export default function useAuth() {
     clearSession,
   };
 }
-
-// export function useLogin() {
-//   const [loading, setLoading] = useState(true);
-//   const nativeLogin = async ({
-//     userName,
-//     password,
-//   }: {
-//     userName: string;
-//     password: string;
-//   }) => {
-//     try {
-//       if (!auth) throw new Error("Auth0 not configured");
-
-//       const user = await auth.auth.createUser({
-//         connection: CONNECTION,
-//         email: userName,
-//         password,
-//         name: userName,
-//       });
-//       console.log({ user });
-//       if (!user?.Id) {
-//         throw new Error("User not created");
-//       }
-
-//       const credentials = await auth.auth.passwordRealm({
-//         username: userName,
-//         password,
-//         realm: CONNECTION,
-//         audience: AUDIENCE,
-//       });
-
-//       const { accessToken } = credentials;
-//       console.log({ accessToken });
-//       // saveToken(accessToken);
-//       if (!credentials.idToken) {
-//         throw new Error("Credentials not created");
-//       }
-//     } catch (error) {
-//       console.error({ error });
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return { loading, nativeLogin };
-// }
