@@ -1,3 +1,5 @@
+export * as AuthContext from "./AuthContext";
+
 // import { create, StateCreator } from 'zustand';
 
 // // ZUTSTAND using the slice pattern, to separate stores. @see https://github.com/pmndrs/zustand/blob/main/docs/guides/typescript.md

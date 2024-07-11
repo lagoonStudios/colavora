@@ -1,17 +1,38 @@
 import React from "react";
-import { useAuth } from "@hooks/Auth";
-import { Pressable } from "react-native";
+import { useTranslation } from "react-i18next";
 
-export default function LoginButton() {
-  const { authorize } = useAuth();
+import useAuth from "@hooks/Auth";
 
-  const onPress = () => {
-    try {
-      authorize().then(console.log).catch(console.log);
-    } catch (e) {
-      console.log(e);
+import Button from "@atoms/Button";
+import { ActivityIndicator } from "@components/Themed";
+import { Alert } from "react-native";
+import Colors from "@constants/Colors";
+
+type LoginButtonProps = {
+  userName: string;
+  password: string;
+};
+export default function LoginButton(props: LoginButtonProps) {
+  const { userName, password } = props;
+  const { login, loading } = useAuth();
+  const { t } = useTranslation();
+
+  const onSubmit = () => {
+    if (userName.trim() === "") {
+      Alert.alert("Error", "Please enter a username");
+      return;
     }
+    if (password.trim() === "") {
+      Alert.alert("Error", "Please enter a password");
+      return;
+    }
+    login({ userName: userName, password: password });
   };
 
-  return <Pressable onPress={onPress} />;
+  return (
+    <>
+      {loading && <ActivityIndicator />}
+      <Button onPress={onSubmit} label={t("LOGIN")} disabled={loading} />
+    </>
+  );
 }
