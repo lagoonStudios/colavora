@@ -11,6 +11,7 @@
       "INVALID_GRANT": "Usuario o contraseña incorrectos",
       "NO_TOKEN": "No token",
       "INVALID_TOKEN": "Token inválido",
+      "TOO_MANY_ATTEMPTS": "Demasiados intentos",
       "UNKNOWN": "Algo salió mal"
     }
   }
