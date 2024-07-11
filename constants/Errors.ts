@@ -3,5 +3,6 @@ export enum ERROR_CODE {
     INVALID_GRANT = "invalid_grant",
     NO_TOKEN = "NO_TOKEN",
     INVALID_TOKEN = "INVALID_TOKEN",
-    UNKNOWN = "UNKNOWN"
+    UNKNOWN = "UNKNOWN",
+    TOO_MANY_ATTEMPTS = "TOO_MANY_ATTEMPTS",
 }

@@ -19,14 +19,14 @@ export default function handleErrorMessage({
 
   try {
     if (error && customMessage === undefined) {
-      let code = "";
+      let code: string | undefined = undefined;
 
       if (typeof error?.name === "string") {
         code = `ERRORS.${error.name.toUpperCase()}`;
       } else if (typeof error?.code === "string") {
         code = `ERRORS.${error.code.toUpperCase()}`;
       }
-      if (exists(code)) {
+      if (code && exists(code)) {
         message = t(code);
       }
     }
