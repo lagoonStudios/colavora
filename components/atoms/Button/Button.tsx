@@ -13,8 +13,15 @@ type ButtonProps = ThemeProps &
   };
 
 export default function Button(props: ButtonProps) {
-  const { style, lightColor, darkColor, label, labelStyle, containerStyle } =
-    props;
+  const {
+    style,
+    lightColor,
+    darkColor,
+    label,
+    labelStyle,
+    containerStyle,
+    ...otherProps
+  } = props;
   const primaryColor = useThemeColor(
     { light: lightColor, dark: darkColor },
     "primary"
@@ -30,8 +37,13 @@ export default function Button(props: ButtonProps) {
           styles.buttonShadow,
           style,
         ]}
+        {...otherProps}
       >
-        <Text style={[styles.label, labelStyle]}>{label}</Text>
+        <Text
+          style={[{ color: primaryColor.contrast }, styles.label, labelStyle]}
+        >
+          {label}
+        </Text>
       </Pressable>
     </View>
   );

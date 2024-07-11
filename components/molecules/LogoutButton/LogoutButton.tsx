@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Pressable } from "react-native";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { useColorScheme } from "@components/useColorScheme";
 
 import Colors from "@constants/Colors";
-import { useAuth } from "@hooks/Auth";
+import useAuth from "@hooks/Auth";
+// import { useAuth } from "@hooks/Auth";
 
 export default function LogoutButton() {
   const colorScheme = useColorScheme();
@@ -13,7 +14,7 @@ export default function LogoutButton() {
 
   const onPress = () => {
     try {
-      clearSession().then(console.log).catch(console.log);
+      clearSession();
     } catch (e) {
       console.log(e);
     }

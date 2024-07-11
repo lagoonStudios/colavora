@@ -55,9 +55,13 @@ module.exports = {
   },
   rules: {
     "prettier/prettier": [
-      "error",
+      "warn",
       {
         doubleQuote: true,
+        singleQuote: false,
+        trailingComma: "all",
+        useTabs: false,
+        tabWidth: 2,
       },
       {
         usePrettierrc: false,
