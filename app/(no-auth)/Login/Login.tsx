@@ -12,8 +12,12 @@ import { styles } from "./Login.styles";
 import CompanyLogo from "@atoms/CompanyLogo";
 
 import TextInput from "@molecules/TextInput";
-import { Text, View } from "@components/Themed";
+import { ActivityIndicator, Text, View } from "@components/Themed";
 import LoginButton from "@molecules/LoginButton";
+import { EmailRegex } from "@constants/Constants";
+import { Alert } from "react-native";
+import useAuth from "@hooks/Auth";
+import { SafeAreaView } from "@atoms/SafeAreaView";
 
 interface LoginForm {
   userName: string;
@@ -24,17 +28,29 @@ export default function Login() {
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
   const { ...methods } = useForm<LoginForm>();
+  const { login, loading } = useAuth();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
-  const onSubmit: SubmitHandler<LoginForm> = (data) => console.log({ data });
+  const onSubmit: SubmitHandler<LoginForm> = (data) => {
+    if (data.userName.trim() === "") {
+      Alert.alert("Error", "Please enter a username");
+      return;
+    }
+    if (data.password.trim() === "") {
+      Alert.alert("Error", "Please enter a password");
+      return;
+    }
+    login({ userName: data.userName, password: data.password });
+  };
+
   const onError: SubmitErrorHandler<LoginForm> = (errors, e) => {
     return console.log(errors);
   };
   // --- END: Data and handlers ------------------------------------------------
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <CompanyLogo />
       <View style={styles.formContainer}>
         <FormProvider {...methods}>
@@ -45,6 +61,10 @@ export default function Login() {
             name="userName"
             rules={{
               required: t("VALIDATIONS.REQUIRED"),
+              pattern: {
+                value: EmailRegex,
+                message: t("VALIDATIONS.EMAIL"),
+              },
             }}
           />
 
@@ -60,9 +80,13 @@ export default function Login() {
           />
         </FormProvider>
       </View>
-      {/* <Button label="test" type="submit" /> */}
-      <LoginButton onPress={methods.handleSubmit(onSubmit, onError)} />
+      {loading ? (
+        <ActivityIndicator />
+      ) : (
+        <LoginButton onPress={methods.handleSubmit(onSubmit, onError)} />
+      )}
+
       <Text>{t("POWERED_BY")}</Text>
-    </View>
+    </SafeAreaView>
   );
 }

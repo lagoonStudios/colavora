@@ -6,7 +6,6 @@
 import {
   Text as DefaultText,
   View as DefaultView,
-  SafeAreaView as DefaultSafeArea,
   ActivityIndicator as DefaultActivityIndicator,
 } from "react-native";
 import React from "react";
@@ -26,7 +25,6 @@ export type Theme = {
 };
 export type TextProps = ThemeProps & DefaultText["props"];
 export type ViewProps = ThemeProps & DefaultView["props"];
-export type SafeAreaProps = ThemeProps & DefaultSafeArea["props"];
 export type ActivityIndicatorProps = ThemeProps &
   DefaultActivityIndicator["props"];
 
@@ -67,17 +65,6 @@ export function View(props: ViewProps) {
   );
 
   return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;
-}
-export function SafeAreaView(props: ViewProps) {
-  const { style, lightColor, darkColor, ...otherProps } = props;
-  const { default: backgroundColor } = useThemeColor(
-    { light: lightColor, dark: darkColor },
-    "background"
-  );
-
-  return (
-    <DefaultSafeArea style={[{ backgroundColor }, style]} {...otherProps} />
-  );
 }
 
 export function ActivityIndicator(props: ActivityIndicatorProps) {
