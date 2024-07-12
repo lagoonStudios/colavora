@@ -1,12 +1,12 @@
 import React from "react";
 import { FlatList, Pressable } from "react-native";
 
-import { Text } from "@components/Themed";
+import { ActivityIndicator, View } from "@components/Themed";
 import ManifestListItem from "@molecules/ManifestListItem";
 import { ManifestListItemProps } from "@molecules/ManifestListItem/ManifestListItem.types";
 
 import { styles } from "./ManifestsList.styles";
-import { SafeAreaView } from "react-native-safe-area-context";
+
 import { useManifestsListData } from "./ManifestsList.functions";
 
 export default function ManifestsList() {
@@ -22,12 +22,12 @@ export default function ManifestsList() {
   );
   // --- END: Data and handlers ------------------------------------------------
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {loading ? (
-        <Text>Loading...</Text>
+        <ActivityIndicator />
       ) : (
         <FlatList data={data} renderItem={renderItem} />
       )}
-    </SafeAreaView>
+    </View>
   );
 }

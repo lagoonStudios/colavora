@@ -1,18 +1,29 @@
 {
   "translation": {
-    "DEFAULT": "Change any of the text, save the file, and your app will automatically update.",
+    "DEFAULT": "Cambie cualquier texto, guarde el archivo y su aplicación se actualizará automáticamente.",
     "USERNAME": "Username",
     "PASSWORD": "Password",
     "POWERED_BY": "Powered by EagerLink",
-    "LOGIN": "Login",
+    "COMMON": {
+      "EMAIL": "Email"
+    },
     "ERRORS": {
       "ERROR": "Error",
       "USER_NOT_CREATED": "User not created",
-      "INVALID_GRANT": "Username or password incorrect",
+      "INVALID_GRANT": "User or password incorrect",
       "NO_TOKEN": "No token",
       "INVALID_TOKEN": "Invalid token",
       "TOO_MANY_ATTEMPTS": "Too many attempts",
       "UNKNOWN": "Something went wrong"
+    },
+    "VALIDATIONS": {
+      "REQUIRED": "Required",
+      "EMAIL": "Invalid email"
+    },
+    "LOGIN": {
+      "LOGIN": "Login",
+      "USERNAME": "Username",
+      "PASSWORD": "Password"
     }
   }
 }

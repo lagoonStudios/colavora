@@ -59,14 +59,19 @@ export default function useAuth() {
     try {
       setLoading(true);
 
-      const { accessToken } = await auth.auth.passwordRealm({
+      const credentials = await auth.auth.passwordRealm({
         username: userName,
         password,
         realm: CONNECTION,
         audience: AUDIENCE,
       });
 
-      saveToken(accessToken);
+      auth.credentialsManager.saveCredentials(credentials);
+      // const credentials = await auth?.credentialsManager.getCredentials();
+      // auth?.credentialsManager.saveCredentials(credentials);
+      // console.log({ credentials });
+
+      saveToken(credentials.accessToken);
     } catch (error) {
       handleErrorMessage({ error });
     } finally {
