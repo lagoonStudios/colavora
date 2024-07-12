@@ -14,6 +14,7 @@ import "@/lang/i18n";
 import { useColorScheme } from "@components/useColorScheme";
 import AuthProvider from "@/providers/Auth";
 import { useAuth0Config } from "@hooks/Auth";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -62,13 +63,15 @@ function RootLayoutNav(props: { authDomain: string; authClientId: string }) {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <AuthProvider domain={authDomain} clientId={authClientId}>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(no-auth)" />
-          <Stack.Screen name="(auth)" />
-        </Stack>
-      </AuthProvider>
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <AuthProvider domain={authDomain} clientId={authClientId}>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(no-auth)" />
+            <Stack.Screen name="(auth)" />
+          </Stack>
+        </AuthProvider>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }
