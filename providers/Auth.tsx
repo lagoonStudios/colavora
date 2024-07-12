@@ -1,5 +1,6 @@
+import { auth } from "@hooks/Auth";
 import { AuthContext } from "@stores/AuthContext";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Auth0Provider } from "react-native-auth0";
 
 export default function AuthProvider({
@@ -11,8 +12,12 @@ export default function AuthProvider({
   domain: string;
   clientId: string;
 }) {
+  // --- Hooks -----------------------------------------------------------------
   const [token, setToken] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // --- END: Hooks ------------------------------------------------------------
+
+  // --- Data and handlers -----------------------------------------------------
   const saveToken = (token: string) => {
     setToken(token);
     setIsLoggedIn(true);
@@ -21,7 +26,27 @@ export default function AuthProvider({
   const logout = () => {
     setToken("");
     setIsLoggedIn(false);
+    return auth?.credentialsManager.clearCredentials();
   };
+
+  const checkCredentials = useCallback(async () => {
+    console.log({ test: "test1" });
+    auth?.credentialsManager.getCredentials().then((creds) => {
+      console.log("checkCredentials", { creds });
+    });
+    // const logged = await auth?.credentialsManager.hasValidCredentials();
+
+    // console.log("checkCredentials", { logged });
+    // setIsLoggedIn(logged ?? false);
+  }, []);
+  // --- END: Data and handlers ------------------------------------------------
+
+  // --- Side effects ----------------------------------------------------------
+  useEffect(() => {
+    checkCredentials();
+  }, [checkCredentials]);
+  // --- END: Side effects -----------------------------------------------------
+
   return (
     <Auth0Provider domain={domain} clientId={clientId}>
       <AuthContext.Provider value={{ token, isLoggedIn, saveToken, logout }}>

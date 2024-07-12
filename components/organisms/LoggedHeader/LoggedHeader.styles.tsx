@@ -18,7 +18,6 @@ export const styles = StyleSheet.create({
   infoContainer: {
     display: "flex",
     gap: 1,
-    backgroundColor: "trasnparent",
   },
   loggedHeaderContainer: {
     display: "flex",
@@ -26,12 +25,10 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
     margin: 10,
-    backgroundColor: "trasnparent",
   },
   image: {
     width: 50,
     height: 50,
     resizeMode: "contain",
-    backgroundColor: "trasnparent",
   },
 });

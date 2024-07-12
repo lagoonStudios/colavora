@@ -17,7 +17,8 @@
       "UNKNOWN": "Algo salió mal"
     },
     "VALIDATIONS": {
-      "REQUIRED": "{{name}} es obligatorio"
+      "REQUIRED": "Requerido",
+      "EMAIL": "Email inválido"
     },
     "LOGIN": {
       "LOGIN": "Iniciar sesión",

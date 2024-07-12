@@ -21,6 +21,7 @@ export const styles = StyleSheet.create({
         width: "100%",
         borderRadius,
         paddingHorizontal: 7,
+        height: 40,
     },
     inputShadow: Platform.select({
         ios: {
