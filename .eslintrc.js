@@ -38,6 +38,7 @@ module.exports = {
         "@typescript-eslint/no-unsafe-assignment": "off",
         "@typescript-eslint/no-explicit-any": "warn",
         "@typescript-eslint/no-unused-vars": "warn",
+        "@typescript-eslint/no-misused-promises": "warn",
       },
     },
   ],

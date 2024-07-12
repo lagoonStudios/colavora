@@ -5,37 +5,32 @@ import useAuth from "@hooks/Auth";
 
 import Button from "@atoms/Button";
 import { ActivityIndicator } from "@components/Themed";
-import { Alert } from "react-native";
-import Colors from "@constants/Colors";
+import { Alert, PressableProps } from "react-native";
 
 type LoginButtonProps = {
   userName: string;
   password: string;
 };
-export default function LoginButton(props: LoginButtonProps) {
-  const { userName, password } = props;
-  const { login, loading } = useAuth();
+export default function LoginButton(props: PressableProps) {
+  // const { userName, password } = props;
+  // const { login, loading } = useAuth();
   const { t } = useTranslation();
 
-  const onSubmit = () => {
-    if (userName.trim() === "") {
-      Alert.alert("Error", "Please enter a username");
-      return;
-    }
-    if (password.trim() === "") {
-      Alert.alert("Error", "Please enter a password");
-      return;
-    }
-    login({ userName: userName, password: password });
-  };
+  // const onSubmit = () => {
+  //   if (userName.trim() === "") {
+  //     Alert.alert("Error", "Please enter a username");
+  //     return;
+  //   }
+  //   if (password.trim() === "") {
+  //     Alert.alert("Error", "Please enter a password");
+  //     return;
+  //   }
+  //   login({ userName: userName, password: password });
+  // };
 
   return (
     <>
-      {loading ? (
-        <ActivityIndicator />
-      ) : (
-        <Button onPress={onSubmit} label={t("LOGIN")} disabled={loading} />
-      )}
+      <Button {...props} label={t("LOGIN")} />
     </>
   );
 }
