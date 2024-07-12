@@ -4,7 +4,9 @@
     "USERNAME": "Nombre de usuario",
     "PASSWORD": "Contraseña",
     "POWERED_BY": "Powered by EagerLink",
-    "LOGIN": "Iniciar sesión",
+    "COMMON": {
+      "EMAIL": "Email"
+    },
     "ERRORS": {
       "ERROR": "Error",
       "USER_NOT_CREATED": "Usuario no creado",
@@ -13,6 +15,14 @@
       "INVALID_TOKEN": "Token inválido",
       "TOO_MANY_ATTEMPTS": "Demasiados intentos",
       "UNKNOWN": "Algo salió mal"
+    },
+    "VALIDATIONS": {
+      "REQUIRED": "{{name}} es obligatorio"
+    },
+    "LOGIN": {
+      "LOGIN": "Iniciar sesión",
+      "USERNAME": "Usuario",
+      "PASSWORD": "Contraseña"
     }
   }
 }
