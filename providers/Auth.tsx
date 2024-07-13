@@ -29,7 +29,7 @@ export default function AuthProvider({
     return auth?.credentialsManager.clearCredentials();
   };
 
-  const checkCredentials = useCallback(async () => {
+  const checkCredentials = useCallback(() => {
     console.log({ test: "test1" });
     auth?.credentialsManager.getCredentials().then((creds) => {
       console.log("checkCredentials", { creds });
