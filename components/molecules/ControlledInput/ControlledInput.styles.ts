@@ -3,40 +3,40 @@ import { StyleSheet, Platform } from "react-native";
 const borderRadius = 10;
 
 export const styles = StyleSheet.create({
-    container: {
-        width: "100%",
-        alignContent: "flex-start",
-        justifyContent: "center",
+  container: {
+    width: "100%",
+    alignContent: "flex-start",
+    justifyContent: "center",
+  },
+  label: {
+    fontSize: 16,
+    marginVertical: 4,
+  },
+  inputContainer: {
+    borderWidth: 0.5,
+    borderRadius,
+    width: "100%",
+  },
+  input: {
+    width: "100%",
+    borderRadius,
+    paddingHorizontal: 7,
+    height: 40,
+  },
+  inputShadow: Platform.select({
+    ios: {
+      shadowOffset: { width: 0, height: 4 },
+      shadowColor: "#000",
+      shadowOpacity: 0.25,
+      borderRadius,
     },
-    label: {
-        fontSize: 16,
-        marginVertical: 4,
+    android: {
+      elevation: 3,
+      borderRadius,
     },
-    inputContainer: {
-        borderWidth: 0.5,
-        borderRadius,
-        width: "100%",
-    },
-    input: {
-        width: "100%",
-        borderRadius,
-        paddingHorizontal: 7,
-        height: 40,
-    },
-    inputShadow: Platform.select({
-        ios: {
-            shadowOffset: { width: 0, height: 4 },
-            shadowColor: "#000",
-            shadowOpacity: 0.25,
-            borderRadius,
-        },
-        android: {
-            elevation: 3,
-            borderRadius,
-        },
-        default: {},
-    }),
-    error: {
-        marginLeft: 7,
-    },
+    default: {},
+  }),
+  error: {
+    marginLeft: 7,
+  },
 });
