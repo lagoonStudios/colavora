@@ -14,19 +14,19 @@ export function useHomeData() {
       {
         counter: "20/35",
         description: "Deliveries for today",
-        route: "/ManifestsList",
+        route: "manifests",
       },
       {
         counter: "26",
         description: "Delivery manifest",
-        route: "/ManifestsList",
+        route: "manifests",
       },
       {
         counter: "3",
         description: "Pickupt for today",
-        route: "/ManifestsList",
+        route: "manifests",
       },
-      { counter: "0", description: "Pickup manifest", route: "/ManifestsList" },
+      { counter: "0", description: "Pickup manifest", route: "manifests" },
     ]);
     setTimeout(() => {
       setLoading(false);
