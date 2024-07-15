@@ -22,6 +22,8 @@
       "@utils/*": ["./utils/*"],
       "@assets/*": ["./assets/*"],
       "@stores/*": ["./stores/*"],
+      "@services/*": ["./services/*"],
+      "@config/*": ["./config/*"],
       "@/*": ["./*"]
     }
   },

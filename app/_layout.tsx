@@ -3,6 +3,7 @@ import { useFonts } from "expo-font";
 import React, { useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { QueryClientProvider } from "@tanstack/react-query";
 import {
   DarkTheme,
   DefaultTheme,
@@ -15,21 +16,18 @@ import { useColorScheme } from "@components/useColorScheme";
 import AuthProvider from "@/providers/Auth";
 import { useAuth0Config } from "@hooks/Auth";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { queryClient } from "@/providers";
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from "expo-router";
+export { ErrorBoundary } from "expo-router";
 
 export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
   initialRouteName: "(tabs)",
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 void SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  // --- Hooks -----------------------------------------------------------------
   const [fontsLoaded, fontsError] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
@@ -40,16 +38,29 @@ export default function RootLayout() {
     domain: authDomain,
     clientId: authClientId,
   } = useAuth0Config();
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
+  // --- END: Hooks ------------------------------------------------------------
+
+  // --- Local state -----------------------------------------------------------
+  // --- END: Local state ------------------------------------------------------
+
+  // --- Refs ------------------------------------------------------------------
+  // --- END: Refs -------------------------------------------------------------
+
+  // --- Redux -----------------------------------------------------------------
+  // --- END: Redux ------------------------------------------------------------
+
+  // --- Side effects ----------------------------------------------------------
   useEffect(() => {
     if (fontsError) throw fontsError;
     if (authError) throw authError;
   }, [fontsError, authError]);
+
   useEffect(() => {
     if (fontsLoaded && authLoaded) {
       void SplashScreen.hideAsync();
     }
   }, [fontsLoaded, authLoaded]);
+  // --- END: Side effects -----------------------------------------------------
 
   if (!fontsLoaded || !authLoaded) {
     return null;
@@ -59,19 +70,40 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav(props: { authDomain: string; authClientId: string }) {
+  // --- Hooks -----------------------------------------------------------------
   const { authDomain, authClientId } = props;
   const colorScheme = useColorScheme();
+  // --- END: Hooks ------------------------------------------------------------
+
+  // --- Local state -----------------------------------------------------------
+  // --- END: Local state ------------------------------------------------------
+
+  // --- Refs ------------------------------------------------------------------
+  // --- END: Refs -------------------------------------------------------------
+
+  // --- Redux -----------------------------------------------------------------
+  // --- END: Redux ------------------------------------------------------------
+
+  // --- Side effects ----------------------------------------------------------
+  // --- END: Side effects -----------------------------------------------------
+
+  // --- Data and handlers -----------------------------------------------------
+  // --- END: Data and handlers ------------------------------------------------
 
   return (
-    <SafeAreaProvider>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <AuthProvider domain={authDomain} clientId={authClientId}>
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="(no-auth)" />
-            <Stack.Screen name="(auth)" />
-          </Stack>
-        </AuthProvider>
-      </ThemeProvider>
-    </SafeAreaProvider>
+    <QueryClientProvider client={queryClient}>
+      <SafeAreaProvider>
+        <ThemeProvider
+          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
+          <AuthProvider domain={authDomain} clientId={authClientId}>
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="(no-auth)" />
+              <Stack.Screen name="(auth)" />
+            </Stack>
+          </AuthProvider>
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </QueryClientProvider>
   );
 }
