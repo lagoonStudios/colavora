@@ -10,23 +10,39 @@ import { useDefaultLanguage } from "@/hooks";
 import { storeLanguageData } from "@/utils";
 
 export default function EditScreenInfo({ path }: { path: string }) {
+  // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
+  // --- END: Hooks ------------------------------------------------------------
+
+  // --- Local state -----------------------------------------------------------
   const languages = [
     { label: "English", value: "en" },
     { label: "Español", value: "es" },
     // Add more languages as needed
   ];
+  // --- END: Local state ------------------------------------------------------
 
+  // --- Refs ------------------------------------------------------------------
+  // --- END: Refs -------------------------------------------------------------
+
+  // --- Redux -----------------------------------------------------------------
+  // --- END: Redux ------------------------------------------------------------
+
+  // --- Side effects ----------------------------------------------------------
   // Set a defalut language stored in the async storage
   useDefaultLanguage();
+  // --- END: Side effects -----------------------------------------------------
+
+  // --- Data and handlers -----------------------------------------------------
+  // --- END: Data and handlers ------------------------------------------------
 
   return (
     <View>
       <View style={styles.getStartedContainer}>
         <Text
           style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)"
+          darkColor="rgba(255,255,255,0.05)"
+          lightColor="rgba(0,0,0,0.05)"
         >
           Open up the code for this screen:
         </Text>
@@ -41,8 +57,8 @@ export default function EditScreenInfo({ path }: { path: string }) {
 
         <Text
           style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)"
+          darkColor="rgba(255,255,255,0.05)"
+          lightColor="rgba(0,0,0,0.05)"
         >
           {t("DEFAULT")}
         </Text>
@@ -85,6 +101,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     lineHeight: 24,
     textAlign: "center",
+    color: "black",
   },
   helpContainer: {
     marginTop: 15,

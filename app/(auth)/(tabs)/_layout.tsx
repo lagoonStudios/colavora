@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   AntDesign,
   FontAwesome,
@@ -13,18 +13,39 @@ import LoggedHeader from "@organisms/LoggedHeader";
 import LogoutButton from "@molecules/LogoutButton/LogoutButton";
 import { useThemeColor } from "@components/Themed";
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
+import { useDriverData, useShipmentData } from "@hooks/index";
 
 export default function TabLayout() {
+  // --- Local state -----------------------------------------------------------
+  const [companyID, setCompanyID] = useState<string>("");
+  // --- END: Local state ------------------------------------------------------
+
+  // --- Hooks -----------------------------------------------------------------
   const colorScheme = useColorScheme();
   const { default: backgroundColor } = useThemeColor({}, "background");
+  const { data: driverData } = useDriverData("1");
+  useShipmentData(companyID);
+  // --- END: Hooks ------------------------------------------------------------
+
+  // --- Refs ------------------------------------------------------------------
+  // --- END: Refs -------------------------------------------------------------
+
+  // --- Redux -----------------------------------------------------------------
+  // --- END: Redux ------------------------------------------------------------
+
+  // --- Side effects ----------------------------------------------------------
+  useEffect(() => {
+    if (driverData) setCompanyID(driverData.companyID);
+  }, [driverData]);
+  // --- END: Side effects -----------------------------------------------------
+
+  // --- Data and handlers -----------------------------------------------------
+  // --- END: Data and handlers ------------------------------------------------
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
+        tabBarActiveTintColor: Colors[colorScheme ?? "light"].text.shade,
         headerShown: useClientOnlyValue(false, true),
       }}
     >
