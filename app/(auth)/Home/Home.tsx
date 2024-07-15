@@ -18,7 +18,7 @@ export default function Home() {
 
   // --- Data and handlers -----------------------------------------------------
   const renderItem = ({ item }: { item: HomeItem }) => (
-    <Link href={item.route} asChild>
+    <Link href={"(tabs)/" + item.route} asChild>
       <Pressable>
         <Card style={styles.item}>
           <Text style={styles.description}>{item.description}</Text>

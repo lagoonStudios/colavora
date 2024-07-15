@@ -74,7 +74,7 @@ export default function TabLayout() {
         options={{
           title: "Manifests",
           tabBarShowLabel: false,
-          headerShown: false,
+          headerStyle: { height: 110, backgroundColor },
           tabBarStyle: { backgroundColor },
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
@@ -91,7 +91,7 @@ export default function TabLayout() {
         options={{
           title: "Profile",
           tabBarShowLabel: false,
-          headerShown: false,
+          headerStyle: { height: 110, backgroundColor },
           tabBarStyle: { backgroundColor },
           tabBarIcon: ({ color }) => (
             <AntDesign
