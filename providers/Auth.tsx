@@ -30,14 +30,7 @@ export default function AuthProvider({
   };
 
   const checkCredentials = useCallback(() => {
-    console.log({ test: "test1" });
-    auth?.credentialsManager.getCredentials().then((creds) => {
-      console.log("checkCredentials", { creds });
-    });
-    // const logged = await auth?.credentialsManager.hasValidCredentials();
-
-    // console.log("checkCredentials", { logged });
-    // setIsLoggedIn(logged ?? false);
+    auth?.credentialsManager.getCredentials().then((creds) => {});
   }, []);
   // --- END: Data and handlers ------------------------------------------------
 
