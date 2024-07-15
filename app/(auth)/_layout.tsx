@@ -12,8 +12,6 @@ export default function AuthLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="Home/index" />
-      <Stack.Screen name="ManifestsList/index" />
     </Stack>
   );
 }
