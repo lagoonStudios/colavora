@@ -10,10 +10,12 @@ import styles from "./Home.styles";
 import { HomeItem } from "./Home.types";
 import { useHomeData } from "./Home.functions";
 import { SafeAreaView } from "@atoms/SafeAreaView";
+import { useTranslation } from "react-i18next";
 
 export default function Home() {
   // --- Hooks -----------------------------------------------------------------
   const { data, loading } = useHomeData();
+  const { t } = useTranslation();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
@@ -21,7 +23,7 @@ export default function Home() {
     <Link href={"(tabs)/" + item.route} asChild>
       <Pressable>
         <Card style={styles.item}>
-          <Text style={styles.description}>{item.description}</Text>
+          <Text style={styles.description}>{t(item.description)}</Text>
           {loading ? (
             <Text>Loading...</Text>
           ) : (

@@ -24,6 +24,12 @@
       "LOGIN": "Login",
       "USERNAME": "Username",
       "PASSWORD": "Password"
+    },
+    "HOME": {
+      "DELIVERIES_FOR_TODAY": "Deliveries for today",
+      "DELIVERY_MANIFEST": "Delivery manifest",
+      "PICKUPS_FOR_TODAY": "Pickups for today",
+      "PICKUP_MANIFEST": "Pickup manifest"
     }
   }
 }
