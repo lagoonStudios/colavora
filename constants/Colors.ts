@@ -34,6 +34,12 @@ export default {
       shade: "#dcddde",
       tint: "#fbfbfc",
     },
+    gray: {
+      default: "#D9D9D9",
+      contrast: "#000000",
+      shade: "#bfbfbf",
+      tint: "#dddddd",
+    }
   },
   dark: {
     text: {
@@ -66,5 +72,11 @@ export default {
       shade: "#dcddde",
       tint: "#fbfbfc",
     },
+    gray: {
+      default: "#D9D9D9",
+      contrast: "#000000",
+      shade: "#bfbfbf",
+      tint: "#dddddd",
+    }
   },
 };

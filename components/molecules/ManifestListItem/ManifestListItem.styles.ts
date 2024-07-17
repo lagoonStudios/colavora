@@ -1,3 +1,4 @@
+import Colors from "@constants/Colors";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -11,6 +12,9 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 25,
     gap: 16,
+    borderColor: Colors.light.gray.default,
+    borderWidth: 1,
+    borderRadius: 13,
   },
   descriptionContainer: {
     display: "flex",
