@@ -8,7 +8,6 @@ import { ManifestListItemProps } from "@molecules/ManifestListItem/ManifestListI
 import { styles } from "./ManifestsList.styles";
 
 import { useManifestsListData } from "./ManifestsList.functions";
-import { SafeAreaView } from "@atoms/SafeAreaView";
 
 export default function ManifestsList() {
   // --- Hooks -----------------------------------------------------------------
@@ -23,12 +22,12 @@ export default function ManifestsList() {
   );
   // --- END: Data and handlers ------------------------------------------------
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {loading ? (
         <ActivityIndicator />
       ) : (
         <FlatList data={data} renderItem={renderItem} />
       )}
-    </SafeAreaView>
+    </View>
   );
 }
