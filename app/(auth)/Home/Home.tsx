@@ -4,7 +4,7 @@ import { FlatList, Pressable } from "react-native";
 import { Link } from "expo-router";
 
 import Card from "@atoms/Card";
-import { Text } from "@components/Themed";
+import { ActivityIndicator, Text } from "@components/Themed";
 
 import styles from "./Home.styles";
 import { HomeItem } from "./Home.types";
@@ -25,7 +25,7 @@ export default function Home() {
         <Card style={styles.item}>
           <Text style={styles.description}>{t(item.description)}</Text>
           {loading ? (
-            <Text>Loading...</Text>
+            <ActivityIndicator style={styles.loader} />
           ) : (
             <Text style={styles.counter}>{item.counter}</Text>
           )}

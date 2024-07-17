@@ -1,3 +1,4 @@
+import Colors from "@constants/Colors";
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
@@ -9,6 +10,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginVertical: 10,
     marginHorizontal: 20,
+    paddingVertical: 20,
+    borderColor: Colors.light.gray.default,
+    borderWidth: 1,
+    borderRadius: 13,
   },
   description: {
     fontSize: 16,
@@ -16,6 +21,10 @@ const styles = StyleSheet.create({
   counter: {
     fontSize: 24,
   },
+  loader: {
+    width: 26,
+    height: 26,
+  }
 });
 
 export default styles;
