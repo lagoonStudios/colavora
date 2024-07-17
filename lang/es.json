@@ -24,6 +24,12 @@
       "LOGIN": "Iniciar sesión",
       "USERNAME": "Usuario",
       "PASSWORD": "Contraseña"
+    },
+    "HOME": {
+      "DELIVERIES_FOR_TODAY": "Entregas para hoy",
+      "DELIVERY_MANIFEST": "Manifesto de entrega",
+      "PICKUPS_FOR_TODAY": "Recogidas para hoy",
+      "PICKUP_MANIFEST": "Manifesto de recogida"
     }
   }
 }

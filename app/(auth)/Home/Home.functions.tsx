@@ -13,20 +13,20 @@ export function useHomeData() {
     setData([
       {
         counter: "20/35",
-        description: "Deliveries for today",
+        description: "HOME.DELIVERIES_FOR_TODAY",
         route: "manifests",
       },
       {
         counter: "26",
-        description: "Delivery manifest",
+        description: "HOME.DELIVERY_MANIFEST",
         route: "manifests",
       },
       {
         counter: "3",
-        description: "Pickupt for today",
+        description: "HOME.PICKUPS_FOR_TODAY",
         route: "manifests",
       },
-      { counter: "0", description: "Pickup manifest", route: "manifests" },
+      { counter: "0", description: "HOME.PICKUP_MANIFEST", route: "manifests" },
     ]);
     setTimeout(() => {
       setLoading(false);
