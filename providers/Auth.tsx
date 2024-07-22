@@ -47,7 +47,10 @@ export default function AuthProvider({
   // --- END: Side effects -----------------------------------------------------
 
   return (
-    <Auth0Provider domain={domain} clientId={clientId}>
+    <Auth0Provider
+      domain={"dev-ghex3xcv4jb2pti7.us.auth0.com"}
+      clientId={"d7kLct8IHrc3RtrAYhZKa7lX9SecWd5r"}
+    >
       <AuthContext.Provider value={{ token, isLoggedIn, saveToken, logout }}>
         {children}
       </AuthContext.Provider>
