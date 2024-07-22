@@ -20,7 +20,6 @@ export default function AuthProvider({
   // --- Data and handlers -----------------------------------------------------
   const saveToken = (token: string) => {
     setToken(token);
-    setIsLoggedIn(true);
   };
 
   const logout = () => {
@@ -29,19 +28,30 @@ export default function AuthProvider({
     return auth?.credentialsManager.clearCredentials();
   };
 
-  const checkCredentials = useCallback(() => {
-    auth?.credentialsManager.getCredentials().then((creds) => {});
-  }, []);
+  const checkCredentials = async () => {
+    if (token == null) {
+      setIsLoggedIn(false);
+      return;
+    }
+
+    const hasValidCredentials =
+      await auth?.credentialsManager.hasValidCredentials();
+    console.log(hasValidCredentials, { hasValidCredentials });
+    setIsLoggedIn(hasValidCredentials ?? false);
+  };
   // --- END: Data and handlers ------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
     checkCredentials();
-  }, [checkCredentials]);
+  }, [token]);
   // --- END: Side effects -----------------------------------------------------
 
   return (
-    <Auth0Provider domain={domain} clientId={clientId}>
+    <Auth0Provider
+      domain={"dev-ghex3xcv4jb2pti7.us.auth0.com"}
+      clientId={"d7kLct8IHrc3RtrAYhZKa7lX9SecWd5r"}
+    >
       <AuthContext.Provider value={{ token, isLoggedIn, saveToken, logout }}>
         {children}
       </AuthContext.Provider>
