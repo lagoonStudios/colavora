@@ -44,7 +44,15 @@ export default function AuthProvider({
       return;
     }
 
-    if (token) checkCredentials();
+    const hasValidCredentials =
+      await auth?.credentialsManager.hasValidCredentials();
+    setIsLoggedIn(hasValidCredentials ?? false);
+  };
+  // --- END: Data and handlers ------------------------------------------------
+
+  // --- Side effects ----------------------------------------------------------
+  useEffect(() => {
+    checkCredentials();
   }, [token]);
   // --- END: Side effects -----------------------------------------------------
 
