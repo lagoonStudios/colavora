@@ -25,8 +25,6 @@ export function useAuth0Config() {
     setLoaded(false);
     const envDomain = process.env.EXPO_PUBLIC_AUTH0_DOMAIN;
     const envClientId = process.env.EXPO_PUBLIC_AUTH0_CLIENT_ID;
-    // const envDomain = "dev-ghex3xcv4jb2pti7.us.auth0.com";
-    // const envClientId = "d7kLct8IHrc3RtrAYhZKa7lX9SecWd5r";
 
     if (envDomain == undefined || envClientId == undefined) {
       setError(new Error("Missing Auth0 configuration"));
@@ -65,12 +63,15 @@ export default function useAuth() {
         realm: CONNECTION,
         audience: AUDIENCE,
       });
-
-      auth.credentialsManager.saveCredentials(credentials);
-      // const credentials = await auth?.credentialsManager.getCredentials();
-      // auth?.credentialsManager.saveCredentials(credentials);
-      // console.log({ credentials });
-
+      // console.log("Login credentials:", { credentials });
+      console.log({ credentials });
+      await auth.credentialsManager.saveCredentials({
+        ...credentials,
+        idToken: credentials.accessToken,
+      });
+      // auth.credentialsManager.getCredentials().then((creds) => {
+      //   console.log("checkCredentials from manager", { creds });
+      // });
       saveToken(credentials.accessToken);
     } catch (error) {
       handleErrorMessage({ error });
