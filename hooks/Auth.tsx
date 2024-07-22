@@ -64,11 +64,7 @@ export default function useAuth() {
         audience: AUDIENCE,
       });
 
-      console.log({ credentials });
-      await auth.credentialsManager.saveCredentials({
-        ...credentials,
-        idToken: credentials.accessToken,
-      });
+      auth.credentialsManager.saveCredentials(credentials);
 
       saveToken(credentials.accessToken);
     } catch (error) {
