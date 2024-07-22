@@ -1,6 +1,6 @@
 import { auth } from "@hooks/Auth";
 import { AuthContext } from "@stores/AuthContext";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Auth0Provider } from "react-native-auth0";
 
 export default function AuthProvider({
@@ -36,7 +36,6 @@ export default function AuthProvider({
 
     const hasValidCredentials =
       await auth?.credentialsManager.hasValidCredentials();
-    console.log(hasValidCredentials, { hasValidCredentials });
     setIsLoggedIn(hasValidCredentials ?? false);
   };
   // --- END: Data and handlers ------------------------------------------------
@@ -48,10 +47,7 @@ export default function AuthProvider({
   // --- END: Side effects -----------------------------------------------------
 
   return (
-    <Auth0Provider
-      domain={"dev-ghex3xcv4jb2pti7.us.auth0.com"}
-      clientId={"d7kLct8IHrc3RtrAYhZKa7lX9SecWd5r"}
-    >
+    <Auth0Provider domain={domain} clientId={clientId}>
       <AuthContext.Provider value={{ token, isLoggedIn, saveToken, logout }}>
         {children}
       </AuthContext.Provider>
