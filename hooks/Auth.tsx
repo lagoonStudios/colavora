@@ -64,7 +64,10 @@ export default function useAuth() {
         audience: AUDIENCE,
       });
 
-      auth.credentialsManager.saveCredentials(credentials);
+      await auth.credentialsManager.saveCredentials({
+        ...credentials,
+        idToken: credentials.accessToken,
+      });
 
       saveToken(credentials.accessToken);
     } catch (error) {
