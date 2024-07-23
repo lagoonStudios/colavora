@@ -1,7 +1,7 @@
-import { AuthContext } from "@stores/AuthContext";
-import { useContext, useEffect, useState } from "react";
 import Auth0 from "react-native-auth0";
 import handleErrorMessage from "./ErrorMessage";
+import { AuthContext } from "@stores/AuthContext";
+import { useContext, useEffect, useState } from "react";
 
 const CONNECTION = "Username-Password-Authentication";
 const AUDIENCE = `https://${process.env.EXPO_PUBLIC_AUTH0_DOMAIN}/api/v2/`;
@@ -66,7 +66,7 @@ export default function useAuth() {
 
       await auth.credentialsManager.saveCredentials({
         ...credentials,
-        idToken: credentials.accessToken,
+        idToken: credentials.idToken ?? credentials.accessToken,
       });
 
       saveToken(credentials.accessToken);
