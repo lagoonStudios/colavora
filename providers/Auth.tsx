@@ -29,23 +29,23 @@ export default function AuthProvider({
     return auth?.credentialsManager.clearCredentials();
   };
 
-  const checkCredentials = async () => {
+  // --- END: Data and handlers ------------------------------------------------
+
+  // --- Side effects ----------------------------------------------------------
+  useEffect(() => {
+    const checkCredentials = async () => {
+      const hasValidCredentials =
+        await auth?.credentialsManager.hasValidCredentials();
+      setIsLoggedIn(hasValidCredentials ?? false);
+    };
+
     if (token == null) {
       // setIsLoggedIn(false);
       setIsLoggedIn(true);
       return;
     }
 
-    // const hasValidCredentials =
-    //   await auth?.credentialsManager.hasValidCredentials();
-    // setIsLoggedIn(hasValidCredentials ?? false);
-    setIsLoggedIn(true);
-  };
-  // --- END: Data and handlers ------------------------------------------------
-
-  // --- Side effects ----------------------------------------------------------
-  useEffect(() => {
-    checkCredentials();
+    if (token) checkCredentials();
   }, [token]);
   // --- END: Side effects -----------------------------------------------------
 
