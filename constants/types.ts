@@ -6,7 +6,7 @@ export interface IFetchDriverData {
   userID: number;
 }
 
-export interface IFetchShipmentData {
+export interface IFetchCompanyData {
   companyID: string;
   companyName: string;
   logo: string;
