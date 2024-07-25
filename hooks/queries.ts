@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchDriverData, fetchShipmentData } from "@/services/custom-api";
+import { fetchDriverData, fetchCompanyData } from "@/services/custom-api";
 
 export function useDriverData(id: string) {
   const driverData = useQuery({
@@ -15,11 +15,11 @@ export function useDriverData(id: string) {
 
   return driverData;
 }
-export function useShipmentData(id: string | undefined) {
-  const shipmentData = useQuery({
-    queryKey: ["shipmentData"],
+export function useCompanyData(id: string | undefined) {
+  const companyData = useQuery({
+    queryKey: ["companyData"],
     queryFn: async () => {
-      const { data: rawData } = await fetchShipmentData(id);
+      const { data: rawData } = await fetchCompanyData(id);
       return rawData ?? {};
     },
     retry: 3,
@@ -28,5 +28,5 @@ export function useShipmentData(id: string | undefined) {
     enabled: Boolean(id),
   });
 
-  return shipmentData;
+  return companyData;
 }

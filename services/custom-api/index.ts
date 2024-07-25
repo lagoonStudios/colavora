@@ -1,3 +1,3 @@
-import { fetchDriverData, fetchShipmentData } from "./custom-api";
+import { fetchDriverData, fetchCompanyData } from "./custom-api";
 
-export { fetchDriverData, fetchShipmentData };
+export { fetchDriverData, fetchCompanyData };
