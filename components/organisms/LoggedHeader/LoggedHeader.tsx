@@ -1,13 +1,15 @@
 import React, { useMemo } from "react";
 import { View, Text } from "@components/Themed";
-import { Image } from "react-native";
+import { Image, ImageSourcePropType } from "react-native";
 import { styles } from "./LoggedHeader.styles";
 import { queryClient } from "@/providers";
-import { IFetchShipmentData } from "@constants/types";
+import { IFetchCompanyData } from "@constants/types";
 
 export default function LoggedHeader() {
   // --- Hooks -----------------------------------------------------------------
-  const state = queryClient.getQueryState<IFetchShipmentData>(["shipmentData"]);
+  const state = queryClient.getQueryState<IFetchCompanyData>([
+    "useCompanyData",
+  ]);
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local state -----------------------------------------------------------
@@ -23,7 +25,7 @@ export default function LoggedHeader() {
   // --- END: Side effects -----------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
-  const source = useMemo(() => {
+  const source: ImageSourcePropType = useMemo(() => {
     if (state?.data?.logo) return { uri: state.data.logo };
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return require("@assets/images/avatar.png");

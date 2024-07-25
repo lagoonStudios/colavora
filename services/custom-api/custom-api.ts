@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { axiosClient } from "@config/axios";
-import { IFetchDriverData, IFetchShipmentData } from "@constants/types";
+import { IFetchDriverData, IFetchCompanyData } from "@constants/types";
 
 export function fetchDriverData(
   id: string,
@@ -8,8 +8,8 @@ export function fetchDriverData(
   return axiosClient.get(`common/driver/${id}`);
 }
 
-export function fetchShipmentData(
+export function fetchCompanyData(
   id?: string,
-): Promise<AxiosResponse<IFetchShipmentData>> {
+): Promise<AxiosResponse<IFetchCompanyData>> {
   return axiosClient.get(`company/${id}`);
 }
