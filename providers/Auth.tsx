@@ -48,13 +48,10 @@ export default function AuthProvider({
     //   await auth?.credentialsManager.hasValidCredentials();
     // setIsLoggedIn(hasValidCredentials ?? false);
     setIsLoggedIn(true);
-  };
+  });
   // --- END: Data and handlers ------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
-  useEffect(() => {
-    checkCredentials();
-  }, [token]);
   // --- END: Side effects -----------------------------------------------------
 
   return (
