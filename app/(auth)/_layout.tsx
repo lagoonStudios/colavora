@@ -1,6 +1,7 @@
 import React from "react";
 import { Redirect, Stack } from "expo-router";
 import useAuth from "@hooks/Auth";
+import { useThemeColor } from "@components/Themed";
 
 export default function AuthLayout() {
   // --- Hooks -----------------------------------------------------------------

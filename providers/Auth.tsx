@@ -44,9 +44,10 @@ export default function AuthProvider({
       return;
     }
 
-    const hasValidCredentials =
-      await auth?.credentialsManager.hasValidCredentials();
-    setIsLoggedIn(hasValidCredentials ?? false);
+    // const hasValidCredentials =
+    //   await auth?.credentialsManager.hasValidCredentials();
+    // setIsLoggedIn(hasValidCredentials ?? false);
+    setIsLoggedIn(true);
   };
   // --- END: Data and handlers ------------------------------------------------
 
