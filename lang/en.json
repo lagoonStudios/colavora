@@ -34,6 +34,9 @@
     },
     "ORDERS": {
       "ORDERS": "Orders"
+    },
+    "MANIFESTS": {
+      "MANIFESTS": "Manifests"
     }
   }
 }
