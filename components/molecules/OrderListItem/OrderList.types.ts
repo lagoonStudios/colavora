@@ -1,12 +1,13 @@
-export interface OrderListItemProps {
-    id: string;
-    companyName: string;
-    name: string;
-    serviceType: string;
-    city: string;
-    zipCode: string;
-    direction: string;
-    dueDate: string;
-    bill: string;
-    pieces: number;
-}
+import { IFetchOrderData } from "@constants/types";
+
+export type TOrderListItemProps = Pick<
+    IFetchOrderData,
+    'consigneeName' |
+    'senderName' |
+    'addressLine1' |
+    'addressLine2' |
+    'zip' |
+    'serviceType' |
+    'referenceNo' |
+    'qty'
+>
