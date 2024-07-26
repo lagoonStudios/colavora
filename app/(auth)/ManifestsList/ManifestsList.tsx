@@ -1,8 +1,8 @@
 import React from "react";
 import { FlatList, Pressable } from "react-native";
 
-import { ActivityIndicator, View } from "@components/Themed";
 import ManifestListItem from "@molecules/ManifestListItem";
+import { ActivityIndicator, View } from "@components/Themed";
 import { ManifestListItemProps } from "@molecules/ManifestListItem/ManifestListItem.types";
 
 import { styles } from "./ManifestsList.styles";

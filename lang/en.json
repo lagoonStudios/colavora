@@ -5,7 +5,8 @@
     "PASSWORD": "Password",
     "POWERED_BY": "Powered by EagerLink",
     "COMMON": {
-      "EMAIL": "Email"
+      "EMAIL": "Email",
+      "PIECES": "Pieces"
     },
     "ERRORS": {
       "ERROR": "Error",
@@ -30,6 +31,9 @@
       "DELIVERY_MANIFEST": "Delivery manifest",
       "PICKUPS_FOR_TODAY": "Pickups for today",
       "PICKUP_MANIFEST": "Pickup manifest"
+    },
+    "ORDERS": {
+      "ORDERS": "Orders"
     }
   }
 }
