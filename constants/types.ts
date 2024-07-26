@@ -66,5 +66,5 @@ export interface IFetchOrderData {
   lastEventComment: null;
   reason: null;
   barcode: string;
-  referenceNo: null;
+  referenceNo: number;
 }
