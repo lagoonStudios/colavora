@@ -1,13 +1,35 @@
 import { View } from "react-native";
-import React, { useRef } from "react";
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import React, { useEffect, useRef } from "react";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 import { mapStyle } from "@/constants/mapStyle";
 
 import { styles } from "./MapScreen.styles";
 
-export default function MapScreen() {
+export default function MapScreen({
+  latitude,
+  longitude,
+}: {
+  latitude: number;
+  longitude: number;
+}) {
+  //--- Refs -----------------------------------------------------------------
   const mapRef = useRef<MapView | null>(null);
+  //--- END: Refs ------------------------------------------------------------
+  //--- Side effects ----------------------------------------------------
+  useEffect(() => {
+    mapRef.current?.animateToRegion(
+      {
+        latitude: latitude,
+        longitude: longitude,
+        latitudeDelta: 0.003,
+        longitudeDelta: 0.003,
+      },
+      0
+    );
+  }, [latitude, longitude]);
+  //--- END: Side effects ------------------------------------------------
+
   return (
     <View style={[styles.container]}>
       <MapView
@@ -15,8 +37,8 @@ export default function MapScreen() {
         provider={PROVIDER_GOOGLE}
         style={styles.mapStyle}
         initialRegion={{
-          latitude: 41.3995345,
-          longitude: 2.1909796,
+          latitude: latitude,
+          longitude: longitude,
           latitudeDelta: 0.003,
           longitudeDelta: 0.003,
         }}
@@ -24,7 +46,9 @@ export default function MapScreen() {
         showsMyLocationButton
         showsUserLocation
         ref={mapRef}
-      />
+      >
+        <Marker coordinate={{ latitude, longitude }} />
+      </MapView>
     </View>
   );
 }

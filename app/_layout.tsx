@@ -25,7 +25,6 @@ export const unstable_settings = {
 };
 
 void SplashScreen.preventAutoHideAsync();
-
 export default function RootLayout() {
   // --- Hooks -----------------------------------------------------------------
   const [fontsLoaded, fontsError] = useFonts({
