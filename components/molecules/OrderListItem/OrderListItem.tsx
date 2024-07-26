@@ -5,30 +5,47 @@ import { View, Text } from "@components/Themed";
 
 import { styles } from "./OrderListItem.styles";
 import { TOrderListItemProps } from "./OrderList.types";
+import { Link } from "expo-router";
+import { Pressable } from "react-native";
 
 export default function OrderListItem(props: TOrderListItemProps) {
+  const {
+    shipmentID,
+    consigneeName,
+    senderName,
+    addressLine1,
+    addressLine2,
+    zip,
+    serviceTypeName,
+    referenceNo,
+    qty,
+  } = props;
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
   // --- END: Hooks ------------------------------------------------------------
 
   return (
-    <View style={styles.container}>
-      <View>
-        <Text style={styles.title}>{companyName}</Text>
-        <Text style={styles.title}>
-          {city}, {zipCode}
-        </Text>
-      </View>
-      <View>
-        <Text style={styles.bodyText}>
-          {name} - {serviceType}
-        </Text>
-        <Text style={styles.bodyText}>{direction}</Text>
-        <Text style={styles.bodyText}>({bill})</Text>
-        <Text style={styles.piecesLabel}>
-          {t("COMMON.PIECES")}: {pieces}
-        </Text>
-      </View>
-    </View>
+    <Link
+      href={{ pathname: "ShipmentDetails", params: { shipmentID } }}
+      asChild
+    >
+      <Pressable style={styles.container}>
+        <View>
+          <Text style={styles.title}>{consigneeName}</Text>
+          <Text style={styles.title}>City, {zip}</Text>
+        </View>
+        <View>
+          <Text style={styles.bodyText}>
+            {senderName} - {serviceTypeName}
+          </Text>
+          <Text style={styles.bodyText}>{addressLine1}</Text>
+          <Text style={styles.bodyText}>{addressLine2}</Text>
+          <Text style={styles.bodyText}>({referenceNo})</Text>
+          <Text style={styles.piecesLabel}>
+            {t("COMMON.PIECES")}: {qty}
+          </Text>
+        </View>
+      </Pressable>
+    </Link>
   );
 }

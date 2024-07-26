@@ -15,6 +15,10 @@ export default function AuthLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="OrdersList/index" />
+      <Stack.Screen
+        name="ShipmentDetails/index"
+        options={{ presentation: "modal" }}
+      />
     </Stack>
   );
 }
