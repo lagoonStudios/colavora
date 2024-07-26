@@ -40,7 +40,8 @@ export default function AuthProvider({
     };
 
     if (token == null) {
-      setIsLoggedIn(false);
+      // setIsLoggedIn(false);
+      setIsLoggedIn(true);
       return;
     }
 
