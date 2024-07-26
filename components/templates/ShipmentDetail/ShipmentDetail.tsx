@@ -1,21 +1,28 @@
 import React from "react";
-import { Text, View } from "@components/Themed";
-import MapScreen from "@organisms/MapScreen";
-import { TShipmentDetailProps } from "./ShipmentDetail.constants";
-import { styles } from "./ShipmentDetail.styles";
-import { useTranslation } from "react-i18next";
 import { ScrollView } from "react-native";
+import { useTranslation } from "react-i18next";
+
+import MapScreen from "@organisms/MapScreen";
+import { Text, View } from "@components/Themed";
+
+import { styles } from "./ShipmentDetail.styles";
+import { TShipmentDetailProps } from "./ShipmentDetail.constants";
+import { useCoordinatesFromAddress } from "./ShipmentDetail.functions";
 
 export default function ShipmentDetails(props: TShipmentDetailProps) {
   const { shipment } = props;
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
-  // --- END: Hooks ------------------------------------------------------------
 
+  const { location, error, loading } = useCoordinatesFromAddress({
+    address: shipment.addressLine1.concat(shipment.addressLine2),
+    zipCode: shipment.zip,
+  });
+  // --- END: Hooks ------------------------------------------------------------
   return (
     <View style={styles.container}>
       <View style={styles.mapContainer}>
-        <MapScreen />
+        <MapScreen latitude={location.lat} longitude={location.lng} />
       </View>
       <ScrollView>
         <View style={styles.infoContainer}>
