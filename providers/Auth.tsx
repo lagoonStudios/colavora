@@ -24,19 +24,22 @@ export default function AuthProvider({
 
   const logout = () => {
     setToken("");
-    setIsLoggedIn(false);
+    // setIsLoggedIn(false);
+    setIsLoggedIn(true);
     return auth?.credentialsManager.clearCredentials();
   };
 
   const checkCredentials = async () => {
     if (token == null) {
-      setIsLoggedIn(false);
+      // setIsLoggedIn(false);
+      setIsLoggedIn(true);
       return;
     }
 
-    const hasValidCredentials =
-      await auth?.credentialsManager.hasValidCredentials();
-    setIsLoggedIn(hasValidCredentials ?? false);
+    // const hasValidCredentials =
+    //   await auth?.credentialsManager.hasValidCredentials();
+    // setIsLoggedIn(hasValidCredentials ?? false);
+    setIsLoggedIn(true);
   };
   // --- END: Data and handlers ------------------------------------------------
 
