@@ -31,6 +31,8 @@ export default function Chip(props: ChipProps) {
       ]}
     >
       <Text
+        adjustsFontSizeToFit={true}
+        numberOfLines={1}
         style={[
           defaultStyles.label,
           active ? { color: activeTextColor } : { color: inActiveTextColor },
