@@ -9,7 +9,7 @@ import { styles } from "./MapScreen.styles";
 export default function MapScreen() {
   const mapRef = useRef<MapView | null>(null);
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       <MapView
         customMapStyle={mapStyle}
         provider={PROVIDER_GOOGLE}

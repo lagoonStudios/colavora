@@ -45,7 +45,13 @@ export default {
       contrast: "#ffffff",
       shade: "#505050",
       tint: "#6b6b6b",
-    }
+    },
+    lightGray: {
+      default: "#C2C2C240",
+      contrast: "#000000",
+      shade: "#abab38",
+      tint: "#c8c853",
+    },
   },
   dark: {
     text: {
@@ -89,6 +95,12 @@ export default {
       contrast: "#ffffff",
       shade: "#505050",
       tint: "#6b6b6b",
-    }
+    },
+    lightGray: {
+      default: "#C2C2C240",
+      contrast: "#000000",
+      shade: "#abab38",
+      tint: "#c8c853",
+    },
   },
 };
