@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   loader: {
     width: 26,
     height: 26,
-  }
+  },
 });
 
 export default styles;
