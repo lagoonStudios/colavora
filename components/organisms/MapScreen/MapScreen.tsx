@@ -25,7 +25,7 @@ export default function MapScreen({
         latitudeDelta: 0.003,
         longitudeDelta: 0.003,
       },
-      0
+      0,
     );
   }, [latitude, longitude]);
   //--- END: Side effects ------------------------------------------------
