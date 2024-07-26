@@ -34,7 +34,6 @@ export default function ShipmentDetails() {
       return <Text>No data</Text>;
     } else {
       if (data === undefined) return null;
-      console.log(JSON.stringify(data));
       switch (selectedTab) {
         case ShipmentDetailsTabsItem.DETAILS:
           return <ShipmentDetail shipment={data} />;

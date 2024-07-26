@@ -8,3 +8,5 @@ export const queryKeys = {
   statusIdData: "statusIdData",
   statusByIdData: "statusByIdData",
 };
+
+export const defaultLocation = { lat: 18.220833, lng: -66.590149 }
