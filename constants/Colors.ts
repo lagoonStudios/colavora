@@ -39,6 +39,12 @@ export default {
       contrast: "#000000",
       shade: "#bfbfbf",
       tint: "#dddddd",
+    },
+    noStatus: {
+      default: "#5B5B5B",
+      contrast: "#ffffff",
+      shade: "#505050",
+      tint: "#6b6b6b",
     }
   },
   dark: {
@@ -77,6 +83,12 @@ export default {
       contrast: "#000000",
       shade: "#bfbfbf",
       tint: "#dddddd",
+    },
+    noStatus: {
+      default: "#5B5B5B",
+      contrast: "#ffffff",
+      shade: "#505050",
+      tint: "#6b6b6b",
     }
   },
 };
