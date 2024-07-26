@@ -1,21 +1,12 @@
 import React from "react";
-import { View, Text } from "@components/Themed";
-import { styles } from "./OrderListItem.styles";
-import { OrderListItemProps } from "./OrderList.types";
 import { useTranslation } from "react-i18next";
 
-export default function OrderListItem(props: OrderListItemProps) {
-  const {
-    companyName,
-    city,
-    zipCode,
-    direction,
-    bill,
-    pieces,
-    name,
-    serviceType,
-  } = props;
+import { View, Text } from "@components/Themed";
 
+import { styles } from "./OrderListItem.styles";
+import { TOrderListItemProps } from "./OrderList.types";
+
+export default function OrderListItem(props: TOrderListItemProps) {
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
   // --- END: Hooks ------------------------------------------------------------
