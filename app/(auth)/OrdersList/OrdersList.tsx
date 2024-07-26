@@ -12,8 +12,8 @@ import { useOrdersListData } from "./OrdersList.functions";
 
 export default function OrdersList() {
   // --- Hooks -----------------------------------------------------------------
-  const { data, loading } = useOrdersListData();
   const { t } = useTranslation();
+  const { data, loading } = useOrdersListData();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
