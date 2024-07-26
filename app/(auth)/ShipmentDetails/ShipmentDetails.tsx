@@ -18,7 +18,7 @@ export default function ShipmentDetails() {
   const { data, loading, error } = useShipmentDetailsData(shipmentID);
   const { t } = useTranslation();
   const [selectedTab, setSelectedTab] = useState<ShipmentDetailsTabsItem>(
-    ShipmentDetailsTabsItem.DETAILS
+    ShipmentDetailsTabsItem.DETAILS,
   );
   // --- END: Hooks ------------------------------------------------------------
   // --- Data and handlers -----------------------------------------------------
