@@ -1,6 +1,6 @@
 import { auth } from "@hooks/Auth";
 import { AuthContext } from "@stores/AuthContext";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Auth0Provider } from "react-native-auth0";
 
 export default function AuthProvider({
@@ -20,7 +20,6 @@ export default function AuthProvider({
   // --- Data and handlers -----------------------------------------------------
   const saveToken = (token: string) => {
     setToken(token);
-    setIsLoggedIn(true);
   };
 
   const logout = () => {
@@ -29,22 +28,22 @@ export default function AuthProvider({
     return auth?.credentialsManager.clearCredentials();
   };
 
-  const checkCredentials = useCallback(() => {
-    console.log({ test: "test1" });
-    auth?.credentialsManager.getCredentials().then((creds) => {
-      console.log("checkCredentials", { creds });
-    });
-    // const logged = await auth?.credentialsManager.hasValidCredentials();
+  const checkCredentials = async () => {
+    if (token == null) {
+      setIsLoggedIn(false);
+      return;
+    }
 
-    // console.log("checkCredentials", { logged });
-    // setIsLoggedIn(logged ?? false);
-  }, []);
+    const hasValidCredentials =
+      await auth?.credentialsManager.hasValidCredentials();
+    setIsLoggedIn(hasValidCredentials ?? false);
+  };
   // --- END: Data and handlers ------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
     checkCredentials();
-  }, [checkCredentials]);
+  }, [token]);
   // --- END: Side effects -----------------------------------------------------
 
   return (

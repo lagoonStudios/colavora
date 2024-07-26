@@ -1,7 +1,7 @@
-import { AuthContext } from "@stores/AuthContext";
-import { useContext, useEffect, useState } from "react";
 import Auth0 from "react-native-auth0";
 import handleErrorMessage from "./ErrorMessage";
+import { AuthContext } from "@stores/AuthContext";
+import { useContext, useEffect, useState } from "react";
 
 const CONNECTION = "Username-Password-Authentication";
 const AUDIENCE = `https://${process.env.EXPO_PUBLIC_AUTH0_DOMAIN}/api/v2/`;
@@ -25,8 +25,6 @@ export function useAuth0Config() {
     setLoaded(false);
     const envDomain = process.env.EXPO_PUBLIC_AUTH0_DOMAIN;
     const envClientId = process.env.EXPO_PUBLIC_AUTH0_CLIENT_ID;
-    // const envDomain = "dev-ghex3xcv4jb2pti7.us.auth0.com";
-    // const envClientId = "d7kLct8IHrc3RtrAYhZKa7lX9SecWd5r";
 
     if (envDomain == undefined || envClientId == undefined) {
       setError(new Error("Missing Auth0 configuration"));
@@ -66,10 +64,10 @@ export default function useAuth() {
         audience: AUDIENCE,
       });
 
-      auth.credentialsManager.saveCredentials(credentials);
-      // const credentials = await auth?.credentialsManager.getCredentials();
-      // auth?.credentialsManager.saveCredentials(credentials);
-      // console.log({ credentials });
+      await auth.credentialsManager.saveCredentials({
+        ...credentials,
+        idToken: credentials.idToken ?? credentials.accessToken,
+      });
 
       saveToken(credentials.accessToken);
     } catch (error) {
