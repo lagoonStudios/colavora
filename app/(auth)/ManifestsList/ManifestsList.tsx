@@ -8,10 +8,13 @@ import { ManifestListItemProps } from "@molecules/ManifestListItem/ManifestListI
 import { styles } from "./ManifestsList.styles";
 
 import { useManifestsListData } from "./ManifestsList.functions";
+import PageHeader from "@molecules/PageHeader/PageHeader";
+import { useTranslation } from "react-i18next";
 
 export default function ManifestsList() {
   // --- Hooks -----------------------------------------------------------------
   const { data, loading } = useManifestsListData();
+  const { t } = useTranslation();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
@@ -23,11 +26,16 @@ export default function ManifestsList() {
   // --- END: Data and handlers ------------------------------------------------
   return (
     <View style={styles.container}>
-      {loading ? (
-        <ActivityIndicator />
-      ) : (
-        <FlatList data={data} renderItem={renderItem} />
-      )}
+      <PageHeader
+        title={`${t("MANIFESTS.MANIFESTS")} ${data.length ? `(${data.length})` : ""}`}
+      />
+      <View style={styles.content}>
+        {loading ? (
+          <ActivityIndicator />
+        ) : (
+          <FlatList data={data} renderItem={renderItem} />
+        )}
+      </View>
     </View>
   );
 }

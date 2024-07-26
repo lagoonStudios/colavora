@@ -1,12 +1,14 @@
-import { SafeAreaView } from "@atoms/SafeAreaView";
-import { ActivityIndicator, Text, View } from "@components/Themed";
 import React from "react";
-import { styles } from "./OrdersList.styles";
-import { FlatList, Pressable } from "react-native";
-import { useOrdersListData } from "./OrdersList.functions";
-import OrderListItem from "@molecules/OrderListItem";
-import { OrderListItemProps } from "@molecules/OrderListItem/OrderList.types";
 import { useTranslation } from "react-i18next";
+import { FlatList, Pressable } from "react-native";
+
+import { styles } from "./OrdersList.styles";
+import OrderListItem from "@molecules/OrderListItem";
+import PageHeader from "@molecules/PageHeader/PageHeader";
+import { ActivityIndicator, View } from "@components/Themed";
+import { OrderListItemProps } from "@molecules/OrderListItem/OrderList.types";
+
+import { useOrdersListData } from "./OrdersList.functions";
 
 export default function OrdersList() {
   // --- Hooks -----------------------------------------------------------------
@@ -23,12 +25,10 @@ export default function OrdersList() {
   // --- END: Data and handlers ------------------------------------------------
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>
-          {t("ORDERS.ORDERS")} {data.length ? `(${data.length})` : 0}
-        </Text>
-      </View>
+    <View style={styles.container}>
+      <PageHeader
+        title={`${t("ORDERS.ORDERS")} ${data.length ? `(${data.length})` : ""}`}
+      />
       <View style={styles.content}>
         {loading ? (
           <ActivityIndicator />
@@ -40,6 +40,6 @@ export default function OrdersList() {
           />
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
