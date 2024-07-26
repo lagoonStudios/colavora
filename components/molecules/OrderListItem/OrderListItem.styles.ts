@@ -22,6 +22,7 @@ export const styles = StyleSheet.create({
         fontSize: 14,
     },
     piecesLabel: {
+        marginTop: 4,
         fontWeight: 400,
         fontSize: 12,
         color: Colors.light.noStatus.default,

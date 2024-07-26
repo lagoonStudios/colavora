@@ -1,12 +1,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { FlatList, Pressable } from "react-native";
+import { FlatList } from "react-native";
 
 import { styles } from "./OrdersList.styles";
 import OrderListItem from "@molecules/OrderListItem";
 import PageHeader from "@molecules/PageHeader/PageHeader";
 import { ActivityIndicator, View } from "@components/Themed";
-import { OrderListItemProps } from "@molecules/OrderListItem/OrderList.types";
+import { TOrderListItemProps } from "@molecules/OrderListItem/OrderList.types";
 
 import { useOrdersListData } from "./OrdersList.functions";
 
@@ -17,10 +17,8 @@ export default function OrdersList() {
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
-  const renderItem = ({ item }: { item: OrderListItemProps }) => (
-    <Pressable>
-      <OrderListItem {...item} />
-    </Pressable>
+  const renderItem = ({ item }: { item: TOrderListItemProps }) => (
+    <OrderListItem {...item} />
   );
   // --- END: Data and handlers ------------------------------------------------
 
@@ -36,7 +34,7 @@ export default function OrdersList() {
           <FlatList
             data={data}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => String(item.shipmentID)}
           />
         )}
       </View>

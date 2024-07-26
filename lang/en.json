@@ -37,6 +37,18 @@
     },
     "MANIFESTS": {
       "MANIFESTS": "Manifests"
+    },
+    "SHIPMENT_DETAILS": {
+      "SHIPMENT_DETAILS": "Shipment Details",
+      "DETAILS": "Details",
+      "PIECES": "Pieces",
+      "COMMENTS": "Comments",
+      "ACTIONS": "Actions",
+      "STATUS": "Status",
+      "WAYBILL": "Waybill",
+      "INVOICE": "Invoice",
+      "SERVICE_TYPE": "Service Type",
+      "COD": "COD"
     }
   }
 }
