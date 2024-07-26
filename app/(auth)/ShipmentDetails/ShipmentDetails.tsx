@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocalSearchParams } from "expo-router";
-
-import { View } from "@components/Themed";
-import PageHeader from "@molecules/PageHeader/PageHeader";
-import ShipmentDetailsTabs from "@molecules/ShipmentDetailsTabs";
+import React, { useCallback, useState } from "react";
 
 import { Text } from "@components/Themed";
-import { styles } from "./ShipmentDetails.styles";
+import ShipmentDetail from "@templates/ShipmentDetail";
+import PageHeader from "@molecules/PageHeader/PageHeader";
+import { ActivityIndicator, View } from "@components/Themed";
+import ShipmentDetailsTabs from "@molecules/ShipmentDetailsTabs";
 import { useShipmentDetailsData } from "./ShipmentDetails.functions";
 import { ShipmentDetailsTabsItem } from "@molecules/ShipmentDetailsTabs/ShipmentDetailsTabs.constants";
-import ShipmentDetail from "@templates/ShipmentDetail";
+
+import { styles } from "./ShipmentDetails.styles";
 
 export default function ShipmentDetails() {
   // --- Hooks -----------------------------------------------------------------
@@ -21,10 +21,37 @@ export default function ShipmentDetails() {
     ShipmentDetailsTabsItem.DETAILS
   );
   // --- END: Hooks ------------------------------------------------------------
+  // --- Data and handlers -----------------------------------------------------
+  const renderView = useCallback(() => {
+    if (data === undefined && loading) {
+      return (
+        <View style={{ margin: "auto" }}>
+          <ActivityIndicator />
+        </View>
+      );
+    } else if (data === undefined && !loading) {
+      //TODO handle error
+      return <Text>No data</Text>;
+    } else {
+      if (data === undefined) return null;
+      console.log(JSON.stringify(data));
+      switch (selectedTab) {
+        case ShipmentDetailsTabsItem.DETAILS:
+          return <ShipmentDetail shipment={data} />;
+        //TODO Make these components
+        // case ShipmentDetailsTabsItem.PIECES:
+        //   return <ShipmentPieces shipment={data} />;
+        // case ShipmentDetailsTabsItem.COMMENTS:
+        //   return <ShipmentComments shipment={data} />;
+        // case ShipmentDetailsTabsItem.ACTIONS:
+        //   return <ShipmentActions shipment={data} />;
+        default:
+          return <Text style={{ margin: "auto" }}>En construcción</Text>;
+      }
+    }
+  }, [data, selectedTab, loading]);
+  // --- END: Data and handlers ------------------------------------------------
 
-  useEffect(() => {
-    console.log(selectedTab);
-  }, [selectedTab]);
   return (
     <View style={styles.container}>
       <PageHeader title={t("SHIPMENT_DETAILS.SHIPMENT_DETAILS")} />
@@ -34,9 +61,7 @@ export default function ShipmentDetails() {
         setSelectedTab={setSelectedTab}
       />
 
-      {selectedTab === ShipmentDetailsTabsItem.DETAILS && (
-        <ShipmentDetail shipment={data} />
-      )}
+      {renderView()}
     </View>
   );
 }
