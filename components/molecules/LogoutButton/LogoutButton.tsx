@@ -1,11 +1,10 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { Pressable } from "react-native";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { useColorScheme } from "@components/useColorScheme";
 
 import Colors from "@constants/Colors";
 import useAuth from "@hooks/Auth";
-// import { useAuth } from "@hooks/Auth";
 
 export default function LogoutButton() {
   const colorScheme = useColorScheme();
