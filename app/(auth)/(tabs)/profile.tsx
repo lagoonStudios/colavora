@@ -4,7 +4,6 @@ import { StyleSheet } from "react-native";
 import { Text, View } from "@components/Themed";
 import EditScreenInfo from "@components/EditScreenInfo";
 import { SafeAreaView } from "@atoms/SafeAreaView";
-import MapScreen from "@organisms/MapScreen";
 
 export default function ProfileScreen() {
   return (
@@ -16,7 +15,6 @@ export default function ProfileScreen() {
         darkColor="rgba(255,255,255,0.1)"
       />
       <EditScreenInfo path="app/(tabs)/profile.tsx" />
-      <MapScreen />
     </SafeAreaView>
   );
 }
