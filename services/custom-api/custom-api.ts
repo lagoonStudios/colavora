@@ -1,15 +1,74 @@
 import { AxiosResponse } from "axios";
 import { axiosClient } from "@config/axios";
-import { IFetchDriverData, IFetchCompanyData } from "@constants/types";
+import {
+  IFetchDriverData,
+  IFetchCompanyData,
+  IOptionalShipmnetProps,
+  IOptionalManifestProps,
+  IFetchShipmentByIdData,
+  IFetchManifestByIdData,
+  IOptionalPiecesProps,
+  IFetchPiecesByIdData,
+  IFetchStatusByIdData,
+} from "@constants/types";
 
 export function fetchDriverData(
   id: string,
 ): Promise<AxiosResponse<IFetchDriverData>> {
   return axiosClient.get(`common/driver/${id}`);
 }
+export function fetchStatusData(): Promise<AxiosResponse<number[]>> {
+  return axiosClient.get(`common/status`);
+}
 
 export function fetchCompanyData(
   id?: string,
 ): Promise<AxiosResponse<IFetchCompanyData>> {
   return axiosClient.get(`company/${id}`);
+}
+export function fetchShipmentData({
+  readyDate,
+  driverId,
+  status,
+}: IOptionalShipmnetProps): Promise<AxiosResponse<number[]>> {
+  return axiosClient.get(`shipment/`, {
+    params: { readyDate, driverId, status },
+  });
+}
+export function fetchManifestData({
+  driverId,
+  status,
+  createdDate,
+}: IOptionalManifestProps): Promise<AxiosResponse<number[]>> {
+  return axiosClient.get(`shipment/manifest`, {
+    params: { createdDate, driverId, status },
+  });
+}
+export function fetchPiecesData({
+  id: shipmentId,
+}: IOptionalPiecesProps): Promise<AxiosResponse<number[]>> {
+  return axiosClient.get(`shipment/piece`, {
+    params: { shipmentId },
+  });
+}
+
+export function fetchStatusByIdData(
+  id?: string,
+): Promise<AxiosResponse<IFetchStatusByIdData>> {
+  return axiosClient.get(`common/status/${id}`);
+}
+export function fetchShipmentByIdData({
+  id,
+}: IOptionalShipmnetProps): Promise<AxiosResponse<IFetchShipmentByIdData>> {
+  return axiosClient.get(`shipment/${id}`);
+}
+export function fetchManifestByIdData({
+  id,
+}: IOptionalManifestProps): Promise<AxiosResponse<IFetchManifestByIdData>> {
+  return axiosClient.get(`shipment/manifest/${id}`);
+}
+export function fetchPiecesByIdData({
+  id,
+}: IOptionalPiecesProps): Promise<AxiosResponse<IFetchPiecesByIdData>> {
+  return axiosClient.get(`shipment/piece/${id}`);
 }
