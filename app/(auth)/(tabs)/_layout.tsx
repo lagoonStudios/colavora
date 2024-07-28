@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import React, { useEffect, useState } from "react";
 import {
   AntDesign,
@@ -13,7 +14,7 @@ import LoggedHeader from "@organisms/LoggedHeader";
 import LogoutButton from "@molecules/LogoutButton/LogoutButton";
 import { useThemeColor } from "@components/Themed";
 
-import { useDriverData, useShipmentData } from "@hooks/index";
+import { useDriverData, useCompanyData, useStatusIdData } from "@hooks/index";
 
 export default function TabLayout() {
   // --- Local state -----------------------------------------------------------
@@ -21,10 +22,12 @@ export default function TabLayout() {
   // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
+  useStatusIdData();
+  useCompanyData(companyID);
+
   const colorScheme = useColorScheme();
   const { default: backgroundColor } = useThemeColor({}, "background");
   const { data: driverData } = useDriverData("1");
-  useShipmentData(companyID);
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Refs ------------------------------------------------------------------
