@@ -25,15 +25,23 @@ export interface IFetchCompanyData {
   companyEmail: string;
 }
 
-export interface IFetchOrderData {
+export interface IFetchManifestByIdData {
+  companyID: string;
+  shipmentID: number;
+  manifestID: number;
+  manifest: string;
+  driverID: number;
+  createdDate: string;
+}
+export interface IFetchShipmentByIdData {
   companyID: string;
   shipmentID: number;
   waybill: string;
   serviceType: number;
   serviceTypeName: string;
   packageType: number;
-  readyDate: Date;
-  dueDate: Date;
+  readyDate: string;
+  dueDate: string;
   codType: string;
   codAmount: number;
   sender: string;
@@ -52,19 +60,50 @@ export interface IFetchOrderData {
   phoneNumber: string;
   contactPerson: string;
   createdUserID: number;
-  createdDate: Date;
-  lastTransferDate: Date;
+  createdDate: string;
+  lastTransferDate: string;
   status: string;
   qty: number;
-  items: null;
+  items?: null | object;
   templateID: number;
   manifestDL: string;
   manifestPk: string;
   assignPK: number;
   assignDL: number;
   division: string;
-  lastEventComment: null;
-  reason: null;
+  lastEventComment?: null | string;
+  reason?: null | string;
   barcode: string;
-  referenceNo?: number;
+  referenceNo?: null | string;
 }
+
+export interface IFetchPiecesByIdData {
+  companyID: string;
+  shipmentID: number;
+  pieceID: number;
+  barcode: string;
+  packageType: number;
+  packageTypeName: string;
+  comments?: null | string | [string];
+  pwBack: string;
+  pod: string;
+}
+
+export interface IFetchStatusByIdData {
+  companyID: string;
+  statusID: number;
+  status: string;
+  completed: boolean;
+}
+
+export interface IOptionalManifestProps {
+  driverId?: string;
+  status?: string;
+  createdDate?: string;
+  id?: string;
+}
+
+export interface IOptionalShipmnetProps extends IOptionalManifestProps {
+  readyDate?: string;
+}
+export interface IOptionalPiecesProps extends IOptionalShipmnetProps {}

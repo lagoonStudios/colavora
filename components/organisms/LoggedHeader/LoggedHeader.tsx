@@ -4,11 +4,12 @@ import { Image, ImageSourcePropType } from "react-native";
 import { styles } from "./LoggedHeader.styles";
 import { queryClient } from "@/providers";
 import { IFetchCompanyData } from "@constants/types";
+import { queryKeys } from "@constants/Constants";
 
 export default function LoggedHeader() {
   // --- Hooks -----------------------------------------------------------------
   const state = queryClient.getQueryState<IFetchCompanyData>([
-    "useCompanyData",
+    queryKeys.companyData,
   ]);
   // --- END: Hooks ------------------------------------------------------------
 
