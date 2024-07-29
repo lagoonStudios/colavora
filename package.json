@@ -14,7 +14,8 @@
     "lint:fix": "npx eslint . --fix",
     "format": "prettier --check ./app",
     "format:fix": "npx prettier --write ./app",
-    "build:dev": "eas build:run -p development --latest"
+    "build:dev": "eas build:run -p development --latest",
+    "secret:push": "eas secret:push --scope project --env-file .env"
   },
   "jest": {
     "preset": "jest-expo",
