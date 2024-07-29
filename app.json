@@ -1,6 +1,6 @@
 {
   "expo": {
-    "owner": "lagoonstudiosorg",
+    "owner": "lagoonstudios",
     "name": "colavora",
     "slug": "colavora",
     "version": "1.0.0",
@@ -43,7 +43,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "c9746909-2e07-4be4-bbdb-e5104ece932f"
+        "projectId": "faafb172-8437-4519-b702-f73cc0c57215"
       }
     }
   }
