@@ -1,5 +1,2 @@
-import { DropDownPickerProps } from "react-native-dropdown-picker";
-
-export type SearchProps<T> = DropDownPickerProps<T>;
-
+import { IFetchOrderData, IFetchShipmentData } from '@constants/types';
 export type SearchTheme = "LIGHT" | "DARK";

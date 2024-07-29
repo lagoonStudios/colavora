@@ -11,6 +11,7 @@ import { HomeItem } from "./Home.types";
 import { useHomeData } from "./Home.functions";
 import { SafeAreaView } from "@atoms/SafeAreaView";
 import { useTranslation } from "react-i18next";
+import Search from "@molecules/search";
 
 export default function Home() {
   // --- Hooks -----------------------------------------------------------------
@@ -37,6 +38,7 @@ export default function Home() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Search containerStyle={styles.searchContainer} />
       <FlatList data={data} renderItem={renderItem} />
     </SafeAreaView>
   );
