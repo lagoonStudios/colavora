@@ -3,7 +3,7 @@ import { axiosClient } from "@config/axios";
 import {
   IFetchDriverData,
   IFetchCompanyData,
-  IOptionalShipmnetProps,
+  IOptionalShipmentProps,
   IOptionalManifestProps,
   IFetchShipmentByIdData,
   IFetchManifestByIdData,
@@ -56,7 +56,7 @@ export function fetchStatusByIdData(
 }
 export function fetchShipmentByIdData({
   id,
-}: IOptionalShipmnetProps): Promise<AxiosResponse<IFetchShipmentByIdData>> {
+}: IOptionalShipmentProps): Promise<AxiosResponse<IFetchShipmentByIdData>> {
   return axiosClient.get(`shipment/${id}`);
 }
 export function fetchManifestByIdData({

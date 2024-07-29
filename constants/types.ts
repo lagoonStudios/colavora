@@ -105,7 +105,7 @@ export interface IOptionalManifestProps {
   optionalKey?: string;
 }
 
-export interface IOptionalShipmnetProps extends IOptionalManifestProps {
+export interface IOptionalShipmentProps extends IOptionalManifestProps {
   readyDate?: string;
 }
-export interface IOptionalPiecesProps extends IOptionalShipmnetProps {}
+export interface IOptionalPiecesProps extends IOptionalShipmentProps { }
