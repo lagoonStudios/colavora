@@ -40,6 +40,7 @@ export default function Home() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Search containerStyle={styles.searchContainer} />
       <FlatList data={data} renderItem={renderItem} />
     </SafeAreaView>
   );
