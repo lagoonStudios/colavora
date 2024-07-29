@@ -13,7 +13,8 @@
     "lint": "eslint .",
     "lint:fix": "npx eslint . --fix",
     "format": "prettier --check ./app",
-    "format:fix": "npx prettier --write ./app"
+    "format:fix": "npx prettier --write ./app",
+    "build:dev": "eas build:run -p development --latest"
   },
   "jest": {
     "preset": "jest-expo",
