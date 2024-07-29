@@ -4,7 +4,11 @@ import DropDownPicker, { LanguageType } from "react-native-dropdown-picker";
 
 import { useColorScheme } from "@/components/useColorScheme";
 
-import { SearchProps, SearchTheme } from "./Search.types";
+import { SearchTheme } from "./Search.types";
+import { styles } from "./Search.styles";
+import { View } from "@components/Themed";
+import { ViewStyle } from "react-native";
+import { useSearchData } from "./Search.funcitons";
 
 // To create a custom theme, see the documentation template: https://github.com/hossein-zare/react-native-dropdown-picker/blob/5.x/src/themes/light/index.js
 /**
@@ -12,13 +16,25 @@ import { SearchProps, SearchTheme } from "./Search.types";
  *
  * @see {@link https://hossein-zare.github.io/react-native-dropdown-picker-website/docs | Documentation}
  */
-export default function Search<T>(props: SearchProps<T>) {
-  //Update folders
-  const { ...otherProps } = props;
+export default function Search({
+  containerStyle,
+}: {
+  containerStyle?: ViewStyle;
+}) {
+  // --- Hooks -----------------------------------------------------------------
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const { data, setData, loading, error, debouncedHandleSearch } =
+    useSearchData("");
   const { i18n } = useTranslation();
   const theme = useColorScheme();
   const [pickerTheme, setPickerTheme] = useState<SearchTheme>("LIGHT");
+  // --- END: Hooks ------------------------------------------------------------
 
+  // --- Data and handlers -----------------------------------------------------
+  // --- END: Data and handlers ------------------------------------------------
+
+  // --- Side effects ----------------------------------------------------------
   useEffect(() => {
     switch (theme) {
       case "dark":
@@ -29,12 +45,28 @@ export default function Search<T>(props: SearchProps<T>) {
         break;
     }
   }, [theme]);
+  // --- END: Side effects -----------------------------------------------------
 
   return (
-    <DropDownPicker
-      {...otherProps}
-      language={i18n.language.toUpperCase() as LanguageType}
-      theme={pickerTheme}
-    />
+    <View style={[containerStyle, { zIndex: 100 }]}>
+      <DropDownPicker
+        open={open}
+        value={value}
+        items={data}
+        searchable={true}
+        loading={loading}
+        theme={pickerTheme}
+        setOpen={setOpen}
+        setItems={setData}
+        setValue={setValue}
+        onChangeSearchText={debouncedHandleSearch}
+        style={styles.search}
+        dropDownContainerStyle={styles.dropdown}
+        searchTextInputStyle={styles.searchTextInput}
+        searchContainerStyle={styles.searchContainer}
+        listItemContainerStyle={styles.listItemContainer}
+        language={i18n.language.toUpperCase() as LanguageType}
+      />
+    </View>
   );
 }
