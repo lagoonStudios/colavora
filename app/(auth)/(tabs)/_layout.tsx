@@ -14,20 +14,37 @@ import LoggedHeader from "@organisms/LoggedHeader";
 import LogoutButton from "@molecules/LogoutButton/LogoutButton";
 import { useThemeColor } from "@components/Themed";
 
-import { useDriverData, useCompanyData, useStatusIdData } from "@hooks/index";
+import {
+  useDriverData,
+  useCompanyData,
+  useStatusIdData,
+  useStatusByIdData,
+  useManifestsIdData,
+} from "@hooks/index";
+import { IFetchDriverData } from "@constants/types";
 
 export default function TabLayout() {
   // --- Local state -----------------------------------------------------------
-  const [companyID, setCompanyID] = useState<string>("");
+  const createdDate = new Date("2024-05-20T00:01:00").toLocaleDateString();
+  const statusForManifests = "'Our for Delivery','Assigned','Created'";
+
+  const [driverData, setDriverData] = useState<IFetchDriverData>();
+  const [statusIds, setStatusIds] = useState<number[]>([]);
   // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
-  useStatusIdData();
-  useCompanyData(companyID);
+  useCompanyData(driverData?.companyID);
+  useStatusByIdData(statusIds);
+  useManifestsIdData({
+    createdDate,
+    driverId: driverData?.userID,
+    status: statusForManifests,
+  });
 
   const colorScheme = useColorScheme();
+  const { data: responseDriverData } = useDriverData("1");
+  const { data: statusIdsData } = useStatusIdData();
   const { default: backgroundColor } = useThemeColor({}, "background");
-  const { data: driverData } = useDriverData("1");
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Refs ------------------------------------------------------------------
@@ -38,8 +55,13 @@ export default function TabLayout() {
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    if (driverData) setCompanyID(driverData.companyID);
-  }, [driverData]);
+    if (responseDriverData) setDriverData(responseDriverData);
+  }, [responseDriverData]);
+
+  useEffect(() => {
+    if (statusIdsData) setStatusIds(statusIdsData);
+  }, [statusIdsData]);
+
   // --- END: Side effects -----------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------

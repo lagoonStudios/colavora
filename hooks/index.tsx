@@ -7,4 +7,5 @@ export {
   useCompanyData,
   useStatusIdData,
   useStatusByIdData,
+  useManifestsIdData,
 } from "./queries";
