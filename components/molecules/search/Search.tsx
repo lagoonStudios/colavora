@@ -9,6 +9,7 @@ import { styles } from "./Search.styles";
 import { View } from "@components/Themed";
 import { ViewStyle } from "react-native";
 import { useSearchData } from "./Search.funcitons";
+import { useNavigation, useRouter } from "expo-router";
 
 // To create a custom theme, see the documentation template: https://github.com/hossein-zare/react-native-dropdown-picker/blob/5.x/src/themes/light/index.js
 /**
@@ -22,16 +23,22 @@ export default function Search({
   containerStyle?: ViewStyle;
 }) {
   // --- Hooks -----------------------------------------------------------------
+  const router = useRouter();
+  const theme = useColorScheme();
+  const { i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const { data, setData, loading, error, debouncedHandleSearch } =
-    useSearchData("");
-  const { i18n } = useTranslation();
-  const theme = useColorScheme();
   const [pickerTheme, setPickerTheme] = useState<SearchTheme>("LIGHT");
+  const { data, setData, loading, error, handleSearch } = useSearchData("");
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
+  const handleSelectItem = (item: any) => {
+    if (item["href"] != null) {
+      const href: string = item["href"];
+      router.push({ pathname: href, params: { shipmentID: item["value"] } });
+    }
+  };
   // --- END: Data and handlers ------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
@@ -59,7 +66,8 @@ export default function Search({
         setOpen={setOpen}
         setItems={setData}
         setValue={setValue}
-        onChangeSearchText={debouncedHandleSearch}
+        onChangeSearchText={handleSearch}
+        onSelectItem={handleSelectItem}
         style={styles.search}
         dropDownContainerStyle={styles.dropdown}
         searchTextInputStyle={styles.searchTextInput}
