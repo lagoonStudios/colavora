@@ -97,10 +97,11 @@ export interface IFetchStatusByIdData {
 }
 
 export interface IOptionalManifestProps {
-  driverId?: string;
+  driverId?: number;
   status?: string;
   createdDate?: string;
   id?: string;
+  optionalKey?: string;
 }
 
 export interface IOptionalShipmnetProps extends IOptionalManifestProps {

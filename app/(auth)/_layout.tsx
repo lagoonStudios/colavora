@@ -3,9 +3,11 @@ import { Redirect, Stack } from "expo-router";
 import useAuth from "@hooks/Auth";
 
 export default function AuthLayout() {
+  // --- Hooks -----------------------------------------------------------------
   const { isLoggedIn } = useAuth();
+  // --- END: Hooks ------------------------------------------------------------
 
-  if (isLoggedIn === false) {
+  if (isLoggedIn === true) {
     return <Redirect href="(no-auth)/Login" />;
   }
 

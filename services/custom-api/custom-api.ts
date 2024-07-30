@@ -32,7 +32,7 @@ export function fetchShipmentData({
   status,
 }: IOptionalShipmnetProps): Promise<AxiosResponse<number[]>> {
   return axiosClient.get(`shipment/`, {
-    params: { readyDate, driverId, status },
+    params: { readyDate, driverId: String(driverId), status },
   });
 }
 export function fetchManifestData({
@@ -41,7 +41,7 @@ export function fetchManifestData({
   createdDate,
 }: IOptionalManifestProps): Promise<AxiosResponse<number[]>> {
   return axiosClient.get(`shipment/manifest`, {
-    params: { createdDate, driverId, status },
+    params: { createdDate, driverId: String(driverId), status },
   });
 }
 export function fetchPiecesData({
