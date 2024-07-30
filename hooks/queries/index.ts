@@ -4,3 +4,5 @@ export {
   useStatusIdData,
   useStatusByIdData,
 } from "./general";
+
+export { useManifestsIdData } from "./manifests";

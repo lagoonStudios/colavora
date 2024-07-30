@@ -8,4 +8,17 @@ export const queryKeys = {
   companyData: "companyData",
   statusIdData: "statusIdData",
   statusByIdData: "statusByIdData",
+  manifestsIdData: "manifestsIdData",
+  manifestsByIdData: "manifestsByIdData",
+};
+
+export const labelStatuses = {
+  manifest: {
+    created: "Created",
+    assigned: "Assigned",
+    ourForDelivery: "Our for Delivery",
+  },
+  pickup: {
+    pickedUp: "PickedUp",
+  },
 };

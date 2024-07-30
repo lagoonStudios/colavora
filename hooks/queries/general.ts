@@ -55,13 +55,16 @@ export function useStatusIdData() {
 export function useStatusByIdData(ids: number[]) {
   const statusByIdData = useQueries({
     queries: ids?.map((id) => ({
-      queryKey: ["status-id-", id],
-      queryFn: () => fetchStatusByIdData(String(id)),
+      queryKey: [`${queryKeys.statusByIdData}-${id}`],
+      queryFn: async () => {
+        const { data: rawData } = await fetchStatusByIdData(String(id));
+        return rawData ?? [];
+      },
       staleTime: Infinity,
     })),
     combine: (results) => {
       return {
-        data: results.map((result) => result.data?.data),
+        data: results.map((result) => result?.data),
         pending: results.some((result) => result.isPending),
       };
     },
