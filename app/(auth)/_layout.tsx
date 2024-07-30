@@ -7,7 +7,7 @@ export default function AuthLayout() {
   const { isLoggedIn } = useAuth();
   // --- END: Hooks ------------------------------------------------------------
 
-  if (isLoggedIn === false) {
+  if (isLoggedIn === true) {
     return <Redirect href="(no-auth)/Login" />;
   }
 
