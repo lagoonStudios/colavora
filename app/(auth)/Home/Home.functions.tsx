@@ -1,22 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
 import { HomeItem } from "./Home.types";
 import { useDriverData, useManifestsIdData } from "@hooks/index";
+import { mockDriverId } from "@constants/Constants";
 
 export function useHomeData() {
   // --- Local state -----------------------------------------------------------
-  const createdDate = new Date("2024-05-20T00:01:00").toLocaleDateString();
-  const statusForManifests = "'Our for Delivery','Assigned','Created'";
+  const createdDate = new Date("2024-05-20T00:01:00").toISOString();
 
   const [data, setData] = useState<HomeItem[]>([]);
+  const [driverId, setDriverId] = useState<number>();
   const [loading, setLoading] = useState(true);
   // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
-  const { data: driverData } = useDriverData("2");
+  const { data: driverData } = useDriverData(mockDriverId);
   const { data: manifestIdData, isSuccess } = useManifestsIdData({
     createdDate,
-    driverId: driverData?.userID,
-    status: statusForManifests,
+    driverId,
   });
   // --- END: Hooks ------------------------------------------------------------
 
@@ -28,6 +28,10 @@ export function useHomeData() {
   // --- END: Data and handlers ------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
+  useEffect(() => {
+    if (driverData) setDriverId(driverData?.userID);
+  }, [driverData]);
+
   useEffect(() => {
     setData([
       {
@@ -57,7 +61,7 @@ export function useHomeData() {
         isDisabled: true,
       },
     ]);
-  }, [totalManifests]);
+  }, [manifestIdData, totalManifests]);
 
   useEffect(() => {
     if (isSuccess) setLoading(false);

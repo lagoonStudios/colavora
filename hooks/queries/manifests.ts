@@ -12,7 +12,6 @@ import {
 export function useManifestsIdData({
   createdDate,
   driverId,
-  status,
   optionalKey,
 }: IOptionalManifestProps) {
   const manifestsIdData = useQuery({
@@ -21,15 +20,13 @@ export function useManifestsIdData({
       const { data: rawData } = await fetchManifestData({
         createdDate,
         driverId,
-        status,
       });
 
       return rawData ?? [];
     },
-    retry: 1,
+    retry: 3,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    enabled: !!driverId,
   });
 
   return manifestsIdData;
