@@ -14,31 +14,20 @@ import LoggedHeader from "@organisms/LoggedHeader";
 import LogoutButton from "@molecules/LogoutButton/LogoutButton";
 import { useThemeColor } from "@components/Themed";
 
-import {
-  useDriverData,
-  useCompanyData,
-  useManifestsIdData,
-} from "@hooks/index";
+import { useDriverData, useCompanyData } from "@hooks/index";
 import { IFetchDriverData } from "@constants/types";
+import { mockDriverId } from "@constants/Constants";
 
 export default function TabLayout() {
   // --- Local state -----------------------------------------------------------
-  const createdDate = new Date("2024-05-20T00:01:00").toLocaleDateString();
-  const statusForManifests = "'Our for Delivery','Assigned','Created'";
-
   const [driverData, setDriverData] = useState<IFetchDriverData>();
   // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
   useCompanyData(driverData?.companyID);
-  useManifestsIdData({
-    createdDate,
-    driverId: driverData?.userID,
-    status: statusForManifests,
-  });
 
   const colorScheme = useColorScheme();
-  const { data: responseDriverData } = useDriverData("1");
+  const { data: responseDriverData } = useDriverData(mockDriverId);
   const { default: backgroundColor } = useThemeColor({}, "background");
   // --- END: Hooks ------------------------------------------------------------
 

@@ -35,11 +35,10 @@ export function fetchShipmentData({
 }
 export function fetchManifestData({
   driverId,
-  status,
   createdDate,
 }: IOptionalManifestProps): Promise<AxiosResponse<number[]>> {
   return axiosClient.get(`shipment/manifest`, {
-    params: { createdDate, driverId: String(driverId), status },
+    params: { createdDate, driverId: String(driverId) },
   });
 }
 export function fetchPiecesData({
