@@ -6,18 +6,20 @@ import { styles } from "./OrdersList.styles";
 import OrderListItem from "@molecules/OrderListItem";
 import PageHeader from "@molecules/PageHeader/PageHeader";
 import { ActivityIndicator, View } from "@components/Themed";
-import { TOrderListItemProps } from "@molecules/OrderListItem/OrderList.types";
 
 import { useOrdersListData } from "./OrdersList.functions";
+import { useStore } from "@stores/index";
+import { IFetchShipmentByIdData } from "@constants/types";
 
 export default function OrdersList() {
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
-  const { data, loading } = useOrdersListData();
+  const { shipmentIds } = useStore();
+  const { data, loading } = useOrdersListData(shipmentIds);
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
-  const renderItem = ({ item }: { item: TOrderListItemProps }) => (
+  const renderItem = ({ item }: { item: IFetchShipmentByIdData }) => (
     <OrderListItem {...item} />
   );
   // --- END: Data and handlers ------------------------------------------------
@@ -25,7 +27,7 @@ export default function OrdersList() {
   return (
     <View style={styles.container}>
       <PageHeader
-        title={`${t("ORDERS.ORDERS")} ${data.length ? `(${data.length})` : ""}`}
+        title={`${t("ORDERS.ORDERS")} (${shipmentIds?.length ?? ""})`}
       />
       <View style={styles.content}>
         {loading ? (

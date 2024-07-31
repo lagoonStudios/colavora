@@ -3,13 +3,16 @@ import { View, Text } from "@components/Themed";
 import { Image, ImageSourcePropType } from "react-native";
 import { styles } from "./LoggedHeader.styles";
 import { queryClient } from "@/providers";
-import { IFetchCompanyData } from "@constants/types";
+import { IFetchCompanyData, IFetchDriverData } from "@constants/types";
 import { queryKeys } from "@constants/Constants";
 
 export default function LoggedHeader() {
   // --- Hooks -----------------------------------------------------------------
-  const state = queryClient.getQueryState<IFetchCompanyData>([
+  const companyData = queryClient.getQueryState<IFetchCompanyData>([
     queryKeys.companyData,
+  ]);
+  const driverData = queryClient.getQueryState<IFetchDriverData>([
+    queryKeys.driverData,
   ]);
   // --- END: Hooks ------------------------------------------------------------
 
@@ -27,13 +30,19 @@ export default function LoggedHeader() {
 
   // --- Data and handlers -----------------------------------------------------
   const source: ImageSourcePropType = useMemo(() => {
-    if (state?.data?.logo) return { uri: state.data.logo };
+    if (companyData?.data?.logo) return { uri: companyData.data.logo };
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return require("@assets/images/avatar.png");
-  }, [state]);
+  }, [companyData]);
 
-  const companyName = useMemo(() => state?.data?.companyName ?? "...", [state]);
-  const contact = useMemo(() => state?.data?.contact ?? "...", [state]);
+  const companyName = useMemo(
+    () => companyData?.data?.companyName ?? "...",
+    [companyData],
+  );
+  const contact = useMemo(
+    () => driverData?.data?.driverName ?? "...",
+    [driverData],
+  );
   // --- END: Data and handlers ------------------------------------------------
   return (
     <View style={styles.loggedHeaderContainer}>

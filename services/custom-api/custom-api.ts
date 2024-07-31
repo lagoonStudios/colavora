@@ -27,12 +27,10 @@ export function fetchCompanyData(
   return axiosClient.get(`company/${id}`);
 }
 export function fetchShipmentData({
-  readyDate,
-  driverId,
-  status,
+  manifest,
 }: IOptionalShipmnetProps): Promise<AxiosResponse<number[]>> {
   return axiosClient.get(`shipment/`, {
-    params: { readyDate, driverId: String(driverId), status },
+    params: { manifest },
   });
 }
 export function fetchManifestData({

@@ -1,7 +1,7 @@
-import { IFetchOrderData } from "@constants/types";
+import { IFetchShipmentByIdData } from "@constants/types";
 
 export type TOrderListItemProps = Pick<
-  IFetchOrderData,
+  IFetchShipmentByIdData,
   | "shipmentID"
   | "consigneeName"
   | "senderName"

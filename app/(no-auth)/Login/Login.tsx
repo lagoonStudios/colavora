@@ -44,7 +44,7 @@ export default function Login() {
     login({ userName: data.userName, password: data.password });
   };
 
-  const onError: SubmitErrorHandler<LoginForm> = (errors, e) => {
+  const onError: SubmitErrorHandler<LoginForm> = (errors) => {
     return console.log(errors);
   };
   // --- END: Data and handlers ------------------------------------------------
@@ -83,6 +83,7 @@ export default function Login() {
       {loading ? (
         <ActivityIndicator />
       ) : (
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         <LoginButton onPress={methods.handleSubmit(onSubmit, onError)} />
       )}
 

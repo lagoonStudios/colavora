@@ -26,54 +26,54 @@ export interface IFetchCompanyData {
 }
 
 export interface IFetchManifestByIdData {
-  companyID: string;
-  shipmentID: number;
-  manifestID: number;
-  manifest: string;
-  driverID: number;
-  createdDate: string;
+  companyID?: string;
+  shipmentID?: number;
+  manifestID?: number;
+  manifest?: string;
+  driverID?: number;
+  createdDate?: string;
 }
 export interface IFetchShipmentByIdData {
-  companyID: string;
-  shipmentID: number;
-  waybill: string;
-  serviceType: number;
-  serviceTypeName: string;
-  packageType: number;
-  readyDate: string;
-  dueDate: string;
-  codType: string;
-  codAmount: number;
-  sender: string;
-  senderName: string;
-  senderAddressLine1: string;
-  senderAddressLine2: string;
-  senderZip: string;
-  senderPhoneNumber: string;
-  senderContactPerson: string;
-  orderNotes: string;
-  consigneeNum: string;
-  consigneeName: string;
-  addressLine1: string;
-  addressLine2: string;
-  zip: string;
-  phoneNumber: string;
-  contactPerson: string;
-  createdUserID: number;
-  createdDate: string;
-  lastTransferDate: string;
-  status: string;
-  qty: number;
+  companyID?: string;
+  shipmentID?: number;
+  waybill?: string;
+  serviceType?: number;
+  serviceTypeName?: string;
+  packageType?: number;
+  readyDate?: string;
+  dueDate?: string;
+  codType?: string;
+  codAmount?: number;
+  sender?: string;
+  senderName?: string;
+  senderAddressLine1?: string;
+  senderAddressLine2?: string;
+  senderZip?: string;
+  senderPhoneNumber?: string;
+  senderContactPerson?: string;
+  orderNotes?: string;
+  consigneeNum?: string;
+  consigneeName?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  zip?: string;
+  phoneNumber?: string;
+  contactPerson?: string;
+  createdUserID?: number;
+  createdDate?: string;
+  lastTransferDate?: string;
+  status?: string;
+  qty?: number;
   items?: null | object;
-  templateID: number;
-  manifestDL: string;
-  manifestPk: string;
-  assignPK: number;
-  assignDL: number;
-  division: string;
+  templateID?: number;
+  manifestDL?: string;
+  manifestPk?: string;
+  assignPK?: number;
+  assignDL?: number;
+  division?: string;
   lastEventComment?: null | string;
   reason?: null | string;
-  barcode: string;
+  barcode?: string;
   referenceNo?: null | string;
 }
 
@@ -101,6 +101,7 @@ export interface IOptionalManifestProps {
   status?: string;
   createdDate?: string;
   id?: string;
+  manifest?: number;
   optionalKey?: string;
 }
 

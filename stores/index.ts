@@ -1,49 +1,78 @@
 export * as AuthContext from "./AuthContext";
 
-// import { create, StateCreator } from 'zustand';
+import {
+  IFetchManifestByIdData,
+  IFetchShipmentByIdData,
+} from "@constants/types";
+import { create, StateCreator } from "zustand";
 
-// // ZUTSTAND using the slice pattern, to separate stores. @see https://github.com/pmndrs/zustand/blob/main/docs/guides/typescript.md
+interface ManifestIdsSlice {
+  manifestIds: number[];
+  addManifestIds: (manifestIds: number[]) => void;
+  resetManifestIds: () => void;
+}
 
-// interface BearSlice {
-//   bears: number;
-//   addBear: () => void;
-//   eatFish: () => void;
-// }
+interface ManifestsSlice {
+  manifests: IFetchManifestByIdData[];
+  addManifest: (manifestIds: IFetchManifestByIdData) => void;
+  resetManifests: () => void;
+}
+interface ShipmentIdsSlice {
+  shipmentIds: number[];
+  addShipmentIds: (shipmentIds: number[]) => void;
+  resetShipmentIds: () => void;
+}
 
-// interface FishSlice {
-//   fishes: number;
-//   addFish: () => void;
-// }
+interface ShipmentSlice {
+  shipment: IFetchShipmentByIdData;
+  addShipment: (shipment: IFetchShipmentByIdData) => void;
+  resetShipment: () => void;
+}
 
-// interface SharedSlice {
-//   addBoth: () => void;
-//   getBoth: () => void;
-// }
+const createManifestIdsSlice: StateCreator<ManifestIdsSlice, [], []> = (
+  set,
+) => ({
+  manifestIds: [],
+  addManifestIds: (manifestIds: number[]) =>
+    set((state) => ({ ...state, manifestIds })),
+  resetManifestIds: () => set((state) => ({ ...state, manifestIds: [] })),
+});
 
-// const createBearSlice: StateCreator<BearSlice & FishSlice, [], [], BearSlice> = (set) => ({
-//   bears: 0,
-//   addBear: () => set((state) => ({ bears: state.bears + 1 })),
-//   eatFish: () => set((state) => ({ fishes: state.fishes - 1 })),
-// });
+const createManifestsSlice: StateCreator<ManifestsSlice, [], []> = (set) => ({
+  manifests: [],
+  addManifest: (manifest: IFetchManifestByIdData) =>
+    set(({ manifests }) => {
+      const newManifests = manifests;
+      newManifests.push(manifest);
 
-// const createFishSlice: StateCreator<BearSlice & FishSlice, [], [], FishSlice> = (set) => ({
-//   fishes: 0,
-//   addFish: () => set((state) => ({ fishes: state.fishes + 1 })),
-// });
+      return { manifests: newManifests };
+    }),
+  resetManifests: () => set((state) => ({ ...state, manifests: [] })),
+});
 
-// const createSharedSlice: StateCreator<BearSlice & FishSlice, [], [], SharedSlice> = (set, get) => ({
-//   addBoth: () => {
-//     // you can reuse previous methods
-//     get().addBear();
-//     get().addFish();
-//     // or do them from scratch
-//     // set((state) => ({ bears: state.bears + 1, fishes: state.fishes + 1 })
-//   },
-//   getBoth: () => get().bears + get().fishes,
-// });
+const createShipmentIdsSlice: StateCreator<ShipmentIdsSlice, [], []> = (
+  set,
+) => ({
+  shipmentIds: [],
+  addShipmentIds: (shipmentIds: number[]) =>
+    set((state) => ({ ...state, shipmentIds })),
+  resetShipmentIds: () => set((state) => ({ ...state, shipmentIds: [] })),
+});
 
-// const useBoundStore = create<BearSlice & FishSlice & SharedSlice>()((...a) => ({
-//   ...createBearSlice(...a),
-//   ...createFishSlice(...a),
-//   ...createSharedSlice(...a),
-// }));
+const createShipmentSlice: StateCreator<ShipmentSlice, [], []> = (set) => ({
+  shipment: {},
+  addShipment: (shipment: IFetchShipmentByIdData) =>
+    set((state) => ({ ...state, shipment })),
+  resetShipment: () => set((state) => ({ ...state, shipment: {} })),
+});
+
+const useBoundStore = create<
+  ManifestIdsSlice & ManifestsSlice & ShipmentIdsSlice & ShipmentSlice
+>()((...a) => ({
+  ...createManifestIdsSlice(...a),
+  ...createManifestsSlice(...a),
+  ...createShipmentIdsSlice(...a),
+  ...createShipmentSlice(...a),
+}));
+
+export { useBoundStore as useStore };

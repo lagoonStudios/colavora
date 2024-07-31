@@ -5,4 +5,5 @@ export {
   useStatusByIdData,
 } from "./general";
 
-export { useManifestsIdData } from "./manifests";
+export { useManifestsIdData, useManifestsByIdData } from "./manifests";
+export { useShipmentsIdData, useShipmentsByIdData } from "./shipments";
