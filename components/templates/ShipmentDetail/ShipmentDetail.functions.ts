@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { defaultLocation } from "@constants/Constants";
+import { useStore } from "@stores/index";
 
 export function useCoordinatesFromAddress({
   address,
@@ -43,4 +44,17 @@ export function useCoordinatesFromAddress({
   }, [address, zipCode]);
 
   return { loading, location, error };
+}
+
+
+export const useShipmentData = () => {
+  const { shipment: rawShipment } = useStore();
+  const shipment = useMemo(() => {
+    return {
+      ...rawShipment,
+      dueDate: new Date(rawShipment?.dueDate ?? "").toLocaleString(),
+    };
+  }, [rawShipment]);
+
+  return { shipment };
 }
