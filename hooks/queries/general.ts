@@ -14,7 +14,7 @@ export function useDriverData(id: string) {
       const { data: rawData } = await fetchDriverData(id);
       return rawData ?? {};
     },
-    retry: 1,
+    retry: 3,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
@@ -44,7 +44,7 @@ export function useStatusIdData() {
       const { data: rawData } = await fetchStatusData();
       return rawData ?? [];
     },
-    retry: 0,
+    retry: 3,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });

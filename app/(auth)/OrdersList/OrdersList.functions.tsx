@@ -1,77 +1,29 @@
-import { TOrderListItemProps } from "@molecules/OrderListItem/OrderList.types";
+import { IFetchShipmentByIdData } from "@constants/types";
+import { useShipmentsByIdData } from "@hooks/queries";
 import { useEffect, useState } from "react";
 
-export function useOrdersListData() {
+export function useOrdersListData(shipmentIds: number[]) {
+  // --- Hooks -----------------------------------------------------------------
+  const { data: dataShipments, pending } = useShipmentsByIdData(
+    shipmentIds?.slice(0, 20),
+  );
+  // --- END: Hooks ------------------------------------------------------------
+
   // --- Local state -----------------------------------------------------------
-  const [data, setData] = useState<TOrderListItemProps[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<IFetchShipmentByIdData[]>([]);
+  const [loading, setLoading] = useState(true);
   // --- END: Local state ------------------------------------------------------
+
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    setLoading(true);
-    setData([
-      {
-        shipmentID: 123,
-        consigneeName:
-          "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet",
-        senderName: "Name 01 test long name test",
-        addressLine1: "Address line 1",
-        addressLine2: "Address line 2",
-        zip: "12345",
-        serviceTypeName: "Next Day",
-        referenceNo: 1234556,
-        qty: 12,
-      },
-      {
-        shipmentID: 1234,
-        consigneeName: "Name 02 test long name test",
-        senderName: "Name 02 test long name test",
-        addressLine1: "Address line 1",
-        addressLine2: "Address line 2",
-        zip: "12345",
-        serviceTypeName: "Next Day",
-        referenceNo: 987654321,
-        qty: 24,
-      },
-      {
-        shipmentID: 12345,
-        consigneeName: "Name 03 test long name test",
-        senderName: "Name 03 test long name test",
-        addressLine1: "Address line 1",
-        addressLine2: "Address line 2",
-        zip: "12345",
-        serviceTypeName: "Next Day",
-        referenceNo: 987654321,
-        qty: 24,
-      },
-      {
-        shipmentID: 123456,
-        consigneeName: "Name 04 test long name test",
-        senderName: "Name 04 test long name test",
-        addressLine1: "Address line 1",
-        addressLine2: "Address line 2",
-        zip: "12345",
-        serviceTypeName: "Next Day",
-        referenceNo: 987654321,
-        qty: 24,
-      },
-      {
-        shipmentID: 1234567,
-        consigneeName: "Name 05 test long name test",
-        senderName: "Name 05 test long name test",
-        addressLine1: "Address line 1",
-        addressLine2: "Address line 2",
-        zip: "12345",
-        serviceTypeName: "Next Day",
-        referenceNo: 987654321,
-        qty: 24,
-      },
-    ]);
+    if (pending === false && dataShipments) {
+      setData(dataShipments?.map((shipment) => shipment));
+    }
+  }, [pending, dataShipments]);
 
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, []);
+  useEffect(() => {
+    if (data.length !== 0) setLoading(false);
+  }, [data]);
   // --- END: Side effects -----------------------------------------------------
 
   return { data, setData, loading, setLoading };

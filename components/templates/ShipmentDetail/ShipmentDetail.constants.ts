@@ -1,5 +1,5 @@
-import { IFetchOrderData } from "@constants/types";
+import { IFetchShipmentByIdData } from "@constants/types";
 
 export type TShipmentDetailProps = {
-  shipment: IFetchOrderData;
+  shipment: IFetchShipmentByIdData;
 };
