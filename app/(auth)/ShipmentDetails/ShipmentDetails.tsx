@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { useLocalSearchParams } from "expo-router";
 import React, { useCallback, useState } from "react";
 
 import { Text } from "@components/Themed";
@@ -14,13 +13,16 @@ import { styles } from "./ShipmentDetails.styles";
 
 export default function ShipmentDetails() {
   // --- Hooks -----------------------------------------------------------------
-  const { shipmentID } = useLocalSearchParams<{ shipmentID: string }>();
-  const { data, loading, error } = useShipmentDetailsData(shipmentID);
+  const { data, loading } = useShipmentDetailsData();
   const { t } = useTranslation();
+  // --- END: Hooks ------------------------------------------------------------
+
+  // --- Local state -----------------------------------------------------------
   const [selectedTab, setSelectedTab] = useState<ShipmentDetailsTabsItem>(
     ShipmentDetailsTabsItem.DETAILS,
   );
-  // --- END: Hooks ------------------------------------------------------------
+  // --- END: Local state ------------------------------------------------------
+
   // --- Data and handlers -----------------------------------------------------
   const renderView = useCallback(() => {
     if (data === undefined && loading) {
@@ -36,7 +38,7 @@ export default function ShipmentDetails() {
       if (data === undefined) return null;
       switch (selectedTab) {
         case ShipmentDetailsTabsItem.DETAILS:
-          return <ShipmentDetail shipment={data} />;
+          return <ShipmentDetail />;
         //TODO Make these components
         // case ShipmentDetailsTabsItem.PIECES:
         //   return <ShipmentPieces shipment={data} />;

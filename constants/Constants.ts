@@ -9,7 +9,10 @@ export const queryKeys = {
   statusIdData: "statusIdData",
   statusByIdData: "statusByIdData",
   manifestsIdData: "manifestsIdData",
+  pickupIdData: "pickupIdData",
   manifestsByIdData: "manifestsByIdData",
+  shipmentsIdData: "shipmentsIdData",
+  shipmentsByIdData: "shipmentsByIdData",
 };
 
 export const labelStatuses = {

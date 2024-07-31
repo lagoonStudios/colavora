@@ -1,33 +1,37 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, Pressable } from "react-native";
 
-import ManifestListItem from "@molecules/ManifestListItem";
+import PageHeader from "@molecules/PageHeader/PageHeader";
 import { ActivityIndicator, View } from "@components/Themed";
-import { ManifestListItemProps } from "@molecules/ManifestListItem/ManifestListItem.types";
+import { useStore } from "@stores/index";
 
 import { styles } from "./ManifestsList.styles";
-
+import ManifestListItem from "@molecules/ManifestListItem";
 import { useManifestsListData } from "./ManifestsList.functions";
-import PageHeader from "@molecules/PageHeader/PageHeader";
-import { useTranslation } from "react-i18next";
+import { ManifestListItemProps } from "@molecules/ManifestListItem/ManifestListItem.types";
 
 export default function ManifestsList() {
   // --- Hooks -----------------------------------------------------------------
-  const { data, loading } = useManifestsListData();
   const { t } = useTranslation();
+  const { manifestIds } = useStore();
+  const { data, loading } = useManifestsListData(manifestIds);
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
   const renderItem = ({ item }: { item: ManifestListItemProps }) => (
     <Pressable>
-      <ManifestListItem code={item.code} date={item.date} count={item.count} />
+      <ManifestListItem code={item.code} date={item.date} />
     </Pressable>
   );
   // --- END: Data and handlers ------------------------------------------------
+
+  // --- Side effects ----------------------------------------------------------
+  // --- END: Side effects -----------------------------------------------------
   return (
     <View style={styles.container}>
       <PageHeader
-        title={`${t("MANIFESTS.MANIFESTS")} ${data.length ? `(${data.length})` : ""}`}
+        title={`${t("MANIFESTS.MANIFESTS")} (${manifestIds?.length ?? ""})`}
       />
       <View style={styles.content}>
         {loading ? (
