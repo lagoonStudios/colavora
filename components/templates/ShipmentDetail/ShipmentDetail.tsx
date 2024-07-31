@@ -6,18 +6,14 @@ import MapScreen from "@organisms/MapScreen";
 import { Text, View } from "@components/Themed";
 
 import { styles } from "./ShipmentDetail.styles";
-import {
-  useCoordinatesFromAddress,
-  useShipmentData,
-} from "./ShipmentDetail.functions";
+import { useCoordinatesFromAddress } from "./ShipmentDetail.functions";
+import { useStore } from "@stores/index";
 
 export default function ShipmentDetails() {
-  //-- Data and handlers -----------------------------------------------------
-
-  //-- END: Data and handlers ------------------------------------------------
   // --- Hooks -----------------------------------------------------------------
   const { shipment } = useShipmentData();
   const { t } = useTranslation();
+  const { shipment } = useStore();
   const { location } = useCoordinatesFromAddress({
     address: shipment?.addressLine1?.concat(shipment?.addressLine2 ?? "") ?? "",
     zipCode: shipment?.zip ?? "",
@@ -46,7 +42,9 @@ export default function ShipmentDetails() {
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.textBody}>{shipment?.dueDate}</Text>
+            <Text style={styles.textBody}>
+              {shipment?.dueDate?.toLocaleString() ?? ""}
+            </Text>
           </View>
 
           <View style={styles.section}>
