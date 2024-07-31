@@ -6,14 +6,10 @@ import { useContext, useEffect, useState } from "react";
 const CONNECTION = "Username-Password-Authentication";
 const AUDIENCE = `https://${process.env.EXPO_PUBLIC_AUTH0_DOMAIN}/api/v2/`;
 
-export const auth =
-  process.env.EXPO_PUBLIC_AUTH0_DOMAIN &&
-  process.env.EXPO_PUBLIC_AUTH0_CLIENT_ID
-    ? new Auth0({
-        domain: process.env.EXPO_PUBLIC_AUTH0_DOMAIN,
-        clientId: process.env.EXPO_PUBLIC_AUTH0_CLIENT_ID,
-      })
-    : undefined;
+export const auth = new Auth0({
+  domain: process.env.EXPO_PUBLIC_AUTH0_DOMAIN!,
+  clientId: process.env.EXPO_PUBLIC_AUTH0_CLIENT_ID!,
+});
 
 export function useAuth0Config() {
   const [domain, setDomain] = useState<string>("");
