@@ -1,22 +1,23 @@
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import DropDownPicker, { LanguageType } from "react-native-dropdown-picker";
 
-import { useColorScheme } from "@/components/useColorScheme";
-
-import { SearchTheme } from "./Search.types";
-import { styles } from "./Search.styles";
-import { View } from "@components/Themed";
-import { ViewStyle } from "react-native";
+import {
+  ActivityIndicator,
+  Text,
+  useThemeColor,
+  View,
+} from "@components/Themed";
+import { FlatList, Pressable, ViewStyle } from "react-native";
 import { useSearchData } from "./Search.funcitons";
-import { useNavigation, useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
+import TextInput from "@molecules/TextInput";
+import { FormProvider, useForm } from "react-hook-form";
+import { styles } from "./Search.styles";
 
-// To create a custom theme, see the documentation template: https://github.com/hossein-zare/react-native-dropdown-picker/blob/5.x/src/themes/light/index.js
-/**
- * Represents a search component that allows users to select an item from a list of options.
- *
- * @see {@link https://hossein-zare.github.io/react-native-dropdown-picker-website/docs | Documentation}
- */
+type SearchForm = {
+  search: string;
+};
+
 export default function Search({
   containerStyle,
 }: {
@@ -24,57 +25,75 @@ export default function Search({
 }) {
   // --- Hooks -----------------------------------------------------------------
   const router = useRouter();
-  const theme = useColorScheme();
-  const { i18n } = useTranslation();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [pickerTheme, setPickerTheme] = useState<SearchTheme>("LIGHT");
-  const { data, setData, loading, error, handleSearch } = useSearchData("");
+  const { ...methods } = useForm<SearchForm>();
+  const [modalHeight, setModalHeight] = useState(0);
+  const { data, setData, loading, handleSearch } = useSearchData("");
+  const { default: backgroundColor } = useThemeColor({}, "background");
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
-  const handleSelectItem = (item: any) => {
-    if (item["href"] != null) {
-      const href: string = item["href"];
-      router.push({ pathname: href, params: { shipmentID: item["value"] } });
-    }
-  };
+
+  const handleModalHeight = (height: number) => setModalHeight(height);
   // --- END: Data and handlers ------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
-  useEffect(() => {
-    switch (theme) {
-      case "dark":
-        setPickerTheme("DARK");
-        break;
-      default:
-        setPickerTheme("LIGHT");
-        break;
-    }
-  }, [theme]);
+
   // --- END: Side effects -----------------------------------------------------
 
   return (
-    <View style={[containerStyle, { zIndex: 100 }]}>
-      <DropDownPicker
-        open={open}
-        value={value}
-        items={data}
-        searchable={true}
-        loading={loading}
-        theme={pickerTheme}
-        setOpen={setOpen}
-        setItems={setData}
-        setValue={setValue}
-        onChangeSearchText={handleSearch}
-        onSelectItem={handleSelectItem}
-        style={styles.search}
-        dropDownContainerStyle={styles.dropdown}
-        searchTextInputStyle={styles.searchTextInput}
-        searchContainerStyle={styles.searchContainer}
-        listItemContainerStyle={styles.listItemContainer}
-        language={i18n.language.toUpperCase() as LanguageType}
-      />
-    </View>
+    <FormProvider {...methods}>
+      <View style={[styles.container, containerStyle]}>
+        <TextInput
+          name="Search"
+          style={[styles.textInput, { backgroundColor }]}
+          onChangeText={handleSearch}
+          placeholder={t("SEARCH.PLACEHOLDER")}
+          onFocus={() => setOpen(true)}
+        />
+        <Text style={styles.leftIcon}>IC</Text>
+        <Text style={styles.rightIcon}>IC</Text>
+        {open && (
+          <View
+            style={[
+              styles.dataContainer,
+              { backgroundColor, bottom: modalHeight * -1 },
+            ]}
+            onLayout={(ev) => handleModalHeight(ev.nativeEvent.layout.height)}
+          >
+            {loading && <ActivityIndicator />}
+            {!loading && data.length == 0 && (
+              <Text style={styles.containerLabel}>
+                {t("SEARCH.NO_RESULTS")}
+              </Text>
+            )}
+            {!loading && data.length > 0 && (
+              <FlatList
+                data={data}
+                renderItem={({ item }) => (
+                  <Link
+                    href={{
+                      pathname: "ShipmentDetails",
+                      params: { shipmentID: item["value"] },
+                    }}
+                    style={[styles.listItemContainer]}
+                    asChild
+                  >
+                    <Pressable>
+                      <Text style={styles.contentText}>{item["label"]}</Text>
+                    </Pressable>
+                  </Link>
+                )}
+                ItemSeparatorComponent={() => (
+                  <View style={styles.listItemSeparator} />
+                )}
+              />
+            )}
+          </View>
+        )}
+      </View>
+    </FormProvider>
   );
 }

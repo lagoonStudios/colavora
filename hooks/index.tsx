@@ -9,3 +9,5 @@ export {
   useStatusByIdData,
   useManifestsIdData,
 } from "./queries";
+
+export { useSQLite } from "./SQLite";

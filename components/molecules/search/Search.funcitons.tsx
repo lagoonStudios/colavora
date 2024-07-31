@@ -1,103 +1,47 @@
 import { debounce } from "@utils/debounce";
 import { useCallback, useState } from "react";
+import { SearchItem } from "./Search.types";
+import Toast from "react-native-root-toast";
+import { useTranslation } from "react-i18next";
 
 export const useSearchData = (text: string) => {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<SearchItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { t } = useTranslation();
 
   const handleSearchRequest = useCallback(
     (text: string) => {
-      setLoading(true);
-      // Aquí va la lógica de tu búsqueda, por ejemplo, hacer una petición a una API
-      setTimeout(() => {
-        setData([
-          {
-            label: "Manifests",
-            value: "manifests",
-          },
-          { label: "Orders", value: "orders" },
-
-          {
-            label: "Name 01 test long name test",
-            value: "123",
-            shipmentID: 123,
-            consigneeName:
-              "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet",
-            senderName: "Name 01 test long name test",
-            addressLine1: "Address line 1",
-            addressLine2: "Address line 2",
-            zip: "12345",
-            serviceTypeName: "Next Day",
-            referenceNo: 1234556,
-            qty: 12,
-            parent: "manifests",
-            href: "/ShipmentDetails",
-          },
-          {
-            label: "Name 02 test long name test",
-            value: "1234",
-            shipmentID: 1234,
-            consigneeName: "Name 02 test long name test",
-            senderName: "Name 02 test long name test",
-            addressLine1: "Address line 1",
-            addressLine2: "Address line 2",
-            zip: "12345",
-            serviceTypeName: "Next Day",
-            referenceNo: 987654321,
-            qty: 24,
-            parent: "manifests",
-            href: "/ShipmentDetails",
-          },
-
-          {
-            label: "Name 03 test long name test",
-            value: "12345",
-            shipmentID: 12345,
-            consigneeName: "Name 03 test long name test",
-            senderName: "Name 03 test long name test",
-            addressLine1: "Address line 1",
-            addressLine2: "Address line 2",
-            zip: "12345",
-            serviceTypeName: "Next Day",
-            referenceNo: 987654321,
-            qty: 24,
-            parent: "orders",
-            href: "/ShipmentDetails",
-          },
-          {
-            label: "Name 04 test long name test",
-            value: "123456",
-            shipmentID: 123456,
-            consigneeName: "Name 04 test long name test",
-            senderName: "Name 04 test long name test",
-            addressLine1: "Address line 1",
-            addressLine2: "Address line 2",
-            zip: "12345",
-            serviceTypeName: "Next Day",
-            referenceNo: 987654321,
-            qty: 24,
-            parent: "orders",
-            href: "/ShipmentDetails",
-          },
-          {
-            label: "Name 05 test long name test",
-            value: "1234567",
-            shipmentID: 1234567,
-            consigneeName: "Name 05 test long name test",
-            senderName: "Name 05 test long name test",
-            addressLine1: "Address line 1",
-            addressLine2: "Address line 2",
-            zip: "12345",
-            serviceTypeName: "Next Day",
-            referenceNo: 987654321,
-            qty: 24,
-            parent: "orders",
-            href: "/ShipmentDetails",
-          },
-        ]);
+      try {
+        setLoading(true);
+        // Aquí va la lógica de tu búsqueda, por ejemplo, hacer una petición a una API
+        setTimeout(() => {
+          setData([
+            { label: "name 01", value: "123", href: "/ShipmentDetails" },
+            { label: "name 02", value: "124", href: "/ShipmentDetails" },
+            { label: "name 03", value: "125", href: "/ShipmentDetails" },
+            { label: "name 04", value: "126", href: "/ShipmentDetails" },
+            { label: "name 05", value: "127", href: "/ShipmentDetails" },
+            { label: "name 06", value: "128", href: "/ShipmentDetails" },
+            { label: "name 07", value: "129", href: "/ShipmentDetails" },
+            { label: "name 08", value: "130", href: "/ShipmentDetails" },
+            { label: "name 09", value: "131", href: "/ShipmentDetails" },
+            { label: "name 10", value: "132", href: "/ShipmentDetails" },
+            { label: "name 11", value: "133", href: "/ShipmentDetails" },
+            { label: "name 12", value: "134", href: "/ShipmentDetails" },
+            { label: "name 13", value: "135", href: "/ShipmentDetails" },
+            { label: "name 14", value: "136", href: "/ShipmentDetails" },
+            { label: "name 15", value: "137", href: "/ShipmentDetails" },
+            { label: "name 16", value: "138", href: "/ShipmentDetails" },
+            { label: "name 17", value: "139", href: "/ShipmentDetails" },
+          ]);
+          setLoading(false);
+        }, 2000);
+      } catch (error) {
+        Toast.show(t("ERRORS.UNKNOWN"));
         setLoading(false);
-      }, 300);
+        console.error(error);
+      }
     },
     [text]
   );
@@ -105,7 +49,7 @@ export const useSearchData = (text: string) => {
   const handleSearch = useCallback(
     debounce((text: string) => {
       handleSearchRequest(text);
-    }, 700),
+    }, 300),
     [handleSearchRequest]
   );
 

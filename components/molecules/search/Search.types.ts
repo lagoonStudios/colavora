@@ -1,2 +1,5 @@
-import { IFetchOrderData, IFetchShipmentData } from '@constants/types';
-export type SearchTheme = "LIGHT" | "DARK";
+export type SearchItem = {
+    label: string;
+    value: string;
+    href: string
+}
