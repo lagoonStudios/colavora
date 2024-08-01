@@ -5,7 +5,18 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_GOOGLE_CLOUD_API_KEY": "AIzaSyD4abcrpF_DJROmlPxd6DBnYpqtPh0Tx0k",
+        "EXPO_PUBLIC_BASE_URL": "https://order.advancelogisticspr.com:8085/api/",
+        "EXPO_PUBLIC_API_KEY": "pgH7QzFHJx4w46fI~5Uzi4RvtTwlEXp",
+        "EXPO_PUBLIC_AUTH0_DOMAIN": "dev-ghex3xcv4jb2pti7.us.auth0.com",
+        "EXPO_PUBLIC_AUTH0_CLIENT_ID": "d7kLct8IHrc3RtrAYhZKa7lX9SecWd5r"
+      },
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease"
+      }
     },
     "preview": {
       "distribution": "internal"
@@ -14,5 +25,5 @@
   },
   "submit": {
     "production": {}
-  }
+}
 }
