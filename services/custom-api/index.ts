@@ -9,4 +9,6 @@ export {
   fetchShipmentData,
   fetchStatusByIdData,
   fetchStatusData,
+  fetchCommentsByIdData,
+  addCommentdData,
 } from "./custom-api";

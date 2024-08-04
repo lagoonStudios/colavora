@@ -1,6 +1,7 @@
 import { ViewStyle } from "react-native";
 
 export enum ShipmentDetailsTabsItem {
+  DEFAULT,
   DETAILS,
   PIECES,
   COMMENTS,

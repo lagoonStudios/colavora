@@ -8,7 +8,7 @@ import PageHeader from "@molecules/PageHeader/PageHeader";
 import { ActivityIndicator, View } from "@components/Themed";
 
 import { useOrdersListData } from "./OrdersList.functions";
-import { useStore } from "@stores/index";
+import { useStore } from "@stores/zustand";
 import { IFetchShipmentByIdData } from "@constants/types";
 
 export default function OrdersList() {

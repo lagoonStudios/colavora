@@ -9,7 +9,7 @@ import { ManifestListItemProps } from "./ManifestListItem.types";
 import { Link } from "expo-router";
 import { Pressable } from "react-native";
 import { useShipmentsIdData } from "@hooks/queries";
-import { useStore } from "@stores/index";
+import { useStore } from "@stores/zustand";
 
 export default function ManifestListItem(props: ManifestListItemProps) {
   // --- Local state -----------------------------------------------------------

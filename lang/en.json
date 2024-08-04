@@ -19,6 +19,7 @@
     },
     "VALIDATIONS": {
       "REQUIRED": "Required",
+      "EMPTY": "Required text",
       "EMAIL": "Invalid email"
     },
     "LOGIN": {
@@ -53,6 +54,10 @@
     "SEARCH": {
       "PLACEHOLDER": "Search",
       "NO_RESULTS": "Search Orders"
+    },
+    "COMMENTS": {
+      "COMMENTS": "Comments",
+      "SAVE": "Save"
     }
   }
 }

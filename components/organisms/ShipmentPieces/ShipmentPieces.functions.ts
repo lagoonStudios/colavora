@@ -1,5 +1,5 @@
 import { usePiecesByIdData, usePiecesIdData } from "@hooks/queries";
-import { useStore } from "@stores/index";
+import { useStore } from "@stores/zustand";
 import { useEffect, useMemo } from "react";
 
 export const usePiecesData = () => {

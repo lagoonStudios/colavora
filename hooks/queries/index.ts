@@ -11,4 +11,6 @@ export {
   useShipmentsByIdData,
   usePiecesIdData,
   usePiecesByIdData,
+  useCommentsIdData,
+  useAddComment,
 } from "./shipments";

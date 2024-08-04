@@ -3,6 +3,9 @@ export const EmailRegex = new RegExp(
 );
 
 export const mockDriverId = "1";
+export const mockCompanyId = 10029;
+export const mockUserID = 0;
+
 export const defaultLocation = { lat: 18.220833, lng: -66.590149 };
 export const queryKeys = {
   driverData: "driverData",
@@ -16,6 +19,7 @@ export const queryKeys = {
   shipmentsByIdData: "shipmentsByIdData",
   piecesIdData: "piecesIdData",
   piecesByIdData: "piecesByIdData",
+  commnetsByIdData: "commnetsByIdData",
 };
 
 export const labelStatuses = {
