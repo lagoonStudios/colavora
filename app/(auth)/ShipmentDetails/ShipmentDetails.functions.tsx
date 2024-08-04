@@ -1,5 +1,5 @@
 import { IFetchShipmentByIdData } from "@constants/types";
-import { useStore } from "@stores/index";
+import { useStore } from "@stores/zustand";
 import { useEffect, useState } from "react";
 
 export const useShipmentDetailsData = () => {

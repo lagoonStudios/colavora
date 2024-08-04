@@ -1,14 +1,17 @@
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
 import {
   fetchShipmentData,
   fetchShipmentByIdData,
   fetchPiecesData,
   fetchPiecesByIdData,
+  fetchCommentsByIdData,
+  addCommentdData,
 } from "@/services/custom-api";
 import { queryKeys } from "@constants/Constants";
 import {
   IFetchPiecesByIdData,
   IFetchShipmentByIdData,
+  IOptionalCommentsProps,
   IOptionalManifestProps,
 } from "@constants/types";
 
@@ -102,4 +105,46 @@ export function usePiecesByIdData(ids: number[]) {
   });
 
   return { ...piecesByIdData, data: piecesByIdData?.data ?? [] };
+}
+
+export function useCommentsIdData({ id }: IOptionalManifestProps) {
+  const queryKey = [`${queryKeys.commnetsByIdData}-${id}`];
+
+  const piecesIdData = useQuery({
+    queryKey,
+    queryFn: async () => {
+      const { data: rawData } = await fetchCommentsByIdData({
+        id,
+      });
+
+      return rawData ?? [];
+    },
+    retry: 3,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+
+  return piecesIdData;
+}
+
+export function useAddComment() {
+  const request = useMutation({
+    mutationFn: async ({
+      companyID,
+      comment,
+      userID,
+      shipmentID,
+    }: IOptionalCommentsProps) => {
+      return await addCommentdData({
+        companyID,
+        comment,
+        userID,
+        shipmentID,
+      });
+    },
+    onSuccess: () => console.log("On Success"),
+    onError: (e) => console.log("On Error: ", e),
+  });
+
+  return request;
 }

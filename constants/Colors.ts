@@ -1,6 +1,6 @@
 // const tintColorLight = "#2f95dc";
 // const tintColorDark = "#fff";
-/* const tintColorGray = "#dddddd"; */
+export const mantisColor = "#7EC074";
 
 export default {
   light: {

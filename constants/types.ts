@@ -108,4 +108,10 @@ export interface IOptionalManifestProps {
 export interface IOptionalShipmentProps extends IOptionalManifestProps {
   readyDate?: string;
 }
-export interface IOptionalPiecesProps extends IOptionalShipmentProps { }
+export interface IOptionalPiecesProps extends IOptionalShipmentProps {}
+export interface IOptionalCommentsProps extends IOptionalShipmentProps {
+  userID?: number;
+  shipmentID?: number;
+  comment?: string;
+  companyID?: number;
+}

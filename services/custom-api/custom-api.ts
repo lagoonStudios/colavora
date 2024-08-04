@@ -10,7 +10,9 @@ import {
   IOptionalPiecesProps,
   IFetchPiecesByIdData,
   IFetchStatusByIdData,
+  IOptionalCommentsProps,
 } from "@constants/types";
+import { API_KEY } from "@constants/url";
 
 export function fetchDriverData(
   id: string,
@@ -68,4 +70,29 @@ export function fetchPiecesByIdData({
   id,
 }: IOptionalPiecesProps): Promise<AxiosResponse<IFetchPiecesByIdData>> {
   return axiosClient.get(`shipment/piece/${id}`);
+}
+
+export function fetchCommentsByIdData({
+  id,
+}: IOptionalCommentsProps): Promise<AxiosResponse<string[]>> {
+  return axiosClient.get(`shipment/shipment/comment`, {
+    params: { shipmentId: Number(id) },
+  });
+}
+export function addCommentdData({
+  comment,
+  companyID,
+  shipmentID,
+  userID,
+}: IOptionalCommentsProps): Promise<AxiosResponse<unknown>> {
+  const config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: `https://order.advancelogisticspr.com:8085/api/shipment/shipment/comment/post?companyID=${companyID}&userID=${userID}&shipmentID=${shipmentID}&comment=${comment}`,
+    headers: {
+      ApiKey: API_KEY,
+    },
+  };
+
+  return axiosClient.request(config);
 }

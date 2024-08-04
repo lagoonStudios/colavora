@@ -8,7 +8,7 @@ import { HomeItem } from "./Home.types";
 import { useHomeData } from "./Home.functions";
 import { SafeAreaView } from "@atoms/SafeAreaView";
 import { ActivityIndicator, Text } from "@components/Themed";
-import { useStore } from "@stores/index";
+import { useStore } from "@stores/zustand";
 
 export default function Home() {
   // --- Hooks -----------------------------------------------------------------

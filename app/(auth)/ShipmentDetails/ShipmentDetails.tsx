@@ -1,21 +1,22 @@
 import { useTranslation } from "react-i18next";
 import React, { useCallback, useState } from "react";
 
-import { Text } from "@components/Themed";
-import ShipmentDetail from "@templates/ShipmentDetail";
-import ShipmentPieces from "@templates/ShipmentPieces";
+import ShipmentDetail from "@organisms/ShipmentDetail";
+import ShipmentPieces from "@organisms/ShipmentPieces";
+import ShipmentComments from "@organisms/ShipmentComments";
+
 import PageHeader from "@molecules/PageHeader/PageHeader";
-import { ActivityIndicator, View } from "@components/Themed";
-import ShipmentDetailsTabs from "@organisms/ShipmentDetailsTabs";
-import { useShipmentDetailsData } from "./ShipmentDetails.functions";
-import { ShipmentDetailsTabsItem } from "@organisms/ShipmentDetailsTabs/ShipmentDetailsTabs.constants";
+import ShipmentDetailsTabs from "@templates/ShipmentDetailsTabs";
+import { Text, ActivityIndicator, View } from "@components/Themed";
+import { ShipmentDetailsTabsItem } from "@templates/ShipmentDetailsTabs/ShipmentDetailsTabs.constants";
 
 import { styles } from "./ShipmentDetails.styles";
+import { useShipmentDetailsData } from "./ShipmentDetails.functions";
 
 export default function ShipmentDetails() {
   // --- Hooks -----------------------------------------------------------------
-  const { data, loading } = useShipmentDetailsData();
   const { t } = useTranslation();
+  const { data, loading } = useShipmentDetailsData();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local state -----------------------------------------------------------
@@ -42,9 +43,9 @@ export default function ShipmentDetails() {
           return <ShipmentDetail />;
         case ShipmentDetailsTabsItem.PIECES:
           return <ShipmentPieces />;
+        case ShipmentDetailsTabsItem.COMMENTS:
+          return <ShipmentComments />;
         //TODO Make these components
-        // case ShipmentDetailsTabsItem.COMMENTS:
-        //   return <ShipmentComments shipment={data} />;
         // case ShipmentDetailsTabsItem.ACTIONS:
         //   return <ShipmentActions shipment={data} />;
         default:
@@ -62,6 +63,7 @@ export default function ShipmentDetails() {
         selectedTab={selectedTab}
         setSelectedTab={setSelectedTab}
       />
+
       {renderView()}
     </View>
   );

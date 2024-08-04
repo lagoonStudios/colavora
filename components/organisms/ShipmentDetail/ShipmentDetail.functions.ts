@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { defaultLocation } from "@constants/Constants";
-import { useStore } from "@stores/index";
+import { useStore } from "@stores/zustand";
 
 export function useCoordinatesFromAddress({
   address,

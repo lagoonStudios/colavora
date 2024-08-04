@@ -7,7 +7,7 @@ import { IFetchShipmentByIdData } from "@constants/types";
 import { styles } from "./OrderListItem.styles";
 import { Link } from "expo-router";
 import { Pressable } from "react-native";
-import { useStore } from "@stores/index";
+import { useStore } from "@stores/zustand";
 
 export default function OrderListItem(props: IFetchShipmentByIdData) {
   // --- Hooks -----------------------------------------------------------------

@@ -5,22 +5,54 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="08119286-e23d-447f-b9a4-38d00335d43d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/components/molecules/AddComment/AddComment.styles.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/molecules/AddComment/AddComment.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/molecules/AddComment/AddComment.types.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/molecules/AddComment/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/molecules/OrderNotes/OrderNotes.styles.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/molecules/OrderNotes/OrderNotes.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/molecules/OrderNotes/OrderNotes.types.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/molecules/OrderNotes/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/molecules/SaveButton/SaveButton.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/molecules/SaveButton/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/organisms/ShipmentComments/ShipmentComments.functions.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/organisms/ShipmentComments/ShipmentComments.styles.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/organisms/ShipmentComments/ShipmentComments.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/organisms/ShipmentComments/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stores/zustand/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stores/zustand/manifests.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stores/zustand/shipments.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(auth)/ManifestsList/ManifestsList.functions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(auth)/ManifestsList/ManifestsList.functions.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(auth)/Home/Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(auth)/Home/Home.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/(auth)/ManifestsList/ManifestsList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(auth)/ManifestsList/ManifestsList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(auth)/OrdersList/OrdersList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(auth)/OrdersList/OrdersList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(auth)/ShipmentDetails/ShipmentDetails.functions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(auth)/ShipmentDetails/ShipmentDetails.functions.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/(auth)/ShipmentDetails/ShipmentDetails.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(auth)/ShipmentDetails/ShipmentDetails.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/molecules/LoginButton/LoginButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/LoginButton/LoginButton.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/molecules/ManifestListItem/ManifestListItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/ManifestListItem/ManifestListItem.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/molecules/ManifestListItem/ManifestListItem.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/ManifestListItem/ManifestListItem.types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/molecules/ShipmentDetailsTabs/ShipmentDetailsTabs.constants.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/molecules/ShipmentDetailsTabs/ShipmentDetailsTabs.styles.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/molecules/ShipmentDetailsTabs/ShipmentDetailsTabs.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/molecules/ShipmentDetailsTabs/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/templates/ShipmentDetail/ShipmentDetail.functions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/templates/ShipmentDetail/ShipmentDetail.functions.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/molecules/OrderListItem/OrderListItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/OrderListItem/OrderListItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/organisms/ShipmentDetailsTabs/ShipmentDetailsTabs.constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/templates/ShipmentDetailsTabs/ShipmentDetailsTabs.constants.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/organisms/ShipmentDetailsTabs/ShipmentDetailsTabs.styles.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/templates/ShipmentDetailsTabs/ShipmentDetailsTabs.styles.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/organisms/ShipmentDetailsTabs/ShipmentDetailsTabs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/templates/ShipmentDetailsTabs/ShipmentDetailsTabs.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/organisms/ShipmentDetailsTabs/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/templates/ShipmentDetailsTabs/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/templates/ShipmentDetail/ShipmentDetail.constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/organisms/ShipmentDetail/ShipmentDetail.constants.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/templates/ShipmentDetail/ShipmentDetail.functions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/organisms/ShipmentDetail/ShipmentDetail.functions.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/templates/ShipmentDetail/ShipmentDetail.styles.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/organisms/ShipmentDetail/ShipmentDetail.styles.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/templates/ShipmentDetail/ShipmentDetail.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/organisms/ShipmentDetail/ShipmentDetail.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/templates/ShipmentDetail/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/organisms/ShipmentDetail/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/templates/ShipmentPieces/ShipmentPieces.functions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/organisms/ShipmentPieces/ShipmentPieces.functions.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/templates/ShipmentPieces/ShipmentPieces.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/organisms/ShipmentPieces/ShipmentPieces.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/templates/ShipmentPieces/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/organisms/ShipmentPieces/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/constants/Colors.ts" beforeDir="false" afterPath="$PROJECT_DIR$/constants/Colors.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/constants/Constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/constants/Constants.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/constants/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/constants/types.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hooks/queries/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/queries/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hooks/queries/shipments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/queries/shipments.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stores/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/stores/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lang/en.json" beforeDir="false" afterPath="$PROJECT_DIR$/lang/en.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lang/es.json" beforeDir="false" afterPath="$PROJECT_DIR$/lang/es.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/custom-api/custom-api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/services/custom-api/custom-api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/custom-api/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/services/custom-api/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stores/index.ts" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
