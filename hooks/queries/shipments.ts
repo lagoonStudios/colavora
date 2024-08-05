@@ -142,7 +142,6 @@ export function useAddComment() {
         shipmentID,
       });
     },
-    onSuccess: () => console.log("On Success"),
     onError: (e) => console.log("On Error: ", e),
   });
 
