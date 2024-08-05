@@ -3,8 +3,8 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 24,
     marginTop: 10,
+    marginHorizontal: 24,
   },
   noteTitle: {
     alignItems: "flex-start",
@@ -19,9 +19,10 @@ export const styles = StyleSheet.create({
     borderRadius: 13,
     alignItems: "flex-start",
     justifyContent: "center",
+    flexDirection: "column",
     gap: 8,
-    marginVertical: 10,
-    padding: 16,
+    marginVertical: 5,
+    padding: 10,
   },
   title: {
     fontWeight: 600,
@@ -30,6 +31,10 @@ export const styles = StyleSheet.create({
   bodyText: {
     fontWeight: 400,
     fontSize: 14,
+  },
+  dateText: {
+    fontWeight: 300,
+    fontSize: 12,
   },
   piecesLabel: {
     marginTop: 4,

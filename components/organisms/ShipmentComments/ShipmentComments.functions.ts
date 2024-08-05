@@ -13,7 +13,7 @@ export function useCommentsData() {
     data: rawComments,
     isSuccess,
     isLoading: loading,
-    refetch
+    refetch,
   } = useCommentsIdData({ id: String(shipmentID) });
   // --- END: Hooks ------------------------------------------------------------
 

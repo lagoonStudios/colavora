@@ -50,7 +50,11 @@ export default function AddComment({ refetch }: IAddComment) {
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    if (isSuccess) refetch?.();
+    if (isSuccess) {
+      refetch?.();
+      methods.reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess, refetch]);
   // --- END: Side effects -----------------------------------------------------
 
