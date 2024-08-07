@@ -58,6 +58,10 @@
     "COMMENTS": {
       "COMMENTS": "Comentarios",
       "SAVE": "Guardar"
+    },
+    "ACTIONS": {
+      "ORDERS_EXCEPTION": "Excepción de pedido",
+      "ORDERS_COMPLETE": "Completar pedido"
     }
   }
 }

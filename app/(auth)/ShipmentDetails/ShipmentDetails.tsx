@@ -1,8 +1,9 @@
-import { useTranslation } from "react-i18next";
 import React, { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import ShipmentDetail from "@organisms/ShipmentDetail";
 import ShipmentPieces from "@organisms/ShipmentPieces";
+import ShipmentActions from "@organisms/ShipmentActions";
 import ShipmentComments from "@organisms/ShipmentComments";
 
 import PageHeader from "@molecules/PageHeader/PageHeader";
@@ -27,17 +28,15 @@ export default function ShipmentDetails() {
 
   // --- Data and handlers -----------------------------------------------------
   const renderView = useCallback(() => {
-    if (data === undefined && loading) {
-      return (
-        <View style={{ margin: "auto" }}>
-          <ActivityIndicator />
-        </View>
-      );
-    } else if (data === undefined && !loading) {
-      //TODO handle error
-      return <Text>No data</Text>;
+    if (data === undefined) {
+      if (loading)
+        return (
+          <View style={{ margin: "auto" }}>
+            <ActivityIndicator />
+          </View>
+        );
+      else return <Text>No data</Text>;
     } else {
-      if (data === undefined) return null;
       switch (selectedTab) {
         case ShipmentDetailsTabsItem.DETAILS:
           return <ShipmentDetail />;
@@ -45,11 +44,8 @@ export default function ShipmentDetails() {
           return <ShipmentPieces />;
         case ShipmentDetailsTabsItem.COMMENTS:
           return <ShipmentComments />;
-        //TODO Make these components
-        // case ShipmentDetailsTabsItem.ACTIONS:
-        //   return <ShipmentActions shipment={data} />;
-        default:
-          return <Text style={{ margin: "auto" }}>En construcción</Text>;
+        case ShipmentDetailsTabsItem.ACTIONS:
+          return <ShipmentActions />;
       }
     }
   }, [data, selectedTab, loading]);
