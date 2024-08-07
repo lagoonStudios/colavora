@@ -7,7 +7,7 @@ import { queryKeys } from "@constants/Constants";
 import {
   IFetchManifestByIdData,
   IOptionalManifestProps,
-} from "@constants/types";
+} from "@constants/types/manifests";
 
 export function useManifestsIdData({
   createdDate,

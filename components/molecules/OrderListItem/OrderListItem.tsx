@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { View, Text } from "@components/Themed";
-import { IFetchShipmentByIdData } from "@constants/types";
+import { IFetchShipmentByIdData } from "@constants/types/shipments";
 
 import { styles } from "./OrderListItem.styles";
 import { Link } from "expo-router";

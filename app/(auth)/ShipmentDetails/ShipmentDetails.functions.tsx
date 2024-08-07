@@ -1,4 +1,4 @@
-import { IFetchShipmentByIdData } from "@constants/types";
+import { IFetchShipmentByIdData } from "@constants/types/shipments";
 import { useStore } from "@stores/zustand";
 import { useEffect, useState } from "react";
 

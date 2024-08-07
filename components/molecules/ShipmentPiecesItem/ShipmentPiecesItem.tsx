@@ -1,7 +1,7 @@
 import { View, Text } from "@components/Themed";
 import React from "react";
 import { styles } from "./ShipmentPiecesItem.styles";
-import { IFetchPiecesByIdData } from "@constants/types";
+import { IFetchPiecesByIdData } from "@constants/types/shipments";
 
 export default function ShipmentPiecesItem({
   barcode,

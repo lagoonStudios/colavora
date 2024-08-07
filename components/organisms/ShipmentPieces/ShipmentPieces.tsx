@@ -1,6 +1,6 @@
 import React from "react";
 import { usePiecesData } from "./ShipmentPieces.functions";
-import { IFetchPiecesByIdData } from "@constants/types";
+import { IFetchPiecesByIdData } from "@constants/types/shipments";
 import { FlatList } from "react-native";
 import ShipmentPiecesItem from "@molecules/ShipmentPiecesItem";
 import { ActivityIndicator } from "@components/Themed";
