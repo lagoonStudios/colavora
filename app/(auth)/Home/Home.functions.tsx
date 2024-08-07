@@ -1,7 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { HomeItem } from "./Home.types";
-import { useDriverData, useManifestsIdData } from "@hooks/index";
+import {
+  useDriverData,
+  useManifestsIdData,
+  useReasonsIdData,
+  useReasonsByIdData,
+  useCODIdData,
+  useCODByIdData,
+} from "@hooks/index";
 import { mockDriverId } from "@constants/Constants";
+import { useStore } from "@stores/zustand";
 
 export function useHomeData() {
   // --- Local state -----------------------------------------------------------
@@ -70,4 +78,48 @@ export function useHomeData() {
   // --- END: Side effects -----------------------------------------------------
 
   return { data, setData, loading, setLoading };
+}
+
+export function useReasonsData() {
+  // --- Hooks -----------------------------------------------------------------
+  const { addReasonIds, reasonIds, addReason } = useStore();
+
+  const { data: reasonsIds } = useReasonsIdData();
+  const { data: reasonsResponse, pending } = useReasonsByIdData(reasonIds);
+  // --- END: Hooks ------------------------------------------------------------
+
+  // --- Side effects ----------------------------------------------------------
+  useEffect(() => {
+    if (reasonsIds) addReasonIds(reasonsIds);
+  }, [addReasonIds, reasonsIds]);
+
+  useEffect(() => {
+    if (pending === false)
+      reasonsResponse?.map((reason) => {
+        if (reason) addReason(reason);
+      });
+  }, [addReason, pending, reasonsResponse]);
+  // --- END: Side effects -----------------------------------------------------
+}
+
+export function useCODData() {
+  // --- Hooks -----------------------------------------------------------------
+  const { addCODIds, CODIds, addCOD } = useStore();
+
+  const { data: CODIdsData } = useCODIdData();
+  const { data: CODs, pending } = useCODByIdData(CODIds);
+  // --- END: Hooks ------------------------------------------------------------
+
+  // --- Side effects ----------------------------------------------------------
+  useEffect(() => {
+    if (CODIdsData) addCODIds(CODIdsData);
+  }, [addCODIds, CODIdsData]);
+
+  useEffect(() => {
+    if (pending === false)
+      CODs?.map((COD) => {
+        if (COD) addCOD(COD);
+      });
+  }, [CODs, addCOD, pending]);
+  // --- END: Side effects -----------------------------------------------------
 }

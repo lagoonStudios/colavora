@@ -20,6 +20,10 @@ export const queryKeys = {
   piecesIdData: "piecesIdData",
   piecesByIdData: "piecesByIdData",
   commnetsByIdData: "commnetsByIdData",
+  reasonsIdData: "reasonsIdData",
+  reasonsByIdData: "reasonsByIdData",
+  CODIdData: "CODIdData",
+  CODByIdData: "CODByIdData",
 };
 
 export const labelStatuses = {

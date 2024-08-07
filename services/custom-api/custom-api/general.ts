@@ -4,6 +4,7 @@ import {
   IFetchDriverData,
   IFetchCompanyData,
   IFetchStatusByIdData,
+  ICODData,
 } from "@constants/types/general";
 import { IOptionalPiecesProps } from "@constants/types/shipments";
 import { IReasonsByIdData } from "@constants/types/general";
@@ -36,4 +37,12 @@ export function fetchReasonsByIdData({
   id,
 }: IOptionalPiecesProps): Promise<AxiosResponse<IReasonsByIdData>> {
   return axiosClient.get(`common/reason/${id}`);
+}
+export function fetchCODData(): Promise<AxiosResponse<number[]>> {
+  return axiosClient.get(`common/cod`);
+}
+export function fetchCODByIdData({
+  id,
+}: IOptionalPiecesProps): Promise<AxiosResponse<ICODData>> {
+  return axiosClient.get(`common/cod/${id}`);
 }

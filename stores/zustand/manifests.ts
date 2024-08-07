@@ -2,8 +2,8 @@ import { IFetchManifestByIdData } from "@constants/types/manifests";
 import { StateCreator } from "zustand";
 
 export interface ManifestIdsSlice {
-  manifestIds: string[];
-  addManifestIds: (manifestIds: string[]) => void;
+  manifestIds: number[];
+  addManifestIds: (manifestIds: number[]) => void;
   resetManifestIds: () => void;
 }
 
@@ -16,7 +16,7 @@ export const createManifestIdsSlice: StateCreator<ManifestIdsSlice, [], []> = (
   set,
 ) => ({
   manifestIds: [],
-  addManifestIds: (manifestIds: string[]) =>
+  addManifestIds: (manifestIds: number[]) =>
     set((state) => ({ ...state, manifestIds })),
   resetManifestIds: () => set((state) => ({ ...state, manifestIds: [] })),
 });
