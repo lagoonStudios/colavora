@@ -9,6 +9,7 @@ import { useCODData, useHomeData, useReasonsData } from "./Home.functions";
 import { SafeAreaView } from "@atoms/SafeAreaView";
 import { ActivityIndicator, Text } from "@components/Themed";
 import { useStore } from "@stores/zustand";
+import SearchInput from "@organisms/SearchInput";
 
 export default function Home() {
   // --- Hooks -----------------------------------------------------------------

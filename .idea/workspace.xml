@@ -5,24 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="08119286-e23d-447f-b9a4-38d00335d43d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/components/molecules/ShipmentActionsComplete/ShipmentActionsComplete.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/molecules/ShipmentActionsComplete/index.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/molecules/ShipmentActionsDefault/ShipmentActionsDefault.style.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/molecules/ShipmentActionsDefault/ShipmentActionsDefault.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/molecules/ShipmentActionsDefault/ShipmentActionsDefault.types.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/molecules/ShipmentActionsDefault/index.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/molecules/ShipmentActionsException/ShipmentActionsException.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/molecules/ShipmentActionsException/index.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/organisms/ShipmentActions/ShipmentAction.constants.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(auth)/ShipmentDetails/ShipmentDetails.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(auth)/ShipmentDetails/ShipmentDetails.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/atoms/Chip/Chip.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/atoms/Chip/Chip.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/atoms/Chip/Chip.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/atoms/Chip/Chip.types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/molecules/PageHeader/PageHeader.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/PageHeader/PageHeader.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/organisms/ShipmentActions/ShipmentActions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/organisms/ShipmentActions/ShipmentActions.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/organisms/ShipmentActions/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/organisms/ShipmentActions/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lang/en.json" beforeDir="false" afterPath="$PROJECT_DIR$/lang/en.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lang/es.json" beforeDir="false" afterPath="$PROJECT_DIR$/lang/es.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(auth)/Home/Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(auth)/Home/Home.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
