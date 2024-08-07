@@ -2,13 +2,14 @@ export * as AuthContext from "./AuthContext";
 
 import {
   IFetchManifestByIdData,
+  IFetchPiecesByIdData,
   IFetchShipmentByIdData,
 } from "@constants/types";
 import { create, StateCreator } from "zustand";
 
 interface ManifestIdsSlice {
-  manifestIds: number[];
-  addManifestIds: (manifestIds: number[]) => void;
+  manifestIds: string[];
+  addManifestIds: (manifestIds: string[]) => void;
   resetManifestIds: () => void;
 }
 
@@ -29,11 +30,23 @@ interface ShipmentSlice {
   resetShipment: () => void;
 }
 
+interface PiecesIdsSlice {
+  piecesIds: number[];
+  addPiecesIds: (piecesIds: number[]) => void;
+  resetPiecesIds: () => void;
+}
+
+interface PiecesSlice {
+  pieces: IFetchPiecesByIdData[];
+  addPieces: (pieces: IFetchPiecesByIdData[]) => void;
+  resetPieces: () => void;
+}
+
 const createManifestIdsSlice: StateCreator<ManifestIdsSlice, [], []> = (
   set,
 ) => ({
   manifestIds: [],
-  addManifestIds: (manifestIds: number[]) =>
+  addManifestIds: (manifestIds: string[]) =>
     set((state) => ({ ...state, manifestIds })),
   resetManifestIds: () => set((state) => ({ ...state, manifestIds: [] })),
 });
@@ -55,7 +68,7 @@ const createShipmentIdsSlice: StateCreator<ShipmentIdsSlice, [], []> = (
 ) => ({
   shipmentIds: [],
   addShipmentIds: (shipmentIds: number[]) =>
-    set((state) => ({ ...state, shipmentIds })),
+    set((state) => ({ ...state, shipmentIds: shipmentIds ?? [] })),
   resetShipmentIds: () => set((state) => ({ ...state, shipmentIds: [] })),
 });
 
@@ -66,13 +79,34 @@ const createShipmentSlice: StateCreator<ShipmentSlice, [], []> = (set) => ({
   resetShipment: () => set((state) => ({ ...state, shipment: {} })),
 });
 
+const createPiecesIdsSlice: StateCreator<PiecesIdsSlice, [], []> = (set) => ({
+  piecesIds: [],
+  addPiecesIds: (piecesIds: number[]) =>
+    set((state) => ({ ...state, piecesIds })),
+  resetPiecesIds: () => set((state) => ({ ...state, piecesIds: [] })),
+});
+
+const createPiecesSlice: StateCreator<PiecesSlice, [], []> = (set) => ({
+  pieces: [],
+  addPieces: (pieces: IFetchPiecesByIdData[]) =>
+    set((state) => ({ ...state, pieces })),
+  resetPieces: () => set((state) => ({ ...state, pieces: [] })),
+});
+
 const useBoundStore = create<
-  ManifestIdsSlice & ManifestsSlice & ShipmentIdsSlice & ShipmentSlice
+  ManifestIdsSlice &
+    ManifestsSlice &
+    ShipmentIdsSlice &
+    ShipmentSlice &
+    PiecesIdsSlice &
+    PiecesSlice
 >()((...a) => ({
   ...createManifestIdsSlice(...a),
   ...createManifestsSlice(...a),
   ...createShipmentIdsSlice(...a),
   ...createShipmentSlice(...a),
+  ...createPiecesIdsSlice(...a),
+  ...createPiecesSlice(...a),
 }));
 
 export { useBoundStore as useStore };

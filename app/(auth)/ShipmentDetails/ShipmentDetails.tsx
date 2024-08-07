@@ -3,11 +3,12 @@ import React, { useCallback, useState } from "react";
 
 import { Text } from "@components/Themed";
 import ShipmentDetail from "@templates/ShipmentDetail";
+import ShipmentPieces from "@templates/ShipmentPieces";
 import PageHeader from "@molecules/PageHeader/PageHeader";
 import { ActivityIndicator, View } from "@components/Themed";
-import ShipmentDetailsTabs from "@molecules/ShipmentDetailsTabs";
+import ShipmentDetailsTabs from "@organisms/ShipmentDetailsTabs";
 import { useShipmentDetailsData } from "./ShipmentDetails.functions";
-import { ShipmentDetailsTabsItem } from "@molecules/ShipmentDetailsTabs/ShipmentDetailsTabs.constants";
+import { ShipmentDetailsTabsItem } from "@organisms/ShipmentDetailsTabs/ShipmentDetailsTabs.constants";
 
 import { styles } from "./ShipmentDetails.styles";
 
@@ -39,9 +40,9 @@ export default function ShipmentDetails() {
       switch (selectedTab) {
         case ShipmentDetailsTabsItem.DETAILS:
           return <ShipmentDetail />;
+        case ShipmentDetailsTabsItem.PIECES:
+          return <ShipmentPieces />;
         //TODO Make these components
-        // case ShipmentDetailsTabsItem.PIECES:
-        //   return <ShipmentPieces shipment={data} />;
         // case ShipmentDetailsTabsItem.COMMENTS:
         //   return <ShipmentComments shipment={data} />;
         // case ShipmentDetailsTabsItem.ACTIONS:
@@ -61,7 +62,6 @@ export default function ShipmentDetails() {
         selectedTab={selectedTab}
         setSelectedTab={setSelectedTab}
       />
-
       {renderView()}
     </View>
   );

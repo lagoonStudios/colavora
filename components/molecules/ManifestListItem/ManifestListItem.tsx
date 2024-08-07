@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import Card from "@atoms/Card";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
@@ -13,11 +13,11 @@ import { useStore } from "@stores/index";
 
 export default function ManifestListItem(props: ManifestListItemProps) {
   // --- Local state -----------------------------------------------------------
-  const { code, date } = props;
+  const { code } = props;
   // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
-  const { data } = useShipmentsIdData({ manifest: Number(code) });
+  const { data } = useShipmentsIdData({ manifest: code });
   const { addShipmentIds } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
@@ -27,9 +27,9 @@ export default function ManifestListItem(props: ManifestListItemProps) {
     return 0;
   }, [data]);
 
-  const setShipmentIdsHandler = () => {
+  const setShipmentIdsHandler = useCallback(() => {
     if (data) addShipmentIds(data);
-  };
+  }, [addShipmentIds, data]);
 
   // --- END: Data and handlers ------------------------------------------------
 
@@ -39,7 +39,7 @@ export default function ManifestListItem(props: ManifestListItemProps) {
         <Card style={styles.container}>
           <FontAwesome name="list-ul" size={25} color="gray" />
           <View style={styles.descriptionContainer}>
-            <Text style={styles.description}>{`${code} - ${date}`}</Text>
+            <Text style={styles.description}>{`${code}`}</Text>
             <Text style={styles.count}>{`(${count})`}</Text>
           </View>
         </Card>

@@ -1,0 +1,30 @@
+import Colors from "@constants/Colors";
+import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+  container: {
+    borderWidth: 1,
+    borderColor: Colors.light.gray.default,
+    borderRadius: 13,
+    alignItems: "flex-start",
+    justifyContent: "center",
+    gap: 30,
+    marginVertical: 10,
+    marginHorizontal: 20,
+    padding: 16,
+  },
+  title: {
+    fontWeight: 600,
+    fontSize: 16,
+  },
+  bodyText: {
+    fontWeight: 600,
+    fontSize: 14,
+  },
+  piecesLabel: {
+    marginTop: 4,
+    fontWeight: 400,
+    fontSize: 12,
+    color: Colors.light.noStatus.default,
+  },
+});
