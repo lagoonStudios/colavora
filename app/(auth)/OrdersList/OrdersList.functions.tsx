@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 
 export function useOrdersListData(shipmentIds: number[]) {
   // --- Hooks -----------------------------------------------------------------
-  const { data: dataShipments, pending } = useShipmentsByIdData(
-    shipmentIds?.slice(0, 20),
-  );
+  const { data: dataShipments, pending } = useShipmentsByIdData(shipmentIds);
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local state -----------------------------------------------------------

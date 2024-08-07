@@ -78,15 +78,15 @@ export interface IFetchShipmentByIdData {
 }
 
 export interface IFetchPiecesByIdData {
-  companyID: string;
-  shipmentID: number;
-  pieceID: number;
-  barcode: string;
-  packageType: number;
-  packageTypeName: string;
+  companyID?: string;
+  shipmentID?: number;
+  pieceID?: number;
+  barcode?: string;
+  packageType?: number;
+  packageTypeName?: string;
   comments?: null | string | [string];
-  pwBack: string;
-  pod: string;
+  pwBack?: string;
+  pod?: string;
 }
 
 export interface IFetchStatusByIdData {
@@ -97,11 +97,11 @@ export interface IFetchStatusByIdData {
 }
 
 export interface IOptionalManifestProps {
-  driverId?: number;
+  driverId?: string;
   status?: string;
   createdDate?: string;
   id?: string;
-  manifest?: number;
+  manifest?: string;
   optionalKey?: string;
 }
 

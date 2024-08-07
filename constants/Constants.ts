@@ -14,6 +14,8 @@ export const queryKeys = {
   manifestsByIdData: "manifestsByIdData",
   shipmentsIdData: "shipmentsIdData",
   shipmentsByIdData: "shipmentsByIdData",
+  piecesIdData: "piecesIdData",
+  piecesByIdData: "piecesByIdData",
 };
 
 export const labelStatuses = {

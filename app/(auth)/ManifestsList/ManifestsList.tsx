@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { FlatList, Pressable } from "react-native";
+import { FlatList } from "react-native";
 
 import PageHeader from "@molecules/PageHeader/PageHeader";
 import { ActivityIndicator, View } from "@components/Themed";
@@ -19,10 +19,8 @@ export default function ManifestsList() {
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
-  const renderItem = ({ item }: { item: ManifestListItemProps }) => (
-    <Pressable>
-      <ManifestListItem code={item.code} date={item.date} />
-    </Pressable>
+  const renderItem = ({ item: { code } }: { item: ManifestListItemProps }) => (
+    <ManifestListItem code={code} />
   );
   // --- END: Data and handlers ------------------------------------------------
 
@@ -34,11 +32,8 @@ export default function ManifestsList() {
         title={`${t("MANIFESTS.MANIFESTS")} (${manifestIds?.length ?? ""})`}
       />
       <View style={styles.content}>
-        {loading ? (
-          <ActivityIndicator />
-        ) : (
-          <FlatList data={data} renderItem={renderItem} />
-        )}
+        {loading && <ActivityIndicator />}
+        {!loading && <FlatList data={data} renderItem={renderItem} />}
       </View>
     </View>
   );

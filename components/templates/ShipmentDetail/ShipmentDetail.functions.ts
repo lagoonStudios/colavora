@@ -46,7 +46,6 @@ export function useCoordinatesFromAddress({
   return { loading, location, error };
 }
 
-
 export const useShipmentData = () => {
   const { shipment: rawShipment } = useStore();
   const shipment = useMemo(() => {
@@ -57,4 +56,4 @@ export const useShipmentData = () => {
   }, [rawShipment]);
 
   return { shipment };
-}
+};
