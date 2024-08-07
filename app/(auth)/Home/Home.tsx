@@ -5,15 +5,18 @@ import { FlatList, Pressable } from "react-native";
 
 import styles from "./Home.styles";
 import { HomeItem } from "./Home.types";
-import { useHomeData } from "./Home.functions";
+import { useCODData, useHomeData, useReasonsData } from "./Home.functions";
 import { SafeAreaView } from "@atoms/SafeAreaView";
 import { ActivityIndicator, Text } from "@components/Themed";
 import { useStore } from "@stores/zustand";
 
 export default function Home() {
   // --- Hooks -----------------------------------------------------------------
-  const { addManifestIds } = useStore();
+  useCODData();
+  useReasonsData();
+
   const { t } = useTranslation();
+  const { addManifestIds } = useStore();
   const { data, loading } = useHomeData();
   // --- END: Hooks ------------------------------------------------------------
 

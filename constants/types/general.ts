@@ -41,3 +41,9 @@ export interface IReasonsByIdData {
   reasonCodeDesc: string;
   completeOrder: boolean;
 }
+
+export interface ICODData {
+  companyID: string;
+  codTypeID: number;
+  codType: string;
+}
