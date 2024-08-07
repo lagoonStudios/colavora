@@ -49,6 +49,10 @@
       "INVOICE": "Invoice",
       "SERVICE_TYPE": "Tipo de servicio",
       "COD": "COD"
+    },
+    "SEARCH": {
+      "PLACEHOLDER": "Buscar",
+      "NO_RESULTS": "Busca Ordenes"
     }
   }
 }

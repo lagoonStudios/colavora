@@ -11,6 +11,7 @@ import {
 } from "@react-navigation/native";
 import "react-native-reanimated";
 import "@/lang/i18n";
+import { RootSiblingParent } from "react-native-root-siblings";
 
 import { useColorScheme } from "@components/useColorScheme";
 import AuthProvider from "@/providers/Auth";
@@ -91,18 +92,20 @@ function RootLayoutNav(props: { authDomain: string; authClientId: string }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SafeAreaProvider>
-        <ThemeProvider
-          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-        >
-          <AuthProvider domain={authDomain} clientId={authClientId}>
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="(no-auth)" />
-              <Stack.Screen name="(auth)" />
-            </Stack>
-          </AuthProvider>
-        </ThemeProvider>
-      </SafeAreaProvider>
+      <RootSiblingParent>
+        <SafeAreaProvider>
+          <ThemeProvider
+            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+          >
+            <AuthProvider domain={authDomain} clientId={authClientId}>
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="(no-auth)" />
+                <Stack.Screen name="(auth)" />
+              </Stack>
+            </AuthProvider>
+          </ThemeProvider>
+        </SafeAreaProvider>
+      </RootSiblingParent>
     </QueryClientProvider>
   );
 }

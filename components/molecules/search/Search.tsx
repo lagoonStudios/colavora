@@ -1,40 +1,48 @@
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useState } from "react";
-import DropDownPicker, { LanguageType } from "react-native-dropdown-picker";
+import React from "react";
 
-import { useColorScheme } from "@/components/useColorScheme";
+import { Text, useThemeColor, View } from "@components/Themed";
+import { Pressable } from "react-native";
+import { FormProvider, useForm } from "react-hook-form";
+import { styles } from "./Search.styles";
+import { SearchForm, SearchProps } from "./Search.types";
+import TextInput from "@molecules/TextInput";
 
-import { SearchProps, SearchTheme } from "./Search.types";
+export default function Search(props: SearchProps) {
+  const { containerStyle, setOpen, open, handleSearch } = props;
+  // --- Hooks -----------------------------------------------------------------
+  const { t } = useTranslation();
+  const { ...methods } = useForm<SearchForm>();
 
-// To create a custom theme, see the documentation template: https://github.com/hossein-zare/react-native-dropdown-picker/blob/5.x/src/themes/light/index.js
-/**
- * Represents a search component that allows users to select an item from a list of options.
- *
- * @see {@link https://hossein-zare.github.io/react-native-dropdown-picker-website/docs | Documentation}
- */
-export default function Search<T>(props: SearchProps<T>) {
-  //Update folders
-  const { ...otherProps } = props;
-  const { i18n } = useTranslation();
-  const theme = useColorScheme();
-  const [pickerTheme, setPickerTheme] = useState<SearchTheme>("LIGHT");
+  const { default: backgroundColor } = useThemeColor({}, "background");
+  const { name } = methods.register("search", {});
+  // --- END: Hooks ------------------------------------------------------------
+  // --- Refs ------------------------------------------------------------------
 
-  useEffect(() => {
-    switch (theme) {
-      case "dark":
-        setPickerTheme("DARK");
-        break;
-      default:
-        setPickerTheme("LIGHT");
-        break;
-    }
-  }, [theme]);
+  // --- END: Refs -------------------------------------------------------------
+  // --- Data and handlers -----------------------------------------------------
+  const handleClose = () => {
+    setOpen(false);
+  };
+  // --- END: Data and handlers ------------------------------------------------
+
+  // --- Side effects ----------------------------------------------------------
+  // --- END: Side effects -----------------------------------------------------
 
   return (
-    <DropDownPicker
-      {...otherProps}
-      language={i18n.language.toUpperCase() as LanguageType}
-      theme={pickerTheme}
-    />
+    <View style={[containerStyle]}>
+      <FormProvider {...methods}>
+        <TextInput
+          name={name}
+          style={[styles.textInput, { backgroundColor }]}
+          onChangeText={handleSearch}
+          placeholder={t("SEARCH.PLACEHOLDER")}
+        />
+        <Text style={styles.leftIcon}>IC</Text>
+        <Pressable style={styles.rightIcon} onPress={handleClose}>
+          <Text>X</Text>
+        </Pressable>
+      </FormProvider>
+    </View>
   );
 }

@@ -1,6 +1,8 @@
 import React from "react";
 import { Redirect, Stack } from "expo-router";
 import useAuth from "@hooks/Auth";
+import { useThemeColor } from "@components/Themed";
+import { useSQLite } from "@hooks/SQLite";
 
 export default function AuthLayout() {
   // --- Hooks -----------------------------------------------------------------

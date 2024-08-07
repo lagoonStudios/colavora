@@ -40,16 +40,26 @@ export default function AuthProvider({
     };
 
     if (token == null) {
-      setIsLoggedIn(false);
+      // setIsLoggedIn(false);
+      setIsLoggedIn(true);
       return;
     }
 
-    if (token) checkCredentials();
-  }, [token]);
+    // const hasValidCredentials =
+    //   await auth?.credentialsManager.hasValidCredentials();
+    // setIsLoggedIn(hasValidCredentials ?? false);
+    setIsLoggedIn(true);
+  });
+  // --- END: Data and handlers ------------------------------------------------
+
+  // --- Side effects ----------------------------------------------------------
   // --- END: Side effects -----------------------------------------------------
 
   return (
-    <Auth0Provider domain={domain} clientId={clientId}>
+    <Auth0Provider
+      domain={"dev-ghex3xcv4jb2pti7.us.auth0.com"}
+      clientId={"d7kLct8IHrc3RtrAYhZKa7lX9SecWd5r"}
+    >
       <AuthContext.Provider value={{ token, isLoggedIn, saveToken, logout }}>
         {children}
       </AuthContext.Provider>

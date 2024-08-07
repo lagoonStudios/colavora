@@ -49,6 +49,10 @@
       "INVOICE": "Invoice",
       "SERVICE_TYPE": "Service Type",
       "COD": "COD"
+    },
+    "SEARCH": {
+      "PLACEHOLDER": "Search",
+      "NO_RESULTS": "Search Orders"
     }
   }
 }

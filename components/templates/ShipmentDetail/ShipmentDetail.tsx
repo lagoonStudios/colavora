@@ -24,7 +24,6 @@ export default function ShipmentDetails() {
   });
 
   // --- END: Hooks ------------------------------------------------------------
-
   return (
     <View style={styles.container}>
       <View style={styles.mapContainer}>

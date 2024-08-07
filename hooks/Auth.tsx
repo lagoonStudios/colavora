@@ -59,20 +59,15 @@ export default function useAuth() {
         realm: CONNECTION,
         audience: AUDIENCE,
       });
-
-      //TODO save credentials
-      // if (credentials?.accessToken) {
-      //   const useInfo = await auth?.auth?.userInfo({
-      //     token: credentials?.accessToken,
-      //   });
-      //   console.log(useInfo);
-      // }
-
-      // await auth.credentialsManager.saveCredentials({
-      //   ...credentials,
-      //   idToken: credentials.idToken ?? credentials.accessToken,
+      // console.log("Login credentials:", { credentials });
+      console.log({ credentials });
+      await auth.credentialsManager.saveCredentials({
+        ...credentials,
+        idToken: credentials.idToken ?? credentials.accessToken,
+      });
+      // auth.credentialsManager.getCredentials().then((creds) => {
+      //   console.log("checkCredentials from manager", { creds });
       // });
-
       saveToken(credentials.accessToken);
     } catch (error) {
       handleErrorMessage({ error });
