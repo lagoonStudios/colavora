@@ -8,10 +8,11 @@ import { View, Text } from "@components/Themed";
 import { styles } from "./PageHeader.styles";
 
 export default function PageHeader(props: { title: string }) {
+  // --- Local state -----------------------------------------------------------
   const { title } = props;
+  // --- END: Local state ------------------------------------------------------
   // --- Hooks -----------------------------------------------------------------
   const navigation = useNavigation();
-
   // --- END: Hooks ------------------------------------------------------------
 
   return (

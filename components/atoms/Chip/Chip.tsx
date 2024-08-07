@@ -8,7 +8,7 @@ import { styles as defaultStyles } from "./Chip.styles";
 
 export default function Chip(props: ChipProps) {
   // --- Hooks -----------------------------------------------------------------
-  const { label, onPress, styles, active } = props;
+  const { label, onPress, styles, active, labelStyles } = props;
   const { default: activeBackgroundColor, contrast: activeTextColor } =
     useThemeColor({}, "primary");
 
@@ -36,6 +36,7 @@ export default function Chip(props: ChipProps) {
         style={[
           defaultStyles.label,
           active ? { color: activeTextColor } : { color: inActiveTextColor },
+          labelStyles,
         ]}
       >
         {label}

@@ -58,6 +58,10 @@
     "COMMENTS": {
       "COMMENTS": "Comments",
       "SAVE": "Save"
+    },
+    "ACTIONS": {
+      "ORDERS_EXCEPTION": "Order Exception",
+      "ORDERS_COMPLETE": "Complete Order"
     }
   }
 }
