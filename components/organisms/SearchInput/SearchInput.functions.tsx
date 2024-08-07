@@ -1,19 +1,23 @@
-import { debounce } from "@utils/debounce";
 import { useCallback, useState } from "react";
-import { SearchItem } from "./Search.types";
+
 import Toast from "react-native-root-toast";
 import { useTranslation } from "react-i18next";
 
-export const useSearchData = (text: string) => {
+import { SearchItem, UseSearchDataProps } from "./SearchInput.types";
+import { debounce } from "@utils/index";
+
+export const useSearchData = ({ text }: UseSearchDataProps) => {
+  const [open, setOpen] = useState(false);
   const [data, setData] = useState<SearchItem[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const { t } = useTranslation();
 
   const handleSearchRequest = useCallback(
     (text: string) => {
       try {
         setLoading(true);
+        setOpen(true);
         // Aquí va la lógica de tu búsqueda, por ejemplo, hacer una petición a una API
         setTimeout(() => {
           setData([
@@ -38,6 +42,7 @@ export const useSearchData = (text: string) => {
           setLoading(false);
         }, 2000);
       } catch (error) {
+        setError("Error");
         Toast.show(t("ERRORS.UNKNOWN"));
         setLoading(false);
         console.error(error);
@@ -53,5 +58,5 @@ export const useSearchData = (text: string) => {
     [handleSearchRequest]
   );
 
-  return { data, setData, loading, error, handleSearch };
+  return { data, setData, loading, error, handleSearch, open, setOpen };
 };

@@ -2,14 +2,14 @@ import Colors from "@constants/Colors";
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { flex: 1, paddingHorizontal: 20 },
+  searchContainer: { marginBottom: 10 },
   item: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     marginVertical: 10,
-    marginHorizontal: 20,
     paddingVertical: 20,
     paddingHorizontal: 10,
     borderColor: Colors.light.gray.default,
@@ -26,10 +26,6 @@ const styles = StyleSheet.create({
     width: 26,
     height: 26,
   },
-  searchContainer: {
-    marginHorizontal: 20,
-    marginBottom: 20
-  }
 });
 
 export default styles;
