@@ -1,38 +1,5 @@
-export interface IFetchDriverData {
-  active: boolean;
-  companyID: string;
-  driverID: number;
-  driverName: string;
-  userID: number;
-}
+import { IOptionalManifestProps } from "@constants/types/manifests";
 
-export interface IFetchCompanyData {
-  companyID: string;
-  companyName: string;
-  logo: string;
-  slogan: string;
-  tel1: string;
-  ext: string;
-  tel2: string;
-  address1: string;
-  address2: string;
-  city: string;
-  state: string;
-  zip: string;
-  contact: string;
-  position: string;
-  contactEmail: string;
-  companyEmail: string;
-}
-
-export interface IFetchManifestByIdData {
-  companyID?: string;
-  shipmentID?: number;
-  manifestID?: number;
-  manifest?: string;
-  driverID?: number;
-  createdDate?: string;
-}
 export interface IFetchShipmentByIdData {
   companyID?: string;
   shipmentID?: number;
@@ -87,22 +54,6 @@ export interface IFetchPiecesByIdData {
   comments?: null | string | [string];
   pwBack?: string;
   pod?: string;
-}
-
-export interface IFetchStatusByIdData {
-  companyID: string;
-  statusID: number;
-  status: string;
-  completed: boolean;
-}
-
-export interface IOptionalManifestProps {
-  driverId?: string;
-  status?: string;
-  createdDate?: string;
-  id?: string;
-  manifest?: string;
-  optionalKey?: string;
 }
 
 export interface IOptionalShipmentProps extends IOptionalManifestProps {

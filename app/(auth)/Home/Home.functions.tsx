@@ -16,7 +16,7 @@ export function useHomeData() {
   const { data: driverData } = useDriverData(mockDriverId);
   const { data: manifestIdData, isSuccess } = useManifestsIdData({
     createdDate,
-    driverId,
+    driverId: String(driverId ?? ""),
   });
   // --- END: Hooks ------------------------------------------------------------
 

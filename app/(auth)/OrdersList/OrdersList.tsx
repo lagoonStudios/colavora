@@ -9,7 +9,7 @@ import { ActivityIndicator, View } from "@components/Themed";
 
 import { useOrdersListData } from "./OrdersList.functions";
 import { useStore } from "@stores/zustand";
-import { IFetchShipmentByIdData } from "@constants/types";
+import { IFetchShipmentByIdData } from "@constants/types/shipments";
 
 export default function OrdersList() {
   // --- Hooks -----------------------------------------------------------------

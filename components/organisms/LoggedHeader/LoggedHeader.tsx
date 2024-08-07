@@ -3,7 +3,7 @@ import { View, Text } from "@components/Themed";
 import { Image, ImageSourcePropType } from "react-native";
 import { styles } from "./LoggedHeader.styles";
 import { queryClient } from "@/providers";
-import { IFetchCompanyData, IFetchDriverData } from "@constants/types";
+import { IFetchCompanyData, IFetchDriverData } from "@constants/types/general";
 import { queryKeys } from "@constants/Constants";
 
 export default function LoggedHeader() {

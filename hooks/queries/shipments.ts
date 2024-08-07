@@ -12,8 +12,8 @@ import {
   IFetchPiecesByIdData,
   IFetchShipmentByIdData,
   IOptionalCommentsProps,
-  IOptionalManifestProps,
-} from "@constants/types";
+} from "@constants/types/shipments";
+import { IOptionalManifestProps } from "@constants/types/manifests";
 
 export function useShipmentsIdData({ manifest }: IOptionalManifestProps) {
   const queryKey = [`${queryKeys.shipmentsIdData}-${manifest}`];

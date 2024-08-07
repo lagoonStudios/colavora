@@ -1,4 +1,7 @@
-import { IFetchPiecesByIdData, IFetchShipmentByIdData } from "@constants/types";
+import {
+  IFetchPiecesByIdData,
+  IFetchShipmentByIdData,
+} from "@constants/types/shipments";
 import { StateCreator } from "zustand";
 
 export interface ShipmentIdsSlice {
@@ -35,7 +38,7 @@ export const createShipmentIdsSlice: StateCreator<ShipmentIdsSlice, [], []> = (
   set,
 ) => ({
   shipmentIds: [],
-  addShipmentIds: (shipmentIds: number[]) =>
+  addShipmentIds: (shipmentIds) =>
     set((state) => ({ ...state, shipmentIds: shipmentIds ?? [] })),
   resetShipmentIds: () => set((state) => ({ ...state, shipmentIds: [] })),
 });
@@ -44,8 +47,7 @@ export const createShipmentSlice: StateCreator<ShipmentSlice, [], []> = (
   set,
 ) => ({
   shipment: {},
-  addShipment: (shipment: IFetchShipmentByIdData) =>
-    set((state) => ({ ...state, shipment })),
+  addShipment: (shipment) => set((state) => ({ ...state, shipment })),
   resetShipment: () => set((state) => ({ ...state, shipment: {} })),
 });
 
@@ -53,15 +55,13 @@ export const createPiecesIdsSlice: StateCreator<PiecesIdsSlice, [], []> = (
   set,
 ) => ({
   piecesIds: [],
-  addPiecesIds: (piecesIds: number[]) =>
-    set((state) => ({ ...state, piecesIds })),
+  addPiecesIds: (piecesIds) => set((state) => ({ ...state, piecesIds })),
   resetPiecesIds: () => set((state) => ({ ...state, piecesIds: [] })),
 });
 
 export const createPiecesSlice: StateCreator<PiecesSlice, [], []> = (set) => ({
   pieces: [],
-  addPieces: (pieces: IFetchPiecesByIdData[]) =>
-    set((state) => ({ ...state, pieces })),
+  addPieces: (pieces) => set((state) => ({ ...state, pieces })),
   resetPieces: () => set((state) => ({ ...state, pieces: [] })),
 });
 
@@ -69,6 +69,6 @@ export const createCommentsSlice: StateCreator<CommentsSlice, [], []> = (
   set,
 ) => ({
   comments: [],
-  addComments: (comments: string[]) => set((state) => ({ ...state, comments })),
+  addComments: (comments) => set((state) => ({ ...state, comments })),
   resetCommnets: () => set((state) => ({ ...state, comments: [] })),
 });

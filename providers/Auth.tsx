@@ -1,4 +1,4 @@
-import { auth } from "@hooks/Auth";
+/* import { auth } from "@hooks/Auth"; */
 import { AuthContext } from "@stores/AuthContext";
 import React, { useEffect, useState } from "react";
 import { Auth0Provider } from "react-native-auth0";

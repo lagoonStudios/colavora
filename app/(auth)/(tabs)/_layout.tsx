@@ -15,7 +15,7 @@ import LogoutButton from "@molecules/LogoutButton/LogoutButton";
 import { useThemeColor } from "@components/Themed";
 
 import { useDriverData, useCompanyData } from "@hooks/index";
-import { IFetchDriverData } from "@constants/types";
+import { IFetchDriverData } from "@constants/types/general";
 import { mockDriverId } from "@constants/Constants";
 
 export default function TabLayout() {

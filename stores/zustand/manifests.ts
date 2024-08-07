@@ -1,4 +1,4 @@
-import { IFetchManifestByIdData } from "@constants/types";
+import { IFetchManifestByIdData } from "@constants/types/manifests";
 import { StateCreator } from "zustand";
 
 export interface ManifestIdsSlice {
