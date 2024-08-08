@@ -61,7 +61,8 @@
     },
     "ACTIONS": {
       "ORDERS_EXCEPTION": "Order Exception",
-      "ORDERS_COMPLETE": "Complete Order"
+      "ORDERS_COMPLETE": "Complete Order",
+      "PLACEHOLDER": "Additional comment"
     }
   }
 }

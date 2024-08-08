@@ -6,6 +6,7 @@ import {
   IOptionalPiecesProps,
   IFetchPiecesByIdData,
   IOptionalCommentsProps,
+  IOptionalExceptionProps,
 } from "@constants/types/shipments";
 import { API_KEY, BASE_URL } from "@constants/url";
 
@@ -52,6 +53,25 @@ export function addCommentdData({
     method: "post",
     maxBodyLength: Infinity,
     url: `${BASE_URL}shipment/shipment/comment/post?companyID=${companyID}&userID=${userID}&shipmentID=${shipmentID}&comment=${comment}`,
+    headers: {
+      ApiKey: API_KEY,
+    },
+  };
+
+  return axiosClient.request(config);
+}
+
+export function orderException({
+  comment,
+  companyID,
+  shipmentID,
+  userID,
+  reasonID,
+}: IOptionalExceptionProps): Promise<AxiosResponse<unknown>> {
+  const config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: `${BASE_URL}shipment/event/exception/post?companyID=${companyID}&userID=${userID}&shipmentID=${shipmentID}&comment=${comment}&reasonID=${reasonID}`,
     headers: {
       ApiKey: API_KEY,
     },

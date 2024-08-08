@@ -6,7 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="08119286-e23d-447f-b9a4-38d00335d43d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(auth)/Home/Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(auth)/Home/Home.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/molecules/ShipmentActionsException/ShipmentActionsException.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/ShipmentActionsException/ShipmentActionsException.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/constants/types/shipments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/constants/types/shipments.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/queries/shipments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/queries/shipments.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lang/en.json" beforeDir="false" afterPath="$PROJECT_DIR$/lang/en.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lang/es.json" beforeDir="false" afterPath="$PROJECT_DIR$/lang/es.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/custom-api/custom-api/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/services/custom-api/custom-api/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/custom-api/custom-api/shipments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/services/custom-api/custom-api/shipments.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/custom-api/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/services/custom-api/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

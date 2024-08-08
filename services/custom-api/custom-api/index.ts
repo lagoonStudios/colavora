@@ -18,4 +18,5 @@ export {
   fetchPiecesData,
   fetchShipmentByIdData,
   fetchShipmentData,
+  orderException,
 } from "./shipments";

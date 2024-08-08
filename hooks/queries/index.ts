@@ -17,4 +17,5 @@ export {
   usePiecesByIdData,
   useCommentsIdData,
   useAddComment,
+  useOrderException,
 } from "./shipments";

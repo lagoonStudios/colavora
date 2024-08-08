@@ -12,7 +12,7 @@ import TextInput from "@molecules/TextInput";
 import { useAddComment } from "@hooks/queries";
 import SaveButton from "@molecules/SaveButton";
 import { Text, View } from "@components/Themed";
-import { mockCompanyId, mockUserID } from "@constants/Constants";
+import { mockUserID } from "@constants/Constants";
 
 import { IAddComment, CommentForm } from "./AddComment.types";
 import { styles } from "./AddComment.styles";
@@ -25,7 +25,7 @@ export default function AddComment({ refetch }: IAddComment) {
     defaultValues: { comment: "" },
   });
   const {
-    shipment: { shipmentID },
+    shipment: { shipmentID, companyID },
   } = useStore();
   // --- END: Hooks ------------------------------------------------
 
@@ -37,7 +37,7 @@ export default function AddComment({ refetch }: IAddComment) {
     }
 
     mutate({
-      companyID: mockCompanyId,
+      companyID: Number(companyID),
       userID: mockUserID,
       shipmentID,
       comment: data.comment,
