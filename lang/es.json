@@ -61,7 +61,8 @@
     },
     "ACTIONS": {
       "ORDERS_EXCEPTION": "Excepción de pedido",
-      "ORDERS_COMPLETE": "Completar pedido"
+      "ORDERS_COMPLETE": "Completar pedido",
+      "PLACEHOLDER": "Comentario Adicional"
     }
   }
 }

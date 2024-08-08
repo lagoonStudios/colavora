@@ -12,6 +12,7 @@ export {
   useReasonsByIdData,
   useCODIdData,
   useCODByIdData,
+  useOrderException,
 } from "./queries";
 
 export { useSQLite } from "./SQLite";

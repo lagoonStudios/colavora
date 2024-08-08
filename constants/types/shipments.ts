@@ -66,3 +66,7 @@ export interface IOptionalCommentsProps extends IOptionalShipmentProps {
   comment?: string;
   companyID?: number;
 }
+
+export interface IOptionalExceptionProps extends IOptionalCommentsProps {
+  reasonID?: number;
+}

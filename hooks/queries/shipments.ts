@@ -6,12 +6,14 @@ import {
   fetchPiecesByIdData,
   fetchCommentsByIdData,
   addCommentdData,
+  orderException,
 } from "@/services/custom-api";
 import { queryKeys } from "@constants/Constants";
 import {
   IFetchPiecesByIdData,
   IFetchShipmentByIdData,
   IOptionalCommentsProps,
+  IOptionalExceptionProps,
 } from "@constants/types/shipments";
 import { IOptionalManifestProps } from "@constants/types/manifests";
 
@@ -140,6 +142,29 @@ export function useAddComment() {
         comment,
         userID,
         shipmentID,
+      });
+    },
+    onError: (e) => console.log("On Error: ", e),
+  });
+
+  return request;
+}
+
+export function useOrderException() {
+  const request = useMutation({
+    mutationFn: async ({
+      companyID,
+      comment,
+      userID,
+      shipmentID,
+      reasonID,
+    }: IOptionalExceptionProps) => {
+      return await orderException({
+        companyID,
+        comment,
+        userID,
+        shipmentID,
+        reasonID,
       });
     },
     onError: (e) => console.log("On Error: ", e),
