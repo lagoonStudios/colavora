@@ -21,7 +21,6 @@ export function useManifestsIdData({
         createdDate,
         driverId,
       });
-
       return rawData ?? [];
     },
     retry: 3,
