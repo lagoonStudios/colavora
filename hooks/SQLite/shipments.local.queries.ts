@@ -1,12 +1,12 @@
 import { IFetchShipmentByIdData } from "@constants/types/shipments";
-import * as SQLite from "expo-sqlite";
+import { db } from "./SQLite";
 
 /**
  * Creates the `shipments` table in the SQLite database if it doesn't exist.
 
  * @param db The SQLite database connection.
  */
-export function createShipmentTable(db: SQLite.SQLiteDatabase) {
+export function createShipmentTable() {
     try {
         db.execSync(
             `
@@ -70,7 +70,7 @@ export function createShipmentTable(db: SQLite.SQLiteDatabase) {
  *
  * @throws {Error}  - Rejects with an error if there is a problem with the database operation.
  */
-export function insertMultipleShipments(db: SQLite.SQLiteDatabase, shipments: IFetchShipmentByIdData[]) {
+export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
     return new Promise((resolve, reject) => {
         const incomingIds = shipments.map(v => v.shipmentID);
         db.getAllAsync(`SELECT shipmentID FROM shipments WHERE shipmentID IN (${incomingIds})`).then((returnedData) => {
@@ -177,7 +177,7 @@ export function insertMultipleShipments(db: SQLite.SQLiteDatabase, shipments: IF
                     notExistingIds
                 ).then((res) => {
                     resolve({
-                        mesasge: `Ids inserted correctly}`,
+                        message: `Ids inserted correctly}`,
                         idsInserted: notExistingIds
                     });
                 }).catch(error => {

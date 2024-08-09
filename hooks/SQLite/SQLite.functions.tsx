@@ -1,8 +1,10 @@
 import * as SQLite from "expo-sqlite";
-import { createManifestsTable } from "./manifests.database";
-import { createShipmentTable } from "./shipments.database";
+import { createManifestsTable } from "./manifests.local.queries";
+import { createShipmentTable } from "./shipments.local.queries";
+import { createCommentsTable } from "./comments.local.queries";
 
 export function createAllDBTables(db: SQLite.SQLiteDatabase) {
-  createManifestsTable(db);
-  createShipmentTable(db);
+  createManifestsTable();
+  createShipmentTable();
+  createCommentsTable();
 }
