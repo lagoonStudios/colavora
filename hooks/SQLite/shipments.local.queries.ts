@@ -1,63 +1,72 @@
 import { IFetchShipmentByIdData } from "@constants/types/shipments";
-import { db } from "./SQLite";
+import { SQLiteDatabase } from 'expo-sqlite';
 
 /**
  * Creates the `shipments` table in the SQLite database if it doesn't exist.
 
  * @param db The SQLite database connection.
  */
-export function createShipmentTable() {
-    try {
-        db.execSync(
+export function createShipmentTable(db: SQLiteDatabase) {
+    return new Promise((resolve: (value: string) => void, reject) => {
+        db.execAsync(
             `
-            CREATE TABLE IF NOT EXISTS shipments (
-            companyID TEXT NOT NULL,
-            shipmentID INTEGER PRIMARY KEY UNIQUE,
-            waybill TEXT,
-            serviceType INTEGER,
-            ServiceTypeName TEXT,
-            packageType INTEGER,
-            readyDate TEXT,
-            dueDate TEXT,
-            codType TEXT,
-            codAmount REAL,
-            sender TEXT,
-            senderName TEXT,
-            senderAddressLine1 TEXT,
-            senderAddressLine2 TEXT,
-            senderZip TEXT,
-            senderPhoneNumber TEXT,
-            senderContactPerson TEXT,
-            orderNotes TEXT,
-            consigneeNum TEXT,
-            consigneeName TEXT,
-            addressLine1 TEXT,
-            addressLine2 TEXT,
-            zip TEXT,
-            phoneNumber TEXT,
-            contactPerson TEXT,
-            createdUserID INTEGER,
-            createdDate TEXT,
-            lastTransferDate TEXT,
-            status TEXT,
-            qty INTEGER,
-            items TEXT,
-            templateID INTEGER,
-            manifestDL TEXT,
-            manifestPk TEXT,
-            assignPK INTEGER,
-            assignDL INTEGER,
-            division TEXT,
-            lastEventComment TEXT,
-            reason TEXT,
-            barcode TEXT,
-            referenceNo TEXT
-            );
-        `
-        );
-    } catch (error) {
-        console.error(error);
-    }
+            DROP TABLE IF EXISTS shipments;
+                CREATE TABLE IF NOT EXISTS shipments (
+                companyID TEXT NOT NULL,
+                shipmentID INTEGER PRIMARY KEY UNIQUE,
+                waybill TEXT,
+                serviceType INTEGER,
+                ServiceTypeName TEXT,
+                packageType INTEGER,
+                readyDate TEXT,
+                dueDate TEXT,
+                codType TEXT,
+                codAmount REAL,
+                sender TEXT,
+                senderName TEXT,
+                senderAddressLine1 TEXT,
+                senderAddressLine2 TEXT,
+                senderZip TEXT,
+                senderPhoneNumber TEXT,
+                senderContactPerson TEXT,
+                orderNotes TEXT,
+                consigneeNum TEXT,
+                consigneeName TEXT,
+                addressLine1 TEXT,
+                addressLine2 TEXT,
+                zip TEXT,
+                phoneNumber TEXT,
+                contactPerson TEXT,
+                createdUserID INTEGER,
+                createdDate TEXT,
+                lastTransferDate TEXT,
+                status TEXT,
+                qty INTEGER,
+                items TEXT,
+                templateID INTEGER,
+                manifestDL TEXT,
+                assignPK INTEGER,
+                assignDL INTEGER,
+                division TEXT,
+                lastEventComment TEXT,
+                reason TEXT,
+                barcode TEXT,
+                referenceNo TEXT,
+                manifestPk TEXT,
+                is_sync BOOLEAN NOT NULL CHECK (is_sync IN (0,1) ) DEFAULT 0,
+                last_sync TEXT,
+                manifest TEXT NOT NULL,
+                FOREIGN KEY (manifest) REFERENCES manifests (manifest)
+                    ON DELETE CASCADE
+                );
+            `
+        ).then(() => {
+            resolve("Table created correctly");
+        }).catch(error => {
+            reject(error);
+        });
+    });
+
 }
 
 /**
@@ -70,7 +79,7 @@ export function createShipmentTable() {
  *
  * @throws {Error}  - Rejects with an error if there is a problem with the database operation.
  */
-export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
+export function insertMultipleShipments(db: SQLiteDatabase, shipments: IFetchShipmentByIdData[]) {
     return new Promise((resolve, reject) => {
         const incomingIds = shipments.map(v => v.shipmentID);
         db.getAllAsync(`SELECT shipmentID FROM shipments WHERE shipmentID IN (${incomingIds})`).then((returnedData) => {
@@ -119,6 +128,7 @@ export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
                         ${v.templateID},
                         '${v.manifestDL}',
                         '${v.manifestPk}',
+                        '${v.manifestPk}',
                         ${v.assignPK},
                         ${v.assignDL},
                         '${v.division}',
@@ -164,6 +174,7 @@ export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
                     templateID,
                     manifestDL,
                     manifestPk,
+                    manifest,
                     assignPK,
                     assignDL,
                     division,
@@ -190,3 +201,4 @@ export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
         })
     });
 };
+

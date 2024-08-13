@@ -1,25 +1,46 @@
-import { db } from "./SQLite";
+import { SQLiteDatabase } from "expo-sqlite";
 
-export function createCommentsTable() {
-    db.execSync(
+/**
+ * Creates a comments table in the provided SQLite database if it doesn't exist.
+ * @param db The SQLite database instance.
+ * @returns A Promise that resolves with "Table created correctly" if successful, or rejects with an error.
+ */
+export function createCommentsTable(db: SQLiteDatabase) {
+    return new Promise((resolve: (value: string) => void, reject) => {
+        db.execAsync(
+            `
+            DROP TABLE IF EXISTS comments;
+          CREATE TABLE IF NOT EXISTS comments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            comment TEXT,
+            is_sync BOOLEAN NOT NULL CHECK (is_sync IN (0,1) ) DEFAULT 0,
+            last_sync TEXT,
+            shipmentID INTEGER,
+            FOREIGN KEY (shipmentID) REFERENCES shipments(shipmentID)
+            );
         `
-      CREATE TABLE IF NOT EXISTS comments (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        shipmentId INTEGER,
-        comment TEXT
-        );
-        CREATE INDEX IF NOT EXISTS comments_shipmentID ON comments (shipmentID);
-    `
-    );
-    const comments = db.getAllSync(`
-        select * from comments;
-    `);
+        ).then(() => {
+            resolve("Table created correctly");
+        }).catch(error => {
+            reject(error);
+        });
+    });
+
 }
 
-export function insertComments(comments: { shipmentId: number, comment: string }[]) {
+/**
+ * Inserts comments into the comments table of the provided SQLite database.
+ *
+ * The function first checks for existing comments with the same shipment ID and comment.
+ * It then inserts only the new comments that are not already present in the table.
+ *
+ * @param db The SQLite database instance.
+ * @param comments An array of objects containing comment data.
+ * @returns A Promise that resolves with a message or rejects with an error.
+ */
+export function insertMultipleComments(db: SQLiteDatabase, comments: { shipmentId: number, comment: string }[]) {
     return new Promise((resolve, reject) => {
         const shipmentIds = new Set(comments.map(v => v.shipmentId));
-
 
         db.getAllAsync(`
         SELECT * FROM comments WHERE shipmentId IN (${[...shipmentIds].join(',')}) AND comment IN (${comments.map(v => `'${v.comment}'`).join(',')});
@@ -28,6 +49,7 @@ export function insertComments(comments: { shipmentId: number, comment: string }
             const notExistingComments = comments.filter(v => !existingComments.find(c => c.shipmentId === v.shipmentId && c.comment === v.comment));
 
             if (notExistingComments.length > 0) {
+
                 db.runAsync(`
                     INSERT INTO comments (shipmentId, comment)
                     VALUES ${notExistingComments.map(v => `(${v.shipmentId}, '${v.comment}')`).join(',')};
