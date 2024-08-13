@@ -2,7 +2,7 @@ export interface IFetchManifestByIdData {
   companyID?: string;
   shipmentID?: number;
   manifestID?: number;
-  manifest?: string;
+  manifest: string;
   driverID?: number;
   createdDate?: string;
 }
