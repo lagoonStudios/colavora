@@ -24,7 +24,7 @@ export default function ManifestListItem(props: ManifestListItemProps) {
   // --- Data and handlers -----------------------------------------------------
   const count = useMemo(() => {
     if (data) return data?.length;
-    return 0;
+    return undefined;
   }, [data]);
 
   const setShipmentIdsHandler = useCallback(() => {
@@ -40,8 +40,8 @@ export default function ManifestListItem(props: ManifestListItemProps) {
           <FontAwesome name="list-ul" size={25} color="gray" />
           <View style={styles.descriptionContainer}>
             <Text style={styles.description}>{`${code}`}</Text>
-            {count !== 0 && <Text style={styles.count}>{`(${count})`}</Text>}
-            {count === 0 && <ActivityIndicator />}
+            {count && <Text style={styles.count}>{`(${count})`}</Text>}
+            {!count && <ActivityIndicator />}
           </View>
         </Card>
       </Pressable>

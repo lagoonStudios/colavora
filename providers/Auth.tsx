@@ -25,30 +25,14 @@ export default function AuthProvider({
   const logout = () => {
     setToken("");
     setIsLoggedIn(false);
-    // return auth?.credentialsManager.clearCredentials();
   };
 
   // --- END: Data and handlers ------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    const checkCredentials = () => {
-      // const hasValidCredentials =
-      //   await auth?.credentialsManager.hasValidCredentials();
-      // setIsLoggedIn(hasValidCredentials ?? false);
-      setIsLoggedIn(Boolean(token));
-    };
+    const checkCredentials = () => setIsLoggedIn(Boolean(token));
 
-    // if (token == null) {
-    //   // setIsLoggedIn(false);
-    //   setIsLoggedIn(true);
-    //   return;
-    // }
-
-    // const hasValidCredentials =
-    //   await auth?.credentialsManager.hasValidCredentials();
-    // setIsLoggedIn(hasValidCredentials ?? false);
-    // setIsLoggedIn(true);
     checkCredentials();
   });
   // --- END: Data and handlers ------------------------------------------------
