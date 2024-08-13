@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ManifestListItemProps } from "@molecules/ManifestListItem/ManifestListItem.types";
 
-export function useManifestsListData(manifestIds: string[]) {
+export function useManifestsListData(manifestIds: number[]) {
   // --- Local state -----------------------------------------------------------
   const [loading, setLoading] = useState(true);
   // --- END: Local state ------------------------------------------------------
@@ -10,7 +10,7 @@ export function useManifestsListData(manifestIds: string[]) {
   const data: ManifestListItemProps[] = useMemo(() => {
     if (manifestIds)
       return manifestIds?.map((code) => {
-        const manifest: ManifestListItemProps = { code };
+        const manifest: ManifestListItemProps = { code: String(code) };
         return manifest;
       });
     return [];

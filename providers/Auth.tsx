@@ -39,16 +39,17 @@ export default function AuthProvider({
       setIsLoggedIn(Boolean(token));
     };
 
-    if (token == null) {
-      // setIsLoggedIn(false);
-      setIsLoggedIn(true);
-      return;
-    }
+    // if (token == null) {
+    //   // setIsLoggedIn(false);
+    //   setIsLoggedIn(true);
+    //   return;
+    // }
 
     // const hasValidCredentials =
     //   await auth?.credentialsManager.hasValidCredentials();
     // setIsLoggedIn(hasValidCredentials ?? false);
-    setIsLoggedIn(true);
+    // setIsLoggedIn(true);
+    checkCredentials();
   });
   // --- END: Data and handlers ------------------------------------------------
 
