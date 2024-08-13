@@ -3,7 +3,8 @@ import { usePiecesData } from "./ShipmentPieces.functions";
 import { IFetchPiecesByIdData } from "@constants/types/shipments";
 import { FlatList } from "react-native";
 import ShipmentPiecesItem from "@molecules/ShipmentPiecesItem";
-import { ActivityIndicator } from "@components/Themed";
+import { ActivityIndicator, View } from "@components/Themed";
+import { styles } from "./ShipmentPieces.styles";
 export default function ShipmentPieces() {
   // --- Hooks -----------------------------------------------------------------
   const { data, loading } = usePiecesData();
@@ -28,7 +29,7 @@ export default function ShipmentPieces() {
   // --- END: Data and handlers ------------------------------------------------
 
   return (
-    <>
+    <View style={styles.content}>
       {loading && <ActivityIndicator />}
       {!loading && (
         <FlatList
@@ -37,6 +38,6 @@ export default function ShipmentPieces() {
           keyExtractor={(item) => String(item.pieceID)}
         />
       )}
-    </>
+    </View>
   );
 }

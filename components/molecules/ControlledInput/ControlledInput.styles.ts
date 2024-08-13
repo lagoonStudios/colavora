@@ -7,6 +7,8 @@ export const styles = StyleSheet.create({
     width: "100%",
     alignContent: "flex-start",
     justifyContent: "center",
+    borderColor: "transparent",
+    borderWidth: 0,
   },
   label: {
     fontSize: 16,

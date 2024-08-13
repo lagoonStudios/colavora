@@ -61,10 +61,10 @@ export default function useAuth() {
       });
       // console.log("Login credentials:", { credentials });
       console.log({ credentials });
-      await auth.credentialsManager.saveCredentials({
+      /* await auth.credentialsManager.saveCredentials({
         ...credentials,
         idToken: credentials.idToken ?? credentials.accessToken,
-      });
+      }); */
       // auth.credentialsManager.getCredentials().then((creds) => {
       //   console.log("checkCredentials from manager", { creds });
       // });

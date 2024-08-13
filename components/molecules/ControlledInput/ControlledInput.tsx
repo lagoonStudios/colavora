@@ -27,22 +27,22 @@ export default function ControlledInput(props: TextInputProps) {
 
   const { default: backgroundColor } = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "background"
+    "background",
   );
   const { tint: textColor } = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "text"
+    "text",
   );
   const { tint: errorColor } = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "danger"
+    "danger",
   );
   const theme = useColorScheme() ?? "light";
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local state -----------------------------------------------------------
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   // --- END: Local state ------------------------------------------------------

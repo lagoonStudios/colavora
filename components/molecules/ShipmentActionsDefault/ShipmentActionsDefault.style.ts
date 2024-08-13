@@ -17,6 +17,7 @@ export const styles = StyleSheet.create({
     paddingVertical: textSize / 2,
     width: "100%",
     alignContent: "center",
+    textAlignVertical: "center",
   },
   label: {
     fontSize: textSize,
