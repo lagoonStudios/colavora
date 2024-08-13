@@ -14,7 +14,7 @@
     "lint:fix": "npx eslint . --fix",
     "format": "prettier --check ./app",
     "format:fix": "npx prettier --write ./app",
-    "build:dev": "eas build:run -p development --latest",
+    "build:dev": "eas build --profile development --platform android",
     "secret:push": "eas secret:push --scope project --env-file .env"
   },
   "jest": {
@@ -65,6 +65,7 @@
     "@react-native-picker/picker": "2.7.5"
   },
   "devDependencies": {
+    "expo-dev-client": "~4.0.22",
     "@babel/core": "7.24.5",
     "@testing-library/react-native": "12.5.1",
     "@types/react": "~18.2.45",

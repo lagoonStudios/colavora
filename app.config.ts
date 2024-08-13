@@ -5,14 +5,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   slug: "colavora",
   ...config,
   ios: {
-    bundleIdentifier: process.env.EXPO_PUBLIC_BUNDLE_IDENTIFIER,
+    bundleIdentifier: "com.eagerlink.colavora",
     supportsTablet: true,
     config: {
       googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_CLOUD_API_KEY,
     },
   },
   android: {
-    package: process.env.EXPO_PUBLIC_BUNDLE_IDENTIFIER,
+    package: "com.eagerlink.colavora",
     adaptiveIcon: {
       foregroundImage: "./assets/images/adaptive-icon.png",
       backgroundColor: "#ffffff",
