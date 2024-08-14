@@ -6,6 +6,11 @@ export const styles = StyleSheet.create({
     marginTop: 10,
     marginHorizontal: 24,
   },
+  secondaryContainer: {
+    display: "flex",
+    marginHorizontal: 24,
+    gap: 16,
+  },
   noteTitle: {
     alignItems: "flex-start",
     justifyContent: "center",

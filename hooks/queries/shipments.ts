@@ -32,6 +32,7 @@ export function useShipmentsIdData({ manifest }: IOptionalManifestProps) {
     retry: 1,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    enabled: !!manifest,
   });
 
   return shipmentsIdData;
