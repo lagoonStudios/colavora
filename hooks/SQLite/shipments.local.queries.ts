@@ -1,5 +1,6 @@
 import { IFetchShipmentByIdData } from "@constants/types/shipments";
 import { SQLiteDatabase } from 'expo-sqlite';
+import { IFetchOrderListItem } from "./SQLite.types";
 
 /**
  * Creates the `shipments` table in the SQLite database if it doesn't exist.
@@ -10,7 +11,6 @@ export function createShipmentTable(db: SQLiteDatabase) {
     return new Promise((resolve: (value: string) => void, reject) => {
         db.execAsync(
             `
-            DROP TABLE IF EXISTS shipments;
                 CREATE TABLE IF NOT EXISTS shipments (
                 companyID TEXT NOT NULL,
                 shipmentID INTEGER PRIMARY KEY UNIQUE,
@@ -53,17 +53,19 @@ export function createShipmentTable(db: SQLiteDatabase) {
                 barcode TEXT,
                 referenceNo TEXT,
                 manifestPk TEXT,
-                is_sync BOOLEAN NOT NULL CHECK (is_sync IN (0,1) ) DEFAULT 0,
-                last_sync TEXT,
                 manifest TEXT NOT NULL,
                 FOREIGN KEY (manifest) REFERENCES manifests (manifest)
                     ON DELETE CASCADE
                 );
+
+                CREATE INDEX IF NOT EXISTS shipments_manifests_idx ON shipments (manifest);
+                CREATE INDEX IF NOT EXISTS shipments_statuses_idx ON shipments (status);
+                CREATE INDEX IF NOT EXISTS shipments_dueDate_idx ON shipments (dueDate);
             `
         ).then(() => {
             resolve("Table created correctly");
         }).catch(error => {
-            reject(error);
+            reject("ERROR Creating shipments table: " + error);
         });
     });
 
@@ -202,3 +204,73 @@ export function insertMultipleShipments(db: SQLiteDatabase, shipments: IFetchShi
     });
 };
 
+
+/**
+ * Gets the count and completed count of shipments for the current day.
+ *
+ * @param db - The SQLite database instance.
+ * @returns A Promise that resolves to an object containing the total count of shipments and the count of completed shipments for the current day, or rejects with an error.
+ */
+export function getTodaysShipments(db: SQLiteDatabase) {
+    return new Promise((resolve: (value: { count: number, completed_count: number }) => void, reject) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const endToday = new Date();
+        endToday.setHours(23, 59, 59, 999);
+        db.getFirstAsync(`
+            SELECT 
+                count(DISTINCT shipments.shipmentID) AS count,
+                SUM(
+                    CASE WHEN shipments.status = 'COMPLETED' THEN 1 ELSE 0 END
+                ) AS completed_count
+            FROM 
+                shipments
+            INNER JOIN manifests ON 
+                shipments.manifest = manifests.manifest
+            WHERE 
+                shipments.status IS NOT NULL 
+            AND 
+                shipments.dueDate >= datetime('${today.toISOString()}')
+            AND 
+                shipments.dueDate <= datetime('${endToday.toISOString()}')
+            `)
+            .then((res) => {
+                const data = res as { count: number, completed_count: number };
+                resolve(data);
+            })
+            .catch(error => {
+                console.log('error getting datta: ', error);
+                reject(error);
+            });
+
+    });
+};
+
+
+export function getShipmentListItemByManifestID(db: SQLiteDatabase, { manifestID }: { manifestID: string }) {
+    return new Promise((resolve: (value: IFetchOrderListItem[]) => void, reject) => {
+        db.getAllAsync(`
+            SELECT 
+                consigneeName,
+                zip,
+                senderName,
+                serviceTypeName,
+                addressLine1,
+                addressLine2,
+                referenceNo,
+                qty
+            FROM 
+                shipments
+            WHERE 
+                manifestPK = ?;
+            `, [manifestID])
+            .then((res) => {
+                const data = res as IFetchOrderListItem[];
+                resolve(data);
+            }).catch(error => {
+                console.log(error);
+                reject(error);
+            });
+    });
+
+}

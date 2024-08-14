@@ -1,5 +1,7 @@
 import { IFetchManifestByIdData } from "@constants/types/manifests";
 import { SQLiteDatabase } from "expo-sqlite";
+import { db } from './SQLite';
+import { PaginatedData } from "@constants/types/general";
 
 
 /**
@@ -11,7 +13,6 @@ export function createManifestsTable(db: SQLiteDatabase) {
     return new Promise((resolve: (value: string) => void, reject) => {
         db.execAsync(
             `
-            DROP TABLE IF EXISTS manifests;
           CREATE TABLE IF NOT EXISTS manifests (
             manifest TEXT PRIMARY KEY UNIQUE NOT NULL,
             companyID TEXT NOT NULL,
@@ -19,14 +20,16 @@ export function createManifestsTable(db: SQLiteDatabase) {
             manifestID INTEGER NOT NULL,
             driverID INTEGER NOT NULL,
             createdDate TEXT,
-            is_sync BOOLEAN NOT NULL CHECK (is_sync IN (0,1) ) DEFAULT 0,
+            is_sync BOOLEAN DEFAULT false,
             last_sync TEXT
           );
+
+          CREATE INDEX IF NOT EXISTS manifestDate_idx ON manifests (createdDate);
         `
         ).then(() => {
             resolve("Table created correctly");
         }).catch(error => {
-            reject(error);
+            reject("ERROR Creating manifest table: " + error);
         });
     });
 }
@@ -80,3 +83,63 @@ export function insertMultipleManifests(db: SQLiteDatabase, manifests: IFetchMan
         });
     })
 };
+
+/**
+ * Gets the total count of manifests that have at least one associated shipment with a non-null status.
+ *
+ * @param db - The SQLite database instance.
+ * @returns A Promise that resolves to the total count of manifests, or rejects with an error.
+ */
+export function getAllManifestsCount(db: SQLiteDatabase) {
+    return new Promise((resolve: (value: { count: number }) => void, reject) => {
+        console.log('getting data');
+        db.getFirstAsync(`
+        SELECT
+             COUNT(DISTINCT manifests.manifest) AS count
+        FROM 
+            manifests 
+        INNER JOIN shipments ON 
+            manifests.manifest = shipments.manifest
+        WHERE 
+            shipments.status IS NOT NULL
+        `).then((res) => {
+            const count = (res as { count: number });
+            resolve(count);
+        }).catch(error => {
+            reject(error);
+        });
+    });
+}
+
+/**
+ * Retrieves a paginated list of manifests with their associated active shipments count.
+
+ * @param db - The SQLite database instance.
+ * @param paginatedData - Pagination parameters (page, page_size).
+ * @returns A Promise that resolves to an array of objects containing manifest details, creation date, and active shipments count, or rejects with an error.
+ */
+export function getManifestsList(db: SQLiteDatabase, { page, page_size }: PaginatedData) {
+    return new Promise((resolve: (value: { manifest: string, createdDate: string, active_shipments: number }[]) => void, reject) => {
+        db.getAllAsync(`
+            SELECT 
+                manifests.manifest,
+                manifests.createdDate,
+                COUNT (CASE WHEN shipments.status IS NOT NULL THEN 1 ELSE 0 END) AS active_shipments
+            FROM 
+                manifests
+            INNER JOIN shipments ON 
+                manifests.manifest = shipments.manifest
+            GROUP BY manifests.manifest
+            ORDER BY 
+                manifests.createdDate DESC
+            LIMIT ${page_size} OFFSET ${page * page_size}
+            `).then((res) => {
+            const data = res as { manifest: string, createdDate: string, active_shipments: number }[];
+            console.log('response data: ', data);
+            resolve(data);
+        }).catch(error => {
+            console.error('Error getting manifests list: ', error);
+            reject(error);
+        });
+    });
+}
