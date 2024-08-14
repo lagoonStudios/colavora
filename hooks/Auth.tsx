@@ -59,7 +59,6 @@ export default function useAuth() {
         realm: CONNECTION,
         audience: AUDIENCE,
       });
-      console.log({ credentials });
       saveToken(credentials.accessToken);
     } catch (error) {
       handleErrorMessage({ error });

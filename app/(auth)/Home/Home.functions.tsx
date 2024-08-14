@@ -10,42 +10,68 @@ import {
 } from "@hooks/index";
 import { mockDriverId } from "@constants/Constants";
 import { useStore } from "@stores/zustand";
+import { useShipmentsIdData } from "@hooks/queries";
 
 export function useHomeData() {
   // --- Local state -----------------------------------------------------------
   const createdDate = new Date("2024-05-20T00:01:00").toISOString();
 
-  const [data, setData] = useState<HomeItem[]>([]);
-  const [driverId, setDriverId] = useState<number>();
   const [loading, setLoading] = useState(true);
+  const [driverId, setDriverId] = useState<number>();
+  const [todayManifest, setTodayManifest] = useState<number>();
   // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
+  const { addShipmentIds, shipmentIds: localShipmentIds } = useStore();
   const { data: driverData } = useDriverData(mockDriverId);
   const { data: manifestIdData, isSuccess } = useManifestsIdData({
     createdDate,
     driverId: String(driverId ?? ""),
   });
+  const { data: shipmentIds, isSuccess: isSuccessShipmentIds } =
+    useShipmentsIdData({
+      manifest: todayManifest ? String(todayManifest) : undefined,
+    });
   // --- END: Hooks ------------------------------------------------------------
+
+  // --- Side effects ----------------------------------------------------------
+  useEffect(() => {
+    if (shipmentIds?.length && shipmentIds?.length !== 0)
+      addShipmentIds(shipmentIds);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shipmentIds]);
+
+  useEffect(() => {
+    if (manifestIdData?.[0]) setTodayManifest(manifestIdData?.[0]);
+  }, [manifestIdData]);
+
+  useEffect(() => {
+    if (driverData) setDriverId(driverData?.userID);
+  }, [driverData]);
+
+  useEffect(() => {
+    if (isSuccess && isSuccessShipmentIds) setLoading(false);
+  }, [isSuccess, isSuccessShipmentIds]);
+
+  // --- END: Side effects -----------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
   const totalManifests = useMemo(
     () => manifestIdData?.length ?? 0,
     [manifestIdData],
   );
-  // --- END: Data and handlers ------------------------------------------------
 
-  // --- Side effects ----------------------------------------------------------
-  useEffect(() => {
-    if (driverData) setDriverId(driverData?.userID);
-  }, [driverData]);
-
-  useEffect(() => {
-    setData([
+  const totalOrdersForToday = useMemo(
+    () => localShipmentIds?.length ?? 0,
+    [localShipmentIds],
+  );
+  
+  const data: HomeItem[] = useMemo(
+    () => [
       {
-        counter: `0/${totalManifests}`,
+        counter: `0/${totalOrdersForToday}`,
         description: "HOME.DELIVERIES_FOR_TODAY",
-        route: "manifests",
+        route: "ordersForToday",
         isDisabled: false,
         data: manifestIdData,
       },
@@ -68,16 +94,12 @@ export function useHomeData() {
         route: "",
         isDisabled: true,
       },
-    ]);
-  }, [manifestIdData, totalManifests]);
+    ],
+    [manifestIdData, totalManifests, totalOrdersForToday],
+  );
+  // --- END: Data and handlers ------------------------------------------------
 
-  useEffect(() => {
-    if (isSuccess) setLoading(false);
-  }, [isSuccess]);
-
-  // --- END: Side effects -----------------------------------------------------
-
-  return { data, setData, loading, setLoading };
+  return { data, loading, setLoading };
 }
 
 export function useReasonsData() {

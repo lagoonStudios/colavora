@@ -77,6 +77,24 @@ export default function TabLayout() {
         name="manifests"
         options={{
           title: "Manifests",
+          href: null,
+          tabBarShowLabel: false,
+          headerShown: false,
+          tabBarStyle: { backgroundColor },
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="truck-fast-outline"
+              color={color}
+              size={28}
+              style={{ marginBottom: -3 }}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="ordersForToday"
+        options={{
+          title: "orderForToday",
           tabBarShowLabel: false,
           headerShown: false,
           tabBarStyle: { backgroundColor },
