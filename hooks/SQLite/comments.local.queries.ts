@@ -9,20 +9,18 @@ export function createCommentsTable(db: SQLiteDatabase) {
     return new Promise((resolve: (value: string) => void, reject) => {
         db.execAsync(
             `
-            DROP TABLE IF EXISTS comments;
           CREATE TABLE IF NOT EXISTS comments (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             comment TEXT,
-            is_sync BOOLEAN NOT NULL CHECK (is_sync IN (0,1) ) DEFAULT 0,
-            last_sync TEXT,
-            shipmentID INTEGER,
-            FOREIGN KEY (shipmentID) REFERENCES shipments(shipmentID)
+            shipmentID INTEGER
             );
+
+            CREATE INDEX IF NOT EXISTS comments_shipmentID_idx ON comments (shipmentID);
         `
         ).then(() => {
             resolve("Table created correctly");
         }).catch(error => {
-            reject(error);
+            reject("ERROR Creating comments table: " + error);
         });
     });
 

@@ -47,3 +47,9 @@ export interface ICODData {
   codTypeID: number;
   codType: string;
 }
+
+
+export type PaginatedData = {
+  page: number;
+  page_size: number;
+}

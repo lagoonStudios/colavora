@@ -12,7 +12,6 @@ export function createPiecesTable(db: SQLiteDatabase) {
     return new Promise((resolve: (value: string) => void, reject) => {
         db.execAsync(
             `
-            DROP TABLE IF EXISTS pieces;
           CREATE TABLE IF NOT EXISTS pieces (
             pieceID INTEGER PRIMARY KEY UNIQUE,
             companyID TEXT FORE,
@@ -23,10 +22,10 @@ export function createPiecesTable(db: SQLiteDatabase) {
             pwBack TEXT,
             pod TEXT,
             shipmentID INTEGER NOT NULL,
-            FOREIGN KEY (shipmentID) REFERENCES shipments(shipmentID),
-            is_sync BOOLEAN NOT NULL CHECK (is_sync IN (0,1) ) DEFAULT 0,
-            last_sync TEXT
+            FOREIGN KEY (shipmentID) REFERENCES shipments(shipmentID)
             );
+
+            CREATE INDEX IF NOT EXISTS pieces_shipmentID_idx ON pieces (shipmentID);
         `
         ).then(() => {
             const pieces = db.getAllSync(`
@@ -34,7 +33,7 @@ export function createPiecesTable(db: SQLiteDatabase) {
             `);
             resolve("Table created correctly");
         }).catch(error => {
-            reject(error);
+            reject("ERROR Creating pieces table: " + error);
         });
     });
 }
