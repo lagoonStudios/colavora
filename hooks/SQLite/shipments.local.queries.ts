@@ -1,14 +1,11 @@
+import { db } from "./db";
 import { IFetchShipmentByIdData } from "@constants/types/shipments";
-import { SQLiteDatabase } from 'expo-sqlite';
 import { IFetchOrderListItem } from "./SQLite.types";
-import { db } from './SQLite';
 
 /**
  * Creates the `shipments` table in the SQLite database if it doesn't exist.
-
- * @param db The SQLite database connection.
  */
-export function createShipmentTable(db: SQLiteDatabase) {
+export function createShipmentTable() {
     return new Promise((resolve: (value: string) => void, reject) => {
         db.execAsync(
             `
@@ -77,14 +74,13 @@ export function createShipmentTable(db: SQLiteDatabase) {
 /**
  * Inserts multiple shipments into a SQLite database.
  *
- * @param db The SQLite database connection.
  * @param shipments An array of shipment objects to insert 
  * @see {@link IFetchShipmentByIdData}.
  * @returns  A promise that resolves with an object containing a success message and the IDs of the inserted shipments. Rejects with an error message if any errors occur.
  *
  * @throws {Error}  - Rejects with an error if there is a problem with the database operation.
  */
-export function insertMultipleShipments(db: SQLiteDatabase, shipments: IFetchShipmentByIdData[]) {
+export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
     return new Promise((resolve, reject) => {
         const incomingIds = shipments.map(v => v.shipmentID);
         db.getAllAsync(`SELECT shipmentID FROM shipments WHERE shipmentID IN (${incomingIds})`).then((returnedData) => {
@@ -211,10 +207,9 @@ export function insertMultipleShipments(db: SQLiteDatabase, shipments: IFetchShi
 /**
  * Gets the count and completed count of shipments for the current day.
  *
- * @param db - The SQLite database instance.
  * @returns A Promise that resolves to an object containing the total count of shipments and the count of completed shipments for the current day, or rejects with an error.
  */
-export function getTodaysShipments(db: SQLiteDatabase) {
+export function getTodaysShipments() {
     return new Promise((resolve: (value: { count: number, completed_count: number }) => void, reject) => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -252,11 +247,10 @@ export function getTodaysShipments(db: SQLiteDatabase) {
 /**
  * Retrieves an array of shipment list items associated with a specific manifest ID from the SQLite database.
 
- * @param db - The SQLite database instance.
  * @param params - An object containing the manifest ID.
  * @returns A Promise that resolves to an array of IFetchOrderListItem objects, or rejects with an error.
  */
-export function getShipmentListItemByManifestID(db: SQLiteDatabase, { manifestID }: { manifestID: string }) {
+export function getShipmentListItemByManifestID({ manifestID }: { manifestID: string }) {
     return new Promise((resolve: (value: IFetchOrderListItem[]) => void, reject) => {
         db.getAllAsync(`
             SELECT 
@@ -286,12 +280,10 @@ export function getShipmentListItemByManifestID(db: SQLiteDatabase, { manifestID
 
 /**
  * Retrieves shipment details by shipment ID from the SQLite database.
-
- * @param db - The SQLite database instance.
  * @param params - An object containing the shipment ID.
  * @returns A Promise that resolves to a partial object of IFetchShipmentByIdData, or rejects with an error.
  */
-export function getShipmenDetailsById(db: SQLiteDatabase, { shipmentID }: { shipmentID: number }) {
+export function getShipmenDetailsById({ shipmentID }: { shipmentID: number }) {
     return new Promise((resolve: (value: Partial<IFetchShipmentByIdData>) => void, reject) => {
         db.getFirstAsync(`
             SELECT

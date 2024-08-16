@@ -1,13 +1,13 @@
+import { db } from "./db";
 import { ICODData } from "@constants/types/general";
-import { SQLiteDatabase } from "expo-sqlite";
+
 
 /**
  * Creates a 'cod' table in the provided SQLite database if it doesn't exist.
  *
- * @param db - The SQLite database instance.
  * @returns A Promise that resolves with "Table created correctly" if successful, or rejects with an error message.
  */
-export function createCODTable(db: SQLiteDatabase) {
+export function createCODTable() {
     return new Promise((resolve: (value: string) => void, reject) => {
         db.execAsync(
             `
@@ -37,12 +37,11 @@ export function createCODTable(db: SQLiteDatabase) {
  * The function first checks for existing `codTypeID` values in the database to avoid duplicate insertions.
  * It then inserts only the entries with non-existing `codTypeID` values.
  *
- * @param db - The SQLite database instance.
  * @param codIds - An array of objects representing COD data. Each object should have the following properties:
  * @returns A Promise that resolves with an object containing:
  * Rejects with an error message on failure.
  */
-export function insertMultipleCOD(db: SQLiteDatabase, codIds: ICODData[]) {
+export function insertMultipleCOD(codIds: ICODData[]) {
     return new Promise((resolve: (value: { message: string, idsInserted: number[] }) => void, reject) => {
         const incomingIds = new Set(codIds.map(v => v.codTypeID));
         db.getAllAsync(`
@@ -95,11 +94,10 @@ export function insertMultipleCOD(db: SQLiteDatabase, codIds: ICODData[]) {
 /**
  * Retrieves all COD records from the provided SQLite database.
  *
- * @param db - The SQLite database instance.
  * @returns A Promise that resolves to an array of ICODData objects,
  *                               or rejects with an error.
  */
-export function getAllCOD(db: SQLiteDatabase) {
+export function getAllCOD() {
     return new Promise((resolve: (value: ICODData[]) => void, reject) => {
         db.getAllAsync(`
             SELECT 

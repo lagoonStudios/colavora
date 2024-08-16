@@ -1,16 +1,11 @@
 import { useEffect } from "react";
-import { openDatabaseSync, SQLiteDatabase } from "expo-sqlite";
 
 import { createAllDBTables } from "./SQLite.functions";
-import { insertMultipleCOD } from "./cod.local.queries";
-
-const DB_NAME = "test.db";
-export const db = openDatabaseSync(DB_NAME);
 
 export default function useSQLite() {
   useEffect(() => {
     try {
-      createAllDBTables(db).then(() => {
+      createAllDBTables().then(() => {
         console.info("All tables created");
       });
     } catch (error) {

@@ -1,11 +1,10 @@
-import { SQLiteDatabase } from "expo-sqlite";
+import { db } from "./db";
 
 /**
  * Creates a comments table in the provided SQLite database if it doesn't exist.
- * @param db The SQLite database instance.
  * @returns A Promise that resolves with "Table created correctly" if successful, or rejects with an error.
  */
-export function createCommentsTable(db: SQLiteDatabase) {
+export function createCommentsTable() {
     return new Promise((resolve: (value: string) => void, reject) => {
         db.execAsync(
             `
@@ -34,11 +33,10 @@ export function createCommentsTable(db: SQLiteDatabase) {
  * The function first checks for existing comments with the same shipment ID and comment.
  * It then inserts only the new comments that are not already present in the table.
  *
- * @param db The SQLite database instance.
  * @param comments An array of objects containing comment data.
  * @returns A Promise that resolves with a message or rejects with an error.
  */
-export function insertMultipleComments(db: SQLiteDatabase, comments: { shipmentID: number, comment: string }[]) {
+export function insertMultipleComments(comments: { shipmentID: number, comment: string }[]) {
     return new Promise((resolve, reject) => {
         const shipmentIds = new Set(comments.map(v => v.shipmentID));
         db.getAllAsync(`
@@ -82,12 +80,11 @@ export function insertMultipleComments(db: SQLiteDatabase, comments: { shipmentI
 /**
  * Retrieves an array of comments associated with a specific shipment ID from the SQLite database.
  *
- * @param db - The SQLite database instance.
  * @param params - An object containing the shipment ID.
  * @returns A Promise that resolves to an array of comment strings,
  *                               or rejects with an error.
  */
-export function getCommentsByShipmentID(db: SQLiteDatabase, { shipmentID }: { shipmentID: number }) {
+export function getCommentsByShipmentID({ shipmentID }: { shipmentID: number }) {
     return new Promise((resolve: (value: string[]) => void, reject) => {
         db.getAllAsync(`
             SELECT 
