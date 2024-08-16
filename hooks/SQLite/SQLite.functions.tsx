@@ -19,7 +19,7 @@ export function createAllDBTables(db: SQLiteDatabase) {
         resolve("Tables created correctly");
       })
       .catch((error) => {
-        console.error(error);
+        console.error("🚀 ~ createAllDBTables ~ error:", error);
         reject(error);
       });
   });

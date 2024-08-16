@@ -145,7 +145,7 @@ export function useAddComment() {
         shipmentID,
       });
     },
-    onError: (e) => console.log("On Error: ", e),
+    onError: (e) => console.error("🚀 ~ useAddComment ~ e:", e)
   });
 
   return request;
@@ -168,7 +168,7 @@ export function useOrderException() {
         reasonID,
       });
     },
-    onError: (e) => console.log("On Error: ", e),
+    onError: (e) => console.error("🚀 ~ useOrderException ~ e:", e)
   });
 
   return request;

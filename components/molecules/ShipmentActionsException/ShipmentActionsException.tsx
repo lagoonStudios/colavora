@@ -44,7 +44,7 @@ export default function ShipmentActionsException() {
           value,
           label,
         })),
-    [reasons],
+    [reasons]
   );
 
   const onSubmit: SubmitHandler<IOrderExceptionForm> = (data) => {
@@ -67,7 +67,8 @@ export default function ShipmentActionsException() {
   };
 
   const onError: SubmitErrorHandler<IOrderExceptionForm> = (errors) =>
-    console.log(errors);
+    console.error("🚀 ~ ShipmentActionsException ~ errors:", errors);
+
   // --- END: Data and handlers ------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------

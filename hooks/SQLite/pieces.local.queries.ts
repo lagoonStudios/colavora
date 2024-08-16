@@ -92,7 +92,7 @@ export function insertMultiplePieces(db: SQLiteDatabase, pieces: IFetchPiecesByI
                         idsInserted: notExistingIds
                     });
                 }).catch(error => {
-                    console.error(error);
+                    console.error("🚀 ~ insertMultiplePieces ~ error:", error);
                     reject(error);
                 });
             } else {

@@ -35,9 +35,9 @@ export function useCoordinatesFromAddress({
           setLoading(false);
         }
       } catch (error) {
+        console.error("🚀 ~ useEffect ~ Error al obtener las coordenadas:", error)
         setError(error);
         setLoading(false);
-        console.error("Error al obtener las coordenadas", error);
       }
     };
     getLocation();

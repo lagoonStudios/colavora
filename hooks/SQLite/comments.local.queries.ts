@@ -64,14 +64,14 @@ export function insertMultipleComments(db: SQLiteDatabase, comments: { shipmentI
                         rowsInserted: res.changes
                     });
                 }).catch(error => {
-                    console.error(error);
+                    console.error("🚀 ~ insertMultipleComments ~ error:", error);
                     reject(error);
                 });
             } else {
                 reject("All comments has been inserted before.")
             }
         }).catch(error => {
-            console.error(error);
+            console.error("🚀 ~ insertMultipleComments ~ error:", error);
             reject(error);
         });
     });

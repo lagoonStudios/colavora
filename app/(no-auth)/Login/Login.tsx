@@ -45,7 +45,7 @@ export default function Login() {
   };
 
   const onError: SubmitErrorHandler<LoginForm> = (errors) => {
-    return console.log(errors);
+    return console.error("🚀 ~ Login ~ errors:", errors);
   };
   // --- END: Data and handlers ------------------------------------------------
 
