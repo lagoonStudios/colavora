@@ -55,7 +55,7 @@ export function insertMultipleManifests(db: SQLiteDatabase, manifests: IFetchMan
             const notExistingIds = [...setIncomingIds].filter(id => !setExistingIds.has(id));
 
             if (notExistingIds.length > 0) {
-                const notExistingManifests = manifests.filter(v => !setExistingIds.has(v.manifest));
+                const notExistingManifests = manifests.filter(v => notExistingIds.find(id => id === v.manifest));
                 db.runAsync(`
                 INSERT INTO manifests (
                 manifest,
@@ -92,7 +92,6 @@ export function insertMultipleManifests(db: SQLiteDatabase, manifests: IFetchMan
  */
 export function getAllManifestsCount(db: SQLiteDatabase) {
     return new Promise((resolve: (value: { count: number }) => void, reject) => {
-        console.log('getting data');
         db.getFirstAsync(`
         SELECT
              COUNT(DISTINCT manifests.manifest) AS count
@@ -134,8 +133,7 @@ export function getManifestsList(db: SQLiteDatabase, { page, page_size }: Pagina
                 manifests.createdDate DESC
             LIMIT ${page_size} OFFSET ${page * page_size}
             `).then((res) => {
-            const data = res as { manifest: string, createdDate: string, active_shipments: number }[];
-            console.log('response data: ', data);
+                const data = res as { manifest: string, createdDate: string, active_shipments: number }[];
             resolve(data);
         }).catch(error => {
             console.error('Error getting manifests list: ', error);

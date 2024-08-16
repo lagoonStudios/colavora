@@ -1,6 +1,7 @@
 import { IFetchShipmentByIdData } from "@constants/types/shipments";
 import { SQLiteDatabase } from 'expo-sqlite';
 import { IFetchOrderListItem } from "./SQLite.types";
+import { db } from './SQLite';
 
 /**
  * Creates the `shipments` table in the SQLite database if it doesn't exist.
@@ -239,7 +240,7 @@ export function getTodaysShipments(db: SQLiteDatabase) {
                 resolve(data);
             })
             .catch(error => {
-                console.log('error getting datta: ', error);
+                console.error('error getting datta: ', error);
                 reject(error);
             });
 
@@ -268,9 +269,43 @@ export function getShipmentListItemByManifestID(db: SQLiteDatabase, { manifestID
                 const data = res as IFetchOrderListItem[];
                 resolve(data);
             }).catch(error => {
-                console.log(error);
+                console.error(error);
                 reject(error);
             });
     });
 
+}
+
+export function getShipmenDetailsById(db: SQLiteDatabase, { shipmentID }: { shipmentID: number }) {
+    return new Promise((resolve: (value: Partial<IFetchShipmentByIdData>) => void, reject) => {
+        db.getFirstAsync(`
+            SELECT
+                consigneeName,
+                zip,
+                senderName,
+                serviceTypeName,
+                addressLine1,
+                addressLine2,
+                phoneNumber,
+                dueDate,
+                status,
+                waybill,
+                waybill,
+                serviceTypeName,
+                qty,
+                codAmount
+            FROM
+                shipments
+            WHERE
+                shipmentID = ?
+            `, [shipmentID])
+            .then((res) => {
+                const data = res as Partial<IFetchShipmentByIdData>;
+                console.error('data: ', data);
+                resolve(data);
+            }).catch(error => {
+                console.error(error);
+                reject(error);
+            });
+    });
 }

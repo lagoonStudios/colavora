@@ -3,17 +3,13 @@ import { openDatabaseSync, SQLiteDatabase } from "expo-sqlite";
 
 import { createAllDBTables } from "./SQLite.functions";
 import { insertMultiplePieces } from "./pieces.local.queries";
-import {
-  getAllManifestsCount,
-  getManifestsList,
-  insertMultipleManifests,
-} from "./manifests.local.queries";
-import {
-  getShipmentListItemByManifestID,
-  getTodaysShipments,
-  insertMultipleShipments,
-} from "./shipments.local.queries";
+import { insertMultipleManifests } from "./manifests.local.queries";
+import { insertMultipleShipments } from "./shipments.local.queries";
 import { insertMultipleComments } from "./comments.local.queries";
+import {
+  getAllExceptions,
+  insertMultipleExceptions,
+} from "./exceptions.local.queries";
 
 const DB_NAME = "test.db";
 export const db = openDatabaseSync(DB_NAME);
@@ -24,7 +20,9 @@ export default function useSQLite() {
       createAllDBTables(db).then((res) => {
         insertData(db);
         setTimeout(() => {
-          getShipmentListItemByManifestID(db, { manifestID: "1234567890" });
+          getAllExceptions(db).then((res) => {
+            console.log(res);
+          });
         }, 2000);
       });
     } catch (error) {
@@ -242,14 +240,59 @@ function insertData(db: SQLiteDatabase) {
     });
 
   insertMultipleComments(db, [
-    { shipmentId: 2, comment: "Comentario 1" },
-    { shipmentId: 2, comment: "Comentario 2" },
-    { shipmentId: 2, comment: "Testesasdasdasdasdasd" },
+    { shipmentID: 2, comment: "Comentario 1" },
+    { shipmentID: 2, comment: "Comentario 2" },
+    { shipmentID: 2, comment: "asdasd" },
   ])
     .then((res) => {
       console.log("INSERTED COMMENTS", res);
     })
     .catch((error) => {
       console.log("ERROR COMMENTS", error);
+    });
+
+  insertMultipleExceptions(db, [
+    {
+      reasonID: 3,
+      companyID: "10029",
+      customerID: 0,
+      reasonCode: "314",
+      reasonDesc: "PICKUP",
+      reasonCodeDesc: "314 - PICKUP",
+      completeOrder: false,
+    },
+    {
+      reasonID: 4,
+      companyID: "10029",
+      customerID: 0,
+      reasonCode: "314",
+      reasonDesc: "PICKUP",
+      reasonCodeDesc: "314 - PICKUP",
+      completeOrder: false,
+    },
+    {
+      reasonID: 2,
+      companyID: "10029",
+      customerID: 0,
+      reasonCode: "314",
+      reasonDesc: "PICKUP",
+      reasonCodeDesc: "314 - PICKUP",
+      completeOrder: false,
+    },
+    {
+      reasonID: 10,
+      companyID: "10029",
+      customerID: 0,
+      reasonCode: "314",
+      reasonDesc: "PICKUP",
+      reasonCodeDesc: "314 - PICKUP",
+      completeOrder: false,
+    },
+  ])
+    .then((res) => {
+      console.log("INSERTED EXCEPTIONS", res);
+    })
+    .catch((error) => {
+      console.log("ERROR EXCEPTIONS", error);
     });
 }

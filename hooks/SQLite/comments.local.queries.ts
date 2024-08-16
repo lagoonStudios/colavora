@@ -36,21 +36,26 @@ export function createCommentsTable(db: SQLiteDatabase) {
  * @param comments An array of objects containing comment data.
  * @returns A Promise that resolves with a message or rejects with an error.
  */
-export function insertMultipleComments(db: SQLiteDatabase, comments: { shipmentId: number, comment: string }[]) {
+export function insertMultipleComments(db: SQLiteDatabase, comments: { shipmentID: number, comment: string }[]) {
     return new Promise((resolve, reject) => {
-        const shipmentIds = new Set(comments.map(v => v.shipmentId));
-
+        const shipmentIds = new Set(comments.map(v => v.shipmentID));
         db.getAllAsync(`
-        SELECT * FROM comments WHERE shipmentId IN (${[...shipmentIds].join(',')}) AND comment IN (${comments.map(v => `'${v.comment}'`).join(',')});
+        SELECT shipmentID, comment FROM comments WHERE shipmentID IN (${[...shipmentIds]}) AND comment IN (${comments.map(v => `'${v.comment}'`)});
         `).then((data) => {
-            const existingComments = data as { shipmentId: number, comment: string }[];
-            const notExistingComments = comments.filter(v => !existingComments.find(c => c.shipmentId === v.shipmentId && c.comment === v.comment));
+            const existingComments = data as { shipmentID: number, comment: string }[];
+            const notExistingComments = comments.filter(v => {
+                const exists = existingComments.find(c => c.shipmentID === v.shipmentID && c.comment === v.comment)
+                if (exists != undefined)
+                    return undefined
+                else
+                    return v;
+            }).filter(v => v != undefined);
 
             if (notExistingComments.length > 0) {
 
                 db.runAsync(`
                     INSERT INTO comments (shipmentId, comment)
-                    VALUES ${notExistingComments.map(v => `(${v.shipmentId}, '${v.comment}')`).join(',')};
+                    VALUES ${notExistingComments.map(v => `(${v.shipmentID}, '${v.comment}')`).join(',')};
                 `,
 
                 ).then((res) => {
@@ -63,11 +68,31 @@ export function insertMultipleComments(db: SQLiteDatabase, comments: { shipmentI
                     reject(error);
                 });
             } else {
-                resolve("All comments has been inserted before.")
+                reject("All comments has been inserted before.")
             }
         }).catch(error => {
             console.error(error);
             reject(error);
         });
+    });
+};
+
+
+export function getCommentsByShipmentID(db: SQLiteDatabase, { shipmentID }: { shipmentID: number }) {
+    return new Promise((resolve: (value: string[]) => void, reject) => {
+        db.getAllAsync(`
+            SELECT 
+                comment
+            FROM
+                comments
+            WHERE
+                shipmentID = ?
+            `, [shipmentID])
+            .then((res) => {
+                const data = res as string[];
+                resolve(data);
+            }).catch(error => {
+                reject(error);
+            });
     });
 };
