@@ -69,7 +69,7 @@ export function insertMultipleExceptions(db: SQLiteDatabase, exceptions: IReason
                         idsInserted: notExistingIds
                     });
                 }).catch(error => {
-                    console.error(error);
+                    console.error("🚀 ~ insertMultipleExceptions ~ error:", error);
                     reject(error);
                 });
             } else {
@@ -95,10 +95,9 @@ export function getAllExceptions(db: SQLiteDatabase) {
             `)
             .then((res) => {
                 const data = res as IReasonsByIdData[];
-                console.log('data: ', data);
                 resolve(data);
             }).catch(error => {
-                console.error(error);
+                console.error("🚀 ~ getAllExceptions ~ error:", error);
                 reject(error);
             });
     })

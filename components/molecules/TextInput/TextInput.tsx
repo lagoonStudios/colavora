@@ -17,7 +17,7 @@ export default function TextInput(props: TextInputProps) {
     const msg = !formContext
       ? "TextInput must be wrapped by the FormProvider"
       : "Name must be defined";
-    console.error(msg);
+    console.error("🚀 ~ TextInput ~ msg:", msg);
     return null;
   }
 

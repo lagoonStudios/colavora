@@ -136,7 +136,7 @@ export function getManifestsList(db: SQLiteDatabase, { page, page_size }: Pagina
                 const data = res as { manifest: string, createdDate: string, active_shipments: number }[];
             resolve(data);
         }).catch(error => {
-            console.error('Error getting manifests list: ', error);
+            console.error("🚀 ~ getManifestsList ~ error:", error);
             reject(error);
         });
     });

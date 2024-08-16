@@ -45,7 +45,8 @@ export default function AddComment({ refetch }: IAddComment) {
   };
 
   const onError: SubmitErrorHandler<CommentForm> = (errors) =>
-    console.log(errors);
+    console.error("🚀 ~ AddComment ~ errors:", errors);
+
   // --- END: Data and handlers ------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------

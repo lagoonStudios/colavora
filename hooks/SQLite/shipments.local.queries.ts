@@ -195,7 +195,7 @@ export function insertMultipleShipments(db: SQLiteDatabase, shipments: IFetchShi
                         idsInserted: notExistingIds
                     });
                 }).catch(error => {
-                    console.error(error);
+                    console.error("🚀 ~ insertMultipleShipments ~ error:", error);
                     reject(error);
                 });
             } else {
@@ -240,7 +240,7 @@ export function getTodaysShipments(db: SQLiteDatabase) {
                 resolve(data);
             })
             .catch(error => {
-                console.error('error getting datta: ', error);
+                console.error("🚀 ~ getTodaysShipments ~ error:", error);
                 reject(error);
             });
 
@@ -269,7 +269,7 @@ export function getShipmentListItemByManifestID(db: SQLiteDatabase, { manifestID
                 const data = res as IFetchOrderListItem[];
                 resolve(data);
             }).catch(error => {
-                console.error(error);
+                console.error("🚀 ~ getShipmentListItemByManifestID ~ error:", error);
                 reject(error);
             });
     });
@@ -301,10 +301,9 @@ export function getShipmenDetailsById(db: SQLiteDatabase, { shipmentID }: { ship
             `, [shipmentID])
             .then((res) => {
                 const data = res as Partial<IFetchShipmentByIdData>;
-                console.error('data: ', data);
                 resolve(data);
             }).catch(error => {
-                console.error(error);
+                console.error("🚀 ~ getShipmenDetailsById ~ error:", error);
                 reject(error);
             });
     });

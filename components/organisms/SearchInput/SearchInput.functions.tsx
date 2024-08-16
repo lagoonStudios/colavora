@@ -42,10 +42,10 @@ export const useSearchData = ({ text }: UseSearchDataProps) => {
           setLoading(false);
         }, 2000);
       } catch (error) {
+        console.error("🚀 ~ useSearchData ~ error:", error);
         setError("Error");
         Toast.show(t("ERRORS.UNKNOWN"));
         setLoading(false);
-        console.error(error);
       }
     },
     [text]

@@ -15,7 +15,7 @@ export default function LogoutButton() {
     try {
       clearSession();
     } catch (e) {
-      console.log(e);
+      console.error("🚀 ~ LogoutButton ~ onPress ~ e:", e);
     }
   };
 

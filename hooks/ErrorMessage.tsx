@@ -11,7 +11,7 @@ export default function handleErrorMessage({
   title?: string;
   customMessage?: string;
 }) {
-  console.error("Error:", error);
+  console.error("🚀 ~ handleErrorMessage ~ error:", error);
   const { t, exists } = i18next;
 
   let message = customMessage;
