@@ -1,14 +1,13 @@
+import { db } from "./db";
 import { IFetchPiecesByIdData } from "@constants/types/shipments";
-import { SQLiteDatabase } from "expo-sqlite";
 
 /**
  * Creates a `pieces` table in the provided SQLite database if it doesn't exist.
  * Inserts an initial record into the table and returns a Promise.
  *
- * @param db The SQLite database instance.
  * @returns A Promise that resolves to "Table created correctly" if successful, otherwise rejects with an error.
  */
-export function createPiecesTable(db: SQLiteDatabase) {
+export function createPiecesTable() {
     return new Promise((resolve: (value: string) => void, reject) => {
         db.execAsync(
             `
@@ -44,11 +43,10 @@ export function createPiecesTable(db: SQLiteDatabase) {
  * Inserts multiple pieces of data into the 'pieces' table in the provided SQLite database.
  * Filters out pieces with IDs already present in the table and inserts the remaining ones.
  *
- * @param db The SQLite database instance.
  * @param pieces An array of objects representing the pieces to insert.
  * @returns A Promise that resolves if the operation is successful, otherwise rejects with an error.
  */
-export function insertMultiplePieces(db: SQLiteDatabase, pieces: IFetchPiecesByIdData[]) {
+export function insertMultiplePieces(pieces: IFetchPiecesByIdData[]) {
     return new Promise((resolve, reject) => {
         const incomingIds = pieces.map(v => v.pieceID).filter(id => id != null);
         db.getAllAsync(`SELECT pieceID FROM pieces WHERE pieceID IN (${incomingIds})`).then((returnedData) => {
@@ -107,11 +105,10 @@ export function insertMultiplePieces(db: SQLiteDatabase, pieces: IFetchPiecesByI
 /**
  * Retrieves an array of pieces associated with a specific shipment ID from the SQLite database.
 
- * @param db - The SQLite database instance.
  * @param params - An object containing the shipment ID.
  * @returns A Promise that resolves to an array of IFetchPiecesByIdData objects, or rejects with an error.
  */
-export function getPiecesByShipmentID(db: SQLiteDatabase, { shipmentID }: { shipmentID: number }) {
+export function getPiecesByShipmentID({ shipmentID }: { shipmentID: number }) {
     return new Promise((resolve: (value: IFetchPiecesByIdData[]) => void, reject) => {
         db.getAllAsync(`
             SELECT 

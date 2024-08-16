@@ -1,14 +1,11 @@
+import { db } from "./db";
 import { IReasonsByIdData } from "@constants/types/general";
-import { SQLiteDatabase } from "expo-sqlite";
 
 /**
  * Creates an 'exceptions' table in the provided SQLite database if it doesn't exist.
-
- * @param db - The SQLite database instance.
- * @returns A Promise that resolves with "exceptions Table created correctly" if successful,
- *                          or rejects with an error message.
+ * @returns A Promise that resolves with "exceptions Table created correctly" if successful, or rejects with an error message.
  */
-export function createExceptionsTable(db: SQLiteDatabase) {
+export function createExceptionsTable() {
     return new Promise((resolve: (value: string) => void, reject) => {
         db.execAsync(
             `
@@ -40,12 +37,11 @@ export function createExceptionsTable(db: SQLiteDatabase) {
  * The function first checks for existing `reasonID` values to avoid duplicate insertions.
  * It then inserts only the entries with non-existing `reasonID` values.
  *
- * @param db - The SQLite database instance.
  * @param exceptions - An array of objects representing exception data. Each object should have the following properties:
  * @returns A Promise that resolves with an object containing:
  * Rejects with an error message on failure.
  */
-export function insertMultipleExceptions(db: SQLiteDatabase, exceptions: IReasonsByIdData[]) {
+export function insertMultipleExceptions(exceptions: IReasonsByIdData[]) {
     return new Promise((resolve, reject) => {
         const setIncomingIds = new Set(exceptions.map(v => v.reasonID));
         db.getAllAsync(`
@@ -101,11 +97,9 @@ export function insertMultipleExceptions(db: SQLiteDatabase, exceptions: IReason
 
 /**
  * Retrieves all exception records from the provided SQLite database.
-
- * @param db - The SQLite database instance.
  * @returns A Promise that resolves to an array of IReasonsByIdData objects, or rejects with an error.
  */
-export function getAllExceptions(db: SQLiteDatabase) {
+export function getAllExceptions() {
     return new Promise((resolve: (value: IReasonsByIdData[]) => void, reject) => {
         db.getAllAsync(`
             SELECT 

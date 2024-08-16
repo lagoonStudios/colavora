@@ -1,15 +1,12 @@
+import { db } from "./db";
 import { IFetchManifestByIdData } from "@constants/types/manifests";
-import { SQLiteDatabase } from "expo-sqlite";
-import { db } from './SQLite';
 import { PaginatedData } from "@constants/types/general";
 
 
 /**
  * Creates the `manifests` table in the SQLite database if it doesn't exist.
-
- * @param  db The SQLite database connection.
  */
-export function createManifestsTable(db: SQLiteDatabase) {
+export function createManifestsTable() {
     return new Promise((resolve: (value: string) => void, reject) => {
         db.execAsync(
             `
@@ -37,13 +34,12 @@ export function createManifestsTable(db: SQLiteDatabase) {
 /**
  * Inserts multiple manifests into a SQLite database.
  *
- * @param  db The SQLite database connection.
  * @param manifests An array of manifest to insert.
  * @returns  A promise that resolves with an object containing a success message and the IDs of the inserted manifests. Rejects with an error message if any errors occur.
  *
  * @throws {Error}  - Rejects with an error if there is a problem with the database operation.
  */
-export function insertMultipleManifests(db: SQLiteDatabase, manifests: IFetchManifestByIdData[]) {
+export function insertMultipleManifests(manifests: IFetchManifestByIdData[]) {
     return new Promise((resolve, reject) => {
         const incomingIds = manifests.map(v => v.manifest).filter(id => id != null);
         db.getAllAsync(`SELECT manifest FROM manifests WHERE manifest IN (${incomingIds})`).then((returnedData) => {
@@ -87,10 +83,9 @@ export function insertMultipleManifests(db: SQLiteDatabase, manifests: IFetchMan
 /**
  * Gets the total count of manifests that have at least one associated shipment with a non-null status.
  *
- * @param db - The SQLite database instance.
  * @returns A Promise that resolves to the total count of manifests, or rejects with an error.
  */
-export function getAllManifestsCount(db: SQLiteDatabase) {
+export function getAllManifestsCount() {
     return new Promise((resolve: (value: { count: number }) => void, reject) => {
         db.getFirstAsync(`
         SELECT
@@ -113,11 +108,10 @@ export function getAllManifestsCount(db: SQLiteDatabase) {
 /**
  * Retrieves a paginated list of manifests with their associated active shipments count.
 
- * @param db - The SQLite database instance.
  * @param paginatedData - Pagination parameters (page, page_size).
  * @returns A Promise that resolves to an array of objects containing manifest details, creation date, and active shipments count, or rejects with an error.
  */
-export function getManifestsList(db: SQLiteDatabase, { page, page_size }: PaginatedData) {
+export function getManifestsList({ page, page_size }: PaginatedData) {
     return new Promise((resolve: (value: { manifest: string, createdDate: string, active_shipments: number }[]) => void, reject) => {
         db.getAllAsync(`
             SELECT 
