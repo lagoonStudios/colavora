@@ -21,6 +21,8 @@ export function createPiecesTable(db: SQLiteDatabase) {
             comments TEXT,
             pwBack TEXT,
             pod TEXT,
+            is_sync BOOLEAN DEFAULT false,
+            last_sync TEXT DEFAULT (datetime('now')),
             shipmentID INTEGER NOT NULL,
             FOREIGN KEY (shipmentID) REFERENCES shipments(shipmentID)
             );
@@ -102,6 +104,13 @@ export function insertMultiplePieces(db: SQLiteDatabase, pieces: IFetchPiecesByI
     });
 }
 
+/**
+ * Retrieves an array of pieces associated with a specific shipment ID from the SQLite database.
+
+ * @param db - The SQLite database instance.
+ * @param params - An object containing the shipment ID.
+ * @returns A Promise that resolves to an array of IFetchPiecesByIdData objects, or rejects with an error.
+ */
 export function getPiecesByShipmentID(db: SQLiteDatabase, { shipmentID }: { shipmentID: number }) {
     return new Promise((resolve: (value: IFetchPiecesByIdData[]) => void, reject) => {
         db.getAllAsync(`

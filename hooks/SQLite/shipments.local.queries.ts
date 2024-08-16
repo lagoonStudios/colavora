@@ -55,6 +55,8 @@ export function createShipmentTable(db: SQLiteDatabase) {
                 referenceNo TEXT,
                 manifestPk TEXT,
                 manifest TEXT NOT NULL,
+                is_sync BOOLEAN DEFAULT false,
+                last_sync TEXT DEFAULT (datetime('now')),
                 FOREIGN KEY (manifest) REFERENCES manifests (manifest)
                     ON DELETE CASCADE
                 );
@@ -247,7 +249,13 @@ export function getTodaysShipments(db: SQLiteDatabase) {
     });
 };
 
+/**
+ * Retrieves an array of shipment list items associated with a specific manifest ID from the SQLite database.
 
+ * @param db - The SQLite database instance.
+ * @param params - An object containing the manifest ID.
+ * @returns A Promise that resolves to an array of IFetchOrderListItem objects, or rejects with an error.
+ */
 export function getShipmentListItemByManifestID(db: SQLiteDatabase, { manifestID }: { manifestID: string }) {
     return new Promise((resolve: (value: IFetchOrderListItem[]) => void, reject) => {
         db.getAllAsync(`
@@ -276,6 +284,13 @@ export function getShipmentListItemByManifestID(db: SQLiteDatabase, { manifestID
 
 }
 
+/**
+ * Retrieves shipment details by shipment ID from the SQLite database.
+
+ * @param db - The SQLite database instance.
+ * @param params - An object containing the shipment ID.
+ * @returns A Promise that resolves to a partial object of IFetchShipmentByIdData, or rejects with an error.
+ */
 export function getShipmenDetailsById(db: SQLiteDatabase, { shipmentID }: { shipmentID: number }) {
     return new Promise((resolve: (value: Partial<IFetchShipmentByIdData>) => void, reject) => {
         db.getFirstAsync(`

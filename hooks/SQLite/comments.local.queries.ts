@@ -12,7 +12,9 @@ export function createCommentsTable(db: SQLiteDatabase) {
           CREATE TABLE IF NOT EXISTS comments (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             comment TEXT,
-            shipmentID INTEGER
+            shipmentID INTEGER,
+            is_sync BOOLEAN DEFAULT false,
+            last_sync TEXT DEFAULT (datetime('now'))
             );
 
             CREATE INDEX IF NOT EXISTS comments_shipmentID_idx ON comments (shipmentID);
@@ -77,7 +79,14 @@ export function insertMultipleComments(db: SQLiteDatabase, comments: { shipmentI
     });
 };
 
-
+/**
+ * Retrieves an array of comments associated with a specific shipment ID from the SQLite database.
+ *
+ * @param db - The SQLite database instance.
+ * @param params - An object containing the shipment ID.
+ * @returns A Promise that resolves to an array of comment strings,
+ *                               or rejects with an error.
+ */
 export function getCommentsByShipmentID(db: SQLiteDatabase, { shipmentID }: { shipmentID: number }) {
     return new Promise((resolve: (value: string[]) => void, reject) => {
         db.getAllAsync(`
