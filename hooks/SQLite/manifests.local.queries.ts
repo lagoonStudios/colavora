@@ -21,7 +21,7 @@ export function createManifestsTable(db: SQLiteDatabase) {
             driverID INTEGER NOT NULL,
             createdDate TEXT,
             is_sync BOOLEAN DEFAULT false,
-            last_sync TEXT
+            last_sync TEXT DEFAULT (datetime('now'))
           );
 
           CREATE INDEX IF NOT EXISTS manifestDate_idx ON manifests (createdDate);
