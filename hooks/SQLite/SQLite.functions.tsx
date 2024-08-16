@@ -4,6 +4,7 @@ import { createManifestsTable } from "./manifests.local.queries";
 import { createShipmentTable } from "./shipments.local.queries";
 import { createCommentsTable } from "./comments.local.queries";
 import { createPiecesTable } from "./pieces.local.queries";
+import { createExceptionsTable } from "./exceptions.local.queries";
 
 export function createAllDBTables(db: SQLiteDatabase) {
   return new Promise(async (resolve, reject) => {
@@ -12,13 +13,13 @@ export function createAllDBTables(db: SQLiteDatabase) {
       createShipmentTable(db),
       createCommentsTable(db),
       createPiecesTable(db),
+      createExceptionsTable(db),
     ])
       .then((res) => {
-        console.log(res);
         resolve("Tables created correctly");
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
         reject(error);
       });
   });

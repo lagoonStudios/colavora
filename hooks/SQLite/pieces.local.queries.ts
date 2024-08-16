@@ -85,12 +85,8 @@ export function insertMultiplePieces(db: SQLiteDatabase, pieces: IFetchPiecesByI
                     pod
                     ) 
                     VALUES ${piecesToInsert.join(',')}
-                    RETURNING pieceID;
                     `,
-                ).then((res) => {
-                    console.log('res inserting pieces', res);
-
-
+                ).then((_) => {
                     resolve({
                         message: `Ids inserted correctly}`,
                         idsInserted: notExistingIds
@@ -100,12 +96,30 @@ export function insertMultiplePieces(db: SQLiteDatabase, pieces: IFetchPiecesByI
                     reject(error);
                 });
             } else {
-
                 reject("All ids has been inserted before.")
             }
         });
     });
 }
 
-
-
+export function getPiecesByShipmentID(db: SQLiteDatabase, { shipmentID }: { shipmentID: number }) {
+    return new Promise((resolve: (value: IFetchPiecesByIdData[]) => void, reject) => {
+        db.getAllAsync(`
+            SELECT 
+                barcode,
+                packageTypeName,
+                comments,
+                pieceId
+            FROM
+                pieces
+            WHERE
+                shipmentID = ?
+            `, [shipmentID])
+            .then((res) => {
+                const data = res as IFetchPiecesByIdData[];
+                resolve(data);
+            }).catch(error => {
+                reject(error);
+            });
+    });
+};
