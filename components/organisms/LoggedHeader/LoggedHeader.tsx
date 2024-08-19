@@ -36,7 +36,6 @@ export default function LoggedHeader() {
     [companyData]
   );
   const contact = useMemo(() => {
-    console.log({ driverData });
     return driverData?.driverName ?? "...";
   }, [driverData]);
   // --- END: Data and handlers ------------------------------------------------
