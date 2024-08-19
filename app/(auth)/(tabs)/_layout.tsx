@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   AntDesign,
   FontAwesome,
@@ -14,20 +14,17 @@ import LoggedHeader from "@organisms/LoggedHeader";
 import LogoutButton from "@molecules/LogoutButton/LogoutButton";
 import { useThemeColor } from "@components/Themed";
 
-import { useDriverData, useCompanyData } from "@hooks/index";
-import { IFetchDriverData } from "@constants/types/general";
-import { mockDriverId } from "@constants/Constants";
+import { useCompanyData, useDriverData } from "./tabs.functions";
 
 export default function TabLayout() {
   // --- Local state -----------------------------------------------------------
-  const [driverData, setDriverData] = useState<IFetchDriverData>();
   // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
-  useCompanyData(driverData?.companyID);
+  useDriverData();
+  useCompanyData();
 
   const colorScheme = useColorScheme();
-  const { data: responseDriverData } = useDriverData(mockDriverId);
   const { default: backgroundColor } = useThemeColor({}, "background");
   // --- END: Hooks ------------------------------------------------------------
 
@@ -38,9 +35,6 @@ export default function TabLayout() {
   // --- END: Redux ------------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
-  useEffect(() => {
-    if (responseDriverData) setDriverData(responseDriverData);
-  }, [responseDriverData]);
   // --- END: Side effects -----------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------

@@ -3,17 +3,13 @@ import { View, Text } from "@components/Themed";
 import { Image, ImageSourcePropType } from "react-native";
 import { styles } from "./LoggedHeader.styles";
 import { queryClient } from "@/providers";
-import { IFetchCompanyData, IFetchDriverData } from "@constants/types/general";
+import { IFetchDriverData } from "@constants/types/general";
 import { queryKeys } from "@constants/Constants";
+import { useStore } from "@stores/zustand";
 
 export default function LoggedHeader() {
   // --- Hooks -----------------------------------------------------------------
-  const companyData = queryClient.getQueryState<IFetchCompanyData>([
-    queryKeys.companyData,
-  ]);
-  const driverData = queryClient.getQueryState<IFetchDriverData>([
-    queryKeys.driverData,
-  ]);
+  const { company: companyData, driver: driverData } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local state -----------------------------------------------------------
@@ -30,19 +26,19 @@ export default function LoggedHeader() {
 
   // --- Data and handlers -----------------------------------------------------
   const source: ImageSourcePropType = useMemo(() => {
-    if (companyData?.data?.logo) return { uri: companyData.data.logo };
+    if (companyData?.logo) return { uri: companyData.logo };
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return require("@assets/images/avatar.png");
   }, [companyData]);
 
   const companyName = useMemo(
-    () => companyData?.data?.companyName ?? "...",
-    [companyData],
+    () => companyData?.companyName ?? "...",
+    [companyData]
   );
-  const contact = useMemo(
-    () => driverData?.data?.driverName ?? "...",
-    [driverData],
-  );
+  const contact = useMemo(() => {
+    console.log({ driverData });
+    return driverData?.driverName ?? "...";
+  }, [driverData]);
   // --- END: Data and handlers ------------------------------------------------
   return (
     <View style={styles.loggedHeaderContainer}>
