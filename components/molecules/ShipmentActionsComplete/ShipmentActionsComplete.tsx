@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import React, { useEffect, useMemo, useReducer, useRef } from "react";
+import { Alert } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import * as ImagePicker from "expo-image-picker";
@@ -11,6 +11,7 @@ import {
   useForm,
 } from "react-hook-form";
 import { SignatureViewRef } from "react-native-signature-canvas";
+import React, { useEffect, useMemo, useReducer, useRef, useState } from "react";
 
 import Colors from "@constants/Colors";
 import Signature from "@atoms/Signature";
@@ -19,13 +20,13 @@ import CODSelected from "@atoms/CODSelected";
 import TextInput from "@molecules/TextInput";
 import CODComponet from "@atoms/CODComponet";
 import SaveButton from "@molecules/SaveButton";
-import CancelButton from "@molecules/CancelButton";
 import { Text, View } from "@components/Themed";
+import CancelButton from "@molecules/CancelButton";
 import DefaultCODLabels from "@atoms/DefaultCODLabels";
 
 import { useStore } from "@stores/zustand";
 import { useSendCODs, useCompleteOrder } from "@hooks/index";
-import { mockCompanyId, mockUserID } from "@constants/Constants";
+import { mockUserID } from "@constants/Constants";
 
 import { styles } from "./ShipmentActionsComplete.styles";
 import { IShipmentActionsComplete } from "./ShipmentActionsComplete.types";
@@ -37,25 +38,26 @@ export default function ShipmentActionsComplete() {
 
   // --- Local state -----------------------------------------------------------
   const [showModal, setModal] = useReducer((e) => !e, false);
+  const [noSelectCOD, setCodition] = useState<boolean>(false);
   // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
   const {
-    shipment: { shipmentID, barcode },
+    shipment: { shipmentID, barcode, companyID },
   } = useStore();
   const { ...methods } = useForm<IShipmentActionsComplete>({
     defaultValues,
   });
 
   const { t } = useTranslation();
-  const { mutate, status } = useSendCODs();
+  const { mutate, status: statusSendCODs } = useSendCODs();
   const { mutate: completeOrder, status: completeOrderStatus } =
     useCompleteOrder();
 
+  const podName = methods.watch("podName");
   const codsSelected = methods.watch("cods");
   const photoImage = methods.watch("photoImage");
   const signatureImage = methods.watch("signatureImage");
-  const podName = methods.watch("podName");
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
@@ -97,17 +99,25 @@ export default function ShipmentActionsComplete() {
     [codsSelected?.length],
   );
 
-  const onSubmit: SubmitHandler<IShipmentActionsComplete> = ({ cods }) => {
+  const onSubmit: SubmitHandler<IShipmentActionsComplete> = ({
+    cods,
+    signatureImage,
+  }) => {
+    if (!signatureImage) {
+      Alert.alert("Error", "The signature is required");
+      return;
+    }
+
     if (cods?.length !== 0) {
       const completeCODs = cods?.map((cod) => ({
         ...cod,
-        companyID: mockCompanyId,
+        companyID: Number(companyID),
         shipmentID: shipmentID,
         userID: mockUserID,
       }));
 
       mutate(completeCODs);
-    }
+    } else setCodition(true);
   };
 
   const onError: SubmitErrorHandler<IShipmentActionsComplete> = (errors) =>
@@ -116,21 +126,30 @@ export default function ShipmentActionsComplete() {
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    if (status === "success")
+    const isCompleteWithOutCODsAllow =
+      codsSelected?.length === 0 && noSelectCOD;
+
+    if (statusSendCODs === "success" || isCompleteWithOutCODsAllow)
       completeOrder({
         barcode,
         signatureImage,
         podName,
-        photoImage: photoImage.uri,
-        companyID: mockCompanyId,
+        photoImage: photoImage?.uri,
+        companyID: Number(companyID),
         shipmentID: shipmentID,
         userID: mockUserID,
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status]);
+  }, [codsSelected?.length, noSelectCOD, statusSendCODs]);
 
   useEffect(() => {
-    if (completeOrderStatus === "success") console.log("Complete Order");
+    if (completeOrderStatus === "success") {
+      console.log("Complete Order");
+      setCodition(false);
+      methods.reset();
+      onClear();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [completeOrderStatus]);
   // --- END: Side effects -----------------------------------------------------
 

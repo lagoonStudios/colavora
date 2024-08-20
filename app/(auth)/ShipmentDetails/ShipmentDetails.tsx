@@ -37,7 +37,7 @@ export default function ShipmentDetails() {
         case ShipmentDetailsTabsItem.COMMENTS:
           return <ShipmentComments />;
         case ShipmentDetailsTabsItem.ACTIONS:
-          return <ShipmentActions />;
+          return <ShipmentActions setSelectedTab={setSelectedTab} />;
       }
 
     if (data === undefined)

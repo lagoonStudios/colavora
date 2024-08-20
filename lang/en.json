@@ -22,6 +22,9 @@
       "EMPTY": "Required text",
       "EMAIL": "Invalid email"
     },
+    "MODAL": {
+      "TEST": "Test Modal Text"
+    },
     "LOGIN": {
       "LOGIN": "Login",
       "USERNAME": "Username",

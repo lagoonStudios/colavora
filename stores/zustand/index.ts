@@ -26,25 +26,33 @@ import {
   CODSlice,
   createCODIdsSlice,
   createCODSlice,
+  StateModalSlice,
+  createStateModalSlice,
 } from "./general";
-import { CompanySlice, createCompanySlice, CompanyIdsSlice, createCompanyIdsSlice } from './company';
-import { DriverSlice, createDriverSlice } from './driver';
+import {
+  CompanySlice,
+  createCompanySlice,
+  CompanyIdsSlice,
+  createCompanyIdsSlice,
+} from "./company";
+import { DriverSlice, createDriverSlice } from "./driver";
 
 const useBoundStore = create<
   ManifestIdsSlice &
-  ManifestsSlice &
-  ShipmentIdsSlice &
-  ShipmentSlice &
-  PiecesIdsSlice &
-  PiecesSlice &
-  CommentsSlice &
-  ReasonIdsSlice &
-  ReasonsSlice &
-  CODIdsSlice &
-  CODSlice &
-  CompanySlice &
-  CompanyIdsSlice &
-  DriverSlice
+    ManifestsSlice &
+    ShipmentIdsSlice &
+    ShipmentSlice &
+    PiecesIdsSlice &
+    PiecesSlice &
+    CommentsSlice &
+    ReasonIdsSlice &
+    ReasonsSlice &
+    CODIdsSlice &
+    CODSlice &
+    CompanySlice &
+    CompanyIdsSlice &
+    DriverSlice &
+    StateModalSlice
 >()((...a) => ({
   ...createManifestIdsSlice(...a),
   ...createManifestsSlice(...a),
@@ -60,6 +68,7 @@ const useBoundStore = create<
   ...createCompanySlice(...a),
   ...createCompanyIdsSlice(...a),
   ...createDriverSlice(...a),
+  ...createStateModalSlice(...a),
 }));
 
 export { useBoundStore as useStore };

@@ -18,6 +18,7 @@ import AuthProvider from "@/providers/Auth";
 import { useAuth0Config } from "@hooks/Auth";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { queryClient } from "@/providers";
+import { StateModal } from "@atoms/Modal";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -98,6 +99,7 @@ function RootLayoutNav(props: { authDomain: string; authClientId: string }) {
             value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
           >
             <AuthProvider domain={authDomain} clientId={authClientId}>
+              <StateModal />
               <Stack screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="(no-auth)" />
                 <Stack.Screen name="(auth)" />

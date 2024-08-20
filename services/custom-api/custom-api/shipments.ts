@@ -114,7 +114,7 @@ export function completeOrder({
   signatureImage,
   podName,
 }: ICompleteOrder): Promise<AxiosResponse<unknown>> {
-  const url = `${BASE_URL}shipment/event/dispatch/post?companyID=${companyID}&userID=${userID}&shipmentID=${shipmentID}&barcode=${barcode}&photoImage=${photoImage}&signatureImage=${signatureImage}&podName=${podName}`;
+  const url = `${BASE_URL}shipment/event/dispatch/post?companyID=${companyID}&userID=${userID}&shipmentID=${shipmentID}&barcode=${barcode}${photoImage ? `&photoImage=${photoImage}` : ""}&signatureImage=${signatureImage}&podName=${podName}`;
 
   const config = {
     method: "post",

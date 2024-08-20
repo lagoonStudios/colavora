@@ -22,6 +22,9 @@
       "EMAIL": "Email inválido",
       "EMPTY": "Texto Requerido"
     },
+    "MODAL": {
+      "TEST": "Texto de Prueba para el Modal"
+    },
     "LOGIN": {
       "LOGIN": "Iniciar sesión",
       "USERNAME": "Usuario",

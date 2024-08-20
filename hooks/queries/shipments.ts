@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
 import {
   fetchShipmentData,
@@ -207,15 +210,27 @@ export function useCompleteOrder() {
       photoImage,
       signatureImage,
     }: ICompleteOrder) => {
-      return await completeOrder({
-        companyID,
-        userID,
-        shipmentID,
-        barcode,
-        podName,
-        photoImage,
-        signatureImage,
-      });
+      const barcodes = barcode
+        ?.replaceAll(",", "")
+        ?.split(" ")
+        .filter((e) => e !== "" && e !== " ");
+
+      if (barcodes) {
+        const results = [];
+        for (const barcode of barcodes) {
+          const result = await completeOrder({
+            companyID,
+            userID,
+            shipmentID,
+            barcode,
+            podName,
+            photoImage,
+            signatureImage,
+          });
+          results.push(result);
+        }
+        return results;
+      }
     },
     onError: (e) => console.error("🚀 ~ useCompleteOrder ~ e:", e),
   });
