@@ -1,10 +1,5 @@
 import { ShipmentDetailsTabsItem } from "@templates/ShipmentDetailsTabs/ShipmentDetailsTabs.constants";
 
-export interface IOrderExceptionForm {
-  comment: string;
-  reasonID: number;
-}
-
-export interface IShipmentActionsException {
+export interface IShipmentActions {
   setSelectedTab: React.Dispatch<React.SetStateAction<ShipmentDetailsTabsItem>>;
 }

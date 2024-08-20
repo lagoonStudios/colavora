@@ -11,13 +11,21 @@ import { Picker } from "@react-native-picker/picker";
 
 import SaveButton from "@molecules/SaveButton";
 import TextInput from "@molecules/TextInput";
-import { ActivityIndicator, Text, View } from "@components/Themed";
+
 import { useStore } from "@stores/zustand";
-import { useOrderException } from "@hooks/queries";
 import { mockUserID } from "@constants/Constants";
+import { useOrderException, useAddComment } from "@hooks/queries";
+import { ActivityIndicator, Text, View } from "@components/Themed";
+import { ShipmentDetailsTabsItem } from "@templates/ShipmentDetailsTabs/ShipmentDetailsTabs.constants";
+
 import { styles } from "./ShipmentActionsException.styles";
-import { IOrderExceptionForm } from "./ShipmentActionsException.types";
-export default function ShipmentActionsException() {
+import {
+  IOrderExceptionForm,
+  IShipmentActionsException,
+} from "./ShipmentActionsException.types";
+export default function ShipmentActionsException({
+  setSelectedTab,
+}: IShipmentActionsException) {
   // --- Hooks -----------------------------------------------------------------
   const {
     shipment: { shipmentID, companyID },
@@ -27,14 +35,23 @@ export default function ShipmentActionsException() {
   const { ...methods } = useForm<IOrderExceptionForm>({
     defaultValues: { comment: undefined, reasonID: undefined },
   });
+
   const { mutate, isSuccess, isPending: loading } = useOrderException();
+  const { mutate: addComment, isSuccess: isSuccessAddComment } =
+    useAddComment();
+
+  const selectedReason = methods.watch("reasonID");
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local state -----------------------------------------------------------
-  const selectedReason = methods.watch("reasonID");
   // --- END: Local state ------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
+  const selectedReasonLabel = useMemo(() => {
+    if (selectedReason)
+      return reasons?.find(({ reasonID }) => reasonID === selectedReason)
+        ?.reasonCodeDesc;
+  }, [reasons, selectedReason]);
   const reasonItems = useMemo(
     () =>
       reasons
@@ -75,9 +92,20 @@ export default function ShipmentActionsException() {
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    if (isSuccess) methods?.reset();
+    if (isSuccess)
+      addComment({
+        companyID: Number(companyID),
+        userID: mockUserID,
+        shipmentID,
+        comment: `Order Exception - ${selectedReasonLabel}`,
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (isSuccessAddComment) setSelectedTab(ShipmentDetailsTabsItem.COMMENTS);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessAddComment]);
   // --- END: Side effects -----------------------------------------------------
   return (
     <FormProvider {...methods}>

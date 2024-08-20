@@ -1,4 +1,8 @@
-import { ICODData, IReasonsByIdData } from "@constants/types/general";
+import {
+  ICODData,
+  IReasonsByIdData,
+  IStateModal,
+} from "@constants/types/general";
 import { StateCreator } from "zustand";
 
 export interface ReasonIdsSlice {
@@ -21,6 +25,12 @@ export interface CODSlice {
   CODs: ICODData[];
   addCOD: (COD: ICODData) => void;
   resetCODs: () => void;
+}
+
+export interface StateModalSlice {
+  modal: IStateModal;
+  setVisible: () => void;
+  setMessage: (message: string) => void;
 }
 
 export const createReasonIdsSlice: StateCreator<ReasonIdsSlice, [], []> = (
@@ -62,4 +72,20 @@ export const createCODSlice: StateCreator<CODSlice, [], []> = (set) => ({
       return { CODs: newCODs };
     }),
   resetCODs: () => set((state) => ({ ...state, CODs: [] })),
+});
+
+export const createStateModalSlice: StateCreator<StateModalSlice, [], []> = (
+  set,
+) => ({
+  modal: {
+    message: "MODAL.TEST",
+    visible: true,
+  },
+  setVisible: () =>
+    set((state) => ({
+      ...state,
+      modal: { ...state.modal, visible: !state.modal.visible },
+    })),
+  setMessage: (message: string) =>
+    set((state) => ({ ...state, modal: { ...state.modal, message } })),
 });

@@ -52,3 +52,8 @@ export type PaginatedData = {
   page: number;
   page_size: number;
 };
+
+export interface IStateModal {
+  visible: boolean;
+  message: string;
+}
