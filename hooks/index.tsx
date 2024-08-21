@@ -13,6 +13,8 @@ export {
   useCODIdData,
   useCODByIdData,
   useOrderException,
+  useSendCODs,
+  useCompleteOrder,
 } from "./queries";
 
 export { useSQLite } from "./SQLite";

@@ -18,4 +18,6 @@ export {
   useCommentsIdData,
   useAddComment,
   useOrderException,
+  useSendCODs,
+  useCompleteOrder,
 } from "./shipments";

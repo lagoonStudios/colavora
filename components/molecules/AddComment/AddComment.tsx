@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Alert } from "react-native";
@@ -81,7 +82,6 @@ export default function AddComment({ refetch }: IAddComment) {
             <ActivityIndicator />
           ) : (
             <SaveButton
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onPress={methods.handleSubmit(onSubmit, onError)}
               style={styles.saveButton}
             />

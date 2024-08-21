@@ -19,4 +19,6 @@ export {
   fetchShipmentByIdData,
   fetchShipmentData,
   orderException,
+  sendCOD,
+  completeOrder,
 } from "./shipments";

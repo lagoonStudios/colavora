@@ -70,6 +70,7 @@
       "ADD_COD": "Agregar COD", 
       "ADD": "Agregar",
       "CANCEL": "Cancelar",
+      "CLEAR": "Limpiar",
       "DOCUMENT_NUMBER": "Numero de Documento",
       "POD_NAME": "Nombre POD",
       "SIGNATURE": "Firma"

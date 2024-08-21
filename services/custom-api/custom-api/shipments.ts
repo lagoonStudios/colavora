@@ -7,6 +7,8 @@ import {
   IFetchPiecesByIdData,
   IOptionalCommentsProps,
   IOptionalExceptionProps,
+  ISendCOD,
+  ICompleteOrder,
 } from "@constants/types/shipments";
 import { API_KEY, BASE_URL } from "@constants/url";
 
@@ -68,10 +70,56 @@ export function orderException({
   userID,
   reasonID,
 }: IOptionalExceptionProps): Promise<AxiosResponse<unknown>> {
+  const url = `${BASE_URL}shipment/event/exception/post?companyID=${companyID}&userID=${userID}&shipmentID=${shipmentID}&comment=${comment}&reasonID=${reasonID}`;
   const config = {
     method: "post",
     maxBodyLength: Infinity,
-    url: `${BASE_URL}shipment/event/exception/post?companyID=${companyID}&userID=${userID}&shipmentID=${shipmentID}&comment=${comment}&reasonID=${reasonID}`,
+    url,
+    headers: {
+      ApiKey: API_KEY,
+    },
+  };
+
+  return axiosClient.request(config);
+}
+
+export function sendCOD({
+  companyID,
+  shipmentID,
+  userID,
+  codAmount,
+  codCheck,
+  codTypeID,
+}: ISendCOD): Promise<AxiosResponse<unknown>> {
+  const url = `${BASE_URL}shipment/event/cod/post?companyID=${companyID}&userID=${userID}&shipmentID=${shipmentID}&codAmount=${codAmount}&codTypeID=${codTypeID}${codCheck && `&codCheck=${codCheck}`}`;
+
+  const config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url,
+    headers: {
+      ApiKey: API_KEY,
+    },
+  };
+
+  return axiosClient.request(config);
+}
+
+export function completeOrder({
+  companyID,
+  shipmentID,
+  userID,
+  barcode,
+  photoImage,
+  signatureImage,
+  podName,
+}: ICompleteOrder): Promise<AxiosResponse<unknown>> {
+  const url = `${BASE_URL}shipment/event/dispatch/post?companyID=${companyID}&userID=${userID}&shipmentID=${shipmentID}&barcode=${barcode}&photoImage=${photoImage}&signatureImage=${signatureImage}&podName=${podName}`;
+
+  const config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url,
     headers: {
       ApiKey: API_KEY,
     },
