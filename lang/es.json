@@ -79,7 +79,7 @@
     },
     "SEARCH": {
       "PLACEHOLDER": "Buscar",
-      "NO_RESULTS": "Busca Ordenes"
+      "NO_RESULTS": "No se encontraron ordenes"
     },
     "COMMENTS": {
       "COMMENTS": "Comentarios",

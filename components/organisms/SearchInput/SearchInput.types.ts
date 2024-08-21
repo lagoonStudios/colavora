@@ -10,7 +10,6 @@ export type SearchInputProps = {
 export type SearchItem = {
     label: string;
     value: string;
-    href: string
 }
 
 export type UseSearchDataProps = {
