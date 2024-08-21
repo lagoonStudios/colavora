@@ -1,5 +1,5 @@
 export const defaultCODSelected = {
-  codTypeID: undefined,
+  codTypeID: -1,
   codAmount: undefined,
   codCheck: undefined,
 };

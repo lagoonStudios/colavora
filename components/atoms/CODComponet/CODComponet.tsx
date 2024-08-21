@@ -35,7 +35,7 @@ export default function CODComponet({
   const addCodHandler = () => {
     Keyboard.dismiss();
 
-    if (!cod?.codTypeID) {
+    if (!cod?.codTypeID || cod?.codTypeID === -1) {
       Alert.alert("Error", "Please select COD type");
       return;
     }
@@ -59,9 +59,9 @@ export default function CODComponet({
             value={value}
             key={`picker-value-${value}`}
           />
-        ),
+        )
       ),
-    [CODs],
+    [CODs]
   );
   // --- END: Data and handlers ------------------------------------------------
   return (
@@ -85,6 +85,7 @@ export default function CODComponet({
             }
             style={styles.picker}
           >
+            <Picker.Item label={t("COMMON.SELECT_A_VALUE")} value={-1} />
             {CODItems}
           </Picker>
           <TextInput

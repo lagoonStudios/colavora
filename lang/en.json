@@ -6,7 +6,8 @@
     "POWERED_BY": "Powered by EagerLink",
     "COMMON": {
       "EMAIL": "Email",
-      "PIECES": "Pieces"
+      "PIECES": "Pieces",
+      "SELECT_A_VALUE": "Select a value"
     },
     "ERRORS": {
       "ERROR": "Error",
@@ -24,7 +25,8 @@
     },
     "MODAL": {
       "TEST": "Test Modal Text",
-      "COMPLETING": "Completing Order..."
+      "COMPLETING": "Completing Order...",
+      "CEATING_EXCEPTION": "Creating exception"
     },
     "LOGIN": {
       "LOGIN": "Login",
