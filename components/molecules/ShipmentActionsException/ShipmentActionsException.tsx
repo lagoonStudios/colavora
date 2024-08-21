@@ -5,19 +5,18 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
+import { Alert } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Picker } from "@react-native-picker/picker";
 
 import SaveButton from "@molecules/SaveButton";
 import TextInput from "@molecules/TextInput";
-import { styles } from "./ShipmentActionsException.styles";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ActivityIndicator, Text, View } from "@components/Themed";
-import { Alert } from "react-native";
 import { useStore } from "@stores/zustand";
-import { IOrderExceptionForm } from "./ShipmentActionsException.types";
 import { useOrderException } from "@hooks/queries";
 import { mockUserID } from "@constants/Constants";
+import { styles } from "./ShipmentActionsException.styles";
+import { IOrderExceptionForm } from "./ShipmentActionsException.types";
 export default function ShipmentActionsException() {
   // --- Hooks -----------------------------------------------------------------
   const {
@@ -40,11 +39,14 @@ export default function ShipmentActionsException() {
     () =>
       reasons
         ?.sort((a, b) => a.reasonID - b.reasonID)
-        ?.map(({ reasonID: value, reasonCodeDesc: label }) => ({
-          value,
-          label,
-        })),
-    [reasons]
+        ?.map(({ reasonID: value, reasonCodeDesc: label }) => (
+          <Picker.Item
+            label={label}
+            value={value}
+            key={`picker-value-${value}`}
+          />
+        )),
+    [reasons],
   );
 
   const onSubmit: SubmitHandler<IOrderExceptionForm> = (data) => {
@@ -73,9 +75,7 @@ export default function ShipmentActionsException() {
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    if (isSuccess) {
-      methods.reset();
-    }
+    if (isSuccess) methods?.reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
   // --- END: Side effects -----------------------------------------------------
@@ -92,13 +92,7 @@ export default function ShipmentActionsException() {
               methods.setValue("reasonID", itemValue)
             }
           >
-            {reasonItems?.map(({ label, value }) => (
-              <Picker.Item
-                label={label}
-                value={value}
-                key={`picker-value-${value}`}
-              />
-            ))}
+            {reasonItems}
           </Picker>
           <TextInput
             clearTextOnFocus={false}

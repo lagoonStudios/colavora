@@ -18,6 +18,9 @@ export const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius,
     width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
   input: {
     width: "100%",

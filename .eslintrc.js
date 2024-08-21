@@ -64,7 +64,6 @@ module.exports = {
         singleQuote: false,
         trailingComma: "all",
         useTabs: false,
-        tabWidth: "off",
       },
       {
         usePrettierrc: false,

@@ -31,7 +31,8 @@ export default function AuthProvider({
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    const checkCredentials = () => setIsLoggedIn(Boolean(token));
+    // const checkCredentials = () => setIsLoggedIn(Boolean(token));
+    const checkCredentials = () => setIsLoggedIn(true);
 
     checkCredentials();
   });

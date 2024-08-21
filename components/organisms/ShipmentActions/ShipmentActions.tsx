@@ -9,9 +9,9 @@ export default function ShipmentActions() {
     ShipmentActionsButtonItem.DEFAULT,
   );
   const components = [
-    <ShipmentActionsDefault key={`shipment-default`} setOption={setOption} />,
-    <ShipmentActionsException key={`shipment-exception`} />,
-    <ShipmentActionsComplete key={`shipment-complete`} />,
+    <ShipmentActionsDefault key="shipment-default" setOption={setOption} />,
+    <ShipmentActionsException key="shipment-exception" />,
+    <ShipmentActionsComplete key="shipment-complete" />,
   ];
   // --- END: Local state ------------------------------------------------------
 

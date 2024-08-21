@@ -63,7 +63,16 @@
     "ACTIONS": {
       "ORDERS_EXCEPTION": "Order Exception",
       "ORDERS_COMPLETE": "Complete Order",
-      "PLACEHOLDER": "Additional comment"
+      "PLACEHOLDER": "Additional comment",
+      "CHOOSE_FILE": "Choose File",
+      "NO_FILE": "No file chosen",
+      "DEAFULT_LABEL": "Select COD type",
+      "ADD_COD": "Add COD",
+      "ADD": "Add",
+      "CANCEL": "Cancel",
+      "DOCUMENT_NUMBER": "Document Number",
+      "POD_NAME": "POD Name",
+      "SIGNATURE": "Signature"
     }
   }
 }

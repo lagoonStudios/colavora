@@ -2,7 +2,7 @@ import Colors, { mantisColor } from "@constants/Colors";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-  noteTitle: {
+  completeTitle: {
     alignItems: "flex-start",
     justifyContent: "center",
     gap: 8,
@@ -15,18 +15,12 @@ export const styles = StyleSheet.create({
     marginTop: 10,
     gap: 16,
   },
-  containerInput: {
+  formContainer: {
     display: "flex",
     gap: 15,
   },
-  commnetInput: {
-    borderWidth: 0,
-    borderColor: "white",
-    backgroundColor: Colors.light.gray.default,
-    height: 100,
-    textAlign: "left",
-    textAlignVertical: "top",
-    paddingVertical: 10,
+  textInput: {
+    width: "90%",
   },
   saveButtonContainer: {
     display: "flex",
@@ -39,10 +33,7 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     width: "auto",
   },
-  pickerContainer: {
-    borderBlockColor: "black",
-    borderWidth: 5,
-    backgroundColor: Colors.light.gray.default,
-    borderRadius: 40,
+  saveButtonText: {
+    color: Colors.light.text.contrast,
   },
 });
