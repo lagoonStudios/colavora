@@ -79,7 +79,7 @@
     },
     "SEARCH": {
       "PLACEHOLDER": "Search",
-      "NO_RESULTS": "Search Orders"
+      "NO_RESULTS": "Not orders found"
     },
     "COMMENTS": {
       "COMMENTS": "Comments",
