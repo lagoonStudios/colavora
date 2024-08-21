@@ -9,7 +9,7 @@ import { IShipmentActions } from "./ShipmentActions.types";
 export default function ShipmentActions({ setSelectedTab }: IShipmentActions) {
   // --- Local state -----------------------------------------------------------
   const [option, setOption] = useState<ShipmentActionsButtonItem>(
-    ShipmentActionsButtonItem.DEFAULT,
+    ShipmentActionsButtonItem.DEFAULT
   );
   const components = [
     <ShipmentActionsDefault key="shipment-default" setOption={setOption} />,
@@ -17,7 +17,10 @@ export default function ShipmentActions({ setSelectedTab }: IShipmentActions) {
       key="shipment-exception"
       setSelectedTab={setSelectedTab}
     />,
-    <ShipmentActionsComplete key="shipment-complete" />,
+    <ShipmentActionsComplete
+      setSelectedTab={setSelectedTab}
+      key="shipment-complete"
+    />,
   ];
   // --- END: Local state ------------------------------------------------------
 
