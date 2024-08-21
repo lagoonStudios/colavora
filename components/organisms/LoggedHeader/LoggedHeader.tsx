@@ -42,7 +42,9 @@ export default function LoggedHeader() {
       <View style={styles.infoContainer}>
         <Text style={styles.companyText}>{companyName}</Text>
         <Text style={styles.userText}>{contact}</Text>
-        <Text style={styles.statusText}>Online</Text>
+        <View style={styles.statusContainer}>
+          <Text style={styles.statusText}>Online</Text>
+        </View>
       </View>
     </View>
   );

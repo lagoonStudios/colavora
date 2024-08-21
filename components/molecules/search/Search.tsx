@@ -1,12 +1,16 @@
-import { useTranslation } from "react-i18next";
 import React from "react";
-
-import { Text, useThemeColor, View } from "@components/Themed";
 import { Pressable } from "react-native";
+import { useTranslation } from "react-i18next";
 import { FormProvider, useForm } from "react-hook-form";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+
+import Feather from "@expo/vector-icons/Feather";
+
+import TextInput from "@molecules/TextInput";
+import { useThemeColor, View } from "@components/Themed";
+
 import { styles } from "./Search.styles";
 import { SearchForm, SearchProps } from "./Search.types";
-import TextInput from "@molecules/TextInput";
 
 export default function Search(props: SearchProps) {
   const { containerStyle, setOpen, open, handleSearch } = props;
@@ -38,10 +42,17 @@ export default function Search(props: SearchProps) {
           onChangeText={handleSearch}
           placeholder={t("SEARCH.PLACEHOLDER")}
         />
-        <Text style={styles.leftIcon}>IC</Text>
-        <Pressable style={styles.rightIcon} onPress={handleClose}>
-          <Text>X</Text>
-        </Pressable>
+        <SimpleLineIcons
+          name="magnifier"
+          size={24}
+          color="black"
+          style={styles.leftIcon}
+        />
+        {open && (
+          <Pressable style={styles.rightIcon} onPress={handleClose}>
+            <Feather name="x" size={16} color="black" />
+          </Pressable>
+        )}
       </FormProvider>
     </View>
   );
