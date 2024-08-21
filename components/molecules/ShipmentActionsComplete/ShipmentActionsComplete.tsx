@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Alert } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
@@ -26,7 +27,6 @@ import DefaultCODLabels from "@atoms/DefaultCODLabels";
 
 import { useStore } from "@stores/zustand";
 import { useSendCODs, useCompleteOrder } from "@hooks/index";
-import { mockUserID } from "@constants/Constants";
 
 import { styles } from "./ShipmentActionsComplete.styles";
 import { IShipmentActionsComplete } from "./ShipmentActionsComplete.types";
@@ -44,6 +44,9 @@ export default function ShipmentActionsComplete() {
   // --- Hooks -----------------------------------------------------------------
   const {
     shipment: { shipmentID, barcode, companyID },
+    setModal: setStateModal,
+    setVisible,
+    driver,
   } = useStore();
   const { ...methods } = useForm<IShipmentActionsComplete>({
     defaultValues,
@@ -108,12 +111,14 @@ export default function ShipmentActionsComplete() {
       return;
     }
 
+    setStateModal("MODAL.COMPLETING");
+
     if (cods?.length !== 0) {
       const completeCODs = cods?.map((cod) => ({
         ...cod,
         companyID: Number(companyID),
         shipmentID: shipmentID,
-        userID: mockUserID,
+        userID: driver?.userID,
       }));
 
       mutate(completeCODs);
@@ -137,18 +142,23 @@ export default function ShipmentActionsComplete() {
         photoImage: photoImage?.uri,
         companyID: Number(companyID),
         shipmentID: shipmentID,
-        userID: mockUserID,
+        userID: driver?.userID,
       });
+
+    if (statusSendCODs === "error") setVisible(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [codsSelected?.length, noSelectCOD, statusSendCODs]);
 
   useEffect(() => {
     if (completeOrderStatus === "success") {
       console.log("Complete Order");
+      setVisible(false);
       setCodition(false);
       methods.reset();
       onClear();
     }
+
+    if (completeOrderStatus === "error") setVisible(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [completeOrderStatus]);
   // --- END: Side effects -----------------------------------------------------

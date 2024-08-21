@@ -13,7 +13,6 @@ import SaveButton from "@molecules/SaveButton";
 import TextInput from "@molecules/TextInput";
 
 import { useStore } from "@stores/zustand";
-import { mockUserID } from "@constants/Constants";
 import { useOrderException, useAddComment } from "@hooks/queries";
 import { ActivityIndicator, Text, View } from "@components/Themed";
 import { ShipmentDetailsTabsItem } from "@templates/ShipmentDetailsTabs/ShipmentDetailsTabs.constants";
@@ -30,6 +29,7 @@ export default function ShipmentActionsException({
   const {
     shipment: { shipmentID, companyID },
     reasons,
+    driver,
   } = useStore();
   const { t } = useTranslation();
   const { ...methods } = useForm<IOrderExceptionForm>({
@@ -78,7 +78,7 @@ export default function ShipmentActionsException({
 
     mutate({
       companyID: Number(companyID),
-      userID: mockUserID,
+      userID: driver?.userID,
       shipmentID,
       comment: data.comment,
       reasonID: data.reasonID,
@@ -95,7 +95,7 @@ export default function ShipmentActionsException({
     if (isSuccess)
       addComment({
         companyID: Number(companyID),
-        userID: mockUserID,
+        userID: driver?.userID,
         shipmentID,
         comment: `Order Exception - ${selectedReasonLabel}`,
       });

@@ -23,7 +23,8 @@
       "EMAIL": "Invalid email"
     },
     "MODAL": {
-      "TEST": "Test Modal Text"
+      "TEST": "Test Modal Text",
+      "COMPLETING": "Completing Order..."
     },
     "LOGIN": {
       "LOGIN": "Login",

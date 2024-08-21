@@ -5,15 +5,23 @@ import { useColorScheme } from "@components/useColorScheme";
 
 import Colors from "@constants/Colors";
 import useAuth from "@hooks/Auth";
+import { useStore } from "@stores/zustand";
 
 export default function LogoutButton() {
-  const colorScheme = useColorScheme();
-
+  // --- Hooks -----------------------------------------------------------------
   const { clearSession } = useAuth();
+  const colorScheme = useColorScheme();
+  const { resetCompanyId, resetCompany, resetDriver, resetShipment } =
+    useStore();
+  // --- END: Hooks ------------------------------------------------------------
 
   const onPress = () => {
     try {
       clearSession();
+      resetCompanyId();
+      resetCompany();
+      resetDriver();
+      resetShipment();
     } catch (e) {
       console.error("🚀 ~ LogoutButton ~ onPress ~ e:", e);
     }

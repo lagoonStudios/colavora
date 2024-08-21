@@ -23,7 +23,8 @@
       "EMPTY": "Texto Requerido"
     },
     "MODAL": {
-      "TEST": "Texto de Prueba para el Modal"
+      "TEST": "Texto de Prueba para el Modal",
+      "COMPLETING": "Completando orden..."
     },
     "LOGIN": {
       "LOGIN": "Iniciar sesión",

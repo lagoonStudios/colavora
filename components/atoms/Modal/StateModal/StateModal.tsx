@@ -14,12 +14,16 @@ export default function StateModal() {
   const { t } = useTranslation();
   // --- END: Hooks ------------------------------------------------------------
 
+  // --- Data and handlers -----------------------------------------------------
+  const onRequestClose = () => setVisible();
+  // --- END: Data and handlers ------------------------------------------------
+
   return (
     <Modal
       visible={visible}
-      animationType="slide"
+      animationType="fade"
       transparent
-      onRequestClose={setVisible}
+      onRequestClose={onRequestClose}
     >
       <View style={styles.viewContainer}>
         <View style={styles.view}>
