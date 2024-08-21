@@ -29,8 +29,9 @@ export interface CODSlice {
 
 export interface StateModalSlice {
   modal: IStateModal;
-  setVisible: () => void;
+  setVisible: (visible?: boolean) => void;
   setMessage: (message: string) => void;
+  setModal: (message: string) => void;
 }
 
 export const createReasonIdsSlice: StateCreator<ReasonIdsSlice, [], []> = (
@@ -79,13 +80,15 @@ export const createStateModalSlice: StateCreator<StateModalSlice, [], []> = (
 ) => ({
   modal: {
     message: "MODAL.TEST",
-    visible: true,
+    visible: false,
   },
-  setVisible: () =>
+  setVisible: (visible?: boolean) =>
     set((state) => ({
       ...state,
-      modal: { ...state.modal, visible: !state.modal.visible },
+      modal: { ...state.modal, visible: visible ?? !state.modal.visible },
     })),
   setMessage: (message: string) =>
     set((state) => ({ ...state, modal: { ...state.modal, message } })),
+  setModal: (message: string) =>
+    set((state) => ({ ...state, modal: { visible: true, message } })),
 });

@@ -8,7 +8,6 @@ import { mockDriverId } from "@constants/Constants";
 
 export function useCompanyData() {
   // --- Hooks -----------------------------------------------------------------
-
   const { addCompany, resetCompany, companyId } = useStore();
 
   const {
@@ -24,30 +23,24 @@ export function useCompanyData() {
   useEffect(() => {
     if (companyId == undefined || isPendingCompany) return;
     if (isErrorCompany) {
-      errorCompany.message;
       console.error(
         "🚀 ~ useCompanyDataById ~ useEffect ~ data.error.message:",
-        errorCompany.message
+        errorCompany.message,
       );
     }
     if (responseCompanyData) {
       resetCompany();
       addCompany(responseCompanyData);
     }
-  }, [
-    addCompany,
-    responseCompanyData,
-    errorCompany,
-    isPendingCompany,
-    companyId,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [responseCompanyData, errorCompany, isPendingCompany, companyId]);
 
   // --- END: Side effects -----------------------------------------------------
 }
 
 export function useDriverData() {
   // --- Hooks -----------------------------------------------------------------
-  const [driverId, setDriverId] = useState(mockDriverId);
+  const [driverId] = useState(mockDriverId);
   const { addCompanyId, addDriver } = useStore();
 
   const {
@@ -63,16 +56,16 @@ export function useDriverData() {
   useEffect(() => {
     if (driverId == undefined || isPendingDriver) return;
     if (isErrorDriver) {
-      errorDriver.message;
       console.error(
         "🚀 ~ useCompanyDataById ~ useEffect ~ data.error.message:",
-        errorDriver.message
+        errorDriver.message,
       );
     }
     if (responseDriverData) {
       addDriver(responseDriverData);
       addCompanyId(responseDriverData.companyID);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseDriverData, errorDriver, isPendingDriver, driverId]);
   // --- END: Side effects -----------------------------------------------------
 }

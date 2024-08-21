@@ -13,7 +13,6 @@ import TextInput from "@molecules/TextInput";
 import { useAddComment } from "@hooks/queries";
 import SaveButton from "@molecules/SaveButton";
 import { Text, View } from "@components/Themed";
-import { mockUserID } from "@constants/Constants";
 
 import { IAddComment, CommentForm } from "./AddComment.types";
 import { styles } from "./AddComment.styles";
@@ -27,6 +26,7 @@ export default function AddComment({ refetch }: IAddComment) {
   });
   const {
     shipment: { shipmentID, companyID },
+    driver,
   } = useStore();
   // --- END: Hooks ------------------------------------------------
 
@@ -39,7 +39,7 @@ export default function AddComment({ refetch }: IAddComment) {
 
     mutate({
       companyID: Number(companyID),
-      userID: mockUserID,
+      userID: driver?.userID,
       shipmentID,
       comment: data.comment,
     });
