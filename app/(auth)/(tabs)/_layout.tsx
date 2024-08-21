@@ -1,10 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import React from "react";
-import {
-  AntDesign,
-  FontAwesome,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 
 import Colors from "@constants/Colors";
@@ -56,10 +52,10 @@ export default function TabLayout() {
           headerStyle: { height: 110, backgroundColor },
           tabBarStyle: { backgroundColor },
           tabBarIcon: ({ color }) => (
-            <FontAwesome
+            <Feather
               name="home"
-              color={color}
               size={28}
+              color={color}
               style={{ marginBottom: -3 }}
             />
           ),
@@ -78,8 +74,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="truck-fast-outline"
-              color={color}
               size={28}
+              color={color}
               style={{ marginBottom: -3 }}
             />
           ),

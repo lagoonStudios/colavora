@@ -2,17 +2,19 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   companyText: {
-    fontSize: 14,
+    fontSize: 12,
   },
   userText: {
     fontWeight: "700",
     fontSize: 17,
   },
-  statusText: {
+  statusContainer: {
     backgroundColor: "#7EC074",
-    width: 100,
-    textAlign: "center",
     borderRadius: 10,
+    width: 100,
+  },
+  statusText: {
+    textAlign: "center",
     color: "#ffffff",
   },
   infoContainer: {

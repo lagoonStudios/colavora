@@ -16,6 +16,12 @@ export const useSearchData = ({ text }: UseSearchDataProps) => {
   const handleSearchRequest = useCallback(
     (text: string) => {
       try {
+        if (text.trim() === "") {
+          setLoading(false);
+          setOpen(false);
+          setData([]);
+          return;
+        }
         setLoading(true);
         setOpen(true);
         // Aquí va la lógica de tu búsqueda, por ejemplo, hacer una petición a una API

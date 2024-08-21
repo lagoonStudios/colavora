@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
         width: ICON_DIMENSIONS,
         height: "100%",
         left: ICON_DIMENSIONS,
-        marginVertical: 10,
+        marginTop: 11,
         fontSize: ICON_DIMENSIONS
     },
     rightIcon: {
@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
         width: ICON_DIMENSIONS,
         height: "100%",
         right: ICON_DIMENSIONS,
-        marginVertical: 10,
+        marginTop: 11,
         fontSize: ICON_DIMENSIONS
     },
 });

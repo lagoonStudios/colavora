@@ -61,19 +61,19 @@ export default function ControlledInput(props: TextInputProps) {
   // --- END: Side effects -----------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
-  const optinalContainerStyles = useMemo(
+  const optionalContainerStyles = useMemo(
     () =>
       backgroundColorContainer
         ? { backgroundColor: backgroundColorContainer, borderWidth: 0 }
         : undefined,
-    [backgroundColorContainer],
+    [backgroundColorContainer]
   );
-  const optinalInputStyles = useMemo(
+  const optionalInputStyles = useMemo(
     () =>
       backgroundColorInput
         ? { backgroundColor: backgroundColorInput }
         : undefined,
-    [backgroundColorInput],
+    [backgroundColorInput]
   );
   // --- END: Data and handlers ------------------------------------------------
   return (
@@ -83,7 +83,7 @@ export default function ControlledInput(props: TextInputProps) {
         style={[
           defaultStyles.inputContainer,
           defaultStyles.inputShadow,
-          optinalContainerStyles,
+          optionalContainerStyles,
         ]}
       >
         {optionalFirstComponent}
@@ -97,7 +97,7 @@ export default function ControlledInput(props: TextInputProps) {
             },
             defaultStyles.input,
             style,
-            optinalInputStyles,
+            optionalInputStyles,
           ]}
           keyboardAppearance={theme}
           onChangeText={field.onChange}
