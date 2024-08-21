@@ -1,13 +1,20 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { Pressable, PressableProps } from "react-native";
 
-import Button from "@atoms/Button";
-import { PressableProps } from "react-native";
+import { Text } from "@components/Themed";
+import Colors from "@constants/Colors";
 
 export default function SaveButton(props: PressableProps) {
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
   // --- END: Hooks ------------------------------------------------------------
 
-  return <Button {...props} label={t("COMMENTS.SAVE")} />;
+  return (
+    <Pressable {...props}>
+      <Text style={{ color: Colors.light.text.contrast }}>
+        {t("COMMENTS.SAVE")}
+      </Text>
+    </Pressable>
+  );
 }

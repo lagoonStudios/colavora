@@ -63,7 +63,16 @@
     "ACTIONS": {
       "ORDERS_EXCEPTION": "Excepción de pedido",
       "ORDERS_COMPLETE": "Completar pedido",
-      "PLACEHOLDER": "Comentario Adicional"
+      "PLACEHOLDER": "Comentario Adicional",
+      "CHOOSE_FILE": "Seleccionar Archivo",
+      "NO_FILE": "No Archivo",
+      "DEAFULT_LABEL": "Seleccione el tipo de COD", 
+      "ADD_COD": "Agregar COD", 
+      "ADD": "Agregar",
+      "CANCEL": "Cancelar",
+      "DOCUMENT_NUMBER": "Numero de Documento",
+      "POD_NAME": "Nombre POD",
+      "SIGNATURE": "Firma"
     }
   }
 }

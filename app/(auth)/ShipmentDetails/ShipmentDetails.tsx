@@ -28,15 +28,7 @@ export default function ShipmentDetails() {
 
   // --- Data and handlers -----------------------------------------------------
   const renderView = useCallback(() => {
-    if (data === undefined) {
-      if (loading)
-        return (
-          <View style={{ margin: "auto" }}>
-            <ActivityIndicator />
-          </View>
-        );
-      else return <Text>No data</Text>;
-    } else {
+    if (data)
       switch (selectedTab) {
         case ShipmentDetailsTabsItem.DETAILS:
           return <ShipmentDetail />;
@@ -47,7 +39,15 @@ export default function ShipmentDetails() {
         case ShipmentDetailsTabsItem.ACTIONS:
           return <ShipmentActions />;
       }
-    }
+
+    if (data === undefined)
+      if (loading)
+        return (
+          <View style={{ margin: "auto" }}>
+            <ActivityIndicator />
+          </View>
+        );
+      else return <Text>No data</Text>;
   }, [data, selectedTab, loading]);
   // --- END: Data and handlers ------------------------------------------------
 
