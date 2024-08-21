@@ -22,7 +22,7 @@ export default function CODSelected({
         <Text style={styles.textItem}>
           {index + 1} {getType(codTypeID)}
         </Text>
-        <Text style={styles.textItem}>{codAmount ? `(${codCheck})` : ""}</Text>
+        {codCheck && <Text style={styles.textItem}>{`(${codCheck})`}</Text>}
         <Text style={styles.textItem}>/ ${codAmount}</Text>
       </View>
     ));

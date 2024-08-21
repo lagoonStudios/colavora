@@ -25,9 +25,19 @@ export const styles = StyleSheet.create({
   saveButtonContainer: {
     display: "flex",
     alignItems: "flex-end",
+    justifyContent: "flex-end",
+    flexDirection: "row",
+    gap: 11,
   },
   saveButton: {
     backgroundColor: mantisColor,
+    paddingHorizontal: 25,
+    paddingVertical: 5,
+    borderRadius: 10,
+    width: "auto",
+  },
+  cancelButton: {
+    backgroundColor: "rgba(245, 39, 13, 0.8)",
     paddingHorizontal: 25,
     paddingVertical: 5,
     borderRadius: 10,

@@ -40,6 +40,11 @@ export default function CODComponet({
       return;
     }
 
+    if (!cod?.codAmount) {
+      Alert.alert("Error", "Please add amount");
+      return;
+    }
+
     addCOD(cod.codTypeID, cod?.codAmount, cod?.codCheck);
     setCod(defaultCODSelected);
     setVisible();

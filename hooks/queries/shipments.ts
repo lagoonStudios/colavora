@@ -7,13 +7,17 @@ import {
   fetchCommentsByIdData,
   addCommentdData,
   orderException,
+  sendCOD,
+  completeOrder,
 } from "@/services/custom-api";
 import { queryKeys } from "@constants/Constants";
 import {
+  ICompleteOrder,
   IFetchPiecesByIdData,
   IFetchShipmentByIdData,
   IOptionalCommentsProps,
   IOptionalExceptionProps,
+  ISendCOD,
 } from "@constants/types/shipments";
 import { IOptionalManifestProps } from "@constants/types/manifests";
 
@@ -145,7 +149,7 @@ export function useAddComment() {
         shipmentID,
       });
     },
-    onError: (e) => console.error("🚀 ~ useAddComment ~ e:", e)
+    onError: (e) => console.error("🚀 ~ useAddComment ~ e:", e),
   });
 
   return request;
@@ -168,7 +172,52 @@ export function useOrderException() {
         reasonID,
       });
     },
-    onError: (e) => console.error("🚀 ~ useOrderException ~ e:", e)
+    onError: (e) => console.error("🚀 ~ useOrderException ~ e:", e),
+  });
+
+  return request;
+}
+
+export function useSendCODs() {
+  const request = useMutation({
+    mutationFn: async (CODs: ISendCOD[]) => {
+      const results = await Promise.all(
+        CODs.map(async (cod) => {
+          return await sendCOD({
+            ...cod,
+          });
+        }),
+      );
+      return results;
+    },
+    onError: (e) => console.error("🚀 ~ useSendCODs ~ e:", e),
+  });
+
+  return request;
+}
+
+export function useCompleteOrder() {
+  const request = useMutation({
+    mutationFn: async ({
+      companyID,
+      userID,
+      shipmentID,
+      barcode,
+      podName,
+      photoImage,
+      signatureImage,
+    }: ICompleteOrder) => {
+      return await completeOrder({
+        companyID,
+        userID,
+        shipmentID,
+        barcode,
+        podName,
+        photoImage,
+        signatureImage,
+      });
+    },
+    onError: (e) => console.error("🚀 ~ useCompleteOrder ~ e:", e),
   });
 
   return request;
