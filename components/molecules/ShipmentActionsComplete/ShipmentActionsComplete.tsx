@@ -31,7 +31,11 @@ import { useSendCODs, useCompleteOrder } from "@hooks/index";
 import { styles } from "./ShipmentActionsComplete.styles";
 import { IShipmentActionsComplete } from "./ShipmentActionsComplete.types";
 import { defaultFieldValues as defaultValues } from "./ShipmentActionsComplete.constants";
-export default function ShipmentActionsComplete() {
+import { IShipmentActionsException } from "@molecules/ShipmentActionsException/ShipmentActionsException.types";
+import { ShipmentDetailsTabsItem } from "@templates/ShipmentDetailsTabs/ShipmentDetailsTabs.constants";
+export default function ShipmentActionsComplete({
+  setSelectedTab,
+}: IShipmentActionsException) {
   // --- Refs ------------------------------------------------------------------
   const ref = useRef<SignatureViewRef>(null);
   // --- END: Refs -------------------------------------------------------------
@@ -66,7 +70,10 @@ export default function ShipmentActionsComplete() {
   // --- Data and handlers -----------------------------------------------------
   const onPressDeafultLabels = () => setModal();
 
-  const onClear = () => ref?.current?.clearSignature();
+  const onClear = () => {
+    methods.setValue("signatureImage", "");
+    return ref?.current?.clearSignature();
+  };
 
   const pickImage = async () => {
     const result = await ImagePicker.launchCameraAsync({
@@ -83,7 +90,7 @@ export default function ShipmentActionsComplete() {
     FileSystem.writeAsStringAsync(
       path,
       signature.replace("data:image/png;base64,", ""),
-      { encoding: FileSystem.EncodingType.Base64 },
+      { encoding: FileSystem.EncodingType.Base64 }
     )
       .then(() => FileSystem.getInfoAsync(path))
       .then((info) => methods.setValue("signatureImage", info.uri))
@@ -99,7 +106,7 @@ export default function ShipmentActionsComplete() {
 
   const showDefaultLabel = useMemo(
     () => codsSelected?.length === 0,
-    [codsSelected?.length],
+    [codsSelected?.length]
   );
 
   const onSubmit: SubmitHandler<IShipmentActionsComplete> = ({
@@ -156,6 +163,7 @@ export default function ShipmentActionsComplete() {
       setCodition(false);
       methods.reset();
       onClear();
+      setSelectedTab(ShipmentDetailsTabsItem.DETAILS);
     }
 
     if (completeOrderStatus === "error") setVisible(false);
@@ -202,7 +210,10 @@ export default function ShipmentActionsComplete() {
           <Signature handleOK={handleOK} refSignature={ref} />
         </View>
         <View style={styles.saveButtonContainer}>
-          <CancelButton style={styles.cancelButton} onClear={onClear} />
+          {signatureImage && (
+            <CancelButton style={styles.cancelButton} onClear={onClear} />
+          )}
+
           <SaveButton
             style={styles.saveButton}
             onPress={methods.handleSubmit(onSubmit, onError)}

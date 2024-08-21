@@ -30,13 +30,15 @@ export default function ShipmentActionsException({
     shipment: { shipmentID, companyID },
     reasons,
     driver,
+    setModal: setStateModal,
+    setVisible: setStateModalVisible,
   } = useStore();
   const { t } = useTranslation();
   const { ...methods } = useForm<IOrderExceptionForm>({
-    defaultValues: { comment: undefined, reasonID: undefined },
+    defaultValues: { comment: "", reasonID: -1 },
   });
 
-  const { mutate, isSuccess, isPending: loading } = useOrderException();
+  const { mutate, isSuccess, isPending: loading, error } = useOrderException();
   const { mutate: addComment, isSuccess: isSuccessAddComment } =
     useAddComment();
 
@@ -63,7 +65,7 @@ export default function ShipmentActionsException({
             key={`picker-value-${value}`}
           />
         )),
-    [reasons],
+    [reasons]
   );
 
   const onSubmit: SubmitHandler<IOrderExceptionForm> = (data) => {
@@ -71,11 +73,11 @@ export default function ShipmentActionsException({
       Alert.alert("Error", "Please enter a comment");
       return;
     }
-    if (!data?.reasonID) {
+    if (!data?.reasonID || data?.reasonID === -1) {
       Alert.alert("Error", "Please select a reason");
       return;
     }
-
+    setStateModal(t("MODAL.CEATING_EXCEPTION"));
     mutate({
       companyID: Number(companyID),
       userID: driver?.userID,
@@ -99,11 +101,20 @@ export default function ShipmentActionsException({
         shipmentID,
         comment: `Order Exception - ${selectedReasonLabel}`,
       });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
 
   useEffect(() => {
+    if (error) {
+      console.error("🚀 ShipmentActionsException ~ error: ", error);
+      setStateModalVisible(false);
+    }
+  }, [error]);
+
+  useEffect(() => {
     if (isSuccessAddComment) setSelectedTab(ShipmentDetailsTabsItem.COMMENTS);
+    setStateModalVisible(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessAddComment]);
   // --- END: Side effects -----------------------------------------------------
@@ -120,6 +131,7 @@ export default function ShipmentActionsException({
               methods.setValue("reasonID", itemValue)
             }
           >
+            <Picker.Item label={t("COMMON.SELECT_A_VALUE")} value={-1} />
             {reasonItems}
           </Picker>
           <TextInput
