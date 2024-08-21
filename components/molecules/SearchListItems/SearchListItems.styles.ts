@@ -12,6 +12,7 @@ export const styles = StyleSheet.create({
         paddingVertical: 16,
     },
     containerLabel: {
+        textAlign: "center",
         fontSize: 16,
         color: Colors.light.noStatus.default
     },
