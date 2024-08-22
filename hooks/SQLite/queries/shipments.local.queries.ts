@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { db } from "../db";
 import { IFetchShipmentByIdData } from "@constants/types/shipments";
 import { IFetchOrderListItem } from "../SQLite.types";
@@ -82,12 +83,11 @@ export function createShipmentTable() {
  */
 export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
     return new Promise((resolve, reject) => {
-        const incomingIds = shipments.map(v => v.shipmentID);
-        db.getAllAsync(`SELECT shipmentID FROM shipments WHERE shipmentID IN (${incomingIds})`).then((returnedData) => {
+        const incomingIds = shipments.map(v => v.shipmentID).filter(id => id != null);
+        filterShipmentIds(incomingIds).then((returnedData) => {
             const setExistingIds = new Set<number>();
-            (returnedData as { shipmentID: number }[]).forEach(item => {
-                setExistingIds.add(item.shipmentID);
-            });
+            returnedData.forEach(item => setExistingIds.add(item));
+
             const setIncomingIds = new Set(shipments.map(v => v.shipmentID!));
             const notExistingIds = [...setIncomingIds].filter(id => !setExistingIds.has(id));
             if (notExistingIds.length > 0) {
@@ -313,5 +313,33 @@ export function getShipmenDetailsById({ shipmentID }: { shipmentID: number }) {
                 console.error("🚀 ~ getShipmenDetailsById ~ error:", error);
                 reject(error);
             });
+    });
+}
+
+/**
+ * Checks if the shipment IDs exist in the database and returns the ones that don't.
+ * @param ids the sipmend IDs to check.
+ * @returns a promise that resolves with an array of shipment IDs that don't exist in the database.
+ */
+export function filterShipmentIds(ids: number[]) {
+    return new Promise((resolve: (value: number[]) => void, reject) => {
+        db.getAllAsync(`SELECT shipmentID FROM shipments WHERE shipmentID IN (${ids.map(v => '?').join(',')})
+        `, [...ids]).then((data) => {
+            try {
+                const responseData = data as { shipmentID: number }[];
+                const setIncomingIds = new Set(ids);
+                const setExistingIds = new Set<number>();
+                responseData.forEach(item => setExistingIds.add(item.shipmentID));
+                const notExistingIds = [...setIncomingIds].filter(id => !setExistingIds.has(id));
+                resolve(notExistingIds)
+            } catch (error) {
+                console.error("🚀 ~ filterShipmentIds ~ error:", error);
+                reject(error);
+            }
+
+        }).catch(error => {
+            console.error("🚀 ~ filterShipmentIds ~ error:", error);
+            reject(error);
+        });
     });
 }
