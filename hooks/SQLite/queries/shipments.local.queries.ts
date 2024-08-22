@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { db } from "../db";
 import { IFetchShipmentByIdData } from "@constants/types/shipments";
 import { IFetchOrderListItem } from "../SQLite.types";
@@ -85,14 +84,10 @@ export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
     return new Promise((resolve, reject) => {
         const incomingIds = shipments.map(v => v.shipmentID).filter(id => id != null);
         filterShipmentIds(incomingIds).then((returnedData) => {
-            const setExistingIds = new Set<number>();
-            returnedData.forEach(item => setExistingIds.add(item));
 
-            const setIncomingIds = new Set(shipments.map(v => v.shipmentID!));
-            const notExistingIds = [...setIncomingIds].filter(id => !setExistingIds.has(id));
-            if (notExistingIds.length > 0) {
+            if (returnedData.length > 0) {
                 const shipmentsToInsert = shipments.filter((v) =>
-                    notExistingIds.find(id => id === v.shipmentID)
+                    returnedData.find(id => id === v.shipmentID)
                 ).map(v => `
                     (
                         '${v.companyID}', 
@@ -318,7 +313,7 @@ export function getShipmenDetailsById({ shipmentID }: { shipmentID: number }) {
 
 /**
  * Checks if the shipment IDs exist in the database and returns the ones that don't.
- * @param ids the sipmend IDs to check.
+ * @param ids the shipments IDs to check.
  * @returns a promise that resolves with an array of shipment IDs that don't exist in the database.
  */
 export function filterShipmentIds(ids: number[]) {

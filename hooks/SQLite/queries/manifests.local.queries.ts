@@ -42,16 +42,9 @@ export function createManifestsTable() {
 export function insertMultipleManifests(manifests: IFetchManifestByIdData[]) {
     return new Promise((resolve, reject) => {
         const incomingIds = manifests.map(v => v.manifest).filter(id => id != null);
-        db.getAllAsync(`SELECT manifest FROM manifests WHERE manifest IN (${incomingIds})`).then((returnedData) => {
-            const setExistingIds = new Set<string>();
-            (returnedData as { manifest: string }[]).forEach(item => {
-                setExistingIds.add(item.manifest);
-            });
-            const setIncomingIds = new Set(manifests.map(v => v.manifest));
-            const notExistingIds = [...setIncomingIds].filter(id => !setExistingIds.has(id));
-
-            if (notExistingIds.length > 0) {
-                const notExistingManifests = manifests.filter(v => notExistingIds.find(id => id === v.manifest));
+        filterManifestsIds(incomingIds).then((returnedData) => {
+            if (returnedData.length > 0) {
+                const notExistingManifests = manifests.filter(v => returnedData.find(id => id === v.manifest));
                 db.runAsync(`
                 INSERT INTO manifests (
                 manifest,
@@ -62,11 +55,10 @@ export function insertMultipleManifests(manifests: IFetchManifestByIdData[]) {
                 createdDate
                 ) VALUES ${notExistingManifests.map(v => `('${v.manifest}', '${v.companyID}', ${v.shipmentID}, ${v.manifestID}, ${v.driverID}, datetime('${v.createdDate}'))`).join(',')};
                 `,
-                    notExistingIds
                 ).then((res) => {
                     resolve({
                         message: `Ids inserted correctly}`,
-                        idsInserted: notExistingIds
+                        idsInserted: returnedData
                     });
                 }).catch(error => {
                     reject(error);
@@ -134,4 +126,32 @@ export function getManifestsList({ page, page_size }: PaginatedData) {
             reject(error);
         });
     });
+}
+
+/**
+  * Checks if the manifests IDs exist in the database and returns the ones that don't.
+ * @param ids the manifests IDs to check.
+ * @returns a promise that resolves with an array of manifests IDs that don't exist in the database.
+ */
+export function filterManifestsIds(ids: string[]) {
+    return new Promise((resolve: (value: string[]) => void, reject) => {
+        db.getAllAsync(`SELECT manifest FROM manifests WHERE manifest IN (${ids.map(v => '?').join(',')})
+        `, [...ids]).then((data) => {
+            try {
+                const responseData = data as { manifest: string }[];
+                const setIncomingIds = new Set(ids);
+                const setExistingIds = new Set<string>();
+                responseData.forEach(item => setExistingIds.add(item.manifest));
+                const notExistingIds = [...setIncomingIds].filter(id => !setExistingIds.has(id));
+                resolve(notExistingIds)
+            } catch (error) {
+                console.error("🚀 ~ filterManifestsIds ~ error:", error);
+                reject(error);
+            }
+        }).catch(error => {
+            console.error("🚀 ~ filterManifestsIds ~ error:", error);
+            reject(error);
+        });
+    });
+
 }
