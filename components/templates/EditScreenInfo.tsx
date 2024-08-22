@@ -3,7 +3,7 @@ import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 
-import { Text, View } from "./Themed";
+import { Text, View } from "../Themed";
 
 import { useDefaultLanguage } from "@/hooks";
 import { storeLanguageData } from "@/utils";
