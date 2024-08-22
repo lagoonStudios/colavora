@@ -1,6 +1,6 @@
 import React from "react";
-import { Pressable } from "react-native";
 import { useTranslation } from "react-i18next";
+import { Keyboard, Pressable } from "react-native";
 import { FormProvider, useForm } from "react-hook-form";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 
@@ -16,7 +16,7 @@ export default function Search(props: SearchProps) {
   const { containerStyle, setOpen, open, handleSearch } = props;
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
-  const { ...methods } = useForm<SearchForm>();
+  const { ...methods } = useForm<SearchForm>({});
 
   const { default: backgroundColor } = useThemeColor({}, "backgroundSecondary");
   const { name } = methods.register("search", {});
@@ -26,6 +26,7 @@ export default function Search(props: SearchProps) {
   // --- END: Refs -------------------------------------------------------------
   // --- Data and handlers -----------------------------------------------------
   const handleClose = () => {
+    Keyboard.dismiss();
     setOpen(false);
   };
   // --- END: Data and handlers ------------------------------------------------
