@@ -1,6 +1,6 @@
-import { db } from "./db";
+import { db } from "../db";
 import { IFetchShipmentByIdData } from "@constants/types/shipments";
-import { IFetchOrderListItem } from "./SQLite.types";
+import { IFetchOrderListItem } from "../SQLite.types";
 
 /**
  * Creates the `shipments` table in the SQLite database if it doesn't exist.

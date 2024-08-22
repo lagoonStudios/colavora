@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { db } from "../db";
 import { IFetchManifestByIdData } from "@constants/types/manifests";
 import { PaginatedData } from "@constants/types/general";
 
@@ -127,7 +127,7 @@ export function getManifestsList({ page, page_size }: PaginatedData) {
                 manifests.createdDate DESC
             LIMIT ${page_size} OFFSET ${page * page_size}
             `).then((res) => {
-                const data = res as { manifest: string, createdDate: string, active_shipments: number }[];
+            const data = res as { manifest: string, createdDate: string, active_shipments: number }[];
             resolve(data);
         }).catch(error => {
             console.error("🚀 ~ getManifestsList ~ error:", error);

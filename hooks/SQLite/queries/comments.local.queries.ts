@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { db } from "../db";
 
 /**
  * Creates a comments table in the provided SQLite database if it doesn't exist.

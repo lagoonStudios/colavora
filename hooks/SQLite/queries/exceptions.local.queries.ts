@@ -1,5 +1,5 @@
-import { db } from "./db";
 import { IReasonsByIdData } from "@constants/types/general";
+import { db } from "../db";
 
 /**
  * Creates an 'exceptions' table in the provided SQLite database if it doesn't exist.

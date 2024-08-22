@@ -1,15 +1,13 @@
-import { SQLiteDatabase } from "expo-sqlite";
-
-import { createCODTable } from "./cod.local.queries";
-import { createPiecesTable } from "./pieces.local.queries";
-import { createCommentsTable } from "./comments.local.queries";
-import { createShipmentTable } from "./shipments.local.queries";
-import { createManifestsTable } from "./manifests.local.queries";
-import { createExceptionsTable } from "./exceptions.local.queries";
+import { createManifestsTable } from "./queries/manifests.local.queries";
+import { createShipmentTable } from "./queries/shipments.local.queries";
+import { createCommentsTable } from "./queries/comments.local.queries";
+import { createPiecesTable } from "./queries/pieces.local.queries";
+import { createExceptionsTable } from "./queries/exceptions.local.queries";
+import { createCODTable } from "./queries/cod.local.queries";
 
 export function createAllDBTables() {
-  return new Promise(async (resolve, reject) => {
-    await Promise.all([
+  return new Promise((resolve, reject) => {
+    Promise.all([
       createManifestsTable(),
       createShipmentTable(),
       createCommentsTable(),
@@ -27,7 +25,7 @@ export function createAllDBTables() {
   });
 }
 
-export function dropAllTables(db: SQLiteDatabase) {
+export function dropAllTables() {
   return new Promise((resolve, reject) => {
     reject("Not implemented");
   });
