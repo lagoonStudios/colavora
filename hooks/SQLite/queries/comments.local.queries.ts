@@ -61,7 +61,6 @@ export function insertMultipleComments(comments: { shipmentID: number, comment: 
                     commentsToInsert
                 ).then((res) => {
                     const result = db.getAllSync('SELECT * FROM comments');
-                    console.log({ result });
                     resolve({
                         message: `Comments inserted correctly}`,
                         rowsInserted: res.changes
