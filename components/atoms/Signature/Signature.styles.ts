@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
     width: "auto",
     display: "flex",
     gap: 10,
-    height: 120,
+    height: 220,
   },
   title: {
     alignItems: "flex-start",
@@ -14,4 +14,5 @@ export const styles = StyleSheet.create({
     fontWeight: 600,
     fontSize: 17,
   },
+  signatureBox: { borderWidth: 0.5, borderColor: "black" }
 });

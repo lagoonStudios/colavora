@@ -69,7 +69,7 @@ export function useHomeData() {
   const data: HomeItem[] = useMemo(
     () => [
       {
-        counter: `0/${totalOrdersForToday}`,
+        counter: `${totalOrdersForToday}`,
         description: "HOME.DELIVERIES_FOR_TODAY",
         route: "ordersForToday",
         isDisabled: false,
@@ -95,7 +95,7 @@ export function useHomeData() {
         isDisabled: true,
       },
     ],
-    [manifestIdData, totalManifests, totalOrdersForToday],
+    [manifestIdData, totalManifests, totalOrdersForToday]
   );
   // --- END: Data and handlers ------------------------------------------------
 

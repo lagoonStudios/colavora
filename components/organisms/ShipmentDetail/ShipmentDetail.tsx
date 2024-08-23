@@ -1,7 +1,8 @@
 import React from "react";
+import { A } from "@expo/html-elements";
+
 import { ScrollView } from "react-native";
 import { useTranslation } from "react-i18next";
-
 import MapScreen from "@organisms/MapScreen";
 import { Text, View } from "@components/Themed";
 
@@ -41,7 +42,12 @@ export default function ShipmentDetails() {
             </Text>
             <Text style={styles.textBody}>{shipment?.addressLine1 ?? ""}</Text>
             <Text style={styles.textBody}>{shipment?.addressLine2 ?? ""}</Text>
-            <Text style={styles.textBody}>{shipment?.phoneNumber ?? ""}</Text>
+            <A
+              href={"tel:" + shipment?.phoneNumber || ""}
+              style={[styles.textBody, styles.phoneNumber]}
+            >
+              {shipment?.phoneNumber ?? ""}
+            </A>
           </View>
 
           <View style={styles.section}>
