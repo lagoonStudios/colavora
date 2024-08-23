@@ -1,3 +1,4 @@
+import { formatISO, isValid } from "date-fns";
 import { db } from "../db";
 
 /**
@@ -11,7 +12,7 @@ export function createCommentsTable() {
             drop table if exists comments;
           CREATE TABLE IF NOT EXISTS comments (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            createdDate TEXT DEFAULT datetime('now'),
+            createdDate TEXT DEFAULT (datetime('now')),
             comment TEXT,
             is_sync BOOLEAN DEFAULT false,
             last_sync TEXT DEFAULT (datetime('now')),
@@ -44,7 +45,10 @@ export function insertMultipleComments(comments: { shipmentID: number, comment: 
         filterComments(comments).then((filteredComments) => {
             if (filteredComments.length > 0) {
                 // TODO FIX DATE ISSUE, actualmente está usando la fecha actual, debería usar la del comment.
-                const commentsToInsert = filteredComments.map(v => `(${v.shipmentID},'${v.comment}',datetime('now'))`)
+                const commentsToInsert = filteredComments.map(v => {
+                    const date = isValid(v.createdDate) ? formatISO(v.createdDate) : formatISO(new Date());
+                    return `(${v.shipmentID},'${v.comment}',datetime('${date}'))`
+                })
                 db.runAsync(`
                     INSERT INTO comments
                         (
@@ -56,6 +60,8 @@ export function insertMultipleComments(comments: { shipmentID: number, comment: 
                 `,
                     commentsToInsert
                 ).then((res) => {
+                    const result = db.getAllSync('SELECT * FROM comments');
+                    console.log({ result });
                     resolve({
                         message: `Comments inserted correctly}`,
                         rowsInserted: res.changes
