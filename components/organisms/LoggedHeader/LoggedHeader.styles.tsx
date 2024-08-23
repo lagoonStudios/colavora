@@ -27,10 +27,11 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
     margin: 10,
+    height: 70,
   },
   image: {
-    width: 50,
-    height: 50,
+    width: 70,
+    height: 70,
     resizeMode: "contain",
   },
 });

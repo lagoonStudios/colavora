@@ -33,6 +33,7 @@ import { IShipmentActionsComplete } from "./ShipmentActionsComplete.types";
 import { defaultFieldValues as defaultValues } from "./ShipmentActionsComplete.constants";
 import { IShipmentActionsException } from "@molecules/ShipmentActionsException/ShipmentActionsException.types";
 import { ShipmentDetailsTabsItem } from "@templates/ShipmentDetailsTabs/ShipmentDetailsTabs.constants";
+import { router } from "expo-router";
 export default function ShipmentActionsComplete({
   setSelectedTab,
 }: IShipmentActionsException) {
@@ -42,7 +43,7 @@ export default function ShipmentActionsComplete({
 
   // --- Local state -----------------------------------------------------------
   const [showModal, setModal] = useReducer((e) => !e, false);
-  const [noSelectCOD, setCodition] = useState<boolean>(false);
+  const [noSelectCOD, setCondition] = useState<boolean>(false);
   // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
@@ -129,7 +130,7 @@ export default function ShipmentActionsComplete({
       }));
 
       mutate(completeCODs);
-    } else setCodition(true);
+    } else setCondition(true);
   };
 
   const onError: SubmitErrorHandler<IShipmentActionsComplete> = (errors) =>
@@ -160,10 +161,10 @@ export default function ShipmentActionsComplete({
     if (completeOrderStatus === "success") {
       console.log("Complete Order");
       setVisible(false);
-      setCodition(false);
+      setCondition(false);
       methods.reset();
       onClear();
-      setSelectedTab(ShipmentDetailsTabsItem.DETAILS);
+      router.navigate("(auth)/(tabs)");
     }
 
     if (completeOrderStatus === "error") setVisible(false);

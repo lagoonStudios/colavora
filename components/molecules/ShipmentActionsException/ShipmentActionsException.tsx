@@ -1,4 +1,5 @@
 import React, { useMemo, useEffect } from "react";
+import { router } from "expo-router";
 import {
   FormProvider,
   SubmitErrorHandler,
@@ -113,8 +114,11 @@ export default function ShipmentActionsException({
   }, [error]);
 
   useEffect(() => {
-    if (isSuccessAddComment) setSelectedTab(ShipmentDetailsTabsItem.COMMENTS);
-    setStateModalVisible(false);
+    if (isSuccessAddComment) {
+      setStateModalVisible(false);
+      router.navigate("(auth)/(tabs)");
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessAddComment]);
   // --- END: Side effects -----------------------------------------------------

@@ -21,7 +21,7 @@ export default function ButtonImage({ pickImage, photoImage }: IButtonImage) {
 
   const fileName = useMemo(() => {
     return photoImage?.fileName
-      ? photoImage?.fileName?.substring(0, 25) + "..."
+      ? t("ACTIONS.FILE_UPLOADED")
       : t("ACTIONS.NO_FILE");
   }, [photoImage?.fileName, t]);
   // --- END: Hooks ------------------------------------------------------------

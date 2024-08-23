@@ -14,6 +14,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: 24,
     marginTop: 10,
     gap: 16,
+    marginBottom: 20,
   },
   formContainer: {
     display: "flex",
