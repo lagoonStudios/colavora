@@ -29,7 +29,7 @@ export interface IFetchShipmentByIdData {
   createdUserID?: number;
   createdDate?: string;
   lastTransferDate?: string;
-  status?: string;
+  status?: ShipmentStatus;
   qty?: number;
   items?: null | object;
   templateID?: number;
@@ -83,4 +83,12 @@ export interface ICompleteOrder extends IOptionalCommentsProps {
   photoImage?: string;
   signatureImage?: string;
   podName?: string;
+}
+
+export enum ShipmentStatus {
+  CREATED,
+  ASSIGNED,
+  OUR_FOR_DELIVERY,
+  PICKED_UP,
+  COMPLETED,
 }

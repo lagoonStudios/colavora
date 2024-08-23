@@ -144,7 +144,7 @@ export function filterManifestsIds(ids: string[]) {
                 responseData.forEach(item => setExistingIds.add(item.manifest));
                 const notExistingIds = [...setIncomingIds].filter(id => !setExistingIds.has(id));
                 resolve(notExistingIds)
-            } catch (error) {
+            } catch (error) {                
                 console.error("🚀 ~ filterManifestsIds ~ error:", error);
                 reject(error);
             }
@@ -153,5 +153,6 @@ export function filterManifestsIds(ids: string[]) {
             reject(error);
         });
     });
+
 
 }
