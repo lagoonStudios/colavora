@@ -1,5 +1,5 @@
 import { db } from "../db";
-import { IFetchShipmentByIdData } from "@constants/types/shipments";
+import { IFetchShipmentByIdData, ShipmentStatus } from "@constants/types/shipments";
 import { IFetchOrderListItem } from "../SQLite.types";
 
 /**
@@ -136,7 +136,7 @@ export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
                 db.runAsync(`
                     INSERT INTO shipments 
                     (
-                    companyID ,
+                    companyID,
                     shipmentID ,
                     waybill,
                     serviceType,
@@ -179,13 +179,13 @@ export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
                     barcode,
                     referenceNo
                     ) 
-                    VALUES ${shipmentsToInsert.join(',')};
+                    VALUES ${shipmentsToInsert.map(() => `?`).join(',')};
                     `,
-                    notExistingIds
+                    shipmentsToInsert
                 ).then((res) => {
                     resolve({
                         message: `Ids inserted correctly}`,
-                        idsInserted: notExistingIds
+                        idsInserted: returnedData
                     });
                 }).catch(error => {
                     console.error("🚀 ~ insertMultipleShipments ~ error:", error);
@@ -336,5 +336,36 @@ export function filterShipmentIds(ids: number[]) {
             console.error("🚀 ~ filterShipmentIds ~ error:", error);
             reject(error);
         });
+    });
+}
+
+/**
+ * Updates the status of a shipment in the database.
+ * @param  options.shipmentId - The unique identifier of the shipment to update.
+ * @param  options.status - The new status for the shipment.
+ * @returns A Promise that resolves with a success message if the update is successful, or rejects with an error message if the update fails.
+ */
+export function updateShipmentStatus({ shipmentId, status }: { shipmentId: number, status: ShipmentStatus }) {
+    return new Promise((resolve: (value: string) => void, reject) => {
+        const ids = db.getAllSync(`SELECT shipmentID, status FROM shipments`,);
+        console.log(ids);
+        db.runAsync(`
+            UPDATE shipments
+            SET status = $status
+            WHERE shipmentID = $shipmentId
+        `, { $status: status, $shipmentId: shipmentId })
+            .then((res) => {
+                if (res.changes === 0) {
+                    console.error("🚀 ~ updateShipmentStatus ~ shipmentId not found:");
+                    reject("shipmentId not found");
+                    return;
+                }
+
+                resolve("Status updated correctly");
+            }).catch(error => {
+                console.error("🚀 ~ updateShipmentStatus ~ error:", error);
+                reject(error);
+            });
+
     });
 }
