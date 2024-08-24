@@ -166,6 +166,7 @@ export function useOrderException() {
       userID,
       shipmentID,
       reasonID,
+      photoImage
     }: IOptionalExceptionProps) => {
       return await orderException({
         companyID,
@@ -173,6 +174,7 @@ export function useOrderException() {
         userID,
         shipmentID,
         reasonID,
+        photoImage
       });
     },
     onError: (e) => console.error("🚀 ~ useOrderException ~ e:", e),
@@ -209,6 +211,7 @@ export function useCompleteOrder() {
       podName,
       photoImage,
       signatureImage,
+      comment,
     }: ICompleteOrder) => {
       const barcodes = barcode
         ?.replaceAll(",", "")
@@ -226,6 +229,7 @@ export function useCompleteOrder() {
             podName,
             photoImage,
             signatureImage,
+            comment,
           });
           results.push(result);
         }

@@ -47,4 +47,8 @@ export const styles = StyleSheet.create({
   saveButtonText: {
     color: Colors.light.text.contrast,
   },
+  commnetInput: {
+    textAlign: "left",
+    textAlignVertical: "center",
+  },
 });

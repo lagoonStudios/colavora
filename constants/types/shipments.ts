@@ -68,6 +68,7 @@ export interface IOptionalCommentsProps extends IOptionalShipmentProps {
 
 export interface IOptionalExceptionProps extends IOptionalCommentsProps {
   reasonID?: number;
+  photoImage?: string;
 }
 
 export interface ISendCOD extends IOptionalCommentsProps {

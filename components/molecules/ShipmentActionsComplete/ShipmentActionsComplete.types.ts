@@ -11,5 +11,6 @@ export interface IShipmentActionsComplete {
   podName: string;
   photoImage: ImagePickerAsset;
   signatureImage: string;
+  comment?: string;
   cods: ICodOptions[];
 }
