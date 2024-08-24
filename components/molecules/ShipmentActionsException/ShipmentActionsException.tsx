@@ -80,7 +80,7 @@ export default function ShipmentActionsException({
     }
     setStateModal(t("MODAL.CEATING_EXCEPTION"));
     mutate({
-      companyID: Number(companyID),
+      companyID: companyID,
       userID: driver?.userID,
       shipmentID,
       comment: data.comment,
@@ -97,7 +97,7 @@ export default function ShipmentActionsException({
   useEffect(() => {
     if (isSuccess)
       addComment({
-        companyID: Number(companyID),
+        companyID: companyID,
         userID: driver?.userID,
         shipmentID,
         comment: `Order Exception - ${selectedReasonLabel}`,
@@ -116,7 +116,7 @@ export default function ShipmentActionsException({
   useEffect(() => {
     if (isSuccessAddComment) {
       setStateModalVisible(false);
-      router.navigate("(auth)/(tabs)");
+      setSelectedTab(ShipmentDetailsTabsItem.COMMENTS);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
