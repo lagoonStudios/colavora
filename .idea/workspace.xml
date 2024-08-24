@@ -6,18 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="08119286-e23d-447f-b9a4-38d00335d43d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(auth)/Home/Home.functions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(auth)/Home/Home.functions.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/templates/EditScreenInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/templates/EditScreenInfo.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/constants/Constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/constants/Constants.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/constants/types/manifests.ts" beforeDir="false" afterPath="$PROJECT_DIR$/constants/types/manifests.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/constants/types/shipments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/constants/types/shipments.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/queries/general.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/queries/general.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/queries/manifests.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/queries/manifests.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/queries/shipments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/queries/shipments.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/providers/Auth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/providers/Auth.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/custom-api/custom-api/general.ts" beforeDir="false" afterPath="$PROJECT_DIR$/services/custom-api/custom-api/general.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/custom-api/custom-api/manifests.ts" beforeDir="false" afterPath="$PROJECT_DIR$/services/custom-api/custom-api/manifests.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/molecules/ShipmentActionsException/ShipmentActionsException.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/ShipmentActionsException/ShipmentActionsException.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/custom-api/custom-api/shipments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/services/custom-api/custom-api/shipments.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

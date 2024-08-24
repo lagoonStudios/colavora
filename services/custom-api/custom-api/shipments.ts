@@ -51,16 +51,15 @@ export function addCommentdData({
   shipmentID,
   userID,
 }: IOptionalCommentsProps): Promise<AxiosResponse<unknown>> {
-  const config = {
-    method: "post",
-    maxBodyLength: Infinity,
-    url: `${BASE_URL}shipment/shipment/comment/post?companyID=${companyID}&userID=${userID}&shipmentID=${shipmentID}&comment=${comment}`,
-    headers: {
-      ApiKey: API_KEY,
-    },
-  };
+  let data = new FormData();
+  data.append('companyID', String(companyID));
+  data.append('userID', String(userID));
+  data.append('shipmentID', String(shipmentID));
+  data.append('comment', String(comment));
 
-  return axiosClient.request(config);
+  const url = `${BASE_URL}shipment/shipment/comment/post`;
+  
+  return axiosClient.postForm(url, data);
 }
 
 export function orderException({
@@ -70,17 +69,16 @@ export function orderException({
   userID,
   reasonID,
 }: IOptionalExceptionProps): Promise<AxiosResponse<unknown>> {
-  const url = `${BASE_URL}shipment/event/exception/post?companyID=${companyID}&userID=${userID}&shipmentID=${shipmentID}&comment=${comment}&reasonID=${reasonID}`;
-  const config = {
-    method: "post",
-    maxBodyLength: Infinity,
-    url,
-    headers: {
-      ApiKey: API_KEY,
-    },
-  };
+  let data = new FormData();
+  data.append('companyID', String(companyID));
+  data.append('userID', String(userID));
+  data.append('shipmentID', String(shipmentID));
+  data.append('comment', String(comment));
+  data.append('reasonID', String(reasonID));
 
-  return axiosClient.request(config);
+  const url = `${BASE_URL}shipment/event/exception/post`;
+  
+  return axiosClient.postForm(url, data);
 }
 
 export function sendCOD({
@@ -91,18 +89,18 @@ export function sendCOD({
   codCheck,
   codTypeID,
 }: ISendCOD): Promise<AxiosResponse<unknown>> {
-  const url = `${BASE_URL}shipment/event/cod/post?companyID=${companyID}&userID=${userID}&shipmentID=${shipmentID}&codAmount=${codAmount}&codTypeID=${codTypeID}${codCheck && `&codCheck=${codCheck}`}`;
+  let data = new FormData();
+  data.append('companyID', String(companyID));
+  data.append('shipmentID', String(shipmentID));
+  data.append('userID', String(userID));
+  data.append('codAmount', String(codAmount));
+  data.append('codTypeID', String(codTypeID));
 
-  const config = {
-    method: "post",
-    maxBodyLength: Infinity,
-    url,
-    headers: {
-      ApiKey: API_KEY,
-    },
-  };
+  if(codCheck) data.append('createdSource', String(codCheck));
 
-  return axiosClient.request(config);
+  const url = `${BASE_URL}shipment/event/cod/post`;
+  
+  return axiosClient.postForm(url, data);
 }
 
 export function completeOrder({
@@ -114,16 +112,17 @@ export function completeOrder({
   signatureImage,
   podName,
 }: ICompleteOrder): Promise<AxiosResponse<unknown>> {
-  const url = `${BASE_URL}shipment/event/dispatch/post?companyID=${companyID}&userID=${userID}&shipmentID=${shipmentID}&barcode=${barcode}${photoImage ? `&photoImage=${photoImage}` : ""}&signatureImage=${signatureImage}&podName=${podName}`;
+  let data = new FormData();
+  data.append('companyID', String(companyID));
+  data.append('userID', String(userID));
+  data.append('shipmentID', String(shipmentID));
+  data.append('barcode', String(barcode));
+  data.append('podName', String(podName));
+  data.append('signatureImage', String(signatureImage));
+  
+  if(photoImage) data.append('photoImage', String(photoImage));
+  
+  const url = `${BASE_URL}shipment/event/dispatch/post`;
 
-  const config = {
-    method: "post",
-    maxBodyLength: Infinity,
-    url,
-    headers: {
-      ApiKey: API_KEY,
-    },
-  };
-
-  return axiosClient.request(config);
+  return axiosClient.postForm(url, data);
 }
