@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import i18next from "i18next";
 import { HomeItem } from "./Home.types";
 import {
   useDriverData,
@@ -8,7 +9,7 @@ import {
   useCODIdData,
   useCODByIdData,
 } from "@hooks/index";
-import { mockDriverId } from "@constants/Constants";
+import { mockCompanyId, mockDriverId } from "@constants/Constants";
 import { useStore } from "@stores/zustand";
 import { useShipmentsIdData } from "@hooks/queries";
 
@@ -106,21 +107,21 @@ export function useReasonsData() {
   // --- Hooks -----------------------------------------------------------------
   const { addReasonIds, reasonIds, addReason } = useStore();
 
-  const { data: reasonsIds } = useReasonsIdData();
-  const { data: reasonsResponse, pending } = useReasonsByIdData(reasonIds);
+  const { data: reasonsIds } = useReasonsIdData(String(mockCompanyId));
+  const { data: reasonsResponse, pending } = useReasonsByIdData(reasonIds, i18next.language);
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
     if (reasonsIds) addReasonIds(reasonsIds);
-  }, [addReasonIds, reasonsIds]);
+  }, [reasonsIds]);
 
   useEffect(() => {
     if (pending === false)
       reasonsResponse?.map((reason) => {
         if (reason) addReason(reason);
       });
-  }, [addReason, pending, reasonsResponse]);
+  }, [pending, reasonsResponse]);
   // --- END: Side effects -----------------------------------------------------
 }
 
@@ -128,20 +129,20 @@ export function useCODData() {
   // --- Hooks -----------------------------------------------------------------
   const { addCODIds, CODIds, addCOD } = useStore();
 
-  const { data: CODIdsData } = useCODIdData();
-  const { data: CODs, pending } = useCODByIdData(CODIds);
+  const { data: CODIdsData } = useCODIdData(String(mockCompanyId));
+  const { data: CODs, pending } = useCODByIdData(CODIds, i18next.language);
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
     if (CODIdsData) addCODIds(CODIdsData);
-  }, [addCODIds, CODIdsData]);
+  }, [CODIdsData]);
 
   useEffect(() => {
     if (pending === false)
       CODs?.map((COD) => {
         if (COD) addCOD(COD);
       });
-  }, [CODs, addCOD, pending]);
+  }, [CODs, pending]);
   // --- END: Side effects -----------------------------------------------------
 }

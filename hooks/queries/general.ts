@@ -41,11 +41,11 @@ export function useCompanyData(id: string | undefined) {
   return companyData;
 }
 
-export function useStatusIdData() {
+export function useStatusIdData(companyID: string | undefined) {
   const statusIdData = useQuery({
     queryKey: [queryKeys.statusIdData],
     queryFn: async () => {
-      const { data: rawData } = await fetchStatusData();
+      const { data: rawData } = await fetchStatusData({ companyID });
       return rawData ?? [];
     },
     retry: 3,
@@ -77,11 +77,11 @@ export function useStatusByIdData(ids: number[]) {
   return statusByIdData;
 }
 
-export function useReasonsIdData() {
+export function useReasonsIdData(companyID: string | undefined) {
   const reasonsIdData = useQuery({
     queryKey: [queryKeys.reasonsIdData],
     queryFn: async () => {
-      const { data: rawData } = await fetchReasonsData();
+      const { data: rawData } = await fetchReasonsData({ companyID });
       return rawData ?? [];
     },
     retry: 3,
@@ -92,13 +92,14 @@ export function useReasonsIdData() {
   return reasonsIdData;
 }
 
-export function useReasonsByIdData(ids: number[]) {
+export function useReasonsByIdData(ids: number[], language: string) {
   const reasonsByIdData = useQueries({
     queries: ids?.map((id) => ({
       queryKey: [`${queryKeys.reasonsByIdData}-${id}`],
       queryFn: async () => {
         const { data: rawData } = await fetchReasonsByIdData({
           id: String(id),
+          language
         });
         return rawData ?? [];
       },
@@ -107,6 +108,7 @@ export function useReasonsByIdData(ids: number[]) {
     combine: (results) => {
       return {
         data: results.map((result) => result?.data),
+        refetch: () => results.forEach((results) => results?.refetch()),
         pending: results.some((result) => result.isPending),
       };
     },
@@ -115,11 +117,11 @@ export function useReasonsByIdData(ids: number[]) {
   return reasonsByIdData;
 }
 
-export function useCODIdData() {
+export function useCODIdData(companyID: string | undefined) {
   const reasonsIdData = useQuery({
     queryKey: [queryKeys.CODIdData],
     queryFn: async () => {
-      const { data: rawData } = await fetchCODData();
+      const { data: rawData } = await fetchCODData({ companyID });
       return rawData ?? [];
     },
     retry: 3,
@@ -130,13 +132,14 @@ export function useCODIdData() {
   return reasonsIdData;
 }
 
-export function useCODByIdData(ids: number[]) {
+export function useCODByIdData(ids: number[], language: string) {
   const reasonsByIdData = useQueries({
     queries: ids?.map((id) => ({
       queryKey: [`${queryKeys.CODByIdData}-${id}`],
       queryFn: async () => {
         const { data: rawData } = await fetchCODByIdData({
           id: String(id),
+          language
         });
         return rawData ?? [];
       },
@@ -145,6 +148,7 @@ export function useCODByIdData(ids: number[]) {
     combine: (results) => {
       return {
         data: results.map((result) => result?.data),
+        refetch: () => results.forEach((results) => results?.refetch()),
         pending: results.some((result) => result.isPending),
       };
     },

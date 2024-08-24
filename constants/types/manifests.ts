@@ -7,11 +7,13 @@ export interface IFetchManifestByIdData {
   createdDate?: string;
 }
 
-export interface IOptionalManifestProps {
+export interface IOptionalProps {
   driverId?: string;
+  companyID?: string;
   status?: string;
   createdDate?: string;
   id?: string;
   manifest?: string;
   optionalKey?: string;
+  language?: string;
 }

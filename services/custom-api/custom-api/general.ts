@@ -7,15 +7,16 @@ import {
   ICODData,
 } from "@constants/types/general";
 import { IOptionalPiecesProps } from "@constants/types/shipments";
-import { IReasonsByIdData } from "@constants/types/general";
+import { IReasonsByIdData, } from "@constants/types/general";
+import { IOptionalProps } from "@constants/types/manifests";
 
 export function fetchDriverData(
   id: string,
 ): Promise<AxiosResponse<IFetchDriverData>> {
   return axiosClient.get(`common/driver/${id}`);
 }
-export function fetchStatusData(): Promise<AxiosResponse<number[]>> {
-  return axiosClient.get(`common/status`);
+export function fetchStatusData({ companyID }: IOptionalProps): Promise<AxiosResponse<number[]>> {
+  return axiosClient.get(`common/status`, { params: { companyID } });
 }
 
 export function fetchCompanyData(
@@ -30,19 +31,21 @@ export function fetchStatusByIdData(
   return axiosClient.get(`common/status/${id}`);
 }
 
-export function fetchReasonsData(): Promise<AxiosResponse<number[]>> {
-  return axiosClient.get(`common/reason`);
+export function fetchReasonsData({ companyID }: IOptionalProps): Promise<AxiosResponse<number[]>> {
+  return axiosClient.get(`common/reason`, { params: { companyID } });
 }
 export function fetchReasonsByIdData({
   id,
+  language
 }: IOptionalPiecesProps): Promise<AxiosResponse<IReasonsByIdData>> {
-  return axiosClient.get(`common/reason/${id}`);
+  return axiosClient.get(`common/reason/${id}`, { params: { language } });
 }
-export function fetchCODData(): Promise<AxiosResponse<number[]>> {
-  return axiosClient.get(`common/cod`);
+export function fetchCODData({ companyID }: IOptionalProps): Promise<AxiosResponse<number[]>> {
+  return axiosClient.get(`common/cod`, { params: { companyID } });
 }
 export function fetchCODByIdData({
   id,
+  language
 }: IOptionalPiecesProps): Promise<AxiosResponse<ICODData>> {
-  return axiosClient.get(`common/cod/${id}`);
+  return axiosClient.get(`common/cod/${id}`, { params: { language } });
 }
