@@ -3,4 +3,5 @@ export const defaultFieldValues = {
   cods: [],
   photoImage: undefined,
   signatureImage: undefined,
+  comment: undefined,
 };

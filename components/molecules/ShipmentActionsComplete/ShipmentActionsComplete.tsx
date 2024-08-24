@@ -4,7 +4,6 @@ import { Alert } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
 import {
   FormProvider,
   SubmitErrorHandler,
@@ -33,7 +32,6 @@ import { IShipmentActionsComplete } from "./ShipmentActionsComplete.types";
 import { defaultFieldValues as defaultValues } from "./ShipmentActionsComplete.constants";
 import { IShipmentActionsException } from "@molecules/ShipmentActionsException/ShipmentActionsException.types";
 import { ShipmentDetailsTabsItem } from "@templates/ShipmentDetailsTabs/ShipmentDetailsTabs.constants";
-import { router } from "expo-router";
 export default function ShipmentActionsComplete({
   setSelectedTab,
 }: IShipmentActionsException) {
@@ -63,6 +61,7 @@ export default function ShipmentActionsComplete({
     useCompleteOrder();
 
   const podName = methods.watch("podName");
+  const comment = methods.watch("comment");
   const codsSelected = methods.watch("cods");
   const photoImage = methods.watch("photoImage");
   const signatureImage = methods.watch("signatureImage");
@@ -87,15 +86,7 @@ export default function ShipmentActionsComplete({
   };
 
   const handleOK = (signature: string) => {
-    const path = FileSystem.cacheDirectory + "sign.png";
-    FileSystem.writeAsStringAsync(
-      path,
-      signature.replace("data:image/png;base64,", ""),
-      { encoding: FileSystem.EncodingType.Base64 }
-    )
-      .then(() => FileSystem.getInfoAsync(path))
-      .then((info) => methods.setValue("signatureImage", info.uri))
-      .catch(console.error);
+    methods.setValue("signatureImage", signature.replace("data:image/png;base64,", ""))
   };
 
   const addCOD = (codTypeID: number, codAmount = 0, codCheck = "") => {
@@ -124,8 +115,8 @@ export default function ShipmentActionsComplete({
     if (cods?.length !== 0) {
       const completeCODs = cods?.map((cod) => ({
         ...cod,
-        companyID: Number(companyID),
-        shipmentID: shipmentID,
+        shipmentID,
+        companyID,
         userID: driver?.userID,
       }));
 
@@ -145,12 +136,13 @@ export default function ShipmentActionsComplete({
     if (statusSendCODs === "success" || isCompleteWithOutCODsAllow)
       completeOrder({
         barcode,
-        signatureImage,
         podName,
-        photoImage: photoImage?.uri,
-        companyID: Number(companyID),
-        shipmentID: shipmentID,
+        comment,
+        companyID,
+        shipmentID,
+        signatureImage,
         userID: driver?.userID,
+        photoImage: photoImage?.base64?.replace("data:image/png;base64",""),
       });
 
     if (statusSendCODs === "error") setVisible(false);
@@ -158,17 +150,15 @@ export default function ShipmentActionsComplete({
   }, [codsSelected?.length, noSelectCOD, statusSendCODs]);
 
   useEffect(() => {
+    if (completeOrderStatus === "error") setVisible(false);
+
     if (completeOrderStatus === "success") {
-      console.log("Complete Order");
+      onClear();
+      methods.reset();
       setVisible(false);
       setCondition(false);
-      methods.reset();
-      onClear();
-      router.navigate("(auth)/(tabs)");
+      setSelectedTab(ShipmentDetailsTabsItem.DETAILS)
     }
-
-    if (completeOrderStatus === "error") setVisible(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [completeOrderStatus]);
   // --- END: Side effects -----------------------------------------------------
 
@@ -194,6 +184,15 @@ export default function ShipmentActionsComplete({
               required: t("VALIDATIONS.REQUIRED"),
             }}
             style={styles.textInput}
+            backgroundColorContainer={Colors.dark.gray.tint}
+            backgroundColorInput="transparent"
+          />          
+          <TextInput
+            name="comment"
+            clearTextOnFocus={false}
+            inputMode="text"
+            placeholder={`${t("ACTIONS.PLACEHOLDER")}`}
+            style={styles.commnetInput}
             backgroundColorContainer={Colors.dark.gray.tint}
             backgroundColorInput="transparent"
           />

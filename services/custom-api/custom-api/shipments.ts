@@ -68,6 +68,7 @@ export function orderException({
   shipmentID,
   userID,
   reasonID,
+  photoImage  
 }: IOptionalExceptionProps): Promise<AxiosResponse<unknown>> {
   let data = new FormData();
   data.append('companyID', String(companyID));
@@ -75,6 +76,8 @@ export function orderException({
   data.append('shipmentID', String(shipmentID));
   data.append('comment', String(comment));
   data.append('reasonID', String(reasonID));
+  
+  if(photoImage) data.append('photoImage', String(photoImage));
 
   const url = `${BASE_URL}shipment/event/exception/post`;
   
@@ -111,6 +114,7 @@ export function completeOrder({
   photoImage,
   signatureImage,
   podName,
+  comment,
 }: ICompleteOrder): Promise<AxiosResponse<unknown>> {
   let data = new FormData();
   data.append('companyID', String(companyID));
@@ -119,7 +123,8 @@ export function completeOrder({
   data.append('barcode', String(barcode));
   data.append('podName', String(podName));
   data.append('signatureImage', String(signatureImage));
-  
+
+  if(comment) data.append('comment', String(comment));
   if(photoImage) data.append('photoImage', String(photoImage));
   
   const url = `${BASE_URL}shipment/event/dispatch/post`;

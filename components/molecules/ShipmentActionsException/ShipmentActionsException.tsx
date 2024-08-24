@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect } from "react";
-import { router } from "expo-router";
+import * as ImagePicker from "expo-image-picker";
 import {
   FormProvider,
   SubmitErrorHandler,
@@ -23,6 +23,7 @@ import {
   IOrderExceptionForm,
   IShipmentActionsException,
 } from "./ShipmentActionsException.types";
+import ButtonImage from "@atoms/ButtonImage";
 export default function ShipmentActionsException({
   setSelectedTab,
 }: IShipmentActionsException) {
@@ -44,17 +45,29 @@ export default function ShipmentActionsException({
     useAddComment();
 
   const selectedReason = methods.watch("reasonID");
+  const photoImage = methods.watch("photoImage");
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local state -----------------------------------------------------------
   // --- END: Local state ------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
+  const pickImage = async () => {
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.1,
+    });
+
+    if (!result.canceled) methods.setValue("photoImage", result.assets[0]);
+  };  
+
   const selectedReasonLabel = useMemo(() => {
     if (selectedReason)
       return reasons?.find(({ reasonID }) => reasonID === selectedReason)
         ?.reasonCodeDesc;
   }, [reasons, selectedReason]);
+
   const reasonItems = useMemo(
     () =>
       reasons
@@ -85,6 +98,7 @@ export default function ShipmentActionsException({
       shipmentID,
       comment: data.comment,
       reasonID: data.reasonID,
+      photoImage: photoImage?.base64?.replace("data:image/png;base64,", "")
     });
   };
 
@@ -150,6 +164,7 @@ export default function ShipmentActionsException({
               required: t("VALIDATIONS.EMPTY"),
             }}
           />
+          <ButtonImage pickImage={pickImage} photoImage={photoImage} />
         </View>
         <View style={styles.saveButtonContainer}>
           {loading ? (
