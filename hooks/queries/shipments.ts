@@ -22,9 +22,9 @@ import {
   IOptionalExceptionProps,
   ISendCOD,
 } from "@constants/types/shipments";
-import { IOptionalManifestProps } from "@constants/types/manifests";
+import { IOptionalProps } from "@constants/types/manifests";
 
-export function useShipmentsIdData({ manifest }: IOptionalManifestProps) {
+export function useShipmentsIdData({ manifest }: IOptionalProps) {
   const queryKey = [`${queryKeys.shipmentsIdData}-${manifest}`];
 
   const shipmentsIdData = useQuery({
@@ -71,7 +71,7 @@ export function useShipmentsByIdData(ids: number[]) {
   return { ...shipmentsByIdData, data: shipmentsByIdData?.data ?? [] };
 }
 
-export function usePiecesIdData({ id }: IOptionalManifestProps) {
+export function usePiecesIdData({ id }: IOptionalProps) {
   const queryKey = [`${queryKeys.piecesIdData}-${id}`];
 
   const piecesIdData = useQuery({
@@ -117,7 +117,7 @@ export function usePiecesByIdData(ids: number[]) {
   return { ...piecesByIdData, data: piecesByIdData?.data ?? [] };
 }
 
-export function useCommentsIdData({ id }: IOptionalManifestProps) {
+export function useCommentsIdData({ id }: IOptionalProps) {
   const queryKey = [`${queryKeys.commnetsByIdData}-${id}`];
 
   const piecesIdData = useQuery({

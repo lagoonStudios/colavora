@@ -19,6 +19,7 @@ import { useAuth0Config } from "@hooks/Auth";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { queryClient } from "@/providers";
 import { StateModal } from "@atoms/Modal";
+import { useDefaultLanguage } from "@hooks/index";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -72,8 +73,10 @@ export default function RootLayout() {
 
 function RootLayoutNav(props: { authDomain: string; authClientId: string }) {
   // --- Hooks -----------------------------------------------------------------
-  const { authDomain, authClientId } = props;
+  // Set a defalut language stored in the async storage
+  useDefaultLanguage();
   const colorScheme = useColorScheme();
+  const { authDomain, authClientId } = props;
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local state -----------------------------------------------------------

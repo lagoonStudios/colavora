@@ -1,4 +1,4 @@
-import { IOptionalManifestProps } from "@constants/types/manifests";
+import { IOptionalProps } from "@constants/types/manifests";
 
 export interface IFetchShipmentByIdData {
   companyID?: string;
@@ -56,7 +56,7 @@ export interface IFetchPiecesByIdData {
   pod?: string;
 }
 
-export interface IOptionalShipmentProps extends IOptionalManifestProps {
+export interface IOptionalShipmentProps extends IOptionalProps {
   readyDate?: string;
 }
 export interface IOptionalPiecesProps extends IOptionalShipmentProps {}
@@ -64,7 +64,6 @@ export interface IOptionalCommentsProps extends IOptionalShipmentProps {
   userID?: number;
   shipmentID?: number;
   comment?: string;
-  companyID?: number;
 }
 
 export interface IOptionalExceptionProps extends IOptionalCommentsProps {

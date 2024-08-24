@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 
 import { Text, View } from "../Themed";
 
-import { useDefaultLanguage } from "@/hooks";
 import { storeLanguageData } from "@/utils";
 
 export default function EditScreenInfo() {
@@ -20,21 +19,6 @@ export default function EditScreenInfo() {
     // Add more languages as needed
   ];
   // --- END: Local state ------------------------------------------------------
-
-  // --- Refs ------------------------------------------------------------------
-  // --- END: Refs -------------------------------------------------------------
-
-  // --- Redux -----------------------------------------------------------------
-  // --- END: Redux ------------------------------------------------------------
-
-  // --- Side effects ----------------------------------------------------------
-  // Set a defalut language stored in the async storage
-  useDefaultLanguage();
-  // --- END: Side effects -----------------------------------------------------
-
-  // --- Data and handlers -----------------------------------------------------
-  // --- END: Data and handlers ------------------------------------------------
-
   return (
     <View>
       <View style={styles.getStartedContainer}>

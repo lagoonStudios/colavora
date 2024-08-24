@@ -6,14 +6,14 @@ import {
 import { queryKeys } from "@constants/Constants";
 import {
   IFetchManifestByIdData,
-  IOptionalManifestProps,
+  IOptionalProps,
 } from "@constants/types/manifests";
 
 export function useManifestsIdData({
   createdDate,
   driverId,
   optionalKey,
-}: IOptionalManifestProps) {
+}: IOptionalProps) {
   const manifestsIdData = useQuery({
     queryKey: [optionalKey ?? queryKeys.manifestsIdData],
     queryFn: async () => {
