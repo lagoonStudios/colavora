@@ -12,6 +12,8 @@ import {
 import { mockCompanyId, mockDriverId } from "@constants/Constants";
 import { useStore } from "@stores/zustand";
 import { useShipmentsIdData } from "@hooks/queries";
+import { getAllManifestsCount, insertMultipleManifests } from "@hooks/SQLite/queries/manifests.local.queries";
+import { IFetchManifestByIdData } from "@constants/types/manifests";
 
 export function useHomeData() {
   // --- Local state -----------------------------------------------------------
@@ -23,7 +25,7 @@ export function useHomeData() {
   // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
-  const { addShipmentIds, shipmentIds: localShipmentIds } = useStore();
+  const { addShipmentIds, shipmentIds: localShipmentIds, driver } = useStore();
   const { data: driverData } = useDriverData(mockDriverId);
   const { data: manifestIdData, isSuccess } = useManifestsIdData({
     createdDate,
@@ -53,6 +55,24 @@ export function useHomeData() {
   useEffect(() => {
     if (isSuccess && isSuccessShipmentIds) setLoading(false);
   }, [isSuccess, isSuccessShipmentIds]);
+
+  useEffect(() => {
+    if(manifestIdData && driver){
+      const manifestsForInsert:IFetchManifestByIdData[] = manifestIdData.map((manifest) => ({
+        manifest: String(manifest),
+        companyID: driver.companyID,
+        driverID: driver.driverID,
+        createdDate,
+      }))
+
+      insertMultipleManifests(manifestsForInsert)
+    }
+  }, [manifestIdData, driver])
+
+  useEffect(() => {
+    if(loading === false)
+      getAllManifestsCount().then((manifests) => console.log("Local manifest: ", manifests))    
+  }, [loading])
 
   // --- END: Side effects -----------------------------------------------------
 
