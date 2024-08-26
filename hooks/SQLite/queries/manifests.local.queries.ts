@@ -13,8 +13,6 @@ export function createManifestsTable() {
           CREATE TABLE IF NOT EXISTS manifests (
             manifest TEXT PRIMARY KEY UNIQUE NOT NULL,
             companyID TEXT NOT NULL,
-            shipmentID INTEGER,
-            manifestID INTEGER NOT NULL,
             driverID INTEGER NOT NULL,
             createdDate TEXT,
             is_sync BOOLEAN DEFAULT false,
@@ -49,18 +47,17 @@ export function insertMultipleManifests(manifests: IFetchManifestByIdData[]) {
                 INSERT INTO manifests (
                 manifest,
                 companyID,
-                shipmentID,
-                manifestID,
                 driverID,
-                createdDate
-                ) VALUES ${notExistingManifests.map(v => `('${v.manifest}', '${v.companyID}', ${v.shipmentID}, ${v.manifestID}, ${v.driverID}, datetime('${v.createdDate}'))`).join(',')};
+                createdDate,
+                ) VALUES ${notExistingManifests.map(v => `('${v.manifest}', '${v.companyID}', ${v.driverID}, datetime('${v.createdDate}'))`).join(',')};
                 `,
-                ).then((res) => {
+                ).then(() => {
                     resolve({
-                        message: `Ids inserted correctly}`,
+                        message: `Ids inserted correctly`,
                         idsInserted: returnedData
                     });
                 }).catch(error => {
+                    console.error(error);
                     reject(error);
                 });
             } else {
@@ -135,7 +132,7 @@ export function getManifestsList({ page, page_size }: PaginatedData) {
  */
 export function filterManifestsIds(ids: string[]) {
     return new Promise((resolve: (value: string[]) => void, reject) => {
-        db.getAllAsync(`SELECT manifest FROM manifests WHERE manifest IN (${ids.map(v => '?').join(',')})
+        db.getAllAsync(`SELECT manifest FROM manifests WHERE manifest IN (${ids.map(() => '?').join(',')})
         `, [...ids]).then((data) => {
             try {
                 const responseData = data as { manifest: string }[];
