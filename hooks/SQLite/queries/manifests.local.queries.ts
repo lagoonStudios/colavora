@@ -13,7 +13,7 @@ export function createManifestsTable() {
           CREATE TABLE IF NOT EXISTS manifests (
             manifest TEXT PRIMARY KEY UNIQUE NOT NULL,
             companyID TEXT NOT NULL,
-            driverID INTEGER NOT NULL,
+            driverID INTEGER,
             createdDate TEXT,
             is_sync BOOLEAN DEFAULT false,
             last_sync TEXT DEFAULT (datetime('now'))
@@ -48,7 +48,7 @@ export function insertMultipleManifests(manifests: IFetchManifestByIdData[]) {
                 manifest,
                 companyID,
                 driverID,
-                createdDate,
+                createdDate
                 ) VALUES ${notExistingManifests.map(v => `('${v.manifest}', '${v.companyID}', ${v.driverID}, datetime('${v.createdDate}'))`).join(',')};
                 `,
                 ).then(() => {
@@ -57,13 +57,14 @@ export function insertMultipleManifests(manifests: IFetchManifestByIdData[]) {
                         idsInserted: returnedData
                     });
                 }).catch(error => {
-                    console.error(error);
+                    console.error("🚀 ~ file: manifests.local.queries.ts:68 ~ insertMultipleManifests ~ error:", error);
                     reject(error);
                 });
             } else {
                 reject("All ids has been inserted before.")
             }
         }).catch(error => {
+            console.error("🚀 ~ file: manifests.local.queries.ts:75 ~ filterManifestsIds ~ error:", error);
             reject(error);
         });
     })
@@ -141,7 +142,7 @@ export function filterManifestsIds(ids: string[]) {
                 responseData.forEach(item => setExistingIds.add(item.manifest));
                 const notExistingIds = [...setIncomingIds].filter(id => !setExistingIds.has(id));
                 resolve(notExistingIds)
-            } catch (error) {                
+            } catch (error) {
                 console.error("🚀 ~ filterManifestsIds ~ error:", error);
                 reject(error);
             }

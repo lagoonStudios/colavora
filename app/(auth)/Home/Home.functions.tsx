@@ -58,14 +58,16 @@ export function useHomeData() {
 
   useEffect(() => {
     if(manifestIdData && driver){
-      const manifestsForInsert:IFetchManifestByIdData[] = manifestIdData.map((manifest) => ({
-        manifest: String(manifest),
-        companyID: driver.companyID,
-        driverID: driver.driverID,
-        createdDate,
-      }))
+      const manifestsForInsert: IFetchManifestByIdData[] = manifestIdData.map(
+        (manifest) => ({
+          manifest: String(manifest),
+          companyID: driver.companyID,
+          driverID: driver.driverID,
+          createdDate,
+        })
+      );
 
-      insertMultipleManifests(manifestsForInsert)
+      insertMultipleManifests(manifestsForInsert);
     }
   }, [manifestIdData, driver])
 
