@@ -348,7 +348,6 @@ export function filterShipmentIds(ids: number[]) {
 export function updateShipmentStatus({ shipmentId, status }: { shipmentId: number, status: ShipmentStatus }) {
     return new Promise((resolve: (value: string) => void, reject) => {
         const ids = db.getAllSync(`SELECT shipmentID, status FROM shipments`,);
-        console.log(ids);
         db.runAsync(`
             UPDATE shipments
             SET status = $status
