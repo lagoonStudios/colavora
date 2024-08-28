@@ -205,17 +205,14 @@ export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
  * @returns A Promise that resolves to an object containing the total count of shipments and the count of completed shipments for the current day, or rejects with an error.
  */
 export function getTodaysShipments() {
-    return new Promise((resolve: (value: { count: number, completed_count: number }) => void, reject) => {
+    return new Promise((resolve: (value: { count: number }) => void, reject) => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const endToday = new Date();
         endToday.setHours(23, 59, 59, 999);
         db.getFirstAsync(`
             SELECT 
-                count(DISTINCT shipments.shipmentID) AS count,
-                SUM(
-                    CASE WHEN shipments.status = 'COMPLETED' THEN 1 ELSE 0 END
-                ) AS completed_count
+                count(DISTINCT shipments.shipmentID) AS count
             FROM 
                 shipments
             INNER JOIN manifests ON 
@@ -228,11 +225,11 @@ export function getTodaysShipments() {
                 shipments.dueDate <= datetime('${endToday.toISOString()}')
             `)
             .then((res) => {
-                const data = res as { count: number, completed_count: number };
+                const data = res as { count: number };
                 resolve(data);
             })
             .catch(error => {
-                console.error("🚀 ~ getTodaysShipments ~ error:", error);
+                console.error("🚀 ~ file: shipments.local.queries.ts:237 ~ getTodaysShipments ~ error:", error);
                 reject(error);
             });
 
