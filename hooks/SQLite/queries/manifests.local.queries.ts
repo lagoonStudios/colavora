@@ -77,15 +77,14 @@ export function insertMultipleManifests(manifests: IFetchManifestByIdData[]) {
  */
 export function getAllManifestsCount() {
     return new Promise((resolve: (value: { count: number }) => void, reject) => {
+        //`SELECT COUNT(DISTINCT manifests.manifest) AS count FROM manifests INNER JOIN shipments ON manifests.manifest = shipments.manifest WHERE shipments.status IS NOT NULL`
         db.getFirstAsync(`
-        SELECT
-             COUNT(DISTINCT manifests.manifest) AS count
-        FROM
-            manifests 
-        INNER JOIN shipments ON 
-            manifests.manifest = shipments.manifest
-        WHERE 
-            shipments.status IS NOT NULL
+            SELECT 
+                count(DISTINCT shipments.shipmentID) AS count
+            FROM 
+                shipments
+            WHERE 
+                shipments.status IS NOT NULL
         `).then((res) => {
             const count = (res as { count: number });
             resolve(count);
