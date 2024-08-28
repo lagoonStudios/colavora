@@ -82,7 +82,7 @@ export function getAllManifestsCount() {
         db.getFirstAsync(`
         SELECT
              COUNT(DISTINCT manifests.manifest) AS count
-        FROM 
+        FROM
             manifests 
         INNER JOIN shipments ON 
             manifests.manifest = shipments.manifest
