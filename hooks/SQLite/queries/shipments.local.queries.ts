@@ -206,8 +206,6 @@ export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
  */
 export function getTodaysShipments() {
     return new Promise((resolve: (value: { count: number }) => void, reject) => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
         const endToday = new Date();
         endToday.setHours(23, 59, 59, 999);
         db.getFirstAsync(`
