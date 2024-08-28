@@ -4,12 +4,14 @@ import { Pressable, PressableProps, TextStyle, ViewStyle } from "react-native";
 import { Text, ThemeProps, View, useThemeColor } from "@components/Themed";
 
 import { styles } from "./Button.styles";
+import Colors from "@constants/Colors";
 
 type ButtonProps = ThemeProps &
   PressableProps & {
     label: string;
     labelStyle?: TextStyle;
     containerStyle?: ViewStyle;
+    colorTheme?: keyof typeof Colors.light;
   };
 
 export default function Button(props: ButtonProps) {
@@ -20,11 +22,13 @@ export default function Button(props: ButtonProps) {
     label,
     labelStyle,
     containerStyle,
+    disabled,
+    colorTheme,
     ...otherProps
   } = props;
   const primaryColor = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "primary",
+    colorTheme ?? "primary"
   );
   return (
     <View style={[styles.container, styles.buttonShadow, containerStyle]}>
@@ -32,6 +36,7 @@ export default function Button(props: ButtonProps) {
         style={[
           {
             backgroundColor: primaryColor.default,
+            opacity: disabled ? 0.5 : 1,
           },
           styles.button,
           styles.buttonShadow,

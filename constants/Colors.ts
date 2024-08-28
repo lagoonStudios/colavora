@@ -11,10 +11,10 @@ export default {
       tint: "#1a1a1a",
     },
     danger: {
-      default: "#ff0000",
-      contrast: "#000000",
-      shade: "#e00000",
-      tint: "#ff0000",
+      default: "#f5270dcc",
+      contrast: "#ffffff",
+      shade: "#220bb4",
+      tint: "#3d25d1",
     },
     primary: {
       default: "#03204B",
@@ -61,10 +61,10 @@ export default {
       tint: "#1a1a1a",
     },
     danger: {
-      default: "#ff0000",
-      contrast: "#000000",
-      shade: "#e00000",
-      tint: "#ff0000",
+      default: "#f5270dcc",
+      contrast: "#ffffff",
+      shade: "#220bb4",
+      tint: "#3d25d1",
     },
     primary: {
       default: "#03204B",

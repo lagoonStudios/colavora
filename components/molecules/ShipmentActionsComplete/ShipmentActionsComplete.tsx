@@ -32,7 +32,10 @@ import { IShipmentActionsComplete } from "./ShipmentActionsComplete.types";
 import { defaultFieldValues as defaultValues } from "./ShipmentActionsComplete.constants";
 import { IShipmentActionsException } from "@molecules/ShipmentActionsException/ShipmentActionsException.types";
 import { ShipmentDetailsTabsItem } from "@templates/ShipmentDetailsTabs/ShipmentDetailsTabs.constants";
+import Button from "@atoms/Button";
+import { ShipmentActionsButtonItem } from "@organisms/ShipmentActions/ShipmentAction.constants";
 export default function ShipmentActionsComplete({
+  setOption,
   setSelectedTab,
 }: IShipmentActionsException) {
   // --- Refs ------------------------------------------------------------------
@@ -86,7 +89,10 @@ export default function ShipmentActionsComplete({
   };
 
   const handleOK = (signature: string) => {
-    methods.setValue("signatureImage", signature.replace("data:image/png;base64,", ""))
+    methods.setValue(
+      "signatureImage",
+      signature.replace("data:image/png;base64,", "")
+    );
   };
 
   const addCOD = (codTypeID: number, codAmount = 0, codCheck = "") => {
@@ -142,7 +148,7 @@ export default function ShipmentActionsComplete({
         shipmentID,
         signatureImage,
         userID: driver?.userID,
-        photoImage: photoImage?.base64?.replace("data:image/png;base64",""),
+        photoImage: photoImage?.base64?.replace("data:image/png;base64", ""),
       });
 
     if (statusSendCODs === "error") setVisible(false);
@@ -157,7 +163,7 @@ export default function ShipmentActionsComplete({
       methods.reset();
       setVisible(false);
       setCondition(false);
-      setSelectedTab(ShipmentDetailsTabsItem.DETAILS)
+      setSelectedTab(ShipmentDetailsTabsItem.DETAILS);
     }
   }, [completeOrderStatus]);
   // --- END: Side effects -----------------------------------------------------
@@ -186,7 +192,7 @@ export default function ShipmentActionsComplete({
             style={styles.textInput}
             backgroundColorContainer={Colors.dark.gray.tint}
             backgroundColorInput="transparent"
-          />          
+          />
           <TextInput
             name="comment"
             clearTextOnFocus={false}
@@ -210,13 +216,25 @@ export default function ShipmentActionsComplete({
           <Signature handleOK={handleOK} refSignature={ref} />
         </View>
         <View style={styles.saveButtonContainer}>
-          {signatureImage && (
-            <CancelButton style={styles.cancelButton} onClear={onClear} />
-          )}
+          <Button
+            labelStyle={styles.backButtonLabel}
+            label={t("COMMON.BACK")}
+            onPress={() => setOption(ShipmentActionsButtonItem.DEFAULT)}
+          />
 
-          <SaveButton
-            style={styles.saveButton}
+          <Button
+            disabled={!signatureImage}
+            label={t("ACTIONS.CLEAR")}
+            labelStyle={styles.cancelButtonLabel}
+            colorTheme="danger"
+            onPress={onClear}
+          />
+
+          <Button
+            label={t("COMMENTS.SAVE")}
+            labelStyle={styles.saveButtonLabel}
             onPress={methods.handleSubmit(onSubmit, onError)}
+            style={styles.saveButton}
           />
         </View>
       </View>

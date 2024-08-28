@@ -46,9 +46,9 @@ export default function ControlledInput(props: TextInputProps) {
     { light: lightColor, dark: darkColor },
     "text",
   );
-  const { tint: errorColor } = useThemeColor(
+  const { default: errorColor } = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "danger",
+    "danger"
   );
   const theme = useColorScheme() ?? "light";
   // --- END: Hooks ------------------------------------------------------------
