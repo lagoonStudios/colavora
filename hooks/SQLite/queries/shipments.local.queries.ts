@@ -215,12 +215,8 @@ export function getTodaysShipments() {
                 count(DISTINCT shipments.shipmentID) AS count
             FROM 
                 shipments
-            INNER JOIN manifests ON 
-                shipments.manifest = manifests.manifest
             WHERE 
-                shipments.status IS NOT NULL 
-            AND 
-                shipments.dueDate >= datetime('${today.toISOString()}')
+                shipments.status IS NOT NULL
             AND 
                 shipments.dueDate <= datetime('${endToday.toISOString()}')
             `)
@@ -246,6 +242,7 @@ export function getShipmentListItemByManifestID({ manifestID }: { manifestID: st
     return new Promise((resolve: (value: IFetchOrderListItem[]) => void, reject) => {
         db.getAllAsync(`
             SELECT 
+                shipmentID,
                 consigneeName,
                 zip,
                 senderName,

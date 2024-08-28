@@ -1,6 +1,7 @@
 import { IFetchShipmentByIdData } from "@constants/types/shipments";
 
 export type IFetchOrderListItem = Pick<IFetchShipmentByIdData,
+    'shipmentID' |
     'consigneeName' |
     'zip' |
     'senderName' |
