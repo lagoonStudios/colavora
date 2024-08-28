@@ -30,14 +30,17 @@ export const styles = StyleSheet.create({
   },
   saveButtonContainer: {
     display: "flex",
-    alignItems: "flex-end",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    gap: 20
   },
   saveButton: {
     backgroundColor: mantisColor,
-    paddingHorizontal: 25,
-    paddingVertical: 5,
-    borderRadius: 10,
-    width: "auto",
+  },
+  saveButtonLabel: { fontSize: 14 },
+  backButtonLabel: {
+    fontSize: 14
   },
   pickerContainer: {
     borderBlockColor: "black",

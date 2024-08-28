@@ -16,10 +16,12 @@ export default function ShipmentActions({ setSelectedTab }: IShipmentActions) {
     <ShipmentActionsException
       key="shipment-exception"
       setSelectedTab={setSelectedTab}
+      setOption={setOption}
     />,
     <ShipmentActionsComplete
       setSelectedTab={setSelectedTab}
       key="shipment-complete"
+      setOption={setOption}
     />,
   ];
   // --- END: Local state ------------------------------------------------------

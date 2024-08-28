@@ -6,7 +6,7 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { Alert } from "react-native";
+import { Alert, Pressable } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Picker } from "@react-native-picker/picker";
 
@@ -24,8 +24,12 @@ import {
   IShipmentActionsException,
 } from "./ShipmentActionsException.types";
 import ButtonImage from "@atoms/ButtonImage";
+import ArrowLeft from "@atoms/ArrowLeft";
+import { ShipmentActionsButtonItem } from "@organisms/ShipmentActions/ShipmentAction.constants";
+import Button from "@atoms/Button";
 export default function ShipmentActionsException({
   setSelectedTab,
+  setOption,
 }: IShipmentActionsException) {
   // --- Hooks -----------------------------------------------------------------
   const {
@@ -60,7 +64,7 @@ export default function ShipmentActionsException({
     });
 
     if (!result.canceled) methods.setValue("photoImage", result.assets[0]);
-  };  
+  };
 
   const selectedReasonLabel = useMemo(() => {
     if (selectedReason)
@@ -98,7 +102,7 @@ export default function ShipmentActionsException({
       shipmentID,
       comment: data.comment,
       reasonID: data.reasonID,
-      photoImage: photoImage?.base64?.replace("data:image/png;base64,", "")
+      photoImage: photoImage?.base64?.replace("data:image/png;base64,", ""),
     });
   };
 
@@ -167,10 +171,17 @@ export default function ShipmentActionsException({
           <ButtonImage pickImage={pickImage} photoImage={photoImage} />
         </View>
         <View style={styles.saveButtonContainer}>
+          <Button
+            labelStyle={styles.backButtonLabel}
+            label={t("COMMON.BACK")}
+            onPress={() => setOption(ShipmentActionsButtonItem.DEFAULT)}
+          />
           {loading ? (
             <ActivityIndicator />
           ) : (
-            <SaveButton
+            <Button
+              label={t("COMMENTS.SAVE")}
+              labelStyle={styles.saveButtonLabel}
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onPress={methods.handleSubmit(onSubmit, onError)}
               style={styles.saveButton}

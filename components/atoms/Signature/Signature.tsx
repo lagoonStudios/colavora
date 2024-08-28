@@ -25,7 +25,7 @@ export default function Signature({ refSignature, handleOK }: ISignature) {
         ref={refSignature}
         onEnd={handleEnd}
         onOK={handleOK}
-        webStyle={`body,html {width: auto; height: 200;}`}
+        webStyle={`body,html {width: auto; height: 150;}`}
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={false}
         style={styles.signatureBox}

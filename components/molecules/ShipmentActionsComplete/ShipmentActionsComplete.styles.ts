@@ -32,20 +32,17 @@ export const styles = StyleSheet.create({
   },
   saveButton: {
     backgroundColor: mantisColor,
-    paddingHorizontal: 25,
-    paddingVertical: 5,
-    borderRadius: 10,
-    width: "auto",
   },
+  saveButtonLabel: { fontSize: 14 },
   cancelButton: {
     backgroundColor: "rgba(245, 39, 13, 0.8)",
-    paddingHorizontal: 25,
-    paddingVertical: 5,
-    borderRadius: 10,
-    width: "auto",
   },
+  cancelButtonLabel: { fontSize: 14 },
   saveButtonText: {
     color: Colors.light.text.contrast,
+  },
+  backButtonLabel: {
+    fontSize: 14
   },
   commnetInput: {
     textAlign: "left",
