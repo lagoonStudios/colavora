@@ -38,7 +38,7 @@ export function createShipmentTable() {
                 createdUserID INTEGER,
                 createdDate TEXT,
                 lastTransferDate TEXT,
-                status TEXT,
+                status TEXT NOT NULL,
                 qty INTEGER,
                 items TEXT,
                 templateID INTEGER,
@@ -236,9 +236,10 @@ export function getTodaysShipments() {
  * @param params - An object containing the manifest ID.
  * @returns A Promise that resolves to an array of IFetchOrderListItem objects, or rejects with an error.
  */
-export function getShipmentListItemByManifestID({ manifestID }: { manifestID: string }) {
+export function getShipmentList({ manifestID }: { manifestID?: string }) {
     return new Promise((resolve: (value: IFetchOrderListItem[]) => void, reject) => {
-        db.getAllAsync(`
+        if (manifestID) {
+            db.getAllAsync(`
             SELECT 
                 shipmentID,
                 consigneeName,
@@ -253,14 +254,41 @@ export function getShipmentListItemByManifestID({ manifestID }: { manifestID: st
                 shipments
             WHERE 
                 manifestPK = ?;
+            AND
+                status IS NOT NULL
             `, [manifestID])
-            .then((res) => {
-                const data = res as IFetchOrderListItem[];
-                resolve(data);
-            }).catch(error => {
-                console.error("🚀 ~ getShipmentListItemByManifestID ~ error:", error);
-                reject(error);
-            });
+                .then((res) => {
+                    const data = res as IFetchOrderListItem[];
+                    resolve(data);
+                }).catch(error => {
+                    console.error("🚀 ~ getShipmentListItemByManifestID ~ error:", error);
+                    reject(error);
+                });
+        } else {
+            db.getAllAsync(`
+                SELECT 
+                    shipmentID,
+                    consigneeName,
+                    zip,
+                    senderName,
+                    serviceTypeName,
+                    addressLine1,
+                    addressLine2,
+                    referenceNo,
+                    qty
+                FROM 
+                    shipments                    
+                WHERE
+                    status IS NOT NULL
+                `,)
+                .then((res) => {
+                    const data = res as IFetchOrderListItem[];
+                    resolve(data);
+                }).catch(error => {
+                    console.error("🚀 ~ getShipmentListItemByManifestID ~ error:", error);
+                    reject(error);
+                });
+        }
     });
 
 }
