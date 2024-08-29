@@ -3,10 +3,12 @@ import { View, Text } from "@components/Themed";
 import { Image, ImageSourcePropType } from "react-native";
 import { styles } from "./LoggedHeader.styles";
 import { useStore } from "@stores/zustand";
+import { useIsConnected } from "react-native-offline";
 
 export default function LoggedHeader() {
   // --- Hooks -----------------------------------------------------------------
   const { company: companyData, driver: driverData } = useStore();
+  const isConnected = useIsConnected();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local state -----------------------------------------------------------
@@ -30,7 +32,7 @@ export default function LoggedHeader() {
 
   const companyName = useMemo(
     () => companyData?.companyName ?? "...",
-    [companyData],
+    [companyData]
   );
   const contact = useMemo(() => {
     return driverData?.driverName ?? "...";
@@ -42,8 +44,15 @@ export default function LoggedHeader() {
       <View style={styles.infoContainer}>
         <Text style={styles.companyText}>{companyName}</Text>
         <Text style={styles.userText}>{contact}</Text>
-        <View style={styles.statusContainer}>
-          <Text style={styles.statusText}>Online</Text>
+        <View
+          style={[
+            styles.statusContainer,
+            { backgroundColor: isConnected ? "green" : "gray" },
+          ]}
+        >
+          <Text style={styles.statusText}>
+            {isConnected ? "Online" : "Offline"}
+          </Text>
         </View>
       </View>
     </View>

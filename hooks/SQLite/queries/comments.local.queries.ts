@@ -25,10 +25,26 @@ export function createCommentsTable() {
         ).then(() => {
             resolve("Table created correctly");
         }).catch(error => {
+            console.error("🚀 ~ file: comments.local.queries.ts:28 ~ createCommentsTable ~ error:", error);
             reject("ERROR Creating comments table: " + error);
         });
     });
 
+}
+
+export function dropCommentsTable() {
+    return new Promise((resolve: ({ status, message }: { status: number, message: string }) => void, reject) => {
+        db.execAsync(`DROP TABLE IF EXISTS comments;`)
+            .then(() => {
+                resolve({
+                    status: 200,
+                    message: "Table dropped correctly"
+                });
+            }).catch(error => {
+                error("🚀 ~ file: comments.local.queries.ts:44 ~ dropCommentsTable ~ error:", error);
+                reject(error)
+            });
+    });
 }
 
 /**
@@ -60,7 +76,6 @@ export function insertMultipleComments(comments: { shipmentID: number, comment: 
                 `,
                     commentsToInsert
                 ).then((res) => {
-                    const result = db.getAllSync('SELECT * FROM comments');
                     resolve({
                         message: `Comments inserted correctly}`,
                         rowsInserted: res.changes

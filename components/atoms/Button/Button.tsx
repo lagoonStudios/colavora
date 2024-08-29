@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Children } from "react";
 import { Pressable, PressableProps, TextStyle, ViewStyle } from "react-native";
 
 import { Text, ThemeProps, View, useThemeColor } from "@components/Themed";
@@ -11,7 +11,7 @@ type ButtonProps = ThemeProps &
     label: string;
     labelStyle?: TextStyle;
     containerStyle?: ViewStyle;
-    colorTheme?: keyof typeof Colors.light;
+    children?: React.ReactNode;
   };
 
 export default function Button(props: ButtonProps) {
@@ -22,13 +22,13 @@ export default function Button(props: ButtonProps) {
     label,
     labelStyle,
     containerStyle,
+    children,
     disabled,
-    colorTheme,
     ...otherProps
   } = props;
   const primaryColor = useThemeColor(
     { light: lightColor, dark: darkColor },
-    colorTheme ?? "primary"
+    "primary"
   );
   return (
     <View style={[styles.container, styles.buttonShadow, containerStyle]}>
@@ -44,11 +44,15 @@ export default function Button(props: ButtonProps) {
         ]}
         {...otherProps}
       >
-        <Text
-          style={[{ color: primaryColor.contrast }, styles.label, labelStyle]}
-        >
-          {label}
-        </Text>
+        {children ? (
+          children
+        ) : (
+          <Text
+            style={[{ color: primaryColor.contrast }, styles.label, labelStyle]}
+          >
+            {label}
+          </Text>
+        )}
       </Pressable>
     </View>
   );

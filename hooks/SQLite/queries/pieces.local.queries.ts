@@ -29,15 +29,28 @@ export function createPiecesTable() {
             CREATE INDEX IF NOT EXISTS pieces_shipmentID_idx ON pieces (shipmentID);
         `
         ).then(() => {
-            const pieces = db.getAllSync(`
-                select pieceID from pieces;
-            `);
             resolve("Table created correctly");
         }).catch(error => {
+            console.error("🚀 ~ file: pieces.local.queries.ts:37 ~ createPiecesTable ~ error:", error);
             reject("ERROR Creating pieces table: " + error);
         });
     });
 }
+
+export function dropPiecesTable() {
+    return new Promise((resolve: ({ status, message }: { status: number, message: string }) => void, reject) => {
+        db.execAsync(`DROP TABLE IF EXISTS pieces;`)
+            .then(() => {
+                resolve({
+                    status: 200,
+                    message: "Table dropped correctly"
+                });
+            }).catch(error => {
+                error("🚀 ~ file: pieces.local.queries.ts:44 ~ dropPiecesTable ~ error:", error);
+                reject(error);
+            });
+    });
+};
 
 /**
  * Inserts multiple pieces of data into the 'pieces' table in the provided SQLite database.

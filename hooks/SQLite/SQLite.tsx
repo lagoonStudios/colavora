@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
-import { createAllDBTables } from "./SQLite.functions";
 import { insertMultipleComments } from "./queries/comments.local.queries";
+import { createAllDBTables } from "./queries/general.local.queries";
 
 export default function useSQLite() {
   useEffect(() => {

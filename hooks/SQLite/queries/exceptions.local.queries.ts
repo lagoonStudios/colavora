@@ -24,12 +24,25 @@ export function createExceptionsTable() {
         ).then(() => {
             resolve("exceptions Table created correctly");
         }).catch(error => {
+            console.error("🚀 ~ file: exceptions.local.queries.ts:27 ~ createExceptionsTable ~ error:", error);
             reject("ERROR Creating exceptions table: " + error);
         });
-
-        const res = db.getAllSync(`SELECT reasonID FROM exceptions`);
     });
 }
+
+export function dropExceptionsTable() {
+    return new Promise((resolve: ({ status, message }: { status: number, message: string }) => void, reject) => {
+        db.execAsync(`DROP TABLE IF EXISTS exceptions;`)
+            .then(() => {
+                resolve({
+                    status: 200,
+                    message: "Table dropped correctly"
+                });
+            }).catch(error => {
+                console.error("🚀 ~ file: exceptions.local.queries.ts:44 ~ dropExceptionsTable ~ error:", error);
+            });
+    });
+};
 
 /**
  * Inserts multiple exception entries into the provided SQLite database, handling duplicates.

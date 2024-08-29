@@ -65,11 +65,27 @@ export function createShipmentTable() {
         ).then(() => {
             resolve("Table created correctly");
         }).catch(error => {
+            console.error("🚀 ~ file: shipments.local.queries.ts:68 ~ createShipmentTable ~ error:", error);
             reject("ERROR Creating shipments table: " + error);
         });
     });
 
 }
+
+export function dropShipmentTable() {
+    return new Promise((resolve: ({ status, message }: { status: number, message: string }) => void, reject) => {
+        db.execAsync(`DROP TABLE IF EXISTS shipments;`)
+            .then(() => {
+                resolve({
+                    status: 200,
+                    message: "Table dropped correctly"
+                });
+            }).catch(error => {
+                console.error("🚀 ~ file: shipments.local.queries.ts:44 ~ dropShipmentTable ~ error:", error);
+                reject(error)
+            });
+    });
+};
 
 /**
  * Inserts multiple shipments into a SQLite database.
@@ -367,7 +383,6 @@ export function filterShipmentIds(ids: number[]) {
  */
 export function updateShipmentStatus({ shipmentId, status }: { shipmentId: number, status: ShipmentStatus }) {
     return new Promise((resolve: (value: string) => void, reject) => {
-        const ids = db.getAllSync(`SELECT shipmentID, status FROM shipments`,);
         db.runAsync(`
             UPDATE shipments
             SET status = $status

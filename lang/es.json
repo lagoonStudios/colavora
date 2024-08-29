@@ -1,14 +1,20 @@
 {
   "translation": {
-    "DEFAULT": "Cambie cualquier texto, guarde el archivo y su aplicación se actualizará automáticamente.",
+    "SPANISH": "Español",
+    "ENGLISH": "Inglés",
+    "PROFILE": "Perfil",
     "USERNAME": "Nombre de usuario",
     "PASSWORD": "Contraseña",
     "POWERED_BY": "Powered by EagerLink",
+    "CHANGE_LANGUAGE": "Cambiar idioma",
     "COMMON": {
       "EMAIL": "Email",
       "PIECES": "Piezas",
       "SELECT_A_VALUE": "Selecciona un valor",
-      "BACK": "Volver"
+      "BACK": "Volver",
+      "CANCEL": "Cancelar",
+      "CLEAR": "Borrar",
+      "ACCEPT": "Aceptar"
     },
     "ERRORS": {
       "ERROR": "Error",
@@ -23,6 +29,10 @@
       "REQUIRED": "Requerido",
       "EMAIL": "Email inválido",
       "EMPTY": "Texto Requerido"
+    },
+    "NETWORK_ERROR": {
+      "TITLE": "Error de conexión",
+      "DESCRIPTION": "No se pudo conectar a la red. Por favor, comprueba tu conexión y vuelve a intentarlo."
     },
     "MODAL": {
       "TEST": "Texto de Prueba para el Modal",
@@ -82,6 +92,13 @@
       "DOCUMENT_NUMBER": "Numero de Documento",
       "POD_NAME": "Nombre POD",
       "SIGNATURE": "Firma"
+    },
+    "SYNC_BUTTON": {
+      "TITLE": "Sincronizar",
+      "DESCRIPTION": "¿Estás seguro que deseas sincronizar?",
+      "CLEANING": "Sincronizando...",
+      "SUCCESS": "Sinronización completada",
+      "ERROR": "Error al sincronizar"
     }
   }
 }

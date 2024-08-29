@@ -1,85 +1,56 @@
-import React, { useEffect } from "react";
+import React from "react";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
-import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 
 import { Text, View } from "../Themed";
 
 import { storeLanguageData } from "@/utils";
+import Button from "@atoms/Button";
+import { useThemeColor } from "@components/Themed";
 
 export default function EditScreenInfo() {
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
+  const them = useThemeColor({}, "primary");
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local state -----------------------------------------------------------
   const languages = [
-    { label: "English", value: "en" },
-    { label: "Español", value: "es" },
+    { label: t("ENGLISH"), value: "en" },
+    { label: t("SPANISH"), value: "es" },
     // Add more languages as needed
   ];
   // --- END: Local state ------------------------------------------------------
   return (
-    <View>
-      <View style={styles.getStartedContainer}>
-        <Text
-          style={styles.getStartedText}
-          darkColor="rgba(255,255,255,0.05)"
-          lightColor="rgba(0,0,0,0.05)"
-        >
-          {t("DEFAULT")}
-        </Text>
-      </View>
-
-      <View style={styles.helpContainer}>
-        <FlatList
-          data={languages}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => {
-                i18next.changeLanguage(item.value);
-                storeLanguageData(item.value);
-              }}
-              style={styles.language}
-            >
-              <Text>{item.label}</Text>
-            </TouchableOpacity>
-          )}
-        />
-      </View>
+    <View style={styles.container}>
+      <Text style={styles.title}>{t("CHANGE_LANGUAGE")}</Text>
+      <FlatList
+        data={languages}
+        renderItem={({ item }) => (
+          <Button
+            label={item.label}
+            onPress={() => {
+              i18next.changeLanguage(item.value);
+              storeLanguageData(item.value);
+            }}
+            style={[styles.language, { backgroundColor: them.default }]}
+            labelStyle={{ color: them.contrast }}
+          />
+        )}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  getStartedContainer: {
+  container: {
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 50,
+    gap: 20,
   },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightContainer: {
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    lineHeight: 24,
-    textAlign: "center",
-    color: "black",
-  },
-  helpContainer: {
-    marginTop: 15,
-    marginHorizontal: 20,
-    alignItems: "center",
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    textAlign: "center",
+  title: {
+    fontSize: 18,
   },
   language: {
     padding: 10,
