@@ -22,14 +22,26 @@ export function createCODTable() {
         ).then(() => {
             resolve("Table created correctly");
         }).catch(error => {
+            console.error("🚀 ~ file: cod.local.queries.ts:25 ~ createCODTable ~ error:", error);
             reject("ERROR Creating cod table: " + error);
         });
-
-        const cods = db.getAllSync(`
-            select codTypeID from cod;
-        `);
     });
 }
+
+export function dropCODTable() {
+    return new Promise((resolve: ({ status, message }: { status: number, message: string }) => void, reject) => {
+        db.execAsync(`DROP TABLE IF EXISTS cod;`)
+            .then(() => {
+                resolve({
+                    status: 200,
+                    message: "Table dropped correctly"
+                });
+            }).catch(error => {
+                console.error("🚀 ~ file: cod.local.queries.ts:44 ~ dropCODTable ~ error:", error);
+                reject(error)
+            });
+    });
+};
 
 /**
  * Inserts multiple COD entries into the provided SQLite database.

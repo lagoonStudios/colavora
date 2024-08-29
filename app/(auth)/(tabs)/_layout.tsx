@@ -11,6 +11,7 @@ import LogoutButton from "@molecules/LogoutButton/LogoutButton";
 import { useThemeColor } from "@components/Themed";
 
 import { useCompanyData, useDriverData } from "./tabs.functions";
+import { useTranslation } from "react-i18next";
 
 export default function TabLayout() {
   // --- Local state -----------------------------------------------------------
@@ -19,6 +20,7 @@ export default function TabLayout() {
   // --- Hooks -----------------------------------------------------------------
   useDriverData();
   useCompanyData();
+  const { t } = useTranslation();
 
   const colorScheme = useColorScheme();
   const { default: backgroundColor } = useThemeColor({}, "background");
@@ -101,9 +103,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
+          headerShown: false,
           tabBarShowLabel: false,
-          headerStyle: { height: 110, backgroundColor },
           tabBarStyle: { backgroundColor },
           tabBarIcon: ({ color }) => (
             <AntDesign

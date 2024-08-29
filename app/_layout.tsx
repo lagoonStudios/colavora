@@ -20,6 +20,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { queryClient } from "@/providers";
 import { StateModal } from "@atoms/Modal";
 import { useDefaultLanguage } from "@hooks/index";
+import { NetworkProvider } from "react-native-offline";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -95,22 +96,24 @@ function RootLayoutNav(props: { authDomain: string; authClientId: string }) {
   // --- END: Data and handlers ------------------------------------------------
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <RootSiblingParent>
-        <SafeAreaProvider>
-          <ThemeProvider
-            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-          >
-            <AuthProvider domain={authDomain} clientId={authClientId}>
-              <StateModal />
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="(no-auth)" />
-                <Stack.Screen name="(auth)" />
-              </Stack>
-            </AuthProvider>
-          </ThemeProvider>
-        </SafeAreaProvider>
-      </RootSiblingParent>
-    </QueryClientProvider>
+    <NetworkProvider>
+      <QueryClientProvider client={queryClient}>
+        <RootSiblingParent>
+          <SafeAreaProvider>
+            <ThemeProvider
+              value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+            >
+              <AuthProvider domain={authDomain} clientId={authClientId}>
+                <StateModal />
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="(no-auth)" />
+                  <Stack.Screen name="(auth)" />
+                </Stack>
+              </AuthProvider>
+            </ThemeProvider>
+          </SafeAreaProvider>
+        </RootSiblingParent>
+      </QueryClientProvider>
+    </NetworkProvider>
   );
 }

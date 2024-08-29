@@ -24,10 +24,26 @@ export function createManifestsTable() {
         ).then(() => {
             resolve("Table created correctly");
         }).catch(error => {
+            console.error("🚀 ~ file: manifests.local.queries.ts:27 ~ createManifestsTable ~ error:", error);
             reject("ERROR Creating manifest table: " + error);
         });
     });
 }
+
+export function dropManifestTable() {
+    return new Promise((resolve: ({ status, message }: { status: number, message: string }) => void, reject) => {
+        db.execAsync(`DROP TABLE IF EXISTS manifests;`)
+            .then(() => {
+                resolve({
+                    status: 200,
+                    message: "Table dropped correctly"
+                });
+            }).catch(error => {
+                console.error("🚀 ~ file: manifests.local.queries.ts:44 ~ dropManifestTable ~ error:", error);
+                reject(error)
+            });
+    });
+};
 
 /**
  * Inserts multiple manifests into a SQLite database.

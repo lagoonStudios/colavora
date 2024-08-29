@@ -9,7 +9,6 @@ export const styles = StyleSheet.create({
     fontSize: 17,
   },
   statusContainer: {
-    backgroundColor: "#7EC074",
     borderRadius: 10,
     width: 100,
   },

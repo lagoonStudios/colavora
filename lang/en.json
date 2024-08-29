@@ -1,14 +1,20 @@
 {
   "translation": {
-    "DEFAULT": "Change any text, save the file and your app will update automatically.",
+    "SPANISH": "Spanish",
+    "ENGLISH": "English",
+    "PROFILE": "Profile",
     "USERNAME": "Username",
     "PASSWORD": "Password",
     "POWERED_BY": "Powered by EagerLink",
+    "CHANGE_LANGUAGE": "Change Language",
     "COMMON": {
       "EMAIL": "Email",
       "PIECES": "Pieces",
       "SELECT_A_VALUE": "Select a value",
-      "BACK": "Back"
+      "BACK": "Back",
+      "CANCEL": "Cancel",
+      "CLEAR": "Clear",
+      "ACCEPT": "Accept"
     },
     "ERRORS": {
       "ERROR": "Error",
@@ -23,6 +29,10 @@
       "REQUIRED": "Required",
       "EMPTY": "Required text",
       "EMAIL": "Invalid email"
+    },
+    "NETWORK_ERROR": {
+      "TITLE": "Network Error",
+      "DESCRIPTION": "Could not connect to the network. Please check your connection and try again."
     },
     "MODAL": {
       "TEST": "Test Modal Text",
@@ -82,6 +92,13 @@
       "DOCUMENT_NUMBER": "Document Number",
       "POD_NAME": "POD Name",
       "SIGNATURE": "Signature"
+    },
+    "SYNC_BUTTON": {
+      "TITLE": "Sync",
+      "DESCRIPTION": "Are you sure you want to synchronize?",
+      "CLEANING": "Synchronizing...",
+      "SUCCESS": "Synchronization successfully",
+      "ERROR": "Synchronization error"
     }
   }
 }
