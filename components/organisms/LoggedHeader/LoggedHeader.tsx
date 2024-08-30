@@ -7,21 +7,9 @@ import { useIsConnected } from "react-native-offline";
 
 export default function LoggedHeader() {
   // --- Hooks -----------------------------------------------------------------
-  const { company: companyData, driver: driverData } = useStore();
   const isConnected = useIsConnected();
+  const { company: companyData, driver: driverData } = useStore();
   // --- END: Hooks ------------------------------------------------------------
-
-  // --- Local state -----------------------------------------------------------
-  // --- END: Local state ------------------------------------------------------
-
-  // --- Refs ------------------------------------------------------------------
-  // --- END: Refs -------------------------------------------------------------
-
-  // --- Redux -----------------------------------------------------------------
-  // --- END: Redux ------------------------------------------------------------
-
-  // --- Side effects ----------------------------------------------------------
-  // --- END: Side effects -----------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
   const source: ImageSourcePropType = useMemo(() => {

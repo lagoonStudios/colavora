@@ -77,7 +77,10 @@ export function insertMultipleManifests(manifests: IFetchManifestByIdData[]) {
                     reject(error);
                 });
             } else {
-                reject("All ids has been inserted before.")
+                resolve({
+                    message: `All ids has been inserted before.`,
+                    idsInserted: returnedData
+                });
             }
         }).catch(error => {
             console.error("🚀 ~ file: manifests.local.queries.ts:75 ~ filterManifestsIds ~ error:", error);
@@ -93,14 +96,13 @@ export function insertMultipleManifests(manifests: IFetchManifestByIdData[]) {
  */
 export function getAllManifestsCount() {
     return new Promise((resolve: (value: { count: number }) => void, reject) => {
+        //` SELECT count(DISTINCT shipments.shipmentID) AS count  FROM shipments WHERE shipments.status IS NOT NULL`
         //`SELECT COUNT(DISTINCT manifests.manifest) AS count FROM manifests INNER JOIN shipments ON manifests.manifest = shipments.manifest WHERE shipments.status IS NOT NULL`
         db.getFirstAsync(`
             SELECT 
-                count(DISTINCT shipments.shipmentID) AS count
+                COUNT(DISTINCT manifests.manifest) AS count 
             FROM 
-                shipments
-            WHERE 
-                shipments.status IS NOT NULL
+                manifests
         `).then((res) => {
             const count = (res as { count: number });
             resolve(count);

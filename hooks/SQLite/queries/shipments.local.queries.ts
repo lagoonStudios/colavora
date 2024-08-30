@@ -195,10 +195,10 @@ export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
                     barcode,
                     referenceNo
                     ) 
-                    VALUES ${shipmentsToInsert.map(() => `?`).join(',')};
+                    VALUES ${shipmentsToInsert.join(',')};
                     `,
                     shipmentsToInsert
-                ).then((res) => {
+                ).then(() => {
                     resolve({
                         message: `Ids inserted correctly}`,
                         idsInserted: returnedData

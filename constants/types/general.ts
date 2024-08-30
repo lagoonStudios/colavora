@@ -4,6 +4,7 @@ export interface IFetchDriverData {
   driverID: number;
   driverName: string;
   userID: number;
+  logo?: string;
 }
 
 export interface IFetchCompanyData {

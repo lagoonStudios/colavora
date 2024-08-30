@@ -1,5 +1,6 @@
-import { AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import { axiosClient } from "@config/axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   IFetchDriverData,
   IFetchCompanyData,
@@ -9,6 +10,22 @@ import {
 import { IOptionalPiecesProps } from "@constants/types/shipments";
 import { IReasonsByIdData, } from "@constants/types/general";
 import { IOptionalProps } from "@constants/types/manifests";
+import { AUTH0_DOMAIN } from "@constants/url";
+
+export async function fetchAuth0UserInfo(){
+  const token = await AsyncStorage.getItem("auth0:token");
+
+  if(token) {
+    const axiosClient = axios.create({
+      baseURL: AUTH0_DOMAIN,
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+    });
+
+    return axiosClient.get('/userinfo');
+  }
+}
 
 export function fetchDriverData(
   id: string,

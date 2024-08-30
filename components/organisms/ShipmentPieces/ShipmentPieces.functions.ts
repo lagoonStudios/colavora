@@ -1,39 +1,24 @@
-import { usePiecesByIdData, usePiecesIdData } from "@hooks/queries";
 import { useStore } from "@stores/zustand";
-import { useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 
 export const usePiecesData = () => {
+  // --- Local State ------------------------------------------------------------
+  const [loading, setLoading] = useState<boolean>(true)
+  // --- END: Local State ------------------------------------------------------------
+
   // --- Hooks -----------------------------------------------------------------
   const {
-    shipment: { shipmentID },
-    piecesIds,
     pieces,
-    addPiecesIds,
-    addPieces,
   } = useStore();
-  const {
-    data: piecesId,
-    isSuccess,
-    isLoading,
-  } = usePiecesIdData({
-    id: String(shipmentID),
-  });
-  const { data: piecesData, pending } = usePiecesByIdData(piecesIds);
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    if (isSuccess) addPiecesIds(piecesId);
-  }, [addPiecesIds, isSuccess, piecesId]);
-
-  useEffect(() => {
-    if (pending === false) addPieces(piecesData);
-  }, [addPieces, pending, piecesData]);
+    if (pieces)
+      if (pieces?.length !== 0)
+        setLoading(false);
+  }, [pieces])
   // --- END: Side effects -----------------------------------------------------
-
-  // --- Data and handlers -----------------------------------------------------
-  const loading = useMemo(() => isLoading, [isLoading]);
-  // --- END: Data and handlers ------------------------------------------------
 
   return { data: pieces, loading };
 };
