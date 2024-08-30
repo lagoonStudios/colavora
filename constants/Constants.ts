@@ -11,6 +11,7 @@ export const mockUserID = 0;
 
 export const defaultLocation = { lat: 18.220833, lng: -66.590149 };
 export const queryKeys = {
+  userInfoData: "userInfoData",
   driverData: "driverData",
   companyData: "companyData",
   statusIdData: "statusIdData",

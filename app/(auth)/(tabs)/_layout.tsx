@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import React from "react";
 import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
@@ -10,33 +9,11 @@ import LoggedHeader from "@organisms/LoggedHeader";
 import LogoutButton from "@molecules/LogoutButton/LogoutButton";
 import { useThemeColor } from "@components/Themed";
 
-import { useCompanyData, useDriverData } from "./tabs.functions";
-import { useTranslation } from "react-i18next";
-
 export default function TabLayout() {
-  // --- Local state -----------------------------------------------------------
-  // --- END: Local state ------------------------------------------------------
-
   // --- Hooks -----------------------------------------------------------------
-  useDriverData();
-  useCompanyData();
-  const { t } = useTranslation();
-
   const colorScheme = useColorScheme();
   const { default: backgroundColor } = useThemeColor({}, "background");
   // --- END: Hooks ------------------------------------------------------------
-
-  // --- Refs ------------------------------------------------------------------
-  // --- END: Refs -------------------------------------------------------------
-
-  // --- Redux -----------------------------------------------------------------
-  // --- END: Redux ------------------------------------------------------------
-
-  // --- Side effects ----------------------------------------------------------
-  // --- END: Side effects -----------------------------------------------------
-
-  // --- Data and handlers -----------------------------------------------------
-  // --- END: Data and handlers ------------------------------------------------
 
   return (
     <Tabs

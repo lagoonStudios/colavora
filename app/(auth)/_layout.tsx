@@ -2,11 +2,13 @@ import React from "react";
 import { Redirect, Stack } from "expo-router";
 import useAuth from "@hooks/Auth";
 import { useSQLite } from "@hooks/SQLite";
+import { useSyncData } from "@hooks/syncData";
 
 export default function AuthLayout() {
   // --- Hooks -----------------------------------------------------------------
-  const { isLoggedIn } = useAuth();
   useSQLite();
+  useSyncData();
+  const { isLoggedIn } = useAuth();
   // --- END: Hooks ------------------------------------------------------------
 
   if (isLoggedIn === false) {

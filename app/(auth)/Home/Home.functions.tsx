@@ -1,94 +1,40 @@
 import { useEffect, useMemo, useState } from "react";
-import i18next from "i18next";
-import { HomeItem } from "./Home.types";
-import {
-  useDriverData,
-  useManifestsIdData,
-  useReasonsIdData,
-  useReasonsByIdData,
-  useCODIdData,
-  useCODByIdData,
-} from "@hooks/index";
-import { mockCompanyId, mockDriverId } from "@constants/Constants";
+
 import { useStore } from "@stores/zustand";
-import { useShipmentsIdData } from "@hooks/queries";
-import { getAllManifestsCount, insertMultipleManifests } from "@hooks/SQLite/queries/manifests.local.queries";
-import { IFetchManifestByIdData } from "@constants/types/manifests";
+import { getHomeCounters } from "@hooks/SQLite/queries/general.local.queries";
+
+import { HomeItem } from "./Home.types";
 
 export function useHomeData() {
-  // --- Local state -----------------------------------------------------------
-  const createdDate = new Date("2024-05-20T00:01:00").toISOString();
+  // --- Hooks -----------------------------------------------------------------  
+  const { manifestIds, shipmentIds } = useStore();
+  // --- END: Hooks ------------------------------------------------------------
 
+  // --- Local state -----------------------------------------------------------
   const [loading, setLoading] = useState(true);
-  const [driverId, setDriverId] = useState<number>();
-  const [todayManifest, setTodayManifest] = useState<number>();
+  const [totalManifests, setTotalManifests] = useState<number>();
+  const [totalOrdersForToday, setTotalOrdersForToday] = useState<number>();
   // --- END: Local state ------------------------------------------------------
 
-  // --- Hooks -----------------------------------------------------------------
-  const { addShipmentIds, shipmentIds: localShipmentIds, driver } = useStore();
-  const { data: driverData } = useDriverData(mockDriverId);
-  const { data: manifestIdData, isSuccess } = useManifestsIdData({
-    createdDate,
-    driverId: String(driverId ?? ""),
-  });
-  const { data: shipmentIds, isSuccess: isSuccessShipmentIds } =
-    useShipmentsIdData({
-      manifest: todayManifest ? String(todayManifest) : undefined,
-    });
-  // --- END: Hooks ------------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    if (shipmentIds?.length && shipmentIds?.length !== 0)
-      addShipmentIds(shipmentIds);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shipmentIds]);
+    if (manifestIds?.length !== 0 && shipmentIds?.length !== 0)
+      getHomeCounters().then((data) => {
+        console.log("Local: ", data);
+        setTotalManifests(data.manifests)
+        setTotalOrdersForToday(data.todayShipments)
+      })
+  }, [manifestIds, shipmentIds])
 
   useEffect(() => {
-    if (manifestIdData?.[0]) setTodayManifest(manifestIdData?.[0]);
-  }, [manifestIdData]);
-
-  useEffect(() => {
-    if (driverData) setDriverId(driverData?.userID);
-  }, [driverData]);
-
-  useEffect(() => {
-    if (isSuccess && isSuccessShipmentIds) setLoading(false);
-  }, [isSuccess, isSuccessShipmentIds]);
-
-  useEffect(() => {
-    if(manifestIdData && driver){
-      const manifestsForInsert: IFetchManifestByIdData[] = manifestIdData.map(
-        (manifest) => ({
-          manifest: String(manifest),
-          companyID: driver.companyID,
-          driverID: driver.driverID,
-          createdDate,
-        })
-      );
-
-      insertMultipleManifests(manifestsForInsert);
-    }
-  }, [manifestIdData, driver])
-
-  useEffect(() => {
-    if(loading === false)
-      getAllManifestsCount().then((manifests) => console.log("Local manifest: ", manifests))    
-  }, [loading])
-
+    if (totalManifests && totalOrdersForToday)
+      if (totalManifests !== 0 && totalOrdersForToday !== 0)
+        setLoading(false)
+  }, [totalManifests, totalOrdersForToday])
   // --- END: Side effects -----------------------------------------------------
 
-  // --- Data and handlers -----------------------------------------------------
-  const totalManifests = useMemo(
-    () => manifestIdData?.length ?? 0,
-    [manifestIdData],
-  );
-
-  const totalOrdersForToday = useMemo(
-    () => localShipmentIds?.length ?? 0,
-    [localShipmentIds],
-  );
-  
+  // --- Data and handlers -----------------------------------------------------  
   const data: HomeItem[] = useMemo(
     () => [
       {
@@ -96,16 +42,17 @@ export function useHomeData() {
         description: "HOME.DELIVERIES_FOR_TODAY",
         route: "ordersForToday",
         isDisabled: false,
-        data: manifestIdData,
+        data: manifestIds,
       },
       {
         counter: `${totalManifests}`,
         description: "HOME.DELIVERY_MANIFEST",
         route: "manifests",
         isDisabled: false,
-        data: manifestIdData,
+        data: manifestIds,
       },
-      {
+      // TO DO: Para otra iteracion
+      /* {
         counter: "0",
         description: "HOME.PICKUPS_FOR_TODAY",
         route: "",
@@ -116,55 +63,11 @@ export function useHomeData() {
         description: "HOME.PICKUP_MANIFEST",
         route: "",
         isDisabled: true,
-      },
+      }, */
     ],
-    [manifestIdData, totalManifests, totalOrdersForToday]
+    [manifestIds, totalManifests, totalOrdersForToday]
   );
   // --- END: Data and handlers ------------------------------------------------
 
   return { data, loading, setLoading };
-}
-
-export function useReasonsData() {
-  // --- Hooks -----------------------------------------------------------------
-  const { addReasonIds, reasonIds, addReason } = useStore();
-
-  const { data: reasonsIds } = useReasonsIdData(String(mockCompanyId));
-  const { data: reasonsResponse, pending } = useReasonsByIdData(reasonIds, i18next.language);
-  // --- END: Hooks ------------------------------------------------------------
-
-  // --- Side effects ----------------------------------------------------------
-  useEffect(() => {
-    if (reasonsIds) addReasonIds(reasonsIds);
-  }, [reasonsIds]);
-
-  useEffect(() => {
-    if (pending === false)
-      reasonsResponse?.map((reason) => {
-        if (reason) addReason(reason);
-      });
-  }, [pending, reasonsResponse]);
-  // --- END: Side effects -----------------------------------------------------
-}
-
-export function useCODData() {
-  // --- Hooks -----------------------------------------------------------------
-  const { addCODIds, CODIds, addCOD } = useStore();
-
-  const { data: CODIdsData } = useCODIdData(String(mockCompanyId));
-  const { data: CODs, pending } = useCODByIdData(CODIds, i18next.language);
-  // --- END: Hooks ------------------------------------------------------------
-
-  // --- Side effects ----------------------------------------------------------
-  useEffect(() => {
-    if (CODIdsData) addCODIds(CODIdsData);
-  }, [CODIdsData]);
-
-  useEffect(() => {
-    if (pending === false)
-      CODs?.map((COD) => {
-        if (COD) addCOD(COD);
-      });
-  }, [CODs, pending]);
-  // --- END: Side effects -----------------------------------------------------
 }

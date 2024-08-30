@@ -1,7 +1,9 @@
 import Auth0 from "react-native-auth0";
+import { useContext, useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import handleErrorMessage from "./ErrorMessage";
 import { AuthContext } from "@stores/AuthContext";
-import { useContext, useEffect, useState } from "react";
 
 const CONNECTION = "Username-Password-Authentication";
 const AUDIENCE = `https://${process.env.EXPO_PUBLIC_AUTH0_DOMAIN}/api/v2/`;
@@ -58,8 +60,10 @@ export default function useAuth() {
         password,
         realm: CONNECTION,
         audience: AUDIENCE,
+        scope: "openid profile email"
       });
-      saveToken(credentials.accessToken);
+      saveToken(credentials.accessToken, userName);
+      await AsyncStorage.setItem("auth0:token", credentials.accessToken);
     } catch (error) {
       handleErrorMessage({ error });
     } finally {

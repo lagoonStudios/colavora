@@ -1,5 +1,6 @@
 import { formatISO, isValid } from "date-fns";
 import { db } from "../db";
+import { IOptionalCommentsProps } from "@constants/types/shipments";
 
 /**
  * Creates a comments table in the provided SQLite database if it doesn't exist.
@@ -102,7 +103,7 @@ export function insertMultipleComments(comments: { shipmentID: number, comment: 
  *                               or rejects with an error.
  */
 export function getCommentsByShipmentID({ shipmentID }: { shipmentID: number }) {
-    return new Promise((resolve: (value: string[]) => void, reject) => {
+    return new Promise((resolve: (value: IOptionalCommentsProps[]) => void, reject) => {
         db.getAllAsync(`
             SELECT 
                 comment,
@@ -110,12 +111,12 @@ export function getCommentsByShipmentID({ shipmentID }: { shipmentID: number }) 
             FROM
                 comments
             WHERE
-                shipmentID = ?
+                shipmentID = ${shipmentID}
             ORDER BY 
                 createdDate DESC
             `, [shipmentID])
             .then((res) => {
-                const data = res as string[];
+                const data = res as IOptionalCommentsProps[];
                 resolve(data);
             }).catch(error => {
                 reject(error);

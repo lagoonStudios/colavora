@@ -8,8 +8,25 @@ import {
   fetchCODData,
   fetchReasonsByIdData,
   fetchReasonsData,
+  fetchAuth0UserInfo
 } from "@/services/custom-api";
 import { queryKeys } from "@constants/Constants";
+
+export function useAuth0UserInfoData(user: string | undefined) {
+  const driverData = useQuery({
+    queryKey: [`${queryKeys.userInfoData}-${user}`],
+    queryFn: async () => {
+      const response = await fetchAuth0UserInfo();
+      return response?.data ?? {};
+    },
+    retry: 3,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    enabled: !!user,
+  });
+
+  return driverData;
+}
 
 export function useDriverData(id: string) {
   const driverData = useQuery({
@@ -21,6 +38,7 @@ export function useDriverData(id: string) {
     retry: 3,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    enabled: !!id,
   });
 
   return driverData;

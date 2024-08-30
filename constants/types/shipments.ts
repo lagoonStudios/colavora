@@ -64,6 +64,7 @@ export interface IOptionalCommentsProps extends IOptionalShipmentProps {
   userID?: number;
   shipmentID?: number;
   comment?: string;
+  createdDate?: string;
 }
 
 export interface IOptionalExceptionProps extends IOptionalCommentsProps {

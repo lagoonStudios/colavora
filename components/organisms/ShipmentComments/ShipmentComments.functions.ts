@@ -1,34 +1,26 @@
-import { useCommentsIdData } from "@hooks/queries";
+import { useEffect, useMemo, useState } from "react";
 import { useStore } from "@stores/zustand";
-import { useEffect, useMemo } from "react";
+import { getCommentsByShipmentID } from "@hooks/SQLite/queries/comments.local.queries";
 
 export function useCommentsData() {
+  // --- Local State -----------------------------------------------------------------
+  const [loading, setLoading] = useState<boolean>(true);
+  // --- END: Local State ------------------------------------------------------------
+
   // --- Hooks -----------------------------------------------------------------
   const {
-    shipment: { shipmentID },
-    addComments,
     comments,
+    shipment: { shipmentID }
   } = useStore();
-  const {
-    data: rawComments,
-    isSuccess,
-    isLoading: loading,
-    refetch,
-  } = useCommentsIdData({ id: String(shipmentID) });
   // --- END: Hooks ------------------------------------------------------------
-
-  // --- Side effects ----------------------------------------------------------
-  useEffect(() => {
-    if (isSuccess) addComments(rawComments);
-  }, [addComments, isSuccess, rawComments]);
-  // --- END: Side effects -----------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
   const data = useMemo(() => {
     if (comments) {
-      const notes = comments.find((value) => value.includes(" Order Notes:"));
+      const filterValue = " Order Notes:";
+      const notes = comments.find((value) => value.includes(filterValue));
       const filterComments = comments.filter(
-        (value) => !value.includes(" Order Notes:"),
+        (value) => !value.includes(filterValue),
       );
 
       return { notes, comments: filterComments };
@@ -37,5 +29,16 @@ export function useCommentsData() {
   }, [comments]);
   // --- END: Data and handlers ------------------------------------------------
 
-  return { data, loading, refetch };
+  // --- Side Effects ------------------------------------------------
+  useEffect(() => {
+    if (data) setLoading(false);
+  }, [data])
+
+  useEffect(() => {
+    if (shipmentID)
+      getCommentsByShipmentID({ shipmentID })
+  }, [comments, shipmentID])
+  // --- END: Side Effects -------------------------------------------
+
+  return { data, loading };
 }
