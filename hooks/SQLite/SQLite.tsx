@@ -20,6 +20,44 @@ export default function useSQLite() {
 
 /** Insert mock data */
 function insertData() {
+  // insertMultipleExceptions([
+  //   {
+  //     reasonID: 1,
+  //     companyID: "1234567890",
+  //     customerID: 0,
+  //     reasonCode: "1234567890",
+  //     reasonDesc: "1234567890",
+  //     reasonCodeDesc: "1234567890",
+  //     completeOrder: false,
+  //     lang: "en",
+  //   },
+  //   {
+  //     reasonID: 2,
+  //     companyID: "1234567890",
+  //     customerID: 0,
+  //     reasonCode: "1234567890",
+  //     reasonDesc: "1234567890",
+  //     reasonCodeDesc: "1234567890",
+  //     completeOrder: false,
+  //     lang: "en",
+  //   },
+  //   {
+  //     reasonID: 3,
+  //     companyID: "1234567890",
+  //     customerID: 0,
+  //     reasonCode: "1234567890",
+  //     reasonDesc: "1234567890",
+  //     reasonCodeDesc: "1234567890",
+  //     completeOrder: false,
+  //     lang: "es",
+  //   },
+  // ])
+  //   .then((res) => {
+  //     console.log(res);
+  //   })
+  //   .catch((error) => {
+  //     console.error("🚀 ~ file: SQLite.tsx:58 ~ ]).then ~ error:", error);
+  //   });
   // insertMultipleCOD([
   //   {
   //     codTypeID: 1,

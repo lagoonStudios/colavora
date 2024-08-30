@@ -1,4 +1,4 @@
-import { IReasonsByIdData } from "@constants/types/general";
+import { IReasonsByIdData, Language } from "@constants/types/general";
 import { db } from "../db";
 
 /**
@@ -17,6 +17,7 @@ export function createExceptionsTable() {
             reasonDesc TEXT,
             reasonCodeDesc TEXT,
             completeOrder BOOLEAN,
+            lang TEXT NOT NULL,
             is_sync BOOLEAN DEFAULT false,
             last_sync TEXT DEFAULT (datetime('now'))
         );
@@ -56,15 +57,8 @@ export function dropExceptionsTable() {
  */
 export function insertMultipleExceptions(exceptions: IReasonsByIdData[]) {
     return new Promise((resolve, reject) => {
-        const setIncomingIds = new Set(exceptions.map(v => v.reasonID));
-        db.getAllAsync(`
-        SELECT reasonID FROM exceptions WHERE reasonID IN (${[...setIncomingIds]});
-        `).then((data) => {
-            const responseData = data as { reasonID: number }[];
-            const setExistingIds = new Set<number>();
-            responseData.forEach(item => setExistingIds.add(item.reasonID));
+        filterDuplicatedExceptions(exceptions).then(({ notExistingIds }) => {
 
-            const notExistingIds = [...setIncomingIds].filter(id => !setExistingIds.has(id));
             if (notExistingIds.length > 0) {
                 const noExistingExceptions = exceptions.filter(v => (notExistingIds.find(id => id === v.reasonID)));
 
@@ -77,7 +71,8 @@ export function insertMultipleExceptions(exceptions: IReasonsByIdData[]) {
                         reasonCode,
                         reasonDesc,
                         reasonCodeDesc,
-                        completeOrder
+                        completeOrder,
+                        lang
                     ) 
                     VALUES 
                     ${noExistingExceptions.map(v =>
@@ -88,7 +83,8 @@ export function insertMultipleExceptions(exceptions: IReasonsByIdData[]) {
                             '${v.reasonCode}', 
                             '${v.reasonDesc}', 
                             '${v.reasonCodeDesc}', 
-                            ${v.completeOrder}
+                            ${v.completeOrder},
+                            '${v.lang}'
                         )`
                 ).join(',')};
                     `,
@@ -102,7 +98,10 @@ export function insertMultipleExceptions(exceptions: IReasonsByIdData[]) {
                     reject(error);
                 });
             } else {
-                reject("All exceptions has been inserted before.")
+                resolve({
+                    message: "All exceptions has been inserted before.",
+                    idsInserted: []
+                })
             }
         });
     })
@@ -112,7 +111,7 @@ export function insertMultipleExceptions(exceptions: IReasonsByIdData[]) {
  * Retrieves all exception records from the provided SQLite database.
  * @returns A Promise that resolves to an array of IReasonsByIdData objects, or rejects with an error.
  */
-export function getAllExceptions() {
+export function getAllExceptionsByLang(lang: Language) {
     return new Promise((resolve: (value: IReasonsByIdData[]) => void, reject) => {
         db.getAllAsync(`
             SELECT 
@@ -122,10 +121,12 @@ export function getAllExceptions() {
                 reasonCode,
                 reasonDesc,
                 reasonCodeDesc,
-                completeOrder
+                completeOrder,
+                lang
             FROM 
                 exceptions
-            `)
+            WHERE lang = ?
+            `, [lang])
             .then((res) => {
                 const data = res as IReasonsByIdData[];
                 resolve(data);
@@ -135,3 +136,25 @@ export function getAllExceptions() {
             });
     })
 };
+
+
+export function filterDuplicatedExceptions(exceptions: IReasonsByIdData[]) {
+    return new Promise((resolve: (value: { existingIds: number[], notExistingIds: number[] }) => void, reject) => {
+        const setIncomingIds = new Set(exceptions.map(v => v.reasonID));
+        db.getAllAsync(`
+            SELECT reasonID FROM exceptions WHERE reasonID IN (${[...setIncomingIds]});
+            `).then((data) => {
+            const responseData = data as { reasonID: number }[];
+            const setExistingIds = new Set<number>();
+            responseData.forEach(item => setExistingIds.add(item.reasonID));
+            const notExistingIds = [...setIncomingIds].filter(id => !setExistingIds.has(id));
+            resolve({
+                existingIds: [...setExistingIds],
+                notExistingIds: [...notExistingIds]
+            })
+        }).catch(error => {
+            console.error("🚀 ~ file: exceptions.local.queries.ts:134 ~ filterDuplicatedExceptions ~ error:", error);
+            reject(error);
+        });
+    });
+}

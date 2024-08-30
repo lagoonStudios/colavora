@@ -90,7 +90,10 @@ export function insertMultipleCOD(cods: ICODData[]) {
                         reject(error);
                     });
             } else {
-                reject("All CODS ids has been inserted before.")
+                resolve({
+                    message: "All CODS ids has been inserted before.",
+                    idsInserted: []
+                })
             };
         }).catch(error => {
             console.error("🚀 ~ file: cod.local.queries.ts:45 ~ filterDuplicatedCODS ~ error:", error);
