@@ -6,9 +6,9 @@ import { createAllDBTables } from "./queries/general.local.queries";
 export default function useSQLite() {
   useEffect(() => {
     try {
-      createAllDBTables().then(() => {
-        console.info("All tables created");
-        insertData();
+      createAllDBTables().then((res) => {
+        console.info(res);
+        // insertData();
       });
     } catch (error) {
       console.error("🚀 ~  useSQLite ~ error:", error);
@@ -20,30 +20,57 @@ export default function useSQLite() {
 
 /** Insert mock data */
 function insertData() {
-  //   insertMultipleCOD(db, [
-  //     {
-  //       codTypeID: 1,
-  //       codType: "1234567890",
-  //       companyID: "1234567890",
-  //     },
-  //     {
-  //       codTypeID: 2,
-  //       codType: "1234567890",
-  //       companyID: "1234567890",
-  //     },
-  //     {
-  //       codTypeID: 3,
-  //       codType: "1234567890",
-  //       companyID: "1234567890",
-  //     },
-  //   ])
-  //     .then((res) => {
-  //       console.log(res);
-  //     })
-  //     .catch((error) => {
-  //       console.log("🚀 ~ insertData ~ error:", error);
-  //       console.log(error);
-  //     });
+  // insertMultipleCOD([
+  //   {
+  //     codTypeID: 1,
+  //     codType: "1234567890",
+  //     companyID: "1234567890",
+  //     lang: "en",
+  //   },
+  //   {
+  //     codTypeID: 2,
+  //     codType: "1234567890",
+  //     companyID: "1234567890",
+  //     lang: "es",
+  //   },
+  //   {
+  //     codTypeID: 3,
+  //     codType: "1234567890",
+  //     companyID: "1234567890",
+  //     lang: "en",
+  //   },
+  //   {
+  //     codTypeID: 4,
+  //     codType: "1234567890",
+  //     companyID: "1234567890",
+  //     lang: "en",
+  //   },
+  //   {
+  //     codTypeID: 5,
+  //     codType: "1234567890",
+  //     companyID: "1234567890",
+  //     lang: "es",
+  //   },
+  //   {
+  //     codTypeID: 6,
+  //     codType: "1234567890",
+  //     companyID: "1234567890",
+  //     lang: "en",
+  //   },
+  //   {
+  //     codTypeID: 7,
+  //     codType: "1234567890",
+  //     companyID: "1234567890",
+  //     lang: "es",
+  //   },
+  // ])
+  //   .then((res) => {
+  //     console.log(res);
+  //   })
+  //   .catch((error) => {
+  //     console.log("🚀 ~ insertData ~ error:", error);
+  //     console.log(error);
+  //   });
   //   // insertMultipleManifests(db, [
   //   //   {
   //   //     manifest: "1234567891",
@@ -68,7 +95,6 @@ function insertData() {
   //   //   .catch((error) => {
   //   //     console.log("ERROR MANIFESTS", error);
   //   //   });
-
   // insertMultipleShipments([
   //   {
   //     companyID: "1234567890",
@@ -104,7 +130,6 @@ function insertData() {
   //     templateID: 1234567890,
   //     manifestDL: "1234567890",
   //     manifestPk: "1234567890",
-
   //     assignPK: 1234567890,
   //     assignDL: 1234567890,
   //     division: "1234567890",
@@ -147,7 +172,6 @@ function insertData() {
   //     templateID: 1234567890,
   //     manifestDL: "1234567890",
   //     manifestPk: "1234567890",
-
   //     assignPK: 1234567890,
   //     assignDL: 1234567890,
   //     division: "1234567890",
@@ -190,7 +214,6 @@ function insertData() {
   //     templateID: 1234567890,
   //     manifestDL: "1234567890",
   //     manifestPk: "1234567891",
-
   //     assignPK: 1234567890,
   //     assignDL: 1234567890,
   //     division: "1234567890",
@@ -206,7 +229,6 @@ function insertData() {
   //   .catch((error) => {
   //     console.log("ERROR SHIPMENTS", error);
   //   });
-
   //   // insertMultiplePieces(db, [
   //   //   {
   //   //     pieceID: 123,
@@ -248,27 +270,25 @@ function insertData() {
   //   //   .catch((error) => {
   //   //     console.log("ERROR PIECES", error);
   //   //   });
-
-  insertMultipleComments([
-    {
-      shipmentID: 3,
-      comment: "Comentario id 3",
-      createdDate: "05/20/24  8:51:51 PM",
-    },
-    {
-      shipmentID: 4,
-      comment: "Comentario id 4",
-      createdDate: "05/20/24  8:51:51 PM",
-    },
-    {
-      shipmentID: 5,
-      comment: "comentario id 5",
-      createdDate: "05/20/24  8:51:51 PM",
-    },
-  ])
-    .then((res) => {})
-    .catch((error) => {});
-
+  // insertMultipleComments([
+  //   {
+  //     shipmentID: 3,
+  //     comment: "Comentario id 3",
+  //     createdDate: "05/20/24  8:51:51 PM",
+  //   },
+  //   {
+  //     shipmentID: 4,
+  //     comment: "Comentario id 4",
+  //     createdDate: "05/20/24  8:51:51 PM",
+  //   },
+  //   {
+  //     shipmentID: 5,
+  //     comment: "comentario id 5",
+  //     createdDate: "05/20/24  8:51:51 PM",
+  //   },
+  // ])
+  //   .then((res) => {})
+  //   .catch((error) => {});
   //   // insertMultipleExceptions(db, [
   //   //   {
   //   //     reasonID: 3,

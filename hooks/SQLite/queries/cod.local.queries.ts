@@ -1,5 +1,5 @@
 import { db } from "../db";
-import { ICODData } from "@constants/types/general";
+import { ICODData, Language } from "@constants/types/general";
 
 
 /**
@@ -15,6 +15,7 @@ export function createCODTable() {
             codTypeID INTEGER PRIMARY KEY UNIQUE NOT NULL,
             codType TEXT,
             companyID TEXT NOT NULL,
+            lang TEXT NOT NULL,
             is_sync BOOLEAN DEFAULT false,
             last_sync TEXT DEFAULT (datetime('now'))
           );
@@ -53,36 +54,32 @@ export function dropCODTable() {
  * @returns A Promise that resolves with an object containing:
  * Rejects with an error message on failure.
  */
-export function insertMultipleCOD(codIds: ICODData[]) {
+export function insertMultipleCOD(cods: ICODData[]) {
     return new Promise((resolve: (value: { message: string, idsInserted: number[] }) => void, reject) => {
-        const incomingIds = new Set(codIds.map(v => v.codTypeID));
-        db.getAllAsync(`
-            SELECT codTypeID FROM cod WHERE codTypeID IN (${[...incomingIds]});
-        `).then((data) => {
-            const responseData = data as { codTypeID: number }[];
-            const setExistingIds = new Set<number>(responseData.map(v => v.codTypeID));
-            const notExistingIds = [...incomingIds].filter(id => !setExistingIds.has(id));
+        filterDuplicatedCODS(cods).then(({ notExistingIds }) => {
             if (notExistingIds.length > 0) {
-                const codsToInsert = codIds.filter((v) =>
+                const codsToInsert = cods.filter((v) =>
                     notExistingIds.find(id => id === v.codTypeID)
                 ).map(v => `
-                    (
-                        ${v.codTypeID},
-                        '${v.codType}',
-                        '${v.companyID}'
-                    )`).join(',');
+                        (
+                            ${v.codTypeID},
+                            '${v.codType}',
+                            '${v.companyID}',
+                            '${v.lang}'
+                        )`).join(',');
 
 
                 db.runAsync(`
-                    INSERT INTO cod
-                        (
-                        codTypeID,
-                        codType,
-                        companyID
-                        )
-                    VALUES
-                        ${codsToInsert}
-                    `)
+                        INSERT INTO cod
+                            (
+                            codTypeID,
+                            codType,
+                            companyID,
+                            lang
+                            )
+                        VALUES
+                            ${codsToInsert}
+                        `)
                     .then((_) => {
                         resolve({
                             message: `Ids inserted correctly}`,
@@ -96,34 +93,66 @@ export function insertMultipleCOD(codIds: ICODData[]) {
                 reject("All CODS ids has been inserted before.")
             };
         }).catch(error => {
-            console.error("🚀 ~ insertMultipleCOD ~ error:", error);
+            console.error("🚀 ~ file: cod.local.queries.ts:45 ~ filterDuplicatedCODS ~ error:", error);
             reject(error);
-        });;
-
+        })
     })
 };
 
 /**
- * Retrieves all COD records from the provided SQLite database.
+ * Retrieves all COD records from the provided SQLite database by language.
  *
- * @returns A Promise that resolves to an array of ICODData objects,
- *                               or rejects with an error.
+ * @returns A Promise that resolves to an array of ICODData objects, or rejects with an error.
  */
-export function getAllCOD() {
+export function getAllCODByLang(lang: Language) {
     return new Promise((resolve: (value: ICODData[]) => void, reject) => {
         db.getAllAsync(`
             SELECT 
                 codTypeID,
                 codType,
-                companyID
+                companyID,
+                lang
             FROM 
                 cod
-            `)
+            WHERE
+                lang = ?
+            `, [lang])
             .then((res) => {
                 const data = res as ICODData[];
                 resolve(data);
             }).catch(error => {
+                console.error("🚀 ~ file: cod.local.queries.ts:104 ~ getAllCOD ~ error:", error);
                 reject(error);
             });
     });
 };
+
+
+/**
+ * Asynchronously filters out COD type IDs from the provided `cods` array that already exist in the database.
+ *
+ * @param  cods - An array of objects representing COD data, each containing a `codTypeID` property.
+ * @returns A promise that resolves to an object with two properties:
+ *   - `existingIds`: An array of COD type IDs that already exist in the database.
+ *   - `notExistingIds`: An array of COD type IDs that do not exist in the database.
+ * @throws Rejects the promise with an error if there's a problem accessing the database.
+ */
+export function filterDuplicatedCODS(cods: ICODData[]) {
+    return new Promise((resolve: (value: { existingIds: number[], notExistingIds: number[] }) => void, reject) => {
+        const incomingIds = new Set(cods.map(v => v.codTypeID));
+        db.getAllAsync(`
+            SELECT codTypeID FROM cod WHERE codTypeID IN (${[...incomingIds]});
+        `).then((data) => {
+            const responseData = data as { codTypeID: number }[];
+            const setExistingIds = new Set<number>(responseData.map(v => v.codTypeID));
+            const notExistingIds = [...incomingIds].filter(id => !setExistingIds.has(id));
+            resolve({
+                existingIds: [...setExistingIds],
+                notExistingIds: [...notExistingIds]
+            })
+        }).catch(error => {
+            console.error("🚀 ~ file: cod.local.queries.ts:125 ~ filterDuplicatedCODS ~ error:", error);
+            reject(error);
+        });;
+    });
+}
