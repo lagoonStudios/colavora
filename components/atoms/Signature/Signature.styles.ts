@@ -5,14 +5,15 @@ export const styles = StyleSheet.create({
     width: "auto",
     display: "flex",
     gap: 10,
-    height: 150,
+    flex: 1,
+    maxHeight: 300
   },
   title: {
     alignItems: "flex-start",
     justifyContent: "center",
     gap: 8,
     fontWeight: 600,
-    fontSize: 17,
+    fontSize: 14,
   },
-  signatureBox: { borderWidth: 0.5, borderColor: "black" }
+  signatureBox: { borderWidth: 0.5, borderColor: "black", height: "auto" }
 });
