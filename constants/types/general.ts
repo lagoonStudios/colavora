@@ -47,6 +47,7 @@ export interface ICODData {
   companyID: string;
   codTypeID: number;
   codType: string;
+  lang: Language;
 }
 
 export type PaginatedData = {
@@ -58,3 +59,5 @@ export interface IStateModal {
   visible: boolean;
   message: string;
 }
+
+export type Language = "en" | "es";
