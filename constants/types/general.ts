@@ -41,6 +41,7 @@ export interface IReasonsByIdData {
   reasonDesc: string;
   reasonCodeDesc: string;
   completeOrder: boolean;
+  lang: Language
 }
 
 export interface ICODData {

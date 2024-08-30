@@ -10,7 +10,6 @@ export function createCommentsTable() {
     return new Promise((resolve: (value: string) => void, reject) => {
         db.execAsync(
             `
-            drop table if exists comments;
           CREATE TABLE IF NOT EXISTS comments (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             createdDate TEXT DEFAULT (datetime('now')),
@@ -86,7 +85,10 @@ export function insertMultipleComments(comments: { shipmentID: number, comment: 
                     reject(error);
                 });
             } else {
-                reject("All comments has been inserted before.")
+                resolve({
+                    message: "All comments has been inserted before.",
+                    rowsInserted: 0
+                })
             }
         }).catch(error => {
             console.error("🚀 comments.local.queries.ts ~ inserMultipleComments ~ line 74 ~ insertMultipleComments ~ error:", error);
@@ -158,8 +160,7 @@ export function filterComments(comments: { shipmentID: number, comment: string, 
             }).filter(v => v != undefined);
             if (notExistingComments.length > 0) { resolve(notExistingComments); }
             else {
-                console.error("🚀 ~ comments.local.queries.ts ~ filterComments ~ line 123 ~ exception:", 'All comments has been inserted before.');
-                reject('All comments has been inserted before.');
+                resolve([]);
             }
 
         }).catch(error => {
