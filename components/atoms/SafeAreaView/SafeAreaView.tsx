@@ -13,7 +13,7 @@ export default function SafeAreaView(props: ViewProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const { default: backgroundColor } = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "backgroundSecondary"
+    "background"
   );
   // --- END: Data and handlers ------------------------------------------------
 

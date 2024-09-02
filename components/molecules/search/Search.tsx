@@ -18,7 +18,7 @@ export default function Search(props: SearchProps) {
   const { t } = useTranslation();
   const { ...methods } = useForm<SearchForm>();
 
-  const { default: backgroundColor } = useThemeColor({}, "background");
+  const { default: backgroundColor } = useThemeColor({}, "backgroundSecondary");
   const { name } = methods.register("search", {});
   // --- END: Hooks ------------------------------------------------------------
   // --- Refs ------------------------------------------------------------------

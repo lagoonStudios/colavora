@@ -2,7 +2,6 @@ import { Platform, StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
-    borderRadius: 8,
   },
   buttonShadow: Platform.select({
     ios: {

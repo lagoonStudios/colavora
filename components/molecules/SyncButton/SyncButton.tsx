@@ -22,7 +22,6 @@ export default function SyncButton() {
   const handleClearCache = () => {
     console.log("PRESSED");
     if (!isConnected) {
-      console.log({ isConnected });
       Alert.alert(t("NETWORK_ERROR.TITLE"), t("NETWORK_ERROR.DESCRIPTION"));
       return;
     }

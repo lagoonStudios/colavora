@@ -40,7 +40,7 @@ export default function ControlledInput(props: TextInputProps) {
 
   const { default: backgroundColor } = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "background",
+    "backgroundSecondary"
   );
   const { tint: textColor } = useThemeColor(
     { light: lightColor, dark: darkColor },
