@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import PageHeader from "@molecules/PageHeader/PageHeader";
 
 import SyncButton from "@molecules/SyncButton";
+import SyncPeriodSelector from "@molecules/SyncPeriodSelector";
 
 export default function ProfileScreen() {
   const { t } = useTranslation();
@@ -16,6 +17,7 @@ export default function ProfileScreen() {
       <PageHeader title={t("PROFILE")} />
       <View style={styles.buttonsContainer}>
         <EditScreenInfo />
+        <SyncPeriodSelector />
         <SyncButton />
       </View>
     </SafeAreaView>

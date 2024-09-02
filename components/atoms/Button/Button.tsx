@@ -31,7 +31,7 @@ export default function Button(props: ButtonProps) {
     "primary"
   );
   return (
-    <View style={[styles.container, styles.buttonShadow, containerStyle]}>
+    <View style={[styles.container, containerStyle]}>
       <Pressable
         style={[
           {

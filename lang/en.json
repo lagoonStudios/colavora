@@ -106,7 +106,9 @@
       "DESCRIPTION": "Are you sure you want to synchronize?",
       "CLEANING": "Synchronizing...",
       "SUCCESS": "Synchronization successfully",
-      "ERROR": "Synchronization error"
+      "ERROR": "Synchronization error",
+      "SYNC_PERIOD_SELECTOR": "Select a sync period (min)",
+      "SYNC_PERIOD_CHANGED": "Sync period changed to {{period}} minutes"
     }
   }
 }

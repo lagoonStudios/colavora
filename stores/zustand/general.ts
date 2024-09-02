@@ -2,6 +2,7 @@ import {
   ICODData,
   IReasonsByIdData,
   IStateModal,
+  SyncPeriod,
 } from "@constants/types/general";
 import { StateCreator } from "zustand";
 
@@ -32,6 +33,15 @@ export interface StateModalSlice {
   setVisible: (visible?: boolean) => void;
   setMessage: (message: string) => void;
   setModal: (message: string) => void;
+}
+
+export interface SyncDataSlice {
+  isSyncing: boolean;
+  setSyncing: (isSyncing: boolean) => void;
+  /** Sync period in minutes */
+  syncPeriod: SyncPeriod;
+  /** Set sync period in minutes */
+  setSyncPeriod: (syncPeriod: SyncPeriod) => void;
 }
 
 export const createReasonIdsSlice: StateCreator<ReasonIdsSlice, [], []> = (
@@ -91,4 +101,12 @@ export const createStateModalSlice: StateCreator<StateModalSlice, [], []> = (
     set((state) => ({ ...state, modal: { ...state.modal, message } })),
   setModal: (message: string) =>
     set((state) => ({ ...state, modal: { visible: true, message } })),
+});
+
+
+export const createSyncDataSlice: StateCreator<SyncDataSlice, [], []> = (set) => ({
+  isSyncing: false,
+  setSyncing: (isSyncing: boolean) => set((state) => ({ ...state, isSyncing })),
+  syncPeriod: 20,
+  setSyncPeriod: (syncPeriod: SyncPeriod) => set((state) => ({ ...state, syncPeriod })),
 });
