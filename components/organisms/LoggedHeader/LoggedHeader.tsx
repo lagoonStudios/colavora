@@ -8,7 +8,7 @@ import { useIsConnected } from "react-native-offline";
 export default function LoggedHeader() {
   // --- Hooks -----------------------------------------------------------------
   const isConnected = useIsConnected();
-  const { company: companyData, driver: driverData } = useStore();
+  const { company: companyData, user: driverData } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------

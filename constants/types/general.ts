@@ -1,10 +1,40 @@
-export interface IFetchDriverData {
+export interface IFetchUserData {
   active: boolean;
   companyID: string;
   driverID: number;
   driverName: string;
   userID: number;
   logo?: string;
+  lastName?: string
+  deptID?: number
+  secAdmin?: boolean
+  secImgView?: boolean
+  secImgIndex?: boolean
+  secMess?: boolean
+  secGroup?: number
+  deptID2?: number
+  sendEmail?: boolean
+  viewDept?: boolean
+  showMssEmail?: boolean
+  siteID?: number
+  changePassword?: boolean
+  typeID?: number
+  clientGroup1?: number
+  clientGroup2?: number
+  clientViewOnly?: boolean
+  clientViewLimitActive?: boolean
+  dashboardID?: number
+  menu?: string
+  secDelete?: number
+  userPublicID?: string
+  multipleDashboard?: boolean
+  createdDate?: string
+  createduser?: number
+  sha?: boolean
+  uUserID?: string
+  active2?: boolean
+  ipOverwrite?: any
+  auth0?: string
 }
 
 export interface IFetchCompanyData {

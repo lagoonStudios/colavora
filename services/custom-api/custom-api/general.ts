@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { axiosClient } from "@config/axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  IFetchDriverData,
+  IFetchUserData,
   IFetchCompanyData,
   IFetchStatusByIdData,
   ICODData,
@@ -27,10 +27,15 @@ export async function fetchAuth0UserInfo(){
   }
 }
 
-export function fetchDriverData(
+export function fetchDriverDataByAuth0(
   id: string,
-): Promise<AxiosResponse<IFetchDriverData>> {
-  return axiosClient.get(`common/driver/${id}`);
+): Promise<AxiosResponse<number[]>> {
+  return axiosClient.get(`common/driver`, { params: { auth0: id } });
+}
+export function fetchUserData(
+  id: string,
+): Promise<AxiosResponse<IFetchUserData>> {
+  return axiosClient.get(`company/user/${id}`);
 }
 export function fetchStatusData({ companyID }: IOptionalProps): Promise<AxiosResponse<number[]>> {
   return axiosClient.get(`common/status`, { params: { companyID } });

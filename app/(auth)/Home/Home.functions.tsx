@@ -19,12 +19,17 @@ export function useHomeData() {
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    if (manifestIds?.length !== 0 && shipmentIds?.length !== 0)
-      getHomeCounters().then((data) => {
-        console.log("Local: ", data);
-        setTotalManifests(data.manifests)
-        setTotalOrdersForToday(data.todayShipments)
-      })
+    getHomeCounters().then((data) => {
+      setTotalManifests(data.manifests)
+      setTotalOrdersForToday(data.todayShipments)
+    })
+  }, [])
+
+  useEffect(() => {
+    getHomeCounters().then((data) => {
+      setTotalManifests(data.manifests)
+      setTotalOrdersForToday(data.todayShipments)
+    })      
   }, [manifestIds, shipmentIds])
 
   useEffect(() => {

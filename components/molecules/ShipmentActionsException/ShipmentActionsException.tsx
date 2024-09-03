@@ -35,7 +35,7 @@ export default function ShipmentActionsException({
   const {
     shipment: { shipmentID, companyID },
     reasons,
-    driver,
+    user,
     setModal: setStateModal,
     setVisible: setStateModalVisible,
   } = useStore();
@@ -98,7 +98,7 @@ export default function ShipmentActionsException({
     setStateModal(t("MODAL.CEATING_EXCEPTION"));
     mutate({
       companyID: companyID,
-      userID: driver?.userID,
+      userID: user?.userID,
       shipmentID,
       comment: data.comment,
       reasonID: data.reasonID,
@@ -116,7 +116,7 @@ export default function ShipmentActionsException({
     if (isSuccess)
       addComment({
         companyID: companyID,
-        userID: driver?.userID,
+        userID: user?.userID,
         shipmentID,
         comment: `Order Exception - ${selectedReasonLabel}`,
       });

@@ -11,7 +11,7 @@ export default function LogoutButton() {
   // --- Hooks -----------------------------------------------------------------
   const { clearSession } = useAuth();
   const colorScheme = useColorScheme();
-  const { resetCompanyId, resetCompany, resetDriver, resetShipment } =
+  const { resetCompanyId, resetCompany, resetUser, resetShipment } =
     useStore();
   // --- END: Hooks ------------------------------------------------------------
 
@@ -20,7 +20,7 @@ export default function LogoutButton() {
       clearSession();
       resetCompanyId();
       resetCompany();
-      resetDriver();
+      resetUser();
       resetShipment();
     } catch (e) {
       console.error("🚀 ~ LogoutButton ~ onPress ~ e:", e);

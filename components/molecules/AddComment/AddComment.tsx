@@ -26,7 +26,7 @@ export default function AddComment({ refetch }: IAddComment) {
   });
   const {
     shipment: { shipmentID, companyID },
-    driver,
+    user,
   } = useStore();
   // --- END: Hooks ------------------------------------------------
 
@@ -38,8 +38,8 @@ export default function AddComment({ refetch }: IAddComment) {
     }
 
     mutate({
-      companyID: Number(companyID),
-      userID: driver?.userID,
+      companyID: companyID,
+      userID: user?.userID,
       shipmentID,
       comment: data.comment,
     });

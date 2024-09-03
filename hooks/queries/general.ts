@@ -1,6 +1,7 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
 import {
-  fetchDriverData,
+  fetchDriverDataByAuth0,
+  fetchUserData,
   fetchCompanyData,
   fetchStatusData,
   fetchStatusByIdData,
@@ -19,29 +20,48 @@ export function useAuth0UserInfoData(user: string | undefined) {
       const response = await fetchAuth0UserInfo();
       return response?.data ?? {};
     },
-    retry: 3,
+    retry: 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    retryOnMount: false,
     enabled: !!user,
   });
 
   return driverData;
 }
 
-export function useDriverData(id: string) {
-  const driverData = useQuery({
-    queryKey: [queryKeys.driverData],
+export function useUserData(id?: number) {
+  const userData = useQuery({
+    queryKey: [queryKeys.userData],
     queryFn: async () => {
-      const { data: rawData } = await fetchDriverData(id);
+      const { data: rawData } = await fetchUserData(id ? String(id) : "");
       return rawData ?? {};
     },
-    retry: 3,
+    retry: 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    retryOnMount: false,
     enabled: !!id,
   });
 
-  return driverData;
+  return userData;
+}
+
+export function useDriverDataByAuth0(authId?: string) {
+  const driverDataId = useQuery({
+    queryKey: [`${queryKeys.driverData}-id`],
+    queryFn: async () => {
+      const { data: rawData } = await fetchDriverDataByAuth0(authId ?? "");
+      return rawData ?? {};
+    },
+    retry: 0,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    retryOnMount: false,
+    enabled: !!authId,
+  });
+
+  return driverDataId;
 }
 export function useCompanyData(id: string | undefined) {
   const companyData = useQuery({
@@ -50,9 +70,10 @@ export function useCompanyData(id: string | undefined) {
       const { data: rawData } = await fetchCompanyData(id);
       return rawData ?? {};
     },
-    retry: 3,
+    retry: 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    retryOnMount: false,
     enabled: Boolean(id),
   });
 
@@ -66,9 +87,10 @@ export function useStatusIdData(companyID: string | undefined) {
       const { data: rawData } = await fetchStatusData({ companyID });
       return rawData ?? [];
     },
-    retry: 3,
+    retry: 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    retryOnMount: false,
   });
 
   return statusIdData;
@@ -102,9 +124,10 @@ export function useReasonsIdData(companyID: string | undefined) {
       const { data: rawData } = await fetchReasonsData({ companyID });
       return rawData ?? [];
     },
-    retry: 3,
+    retry: 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    retryOnMount: false,
   });
 
   return reasonsIdData;
@@ -142,9 +165,10 @@ export function useCODIdData(companyID: string | undefined) {
       const { data: rawData } = await fetchCODData({ companyID });
       return rawData ?? [];
     },
-    retry: 3,
+    retry: 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    retryOnMount: false,
   });
 
   return reasonsIdData;
