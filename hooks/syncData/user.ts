@@ -1,5 +1,5 @@
 import { mockDriverId } from "@constants/Constants";
-import { useAuth0UserInfoData, useDriverData } from "@hooks/queries";
+import { useAuth0UserInfoData, useDriverDataByAuth0, useUserData } from "@hooks/queries";
 import { useState, useEffect } from "react";
 import { useStore } from "@stores/zustand";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -8,13 +8,16 @@ export function useDriverFetch() {
   // --- Local state -----------------------------------------------------------
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
-  const [user, setUser] = useState<string>();
+  const [userEmail, setUserEmail] = useState<string>();
+  const [userId, setUserId] = useState<number>();
+  const [auth0Id, setAuth0Id] = useState<string>();
   // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
-  const { driver, addDriver } = useStore();  
-  const { data: userInfo } = useAuth0UserInfoData(user);
-  const { data: driverData, isSuccess } = useDriverData(mockDriverId);  
+  const { user, addUser } = useStore();  
+  const { data: userInfo } = useAuth0UserInfoData(userEmail);
+  const { data: users } = useDriverDataByAuth0(auth0Id);
+  const { data: userData, isSuccess } = useUserData(userId);  
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
@@ -22,7 +25,7 @@ export function useDriverFetch() {
     const getData = async () => {
       try {
         const jsonValue = await AsyncStorage.getItem("auth0:email");
-        if (jsonValue != null) setUser(jsonValue);
+        if (jsonValue != null) setUserEmail(jsonValue);
       } catch (e) {
         // error reading value
       }
@@ -32,18 +35,27 @@ export function useDriverFetch() {
   }, [])
 
   useEffect(() => {
-    if (driverData && userInfo) {
-      const newDriver = {
-        ...driverData,
+    if(userInfo) setAuth0Id(userInfo?.sub)
+  }, [userInfo])
+
+  useEffect(() => {
+    if(users && users?.length !== 0) setUserId(users?.[0])
+  }, [users])
+
+  useEffect(() => {
+    if (userData && userInfo) {
+      const newUser = {
+        ...userData,
         driverName: userInfo?.name,
+        driverID: userData?.userID,
         logo: userInfo?.picture,
       }
-      addDriver(newDriver)
+      addUser(newUser)
     }
-  }, [driverData, userInfo]);
+  }, [userData, userInfo]);
   
   useEffect(() => {
-    if (isSuccess && driver) setLoading(false);
+    if (isSuccess && user) setLoading(false);
   }, [isSuccess]);
 
   useEffect(() => {

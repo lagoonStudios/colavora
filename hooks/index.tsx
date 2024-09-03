@@ -3,9 +3,10 @@ export { default as useDefaultLanguage } from "./language";
 export { default as handleErrorMessage } from "./ErrorMessage";
 
 export {
-  useDriverData,
+  useUserData,
   useCompanyData,
   useAuth0UserInfoData,
+  useDriverDataByAuth0,
   useStatusIdData,
   useStatusByIdData,
   useManifestsIdData,
@@ -21,4 +22,4 @@ export {
 export { useSQLite } from "./SQLite";
 export { useSyncData } from "./syncData";
 
-export { useDriverFetch } from "./syncData/driver";
+export { useDriverFetch } from "./syncData/user";

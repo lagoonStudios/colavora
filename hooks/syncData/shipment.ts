@@ -12,7 +12,7 @@ export function useShipmentFetch() {
 
   // --- Hooks -----------------------------------------------------------------
   const { manifestIds, addShipmentIds } = useStore();
-  const { data: shipmentIds, isSuccess: isSuccessShipmentIds } =
+  const { data: shipmentIds } =
     useShipmentsIdData({
       manifest: todayManifest ? String(todayManifest) : undefined,
     });
@@ -22,7 +22,7 @@ export function useShipmentFetch() {
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    if (manifestIds?.[0]) setTodayManifest(manifestIds?.[0]);
+    if (manifestIds && manifestIds?.[0]) setTodayManifest(manifestIds?.[0]);
   }, [manifestIds]);
 
   useEffect(() => {

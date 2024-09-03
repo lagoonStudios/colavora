@@ -1,4 +1,3 @@
-import { mockDriverId } from "@constants/Constants";
 import { useCompanyData } from "@hooks/queries";
 import { useState, useEffect } from "react";
 import { useStore } from "@stores/zustand";
@@ -10,20 +9,20 @@ export function useCompanyFetch() {
   // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
-  const { driver, addCompany, company } = useStore();
-  const { data: companyData, isSuccess } = useCompanyData(driver?.companyID);  
+  const { user, addCompany, company } = useStore();
+  const { data: companyData, isSuccess } = useCompanyData(user?.companyID);  
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    if (companyData && driver) {
+    if (companyData && user) {
       const company = {
         ...companyData,
-        logo: driver?.logo ?? companyData.logo
+        logo: user?.logo ?? companyData.logo
       }
       addCompany(company)
     }
-  }, [companyData, driver]);
+  }, [companyData, user]);
   
   useEffect(() => {
     if (isSuccess && company) setLoading(false);

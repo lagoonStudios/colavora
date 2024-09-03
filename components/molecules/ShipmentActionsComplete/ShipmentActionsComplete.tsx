@@ -19,9 +19,7 @@ import ButtonImage from "@atoms/ButtonImage";
 import CODSelected from "@atoms/CODSelected";
 import TextInput from "@molecules/TextInput";
 import CODComponet from "@atoms/CODComponet";
-import SaveButton from "@molecules/SaveButton";
 import { Text, View } from "@components/Themed";
-import CancelButton from "@molecules/CancelButton";
 import DefaultCODLabels from "@atoms/DefaultCODLabels";
 
 import { useStore } from "@stores/zustand";
@@ -52,7 +50,7 @@ export default function ShipmentActionsComplete({
     shipment: { shipmentID, barcode, companyID },
     setModal: setStateModal,
     setVisible,
-    driver,
+    user,
   } = useStore();
   const { ...methods } = useForm<IShipmentActionsComplete>({
     defaultValues,
@@ -123,7 +121,7 @@ export default function ShipmentActionsComplete({
         ...cod,
         shipmentID,
         companyID,
-        userID: driver?.userID,
+        userID: user?.userID,
       }));
 
       mutate(completeCODs);
@@ -147,7 +145,7 @@ export default function ShipmentActionsComplete({
         companyID,
         shipmentID,
         signatureImage,
-        userID: driver?.userID,
+        userID: user?.userID,
         photoImage: photoImage?.base64?.replace("data:image/png;base64", ""),
       });
 

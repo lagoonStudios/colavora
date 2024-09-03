@@ -1,7 +1,8 @@
 export {
   useAuth0UserInfoData,
   useCompanyData,
-  useDriverData,
+  useDriverDataByAuth0,
+  useUserData,
   useStatusIdData,
   useStatusByIdData,
   useReasonsIdData,

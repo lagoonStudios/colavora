@@ -35,7 +35,7 @@ import {
   CompanyIdsSlice,
   createCompanyIdsSlice,
 } from "./company";
-import { DriverSlice, createDriverSlice } from "./driver";
+import { UserSlice, createUserSlice } from "./user";
 
 const useBoundStore = create<
   ManifestIdsSlice &
@@ -51,7 +51,7 @@ const useBoundStore = create<
     CODSlice &
     CompanySlice &
     CompanyIdsSlice &
-    DriverSlice &
+    UserSlice &
     StateModalSlice
 >()((...a) => ({
   ...createManifestIdsSlice(...a),
@@ -67,7 +67,7 @@ const useBoundStore = create<
   ...createCODSlice(...a),
   ...createCompanySlice(...a),
   ...createCompanyIdsSlice(...a),
-  ...createDriverSlice(...a),
+  ...createUserSlice(...a),
   ...createStateModalSlice(...a),
 }));
 

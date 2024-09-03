@@ -36,9 +36,10 @@ export function useShipmentsIdData({ manifest }: IOptionalProps) {
 
       return rawData ?? [];
     },
-    retry: 1,
+    retry: 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    retryOnMount: false,
     enabled: !!manifest,
   });
 
@@ -83,9 +84,10 @@ export function usePiecesIdData({ id }: IOptionalProps) {
 
       return rawData ?? [];
     },
-    retry: 1,
+    retry: 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    retryOnMount: false,
   });
 
   return piecesIdData;
@@ -129,9 +131,10 @@ export function useCommentsIdData({ id }: IOptionalProps) {
 
       return rawData ?? [];
     },
-    retry: 3,
+    retry: 0,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    retryOnMount: false,
   });
 
   return piecesIdData;

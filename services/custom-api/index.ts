@@ -1,6 +1,7 @@
 export {
-  fetchDriverData,
   fetchAuth0UserInfo,
+  fetchDriverDataByAuth0,
+  fetchUserData,
   fetchCompanyData,
   fetchManifestByIdData,
   fetchManifestData,

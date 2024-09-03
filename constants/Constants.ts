@@ -13,6 +13,7 @@ export const defaultLocation = { lat: 18.220833, lng: -66.590149 };
 export const queryKeys = {
   userInfoData: "userInfoData",
   driverData: "driverData",
+  userData: "userData",
   companyData: "companyData",
   statusIdData: "statusIdData",
   statusByIdData: "statusByIdData",
