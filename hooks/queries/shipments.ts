@@ -47,6 +47,10 @@ export function useShipmentsIdData({ manifest }: IOptionalProps) {
 }
 
 export function useShipmentsByIdData(ids: number[]) {
+  if (ids == null) {
+    console.error("🚀 ~ file: shipments.ts:52 ~ useShipmentsByIdData ~ ids:", ids);
+    return;
+  }
   const shipmentsByIdData = useQueries({
     queries: ids?.map((id) => ({
       queryKey: [`${queryKeys.shipmentsByIdData}-${id}`],

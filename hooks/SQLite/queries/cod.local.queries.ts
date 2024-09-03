@@ -54,8 +54,11 @@ export function dropCODTable() {
  * @returns A Promise that resolves with an object containing:
  * Rejects with an error message on failure.
  */
-export function insertMultipleCOD(cods: ICODData[]) {
+export function insertMultipleCOD(codArr: ICODData[]) {
     return new Promise((resolve: (value: { message: string, idsInserted: number[] }) => void, reject) => {
+        const codMap = new Map<number, ICODData>();
+        codArr.forEach(v => codMap.set(v.codTypeID, v));
+        const cods = [...codMap.values()];
         filterDuplicatedCODS(cods).then(({ notExistingIds }) => {
             if (notExistingIds.length > 0) {
                 const codsToInsert = cods.filter((v) =>
