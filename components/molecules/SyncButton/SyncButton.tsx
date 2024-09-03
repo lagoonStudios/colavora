@@ -7,17 +7,20 @@ import { useTranslation } from "react-i18next";
 import { useThemeColor } from "@components/Themed";
 import { useColorScheme } from "@components/useColorScheme";
 import { useIsConnected } from "react-native-offline";
+import { useState } from "react";
 
 export default function SyncButton() {
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
-  const { setVisible, setModal } = useStore();
+  const { setVisible, setModal, user } = useStore();
   const theme = useThemeColor({}, "primary");
   const colorScheme = useColorScheme();
   const isConnected = useIsConnected();
+  const [disableActions, setDisableActions] = useState(false);
   // --- END: Hooks ------------------------------------------------------------
   // --- Data and handlers -----------------------------------------------------
   const handleClearCache = () => {
+    console.log("PRESSED");
     if (!isConnected) {
       console.log({ isConnected });
       Alert.alert(t("NETWORK_ERROR.TITLE"), t("NETWORK_ERROR.DESCRIPTION"));
@@ -36,19 +39,24 @@ export default function SyncButton() {
           text: t("COMMON.ACCEPT"),
           onPress: () => {
             setModal(t("SYNC_BUTTON.CLEANING"));
-            resetDatabase()
-              .then(() => {
-                setVisible(false);
-                Toast.show(t("SYNC_BUTTON.SUCCESS"));
-              })
-              .catch((error) => {
-                setVisible(false);
-                Toast.show(t("SYNC_BUTTON.ERROR"));
-                console.error(
-                  "🚀 ~ file: SyncButton.tsx:26 ~ resetDatabase ~ error:",
-                  error
-                );
-              });
+            if (user) {
+              setDisableActions(true);
+              resetDatabase(user, { t, setModalMessage: setModal })
+                .then(() => {
+                  setDisableActions(false);
+                  setVisible(false);
+                  Toast.show(t("SYNC_BUTTON.SUCCESS"));
+                })
+                .catch((error) => {
+                  setDisableActions(false);
+                  setVisible(false);
+                  Toast.show(t("SYNC_BUTTON.ERROR"));
+                  console.error(
+                    "🚀 ~ file: SyncButton.tsx:26 ~ resetDatabase ~ error:",
+                    error
+                  );
+                });
+            }
           },
         },
       ],
@@ -61,6 +69,7 @@ export default function SyncButton() {
   // --- END: Data and handlers ------------------------------------------------
   return (
     <Button
+      disabled={disableActions}
       onPress={handleClearCache}
       label={t("SYNC_BUTTON.TITLE")}
       style={{ backgroundColor: theme.default }}

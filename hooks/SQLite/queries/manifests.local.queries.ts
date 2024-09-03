@@ -54,7 +54,7 @@ export function dropManifestTable() {
  * @throws {Error}  - Rejects with an error if there is a problem with the database operation.
  */
 export function insertMultipleManifests(manifests: IFetchManifestByIdData[]) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve: (value: { message: string, idsInserted: string[] }) => void, reject) => {
         const incomingIds = manifests.map(v => v.manifest).filter(id => id != null);
         filterManifestsIds(incomingIds).then((returnedData) => {
             if (returnedData.length > 0) {

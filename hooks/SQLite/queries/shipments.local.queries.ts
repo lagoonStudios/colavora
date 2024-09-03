@@ -153,7 +153,7 @@ export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
                     INSERT INTO shipments 
                     (
                     companyID,
-                    shipmentID ,
+                    shipmentID,
                     waybill,
                     serviceType,
                     ServiceTypeName,
@@ -197,14 +197,13 @@ export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
                     ) 
                     VALUES ${shipmentsToInsert.join(',')};
                     `,
-                    shipmentsToInsert
                 ).then(() => {
                     resolve({
-                        message: `Ids inserted correctly}`,
+                        message: `Ids inserted correctly`,
                         idsInserted: returnedData
                     });
                 }).catch(error => {
-                    console.error("🚀 ~ insertMultipleShipments ~ error:", error);
+                    console.error("🚀 ~ file: shipments.local.queries.ts:207 ~ insertMultipleShipments ~ error:", error);
                     reject(error);
                 });
             } else {

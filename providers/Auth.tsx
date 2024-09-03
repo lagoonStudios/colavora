@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Auth0Provider } from "react-native-auth0";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "@stores/AuthContext";
-import { resetDatabase } from "@hooks/SQLite";
+import { dropTables } from "@hooks/SQLite";
 
 export default function AuthProvider({
   children,
   clientId,
-  domain
+  domain,
 }: {
   children: React.ReactNode;
   domain: string;
@@ -26,7 +26,7 @@ export default function AuthProvider({
 
   const logout = () => {
     setToken("");
-    resetDatabase();
+    dropTables();
     setIsLoggedIn(false);
     AsyncStorage.removeItem("auth0:token");
     AsyncStorage.removeItem("auth0:email");
@@ -37,9 +37,9 @@ export default function AuthProvider({
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
     const checkCredentials = async () => {
-      const localToken = await AsyncStorage.getItem("auth0:token")
+      const localToken = await AsyncStorage.getItem("auth0:token");
       const remainToken = token || localToken;
-      setIsLoggedIn(Boolean(remainToken))
+      setIsLoggedIn(Boolean(remainToken));
     };
 
     checkCredentials();
@@ -47,10 +47,7 @@ export default function AuthProvider({
 
   // --- END: Side effects ------------------------------------------------
   return (
-    <Auth0Provider
-      domain={domain}
-      clientId={clientId}
-    >
+    <Auth0Provider domain={domain} clientId={clientId}>
       <AuthContext.Provider value={{ token, isLoggedIn, saveToken, logout }}>
         {children}
       </AuthContext.Provider>
