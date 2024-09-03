@@ -95,7 +95,7 @@ export default function ShipmentActionsException({
       Alert.alert("Error", "Please select a reason");
       return;
     }
-    setStateModal(t("MODAL.CEATING_EXCEPTION"));
+    setStateModal(t("MODAL.CREATING_EXCEPTION"));
     mutate({
       companyID: companyID,
       userID: user?.userID,

@@ -59,12 +59,18 @@ export interface IFetchPiecesByIdData {
 export interface IOptionalShipmentProps extends IOptionalProps {
   readyDate?: string;
 }
-export interface IOptionalPiecesProps extends IOptionalShipmentProps {}
+export interface IOptionalPiecesProps extends IOptionalShipmentProps { }
 export interface IOptionalCommentsProps extends IOptionalShipmentProps {
   userID?: number;
   shipmentID?: number;
   comment?: string;
   createdDate?: string;
+}
+export interface IRequiredCommentsProps {
+  shipmentID: number;
+  comment: string;
+  companyID: string;
+  createdDate: string;
 }
 
 export interface IOptionalExceptionProps extends IOptionalCommentsProps {

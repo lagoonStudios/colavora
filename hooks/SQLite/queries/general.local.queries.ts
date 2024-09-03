@@ -1,9 +1,11 @@
-import { createCODTable, dropCODTable } from "./cod.local.queries";
-import { createCommentsTable, dropCommentsTable } from "./comments.local.queries";
-import { createExceptionsTable, dropExceptionsTable } from "./exceptions.local.queries";
-import { createManifestsTable, dropManifestTable, getAllManifestsCount } from "./manifests.local.queries";
-import { createPiecesTable, dropPiecesTable } from "./pieces.local.queries";
-import { createShipmentTable, dropShipmentTable, getTodaysShipments } from "./shipments.local.queries";
+import { fetchData, fetchDataOptions } from "@utils/functions";
+import { createCODTable } from "./cod.local.queries";
+import { createCommentsTable, dropCommentsTable, insertMultipleComments } from "./comments.local.queries";
+import { createExceptionsTable } from "./exceptions.local.queries";
+import { createManifestsTable, dropManifestTable, getAllManifestsCount, insertMultipleManifests } from "./manifests.local.queries";
+import { createPiecesTable, dropPiecesTable, insertMultiplePieces } from "./pieces.local.queries";
+import { createShipmentTable, dropShipmentTable, getTodaysShipments, insertMultipleShipments } from "./shipments.local.queries";
+import { IFetchUserData } from "@constants/types/general";
 
 
 
@@ -27,27 +29,64 @@ export function createAllDBTables() {
     });
 }
 
-
-export function resetDatabase() {
+export function dropTables() {
     return new Promise((resolve: (value: string) => void, reject) => {
-        console.info("🚀 ~ file: general.local.queries.ts:33 ~ resetDatabase 'NEED TO COMPLETE THIS FUNCTION'");
-        // TODO Obtener toda la data, guardarla en un array y luego borrar las tablas, esperar a que se vuelvan a crear y luego insertar los datos
-        // TODO Para evitar que se pierda información al sincronizar.
         Promise.all([
             dropManifestTable(),
             dropShipmentTable(),
             dropPiecesTable(),
             dropCommentsTable(),
         ]).then(() => {
-            createAllDBTables().then(() => {
-                resolve("Database started correctly");
-            }).catch((error) => {
-                console.error("🚀 ~ file: general.local.queries.ts:44 ~ resetDatabase ~ createAllDBTables ~ error:", error);
+            resolve("Tables dropped correctly");
+        }).catch(error => {
+            console.error("🚀 ~ file: general.local.queries.ts:44 ~ dropTables ~ error:", error);
+            reject(error);
+        });
+    });
+}
+
+export function resetDatabase(user: IFetchUserData, options?: fetchDataOptions) {
+    return new Promise(async (resolve: (value: string) => void, reject) => {
+        fetchData(user, options).then(data => {
+            dropTables().then(() => {
+                createAllDBTables().then(() => {
+                    const { manifests, shipments, pieces, comments } = data;
+
+                    if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.SAVING_MANIFESTS") || "Saving manifests")
+                    insertMultipleManifests(manifests).then(() => {
+                        if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.SAVING_SHIPMENTS") || "Saving shipments")
+                        insertMultipleShipments(shipments.splice(30, 30)).then(() => {
+                            if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.SAVING_PIECES") || "Saving pieces")
+                            Promise.all([
+                                insertMultiplePieces(pieces),
+                                insertMultipleComments(comments)
+                            ]).then(() => {
+                                console.log("DATABASE RESETEADA CORRECTAMENTE");
+                                resolve("")
+                            }).catch(error => {
+                                console.error("🚀 ~ file: general.local.queries.ts:54 ~ requiring pieces and comments ~ error:", error);
+                                reject(error)
+                            })
+                        })
+                            .catch(error => {
+                                console.error("🚀 ~ file: general.local.queries.ts:55 ~ insertMultipleShipments ~ error:", error);
+                                reject(error);
+                            });
+                    }).catch(error => {
+                        console.error("🚀 ~ file: general.local.queries.ts:49 ~ insertMultipleManifests ~ error:", error);
+                        reject(error);
+                    })
+                }).catch((error) => {
+                    console.error("🚀 ~ file: general.local.queries.ts:44 ~ resetDatabase ~ createAllDBTables ~ error:", error);
+                    reject(error);
+                });
+
+            }).catch(error => {
+                console.error("🚀 ~ file: general.local.queries.ts:16 ~ resetDatabase ~ error:", error);
                 reject(error);
             });
-
         }).catch(error => {
-            console.error("🚀 ~ file: general.local.queries.ts:16 ~ resetDatabase ~ error:", error);
+            console.error("🚀 ~ file: general.local.queries.ts:37 ~ fetchData ~ error:", error);
             reject(error);
         });
     });

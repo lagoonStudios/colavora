@@ -37,7 +37,15 @@
     "MODAL": {
       "TEST": "Texto de Prueba para el Modal",
       "COMPLETING": "Completando orden...",
-      "CEATING_EXCEPTION": "Creando excepción"
+      "CREATING_EXCEPTION": "Creando excepción",
+      "FETCHING_MANIFESTS": "Buscando manifiestos...",
+      "FETCHING_SHIPMENTS": "Buscando ordenes...",
+      "FETCHING_PIECES": "Buscando piezas...",
+      "FETCHING_COMMENTS": "Buscando comentarios...",
+      "SAVING_MANIFESTS": "Guardando manifiestos...",
+      "SAVING_SHIPMENTS": "Guardando ordenes...",
+      "SAVING_PIECES": "Guardando piezas...",
+      "SAVING_COMMENTS": "Guardando comentarios..."
     },
     "LOGIN": {
       "LOGIN": "Iniciar sesión",
