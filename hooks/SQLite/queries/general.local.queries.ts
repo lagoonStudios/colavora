@@ -51,7 +51,7 @@ export function resetDatabase(user: IFetchUserData, options?: fetchDataOptions) 
             dropTables().then(() => {
                 createAllDBTables().then(() => {
                     const { manifests, shipments, pieces, comments } = data;
-
+                    console.log({ data });
                     if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.SAVING_MANIFESTS") || "Saving manifests")
                     insertMultipleManifests(manifests).then(() => {
                         if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.SAVING_SHIPMENTS") || "Saving shipments")

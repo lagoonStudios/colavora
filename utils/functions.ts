@@ -19,92 +19,269 @@ export async function fetchData(user: IFetchUserData, options?: fetchDataOptions
     comments: IRequiredCommentsProps[]
   }) => void, reject) => {
     const createdDate = new Date("2024-08-20T00:01:00").toISOString();
-    const manifests = new Map<number, IFetchManifestByIdData>();
-    const shipments = new Map<number, IFetchShipmentByIdData>();
-    const pieces = new Map<number, IFetchPiecesByIdData>();
-    const comments = new Map<string, IRequiredCommentsProps>();
     console.log("Fetching data");
     try {
-      if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_MANIFESTS") || "Fetching manifests")
-      const manifestIdsFn = await fetchManifestData({ createdDate, companyID: user?.companyID, driverId: String(user?.driverID) })
+      fetchManifests(createdDate, user, options).then(manifests => {
+        const manifestIds = manifests.map(v => v.manifest!).filter(id => id != null);
 
-      if (manifestIdsFn?.data.length > 0) {
-        for (const manifestId of manifestIdsFn?.data) {
-          try {
-            if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_SHIPMENTS") || "Fetching shipments")
-            const shipmentsByManifest = await fetchShipmentData({ manifest: String(manifestId) })
-            if (user?.driverID && user?.companyID)
-              manifests.set(manifestId, {
-                manifest: String(manifestId),
-                companyID: user.companyID,
-                driverID: user.driverID,
-                createdDate
-              })
+        fetchShipmentsIDs(manifestIds, options).then(shipmentsIDs => {
 
-            if (shipmentsByManifest?.data.length > 0) {
-              for (const shipmentId of shipmentsByManifest.data) {
-                await Promise.all([
-                  fetchShipmentByIdData({ id: String(shipmentId) }),
-                  fetchPiecesData({ id: String(shipmentId) }),
-                  fetchCommentsByIdData({ id: String(shipmentId) })
-                ]).then(async ([detailShipment, piecesShipment, commentsShipment]) => {
-                  if (commentsShipment?.data.length > 0) {
-                    for (const comment of commentsShipment.data) {
-                      comments.set(shipmentId + '-' + comment, {
-                        comment,
-                        createdDate,
-                        companyID: user.companyID,
-                        shipmentID: detailShipment.data.shipmentID!
-                      })
-                    }
-                  }
-
-                  if (detailShipment?.data?.shipmentID)
-                    shipments.set(detailShipment.data.shipmentID, detailShipment?.data)
-
-                  if (piecesShipment?.data) {
-                    const piecesPromises: Promise<AxiosResponse<IFetchPiecesByIdData, any>>[] = [];
-                    for (const pieceId of piecesShipment.data) {
-                      const piecePromise = fetchPiecesByIdData({ id: String(pieceId) })
-                      piecesPromises.push(piecePromise)
-                    }
-                    console.log("Buscando piezas");
-                    if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_PIECES") || "Fetching shipments pieces")
-
-                    await Promise.all(piecesPromises).then((piecesResponse) => {
-                      for (const piece of piecesResponse) {
-                        if (piece?.data?.pieceID) pieces.set(piece.data.pieceID, piece.data)
-                      }
-                    }).catch(error => {
-                      console.error("🚀 ~ file: functions.ts:65 ~ Promise.all ~ error:", error);
-                      reject("🚀 ~ file: functions.ts:65 ~ fetchPiecesByIdData ~ error: " + error)
-                    })
-                  }
-                }).catch(error => {
-                  console.error("🚀 ~ file: functions.ts:67 ~ fetching shipment data ~ error:", error);
-                  reject("🚀 ~ file: functions.ts:67 ~ fetching shipment data ~ error: " + error)
-                });
-              }
-            } else reject("🚀 ~ file: functions.ts:28 ~ fetchData ~ error: Undefined data shipment Ids")
-          } catch (error) {
-            console.error("🚀 ~ file: functions.ts:70 ~ fetchShipmentData ~ error:", error);
-            reject("🚀 ~ file: functions.ts:70 ~ fetchShipmentData ~ error: " + error)
-          }
-        }
-
-        resolve({
-          manifests: [...manifests.values()],
-          shipments: [...shipments.values()].sort((a, b) => {
-            if (a.shipmentID && b.shipmentID) return a.shipmentID - b.shipmentID
-            else return 0
-          }),
-          pieces: [...pieces.values()],
-          comments: [...comments.values()]
+          Promise.all([
+            fetchShipmentsData(shipmentsIDs, options),
+            fetchPiecesDataFn(shipmentsIDs, options),
+            fetchCommentsData(shipmentsIDs, user, createdDate, options)
+          ]).then(([shipments, pieces, comments]) => {
+            resolve({
+              manifests,
+              shipments,
+              pieces,
+              comments
+            })
+          }).catch(error => {
+            console.error("🚀 ~ file: functions.ts:100 ~ Promise.all ~ error:", error);
+            reject("🚀 ~ file: functions.ts:100 ~ fetchData ~ error: " + error)
+          })
+        }).catch(error => {
+          console.error("🚀 ~ file: functions.ts:45 ~ fetchShipmentsIDs ~ error:", error);
+          reject(error)
         })
-      } else reject("🚀 ~ file: functions.ts:16 ~ fetchData ~ error: Undefined data manifest Ids")
+      }).catch(error => {
+        console.error("🚀 ~ file: functions.ts:49 ~ fetchManifests ~ error:", error);
+        reject(error)
+      });
+
+
+
+
+
+
+
+
+
+
+
+
+      // // if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_MANIFESTS") || "Fetching manifests")
+      // // const manifestIdsFn = await fetchManifestData({ createdDate, companyID: user?.companyID, driverId: String(user?.driverID) })
+
+      // // if (manifestIdsFn?.data.length > 0) {
+      // //   for (const manifestId of manifestIdsFn?.data) {
+      // //     try {
+      // //       if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_SHIPMENTS") || "Fetching shipments")
+      // //       const shipmentsByManifest = await fetchShipmentData({ manifest: String(manifestId) })
+      // //       if (user?.driverID && user?.companyID)
+      // //         manifests.set(manifestId, {
+      // //           manifest: String(manifestId),
+      // //           companyID: user.companyID,
+      // //           driverID: user.driverID,
+      // //           createdDate
+      // //         })
+
+      // //       if (shipmentsByManifest?.data.length > 0) {
+      // //         for (const shipmentId of shipmentsByManifest.data) {
+      // //           await Promise.all([
+      // //             fetchShipmentByIdData({ id: String(shipmentId) }),
+      // //             fetchPiecesData({ id: String(shipmentId) }),
+      // //             fetchCommentsByIdData({ id: String(shipmentId) })
+      // //           ]).then(async ([detailShipment, piecesShipment, commentsShipment]) => {
+      // //             if (commentsShipment?.data.length > 0) {
+      // //               for (const comment of commentsShipment.data) {
+      // //                 comments.set(shipmentId + '-' + comment, {
+      // //                   comment,
+      // //                   createdDate,
+      // //                   companyID: user.companyID,
+      // //                   shipmentID: detailShipment.data.shipmentID!
+      // //                 })
+      // //               }
+      // //             }
+
+      // //             if (detailShipment?.data?.shipmentID)
+      // //               shipments.set(detailShipment.data.shipmentID, detailShipment?.data)
+
+      // //             if (piecesShipment?.data) {
+      // //               const piecesPromises: Promise<AxiosResponse<IFetchPiecesByIdData, any>>[] = [];
+      // //               for (const pieceId of piecesShipment.data) {
+      // //                 const piecePromise = fetchPiecesByIdData({ id: String(pieceId) })
+      // //                 piecesPromises.push(piecePromise)
+      // //               }
+      // //               console.log("Buscando piezas");
+      // //               if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_PIECES") || "Fetching shipments pieces")
+
+      // //               await Promise.all(piecesPromises).then((piecesResponse) => {
+      // //                 for (const piece of piecesResponse) {
+      // //                   if (piece?.data?.pieceID) pieces.set(piece.data.pieceID, piece.data)
+      // //                 }
+      // //               }).catch(error => {
+      // //                 console.error("🚀 ~ file: functions.ts:65 ~ Promise.all ~ error:", error);
+      // //                 reject("🚀 ~ file: functions.ts:65 ~ fetchPiecesByIdData ~ error: " + error)
+      // //               })
+      // //             }
+      // //           }).catch(error => {
+      // //             console.error("🚀 ~ file: functions.ts:67 ~ fetching shipment data ~ error:", error);
+      // //             reject("🚀 ~ file: functions.ts:67 ~ fetching shipment data ~ error: " + error)
+      // //           });
+      // //         }
+      // //       } else reject("🚀 ~ file: functions.ts:28 ~ fetchData ~ error: Undefined data shipment Ids")
+      // //     } catch (error) {
+      // //       console.error("🚀 ~ file: functions.ts:70 ~ fetchShipmentData ~ error:", error);
+      // //       reject("🚀 ~ file: functions.ts:70 ~ fetchShipmentData ~ error: " + error)
+      // //     }
+      // //   }
+
+      // //   resolve({
+      // //     manifests: [...manifests.values()],
+      // //     shipments: [...shipments.values()].sort((a, b) => {
+      // //       if (a.shipmentID && b.shipmentID) return a.shipmentID - b.shipmentID
+      // //       else return 0
+      // //     }),
+      // //     pieces: [...pieces.values()],
+      // //     comments: [...comments.values()]
+      // //   })
+      // // } else reject("🚀 ~ file: functions.ts:16 ~ fetchData ~ error: Undefined data manifest Ids")
     } catch (error) {
       console.error("🚀 ~ file: functions.ts:12 ~ fetchData ~ error:", error);
       reject("🚀 ~ file: functions.ts:12 ~ fetchData ~ error: " + error);
     }
+  })
+}
+
+function fetchManifests(createdDate: string, user: IFetchUserData, options?: fetchDataOptions) {
+  return new Promise(async (resolve: (value: IFetchManifestByIdData[]) => void, reject) => {
+    const manifests = new Map<number, IFetchManifestByIdData>();
+    if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_MANIFESTS") || "Fetching manifests")
+    try {
+      const manifestIdsFn = await fetchManifestData({ createdDate, companyID: user?.companyID, driverId: String(user?.driverID) })
+      if (manifestIdsFn?.data != null) {
+        for (const manifestId of manifestIdsFn?.data) {
+          if (user?.driverID && user?.companyID)
+            manifests.set(manifestId, {
+              manifest: String(manifestId),
+              companyID: user.companyID,
+              driverID: user.driverID,
+              createdDate
+            })
+        }
+        resolve([...manifests.values()]);
+      } else {
+        console.error("🚀 ~ file: functions.ts:130 ~ fetchManifests ~ error: Undefined data manifest Ids")
+        reject("🚀 ~ file: functions.ts:130 ~ fetchManifests ~ error: Undefined data manifest Ids")
+      }
+    } catch (error) {
+      console.error("🚀 ~ file: functions.ts:122 ~ fetchManifests ~ error:", error);
+      reject(error)
+    }
+  });
+}
+
+function fetchShipmentsIDs(manifestIds: string[], options?: fetchDataOptions) {
+  return new Promise(async (resolve: (value: number[]) => void, reject) => {
+    if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_SHIPMENTS") || "Fetching shipments")
+
+    const shipmentIds = new Set<number>()
+    const shipmentsIdsPromises: Promise<AxiosResponse<number[], any>>[] = [];
+
+    for (const manifestId of manifestIds) {
+      const shipmentIdPromise = fetchShipmentData({ manifest: String(manifestId) })
+      shipmentsIdsPromises.push(shipmentIdPromise)
+    }
+
+    Promise.all(shipmentsIdsPromises).then(shipmentsIdsResponse => {
+      shipmentsIdsResponse.forEach(v => v.data.forEach(id => shipmentIds.add(id)))
+
+      resolve([...shipmentIds])
+    }).catch(error => {
+      console.error("🚀 ~ file: functions.ts:178 ~ fetchShipmentsIDs ~ error:", error);
+      reject(error)
+    })
+  });
+}
+
+
+function fetchShipmentsData(shipmentIds: number[], options?: fetchDataOptions) {
+  return new Promise(async (resolve: (value: IFetchShipmentByIdData[]) => void, reject) => {
+
+    const promises: Promise<AxiosResponse<IFetchShipmentByIdData, any>>[] = [];
+    const shipments = new Map<number, IFetchShipmentByIdData>();
+
+
+    for (const id of shipmentIds) {
+      const shipmentPromise = fetchShipmentByIdData({ id: String(id) })
+      promises.push(shipmentPromise)
+    }
+
+    Promise.all(promises).then(shipmentsResponse => {
+      for (const shipment of shipmentsResponse) {
+        if (shipment?.data?.shipmentID != null) shipments.set(shipment.data.shipmentID, shipment.data)
+      }
+      resolve([...shipments.values()])
+    }).catch(error => {
+      console.error("🚀 ~ file: functions.ts:208 ~ fetchShipmentsData ~ error:", error);
+      reject(error)
+    })
+  });
+
+}
+
+function fetchPiecesDataFn(shipmentIds: number[], options?: fetchDataOptions) {
+  return new Promise(async (resolve: (value: IFetchPiecesByIdData[]) => void, reject) => {
+
+    if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_PIECES") || "Fetching shipments pieces")
+
+    const promisesPiecesIDs: Promise<AxiosResponse<number[], any>>[] = [];
+    const pieces = new Map<number, IFetchPiecesByIdData>();
+
+    for (const id of shipmentIds) {
+      const piecesIDPromise = fetchPiecesData({ id: String(id) })
+      promisesPiecesIDs.push(piecesIDPromise)
+    }
+
+    Promise.all(promisesPiecesIDs).then(piecesResponse => {
+      const piecesPromises: Promise<AxiosResponse<IFetchPiecesByIdData, any>>[] = [];
+
+      piecesResponse.forEach(pieceRes => {
+        pieceRes.data?.forEach(pieceId => {
+          const piecePromise = fetchPiecesByIdData({ id: String(pieceId) })
+          piecesPromises.push(piecePromise)
+        });
+      })
+
+      Promise.all(piecesPromises).then(response => {
+        response.forEach(res => {
+          if (res.data?.pieceID != null) pieces.set(res.data.pieceID, res.data)
+        });
+        resolve([...pieces.values()])
+      });
+
+    }).catch(error => {
+      console.error("🚀 ~ file: functions.ts:228 ~ fetchPiecesData ~ error:", error);
+      reject(error)
+    })
+  });
+}
+
+
+function fetchCommentsData(shipmentIds: number[], user: IFetchUserData, createdDate: string, options?: fetchDataOptions) {
+  return new Promise(async (resolve: (value: IRequiredCommentsProps[]) => void, reject) => {
+    const comments = new Map<string, IRequiredCommentsProps>();
+
+    for (const shipmentId of shipmentIds) {
+      try {
+        const commentsByShipment = (await fetchCommentsByIdData({ id: String(shipmentId) })).data
+        if (commentsByShipment != null) {
+          for (const comment of commentsByShipment) {
+            comments.set(shipmentId + '-' + comment, {
+              comment,
+              createdDate,
+              companyID: user.companyID,
+              shipmentID: shipmentId!
+            })
+          }
+        }
+      } catch (error) {
+        console.error("🚀 ~ file: functions.ts:253 ~ returnnewPromise ~ error:", error);
+        reject(error)
+      }
+    }
+    resolve([...comments.values()])
   })
 }

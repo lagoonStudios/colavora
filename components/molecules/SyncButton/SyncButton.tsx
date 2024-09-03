@@ -41,7 +41,7 @@ export default function SyncButton() {
             if (user) {
               setDisableActions(true);
               resetDatabase(user, { t, setModalMessage: setModal })
-                .then(() => {
+                .then((res) => {
                   setDisableActions(false);
                   setVisible(false);
                   Toast.show(t("SYNC_BUTTON.SUCCESS"));
