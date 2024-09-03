@@ -55,8 +55,11 @@ export function dropExceptionsTable() {
  * @returns A Promise that resolves with an object containing:
  * Rejects with an error message on failure.
  */
-export function insertMultipleExceptions(exceptions: IReasonsByIdData[]) {
+export function insertMultipleExceptions(exceptionsArr: IReasonsByIdData[]) {
     return new Promise((resolve, reject) => {
+        const exceptionsMap = new Map<number, IReasonsByIdData>();
+        exceptionsArr.forEach(v => exceptionsMap.set(v.reasonID, v));
+        const exceptions = [...exceptionsMap.values()];
         filterDuplicatedExceptions(exceptions).then(({ notExistingIds }) => {
 
             if (notExistingIds.length > 0) {
