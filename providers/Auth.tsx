@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Auth0Provider } from "react-native-auth0";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "@stores/AuthContext";
+import { resetDatabase } from "@hooks/SQLite";
 
 export default function AuthProvider({
   children,
@@ -25,6 +26,7 @@ export default function AuthProvider({
 
   const logout = () => {
     setToken("");
+    resetDatabase();
     setIsLoggedIn(false);
     AsyncStorage.removeItem("auth0:token");
     AsyncStorage.removeItem("auth0:email");
