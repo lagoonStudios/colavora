@@ -39,7 +39,7 @@ export function fetchPiecesByIdData({
 }
 
 export function fetchCommentsByIdData({
-  id,
+  id
 }: IOptionalCommentsProps): Promise<AxiosResponse<string[]>> {
   return axiosClient.get(`shipment/shipment/comment`, {
     params: { shipmentId: Number(id) },

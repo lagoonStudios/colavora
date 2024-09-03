@@ -17,7 +17,7 @@ export function useShipmentFetch() {
       manifest: todayManifest ? String(todayManifest) : undefined,
     });
 
-  const { data: shipments, pending } = useShipmentsByIdData(shipmentIds ?? []);
+  const dataShipments = useShipmentsByIdData(shipmentIds ?? []);
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
@@ -31,13 +31,13 @@ export function useShipmentFetch() {
   }, [shipmentIds]);
 
   useEffect(() => {
-    if (pending === false)
-      if (shipments?.length && shipments?.length !== 0)
-        insertMultipleShipments(shipments).then(() => {
+    if (dataShipments?.pending === false)
+      if (dataShipments?.data?.length && dataShipments?.data?.length !== 0)
+        insertMultipleShipments(dataShipments?.data).then(() => {
           setLoading(false);
           setSuccess(true);
         });
-  }, [shipments, pending])
+  }, [dataShipments])
   // --- END: Side effects -----------------------------------------------------
 
   return { success, loading };

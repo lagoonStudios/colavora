@@ -38,10 +38,8 @@ export function resetDatabase() {
             dropShipmentTable(),
             dropPiecesTable(),
             dropCommentsTable(),
-            dropExceptionsTable(),
-            dropCODTable()
-        ]).then((res) => {
-            createAllDBTables().then((res) => {
+        ]).then(() => {
+            createAllDBTables().then(() => {
                 resolve("Database started correctly");
             }).catch((error) => {
                 console.error("🚀 ~ file: general.local.queries.ts:44 ~ resetDatabase ~ createAllDBTables ~ error:", error);
