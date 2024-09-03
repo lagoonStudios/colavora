@@ -69,21 +69,21 @@ export function insertMultiplePieces(pieces: IFetchPiecesByIdData[]) {
             });
             const setIncomingIds = new Set(pieces.map(v => v.pieceID));
             const notExistingIds = [...setIncomingIds].filter(id => !setExistingIds.has(id!));
-            if (notExistingIds.length > 0) {
-                const piecesToInsert = pieces.filter((v) =>
-                    notExistingIds.find(id => id === v.pieceID)
-                ).map(v => `
-                    (
-                        ${v.pieceID},
-                        '${v.companyID}', 
-                        ${v.shipmentID}, 
-                        '${v.barcode}', 
-                        ${v.packageType},
-                        '${v.packageTypeName}',
-                        '${v.comments}',
-                        '${v.pwBack}',
-                        '${v.pod}'
-                    )`)
+            const piecesToInsert = pieces.filter((v) =>
+                notExistingIds.find(id => id === v.pieceID)
+            ).map(v => `
+                (
+                    ${v.pieceID},
+                    '${v.companyID}', 
+                    ${v.shipmentID}, 
+                    '${v.barcode}', 
+                    ${v.packageType},
+                    '${v.packageTypeName}',
+                    '${v.comments}',
+                    '${v.pwBack}',
+                    '${v.pod}'
+                )`)
+            if (notExistingIds.length > 0 && piecesToInsert.length > 0) {
                 db.runAsync(`
                     INSERT INTO pieces 
                     (
@@ -105,12 +105,14 @@ export function insertMultiplePieces(pieces: IFetchPiecesByIdData[]) {
                         idsInserted: notExistingIds
                     });
                 }).catch(error => {
-                    console.error("🚀 ~ insertMultiplePieces ~ error:", error);
+                    console.error("🚀 ~ file: pieces.local.queries.ts:108 ~ db.getAllAsync ~ error:", error);
                     reject(error);
                 });
             } else {
-                reject("All ids has been inserted before.")
+                resolve("All ids has been inserted before.")
             }
+        }).catch(error => {
+            console.error("🚀 ~ file: pieces.local.queries.ts:115 ~ insertMultiplePieces ~ error:", error);
         });
     });
 }
