@@ -3,5 +3,4 @@ export interface HomeItem {
   counter: string;
   route: string;
   isDisabled: boolean;
-  data?: number[];
 }
