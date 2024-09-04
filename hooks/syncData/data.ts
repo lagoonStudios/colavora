@@ -82,9 +82,6 @@ export function useDataFetch(user: IFetchUserData | null) {
       const actualDate = new Date();
       const lastDate = new Date(lastSyncDate);
       const difference = differenceInCalendarDays(actualDate, lastDate)
-
-      console.log({ difference });
-
       /* TO DO: si la diferencia de fecha es 0 requerir la local data para meterla en zustand */
       if (difference > 0) fetchDataLocally(user)
       else if (difference === 0) {
@@ -93,9 +90,8 @@ export function useDataFetch(user: IFetchUserData | null) {
             addManifestIds(manifestIds)
         }).then(() => {
           const firstManifest = manifestIds[0];
-          if (firstManifest) 
+          if (firstManifest)
             getAllShipmentIds({ manifestID: String(firstManifest) }).then((shipmentsIds) => {
-              console.log("LOCAL SHIPMENTS: ", { shipmentsIds });
             })
         }).finally(() => {
           setSyncing(false);

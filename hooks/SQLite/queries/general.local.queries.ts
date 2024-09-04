@@ -51,7 +51,6 @@ export function resetDatabase(user: IFetchUserData, options?: fetchDataOptions) 
             dropTables().then(() => {
                 createAllDBTables().then(() => {
                     const { manifests, shipments, pieces, comments } = data;
-                    console.log({ data });
                     if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.SAVING_MANIFESTS") || "Saving manifests")
                     insertMultipleManifests(manifests).then(() => {
                         if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.SAVING_SHIPMENTS") || "Saving shipments")
@@ -61,7 +60,6 @@ export function resetDatabase(user: IFetchUserData, options?: fetchDataOptions) 
                                 insertMultiplePieces(pieces),
                                 insertMultipleComments(comments)
                             ]).then(() => {
-                                console.log("DATABASE RESETEADA CORRECTAMENTE");
                                 resolve("")
                             }).catch(error => {
                                 console.error("🚀 ~ file: general.local.queries.ts:54 ~ requiring pieces and comments ~ error:", error);
