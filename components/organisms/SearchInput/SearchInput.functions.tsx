@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { SearchItem, UseSearchDataProps } from "./SearchInput.types";
 import { debounce } from "@utils/index";
-import { searchShipments } from "@hooks/SQLite/shipments.local.queries";
+import { searchShipments } from "@hooks/SQLite";
 
 export const useSearchData = ({ text }: UseSearchDataProps) => {
   const [open, setOpen] = useState(false);
