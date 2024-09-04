@@ -171,3 +171,20 @@ export function filterManifestsIds(ids: string[]) {
 
 
 }
+
+/**
+ * Retrieves all the manifest IDs from the 'manifests' table.
+ * @returns A promise that resolves to an array of manifest IDs.
+ */
+export function getAllManifestIds() {
+    return new Promise((resolve: (value: number[]) => void, reject) => {
+        db.getAllAsync(`
+            SELECT manifest FROM manifests
+            `).then((res) => {
+            const manifestIds: number[] = res as any[];
+            resolve(manifestIds)
+        }).catch(error => {
+            reject(error);
+        });
+    });
+}
