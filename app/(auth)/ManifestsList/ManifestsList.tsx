@@ -24,8 +24,6 @@ export default function ManifestsList() {
   );
   // --- END: Data and handlers ------------------------------------------------
 
-  // --- Side effects ----------------------------------------------------------
-  // --- END: Side effects -----------------------------------------------------
   return (
     <View style={styles.container}>
       <PageHeader

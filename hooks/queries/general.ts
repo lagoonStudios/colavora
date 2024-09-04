@@ -128,6 +128,7 @@ export function useReasonsIdData(companyID: string | undefined) {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     retryOnMount: false,
+    enabled: !!companyID,
   });
 
   return reasonsIdData;
@@ -169,6 +170,7 @@ export function useCODIdData(companyID: string | undefined) {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     retryOnMount: false,
+    enabled: !!companyID
   });
 
   return reasonsIdData;

@@ -5,28 +5,23 @@ import { FlatList, Pressable } from "react-native";
 
 import styles from "./Home.styles";
 import { HomeItem } from "./Home.types";
+import { useStore } from "@stores/zustand";
 import { useHomeData } from "./Home.functions";
+import SearchInput from "@organisms/SearchInput";
 import { SafeAreaView } from "@atoms/SafeAreaView";
 import { ActivityIndicator, Text } from "@components/Themed";
-import { useStore } from "@stores/zustand";
-import SearchInput from "@organisms/SearchInput";
 
 export default function Home() {
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
-  const { addManifestIds } = useStore();
   const { data, loading } = useHomeData();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
   const renderItem = ({ item }: { item: HomeItem }) => {
-    /* const setManifestIdsHandler = () => {
-      if (item?.data) addManifestIds(item.data);
-    }; */
-
     return (
       <Link href={"(tabs)/" + item.route} asChild disabled={item.isDisabled}>
-        <Pressable style={styles.item} /* onPress={setManifestIdsHandler} */>
+        <Pressable style={styles.item}>
           <Text style={styles.description}>{t(item.description)}</Text>
           {loading ? (
             <ActivityIndicator style={styles.loader} />

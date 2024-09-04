@@ -2,10 +2,9 @@ import { useStore } from "@stores/zustand";
 import { useEffect } from "react";
 
 /** Gets the sync period (in minutes) from the store and sets up a timer to sync the data every syncPeriod minutes */
-export const useSyncLocalData = () => {
+export const useSyncDataByPeriod = () => {
   // --- Hooks -----------------------------------------------------------------
   const { syncPeriod, setSyncing } = useStore();
-
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------

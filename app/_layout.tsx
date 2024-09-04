@@ -11,16 +11,16 @@ import {
 } from "@react-navigation/native";
 import "react-native-reanimated";
 import "@/lang/i18n";
-import { RootSiblingParent } from "react-native-root-siblings";
 
-import { useColorScheme } from "@components/useColorScheme";
+import { StateModal } from "@atoms/Modal";
+import { queryClient } from "@/providers";
 import AuthProvider from "@/providers/Auth";
 import { useAuth0Config } from "@hooks/Auth";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { queryClient } from "@/providers";
-import { StateModal } from "@atoms/Modal";
 import { useDefaultLanguage } from "@hooks/index";
 import { NetworkProvider } from "react-native-offline";
+import { useColorScheme } from "@components/useColorScheme";
+import { RootSiblingParent } from "react-native-root-siblings";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -42,15 +42,6 @@ export default function RootLayout() {
     clientId: authClientId,
   } = useAuth0Config();
   // --- END: Hooks ------------------------------------------------------------
-
-  // --- Local state -----------------------------------------------------------
-  // --- END: Local state ------------------------------------------------------
-
-  // --- Refs ------------------------------------------------------------------
-  // --- END: Refs -------------------------------------------------------------
-
-  // --- Redux -----------------------------------------------------------------
-  // --- END: Redux ------------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
@@ -79,21 +70,6 @@ function RootLayoutNav(props: { authDomain: string; authClientId: string }) {
   const colorScheme = useColorScheme();
   const { authDomain, authClientId } = props;
   // --- END: Hooks ------------------------------------------------------------
-
-  // --- Local state -----------------------------------------------------------
-  // --- END: Local state ------------------------------------------------------
-
-  // --- Refs ------------------------------------------------------------------
-  // --- END: Refs -------------------------------------------------------------
-
-  // --- Redux -----------------------------------------------------------------
-  // --- END: Redux ------------------------------------------------------------
-
-  // --- Side effects ----------------------------------------------------------
-  // --- END: Side effects -----------------------------------------------------
-
-  // --- Data and handlers -----------------------------------------------------
-  // --- END: Data and handlers ------------------------------------------------
 
   return (
     <NetworkProvider>

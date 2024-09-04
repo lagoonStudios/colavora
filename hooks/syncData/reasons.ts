@@ -4,12 +4,13 @@ import i18next from "i18next";
 import { useEffect } from "react";
 import { useStore } from "@stores/zustand";
 import { insertMultipleExceptions } from "@hooks/SQLite";
+import { IFetchUserData } from "@constants/types/general";
 
-export function useReasonsFetch() {
+export function useReasonsFetch(user: IFetchUserData | null) {
   // --- Hooks -----------------------------------------------------------------
   const { addReasonIds, reasonIds, addReason, reasons } = useStore();
 
-  const { data: reasonsIds } = useReasonsIdData(String(mockCompanyId));
+  const { data: reasonsIds } = useReasonsIdData(user?.companyID);
   const { data: reasonsResponse, pending } = useReasonsByIdData(reasonIds, i18next.language);
   // --- END: Hooks ------------------------------------------------------------
 

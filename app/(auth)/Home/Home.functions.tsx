@@ -7,7 +7,7 @@ import { HomeItem } from "./Home.types";
 
 export function useHomeData() {
   // --- Hooks -----------------------------------------------------------------  
-  const { manifestIds, shipmentIds } = useStore();
+  const { manifestIds, isSyncing } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local state -----------------------------------------------------------
@@ -19,18 +19,14 @@ export function useHomeData() {
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    getHomeCounters().then((data) => {
-      setTotalManifests(data.manifests)
-      setTotalOrdersForToday(data.todayShipments)
-    })
-  }, [])
-
-  useEffect(() => {
-    getHomeCounters().then((data) => {
-      setTotalManifests(data.manifests)
-      setTotalOrdersForToday(data.todayShipments)
-    })      
-  }, [manifestIds, shipmentIds])
+    if (isSyncing === false)
+      if (manifestIds?.length !== 0) {
+        getHomeCounters().then((data) => {
+          setTotalManifests(data.manifests)
+          setTotalOrdersForToday(data.todayShipments)
+        })
+      }
+  }, [isSyncing, manifestIds])
 
   useEffect(() => {
     if (totalManifests && totalOrdersForToday)
