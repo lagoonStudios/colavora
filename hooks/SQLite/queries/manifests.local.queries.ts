@@ -181,8 +181,8 @@ export function getAllManifestIds() {
         db.getAllAsync(`
             SELECT manifest FROM manifests
             `).then((res) => {
-            const manifestIds: number[] = res as any[];
-            resolve(manifestIds)
+            const manifestIds: { manifest: string }[] = res as { manifest: string }[];
+            resolve(manifestIds?.map(({ manifest }) => Number(manifest)))
         }).catch(error => {
             reject(error);
         });
