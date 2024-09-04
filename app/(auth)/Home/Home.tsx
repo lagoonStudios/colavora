@@ -5,7 +5,6 @@ import { FlatList, Pressable } from "react-native";
 
 import styles from "./Home.styles";
 import { HomeItem } from "./Home.types";
-import { useStore } from "@stores/zustand";
 import { useHomeData } from "./Home.functions";
 import SearchInput from "@organisms/SearchInput";
 import { SafeAreaView } from "@atoms/SafeAreaView";
