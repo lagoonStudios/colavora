@@ -45,7 +45,8 @@
       "SAVING_MANIFESTS": "Guardando manifiestos...",
       "SAVING_SHIPMENTS": "Guardando ordenes...",
       "SAVING_PIECES": "Guardando piezas...",
-      "SAVING_COMMENTS": "Guardando comentarios..."
+      "SAVING_COMMENTS": "Guardando comentarios...",
+      "FETCHING_USER": "Buscando informacion del usuario"
     },
     "LOGIN": {
       "LOGIN": "Iniciar sesión",

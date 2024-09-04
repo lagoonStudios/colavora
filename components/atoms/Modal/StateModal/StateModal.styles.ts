@@ -26,4 +26,7 @@ export const styles = StyleSheet.create({
     height: 120,
     transform: [{ scaleX: 3 }, { scaleY: 3 }],
   },
+  text: {
+    textAlign: "center",
+  }
 });

@@ -45,7 +45,8 @@
       "SAVING_MANIFESTS": "Saving manifests...",
       "SAVING_SHIPMENTS": "Saving shipments...",
       "SAVING_PIECES": "Saving pieces...",
-      "SAVING_COMMENTS": "Saving comments..."
+      "SAVING_COMMENTS": "Saving comments...",
+      "FETCHING_USER": "Fetching user info..."
     },
     "LOGIN": {
       "LOGIN": "Login",
