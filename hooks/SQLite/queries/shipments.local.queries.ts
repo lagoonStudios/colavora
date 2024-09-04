@@ -322,3 +322,27 @@ export function updateShipmentStatus({ shipmentId, status }: { shipmentId: numbe
 
     });
 }
+
+/**
+ * Retrieves all the shipment IDs from the 'shipments' table where manifest match with the given one.
+ * @returns A promise that resolves to an array of shipments IDs.
+ */
+export function getAllShipmentIds({ manifestID }: { manifestID: string }) {
+    return new Promise((resolve: (value: { shipmentID: number, manifest: string }[]) => void, reject) => {
+        console.log(manifestID);
+        db.getAllAsync(`
+            SELECT
+                shipmentID,
+                manifest
+            FROM
+                shipments
+            WHERE
+                manifest = ?
+            `, [manifestID]).then((res) => {
+            const shipmentIds: { shipmentID: number, manifest: string }[] = res as { shipmentID: number, manifest: string }[];
+            resolve(shipmentIds)
+        }).catch(error => {
+            reject(error);
+        });
+    });
+}

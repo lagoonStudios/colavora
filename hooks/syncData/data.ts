@@ -1,11 +1,11 @@
+import { differenceInCalendarDays } from 'date-fns';
 import { useState, useEffect, useMemo, useCallback } from "react";
 
 import { useStore } from "@stores/zustand";
 import { IFetchUserData } from "@constants/types/general";
 import { useTranslation } from "react-i18next";
 import { fetchData } from "@utils/functions";
-import { differenceInCalendarDays } from 'date-fns';
-import { insertMultipleManifests, insertMultipleShipments } from "@hooks/SQLite";
+import { getAllManifestIds, getAllShipmentIds, getShipmentList, insertMultipleManifests, insertMultipleShipments } from "@hooks/SQLite";
 import { insertMultipleComments } from "@hooks/SQLite/queries/comments.local.queries";
 import { insertMultiplePieces } from "@hooks/SQLite/queries/pieces.local.queries";
 
@@ -18,11 +18,13 @@ export function useDataFetch(user: IFetchUserData | null) {
 
   // --- Hooks -----------------------------------------------------------------
   const {
-    addManifestIds,
     setModal,
     setVisible,
     setSyncing,
     setLastSyncDate,
+    addManifestIds,
+    addShipmentIds,
+    manifestIds,
     lastSyncDate
   } = useStore();
   const { t } = useTranslation();
@@ -43,23 +45,28 @@ export function useDataFetch(user: IFetchUserData | null) {
 
   const fetchDataLocally = useCallback((user: IFetchUserData) => {
     setSyncing(true);
-      fetchData(user, { 
-        t, 
-        optionalDate: createdDate, 
-        setModalMessage: setModal, 
-      }).then((values) => {
-        setLastSyncDate(new Date().toISOString());
-        insertMultipleManifests(values.manifests).then(() => {
-          insertMultipleShipments(values.shipments).then(() => {
-            insertMultipleComments(values.comments);
-            insertMultiplePieces(values.pieces);
-          });
-        });
+    fetchData(user, {
+      t,
+      optionalDate: createdDate,
+      setModalMessage: setModal,
+    }).then((values) => {
+      setLastSyncDate(new Date().toISOString());
+      const manifestIdsFromFetching = values.manifests.map(({ manifest }) => Number(manifest))
 
-        addManifestIds(values.manifests.map(({ manifest }) => Number(manifest)))
-        setSyncing(false);
-        setVisible(false);
-      })
+      insertMultipleManifests(values.manifests).then(() => {
+        insertMultipleShipments(values.shipments).then(() => {
+          insertMultipleComments(values.comments);
+          insertMultiplePieces(values.pieces);
+
+          if (manifestIdsFromFetching.length > 0)
+            addManifestIds(values.manifests.map(({ manifest }) => Number(manifest)))
+
+        });
+      });
+
+      setSyncing(false);
+      setVisible(false);
+    })
       .catch(() => {
         setSyncing(false);
         setVisible(false);
@@ -71,14 +78,32 @@ export function useDataFetch(user: IFetchUserData | null) {
   useEffect(() => {
     if (user && lastSyncDate === null) {
       fetchDataLocally(user)
-    } else if(user && lastSyncDate !== null){
+    } else if (user && lastSyncDate !== null) {
       const actualDate = new Date();
       const lastDate = new Date(lastSyncDate);
-      
+      const difference = differenceInCalendarDays(actualDate, lastDate)
+
+      console.log({ difference });
+
       /* TO DO: si la diferencia de fecha es 0 requerir la local data para meterla en zustand */
-      if(differenceInCalendarDays(actualDate, lastDate) > 0) fetchDataLocally(user)
+      if (difference > 0) fetchDataLocally(user)
+      else if (difference === 0) {
+        getAllManifestIds().then((manifestIds) => {
+          if (manifestIds.length > 0)
+            addManifestIds(manifestIds)
+        }).then(() => {
+          const firstManifest = manifestIds[0];
+          if (firstManifest) 
+            getAllShipmentIds({ manifestID: String(firstManifest) }).then((shipmentsIds) => {
+              console.log("LOCAL SHIPMENTS: ", { shipmentsIds });
+            })
+        }).finally(() => {
+          setSyncing(false);
+          setVisible(false);
+        })
+      }
     }
-  }, [user])
+  }, [user, lastSyncDate])
   // --- END: Side effects -----------------------------------------------------
 
   return { success };
