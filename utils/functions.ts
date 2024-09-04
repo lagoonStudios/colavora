@@ -111,7 +111,7 @@ function fetchShipmentsIDs(manifestIds: string[], options?: fetchDataOptions) {
 
 function fetchShipmentsData(shipmentIds: number[], options?: fetchDataOptions) {
   return new Promise(async (resolve: (value: IFetchShipmentByIdData[]) => void, reject) => {
-
+    if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_SHIPMENTS") || "Fetching shipments")
     const promises: Promise<AxiosResponse<IFetchShipmentByIdData, any>>[] = [];
     const shipments = new Map<number, IFetchShipmentByIdData>();
 
@@ -175,6 +175,7 @@ function fetchPiecesDataFn(shipmentIds: number[], options?: fetchDataOptions) {
 function fetchCommentsData(shipmentIds: number[], user: IFetchUserData, createdDate: string, options?: fetchDataOptions) {
   return new Promise(async (resolve: (value: IRequiredCommentsProps[]) => void, reject) => {
     const comments = new Map<string, IRequiredCommentsProps>();
+    if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.SAVING_COMMENTS") || "Fetching shipments pieces")
 
     for (const shipmentId of shipmentIds) {
       try {
