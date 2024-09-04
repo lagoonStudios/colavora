@@ -329,7 +329,6 @@ export function updateShipmentStatus({ shipmentId, status }: { shipmentId: numbe
  */
 export function getAllShipmentIds({ manifestID }: { manifestID: string }) {
     return new Promise((resolve: (value: { shipmentID: number, manifest: string }[]) => void, reject) => {
-        console.log(manifestID);
         db.getAllAsync(`
             SELECT
                 shipmentID,
@@ -345,4 +344,45 @@ export function getAllShipmentIds({ manifestID }: { manifestID: string }) {
             reject(error);
         });
     });
+}
+
+export function searchShipments({ q }: { q: string }) {
+    return new Promise((resolve: (value: IFetchShipmentByIdData[]) => void, reject) => {
+        if (q == null || q.trim() === "") {
+            resolve([]);
+            return;
+        }
+        db.getAllAsync(`
+            SELECT 
+                shipmentID,
+                consigneeName,
+                zip,
+                senderName,
+                serviceTypeName,
+                addressLine1,
+                addressLine2,
+                referenceNo,
+                qty
+            FROM 
+                shipments
+            WHERE
+                waybill LIKE $q OR
+                ServiceTypeName LIKE $q OR
+                codType LIKE $q OR
+                sender LIKE $q OR
+                senderName LIKE $q OR
+                consigneeName LIKE $q OR
+                addressLine1 LIKE $q OR
+                addressLine2 LIKE $q OR
+                contactPerson LIKE $q OR
+                barcode LIKE $q
+            `, { $q: `%${q}%` }).then((res) => {
+            const data = res as IFetchShipmentByIdData[];
+            resolve(data);
+        }).catch(error => {
+            console.error("🚀 ~ file: shipments.local.queries.ts:384 ~ searchShipments ~ error:", error);
+            reject(error);
+        });
+    });
+
 }
