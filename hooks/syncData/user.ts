@@ -1,23 +1,22 @@
-import { mockDriverId } from "@constants/Constants";
 import { useAuth0UserInfoData, useDriverDataByAuth0, useUserData } from "@hooks/queries";
 import { useState, useEffect } from "react";
 import { useStore } from "@stores/zustand";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "react-i18next";
 
 export function useDriverFetch() {
   // --- Local state -----------------------------------------------------------
-  const [loading, setLoading] = useState(true);
-  const [success, setSuccess] = useState(false);
   const [userEmail, setUserEmail] = useState<string>();
   const [userId, setUserId] = useState<number>();
   const [auth0Id, setAuth0Id] = useState<string>();
   // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
-  const { user, addUser } = useStore();  
+  const { t } = useTranslation();
+  const { user, addUser, setModal, setVisible } = useStore();  
   const { data: userInfo } = useAuth0UserInfoData(userEmail);
   const { data: users } = useDriverDataByAuth0(auth0Id);
-  const { data: userData, isSuccess } = useUserData(userId);  
+  const { data: userData } = useUserData(userId);  
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
@@ -35,7 +34,10 @@ export function useDriverFetch() {
   }, [])
 
   useEffect(() => {
-    if(userInfo) setAuth0Id(userInfo?.sub)
+    if(userInfo) {      
+      setModal(t("MODAL.FETCHING_USER"))
+      setAuth0Id(userInfo?.sub)
+    }
   }, [userInfo])
 
   useEffect(() => {
@@ -55,13 +57,9 @@ export function useDriverFetch() {
   }, [userData, userInfo]);
   
   useEffect(() => {
-    if (isSuccess && user) setLoading(false);
-  }, [isSuccess]);
-
-  useEffect(() => {
-    if(loading === false) setSuccess(true)
-  }, [loading])
+    if (user !== null) setVisible(false);
+  }, [user]);
   // --- END: Side effects -----------------------------------------------------
 
-  return { success, loading };
+  return;
 }

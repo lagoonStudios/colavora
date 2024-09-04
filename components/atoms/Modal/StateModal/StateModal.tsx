@@ -32,7 +32,7 @@ export default function StateModal() {
             size="large"
             color="#0075CF"
           />
-          <Text>{t(message)}</Text>
+          <Text style={styles.text}>{t(message)}</Text>
         </View>
       </View>
     </Modal>
