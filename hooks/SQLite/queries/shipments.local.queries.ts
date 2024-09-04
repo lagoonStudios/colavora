@@ -1,6 +1,7 @@
 import { db } from "../db";
 import { IFetchShipmentByIdData, ShipmentStatus } from "@constants/types/shipments";
 import { IFetchOrderListItem } from "../SQLite.types";
+import { SQLiteRunResult } from "expo-sqlite";
 
 /**
  * Creates the `shipments` table in the SQLite database if it doesn't exist.
@@ -104,106 +105,25 @@ export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
             if (returnedData.length > 0) {
                 const shipmentsToInsert = shipments.filter((v) =>
                     returnedData.find(id => id === v.shipmentID)
-                ).map(v => `
-                    (
-                        '${String(v.companyID)}', 
-                        ${Number(v.shipmentID)}, 
-                        '${String(v.waybill)}', 
-                        ${Number(v.serviceType)},
-                        '${String(v.serviceTypeName)}',
-                        ${Number(v.packageType)},
-                        datetime('${String(v.readyDate)?.replace("T", " ")}'),
-                        datetime('${String(v.dueDate)?.replace("T", " ")}'),
-                        '${String(v.codType)}',
-                        ${Number(v.codAmount)},
-                        '${String(v.sender)}',
-                        '${String(v.senderName)}',
-                        '${String(v.senderAddressLine1)}',
-                        '${String(v.senderAddressLine2)}',
-                        '${String(v.senderZip)}',
-                        '${String(v.senderPhoneNumber)}',
-                        '${String(v.senderContactPerson)}',
-                        '${String(v.orderNotes)}',
-                        '${String(v.consigneeNum)}',
-                        '${String(v.consigneeName)}',
-                        '${String(v.addressLine1)}',
-                        '${String(v.addressLine2)}',
-                        '${String(v.zip)}',
-                        '${String(v.phoneNumber)}',
-                        '${String(v.contactPerson)}',
-                        ${String(v.createdUserID)},
-                        datetime('${String(v.createdDate)?.replace("T", " ")}'),
-                        datetime('${String(v.lastTransferDate)?.replace("T", " ")}'),
-                        '${String(v.status)}',
-                        ${Number(v.qty)},
-                        '${String(v.items)}',
-                        ${Number(v.templateID)},
-                        '${String(v.manifestDL)}',
-                        '${String(v.manifestPk)}',
-                        '${String(v.manifestPk)}',
-                        ${Number(v.assignPK)},
-                        ${Number(v.assignDL)},
-                        '${String(v.division)}',
-                        '${String(v.lastEventComment)}',
-                        '${String(v.reason)}',
-                        '${String(v.barcode)}',
-                        '${String(v.referenceNo)}'
-                    )`)
-                db.runAsync(`
-                    INSERT INTO shipments 
-                    (
-                    companyID,
-                    shipmentID,
-                    waybill,
-                    serviceType,
-                    ServiceTypeName,
-                    packageType,
-                    readyDate,
-                    dueDate,
-                    codType,
-                    codAmount,
-                    sender,
-                    senderName,
-                    senderAddressLine1,
-                    senderAddressLine2,
-                    senderZip,
-                    senderPhoneNumber,
-                    senderContactPerson,
-                    orderNotes,
-                    consigneeNum,
-                    consigneeName,
-                    addressLine1,
-                    addressLine2,
-                    zip,
-                    phoneNumber,
-                    contactPerson,
-                    createdUserID,
-                    createdDate,
-                    lastTransferDate,
-                    status,
-                    qty,
-                    items,
-                    templateID,
-                    manifestDL,
-                    manifestPk,
-                    manifest,
-                    assignPK,
-                    assignDL,
-                    division,
-                    lastEventComment,
-                    reason,
-                    barcode,
-                    referenceNo
-                    ) 
-                    VALUES ${shipmentsToInsert.join(',')};
-                    `,
-                ).then(() => {
+                )
+                const promises: Promise<SQLiteRunResult>[] = [];
+
+                for (const item of shipmentsToInsert) {
+                    const parsedItem = { ...item, manifest: item.manifestPk }
+                    const keys = Object.keys(parsedItem).join(',');
+                    const placeholders = Object.keys(parsedItem).map(() => "?").join(',');
+                    const values: any = Object.values(parsedItem);
+                    const promise = db.runAsync(`INSERT INTO shipments (${keys}) VALUES (${placeholders})`, values)
+                    promises.push(promise);
+                }
+
+                Promise.all(promises).then(() => {
                     resolve({
                         message: `Ids inserted correctly`,
                         idsInserted: returnedData
                     });
                 }).catch(error => {
-                    console.error("🚀 ~ file: shipments.local.queries.ts:207 ~ insertMultipleShipments ~ error:", error);
+                    console.error("🚀 ~ file: shipments.local.queries.ts:125 ~ insertMultipleShipments ~ error:", error);
                     reject(error);
                 });
             } else {
