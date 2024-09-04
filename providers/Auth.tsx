@@ -27,9 +27,10 @@ export default function AuthProvider({
   const logout = () => {
     setToken("");
     dropTables();
-    setIsLoggedIn(false);
     AsyncStorage.removeItem("auth0:token");
     AsyncStorage.removeItem("auth0:email");
+    AsyncStorage.removeItem("lastSync");
+    setIsLoggedIn(false);
   };
 
   // --- END: Data and handlers ------------------------------------------------

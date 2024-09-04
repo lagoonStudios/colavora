@@ -1,22 +1,20 @@
 import { useCODFetch } from "./COD";
-import { useCommentsFetch } from "./comments";
 import { useCompanyFetch } from "./company";
 import { useDriverFetch } from "./user";
-import { useManifestFetch } from "./manifest";
-import { usePiecesFetch } from "./pieces";
+import { useDataFetch } from "./data";
 import { useReasonsFetch } from "./reasons";
-import { useShipmentFetch } from "./shipment";
+import { useStore } from "@stores/zustand";
 
 export function useSyncData() {
   // --- Hooks -----------------------------------------------------------------
-  useCODFetch();
+  const { user } = useStore();
+
   useDriverFetch();
-  useReasonsFetch();
   useCompanyFetch();
-  useManifestFetch();
-  useShipmentFetch();
-  useCommentsFetch();
-  usePiecesFetch();
+  
+  useCODFetch(user);
+  useReasonsFetch(user);
+  useDataFetch(user);
   // --- END: Hooks ------------------------------------------------------------
 
   return;

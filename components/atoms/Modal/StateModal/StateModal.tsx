@@ -15,7 +15,7 @@ export default function StateModal() {
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
-  const onRequestClose = () => setVisible();
+  const onRequestClose = () => setVisible(true);
   // --- END: Data and handlers ------------------------------------------------
 
   return (

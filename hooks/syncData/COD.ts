@@ -1,16 +1,18 @@
-import { mockCompanyId } from "@constants/Constants";
-import { useCODIdData, useCODByIdData } from "@hooks/queries";
 import i18next from "i18next";
 import { useEffect } from "react";
+
 import { useStore } from "@stores/zustand";
 import { insertMultipleCOD } from "@hooks/SQLite";
+import { mockCompanyId } from "@constants/Constants";
+import { IFetchUserData } from "@constants/types/general";
+import { useCODIdData, useCODByIdData } from "@hooks/queries";
 
-export function useCODFetch() {
+export function useCODFetch(user: IFetchUserData | null) {
   // --- Hooks -----------------------------------------------------------------
   const { addCODIds, CODIds, addCOD, CODs } = useStore();
 
-  const { data: CODIdsData } = useCODIdData(String(mockCompanyId));
-  const { data: DataCODs, pending } = useCODByIdData(CODIds, i18next.language);
+  const { data: CODIdsData } = useCODIdData(user?.companyID);
+  const { data: dataCODs, pending } = useCODByIdData(CODIds, i18next.language);
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
@@ -20,10 +22,10 @@ export function useCODFetch() {
 
   useEffect(() => {
     if (pending === false)
-      DataCODs?.map((COD) => {
+      dataCODs?.map((COD) => {
         if (COD) addCOD(COD);
       });
-  }, [DataCODs, pending]);
+  }, [dataCODs, pending]);
 
   useEffect(() => {
     if (CODs)
