@@ -142,7 +142,7 @@ export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
                         '${String(v.manifestPk)}',
                         '${String(v.manifestPk)}',
                         ${Number(v.assignPK)},
-                        ${String(v.assignDL)},
+                        ${Number(v.assignDL)},
                         '${String(v.division)}',
                         '${String(v.lastEventComment)}',
                         '${String(v.reason)}',
