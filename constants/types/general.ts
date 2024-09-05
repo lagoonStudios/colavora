@@ -94,9 +94,3 @@ export interface IStateModal {
 export type Language = "en" | "es";
 
 export type SyncPeriod = 5 | 10 | 20 | 30 | 60;
-
-export enum ShipmentStatus {
-  CREATED = "CREATED",
-  ASSIGNED = "ASSIGNED",
-  COMPLETED = "COMPLETED",
-}

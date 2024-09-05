@@ -93,9 +93,7 @@ export interface ICompleteOrder extends IOptionalCommentsProps {
 }
 
 export enum ShipmentStatus {
-  CREATED,
-  ASSIGNED,
-  OUR_FOR_DELIVERY,
-  PICKED_UP,
-  COMPLETED,
+  CREATED = "CREATED",
+  ASSIGNED = "ASSIGNED",
+  COMPLETED = "COMPLETED",
 }
