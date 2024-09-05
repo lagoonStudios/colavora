@@ -154,6 +154,12 @@ export function getTodaysShipments() {
             AND
                 shipments.status != ${ShipmentStatus.COMPLETED}
             AND 
+                shipments.status != ${ShipmentStatus.CANCELLED}
+            AND
+                shipments.status != ${ShipmentStatus.PARTIAL_DELIVERY}
+            AND 
+                shipments.status != ${ShipmentStatus.DELIVERED}
+            AND 
                 shipments.dueDate <= datetime('${endToday.toISOString()}')
             
             `)
@@ -198,6 +204,12 @@ export function getShipmentList({ manifestID }: { manifestID?: string }) {
                 status IS NOT NULL
             AND
                 shipments.status != ${ShipmentStatus.COMPLETED}
+            AND
+                shipments.status != ${ShipmentStatus.CANCELLED}
+            AND
+                shipments.status != ${ShipmentStatus.PARTIAL_DELIVERY}
+            AND 
+                shipments.status != ${ShipmentStatus.DELIVERED}
             `, [manifestID])
                 .then((res) => {
                     const data = res as IFetchOrderListItem[];
@@ -224,6 +236,12 @@ export function getShipmentList({ manifestID }: { manifestID?: string }) {
                     status IS NOT NULL
                 AND
                     shipments.status != ${ShipmentStatus.COMPLETED}
+                AND
+                    shipments.status != ${ShipmentStatus.CANCELLED}
+                AND
+                    shipments.status != ${ShipmentStatus.PARTIAL_DELIVERY}
+                AND 
+                    shipments.status != ${ShipmentStatus.DELIVERED}
                 `,)
                 .then((res) => {
                     const data = res as IFetchOrderListItem[];
