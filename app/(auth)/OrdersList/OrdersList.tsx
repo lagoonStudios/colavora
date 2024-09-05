@@ -27,7 +27,7 @@ export default function OrdersList() {
   return (
     <View style={styles.container}>
       <PageHeader
-        title={`${t("ORDERS.ORDERS")} (${shipmentIds?.length ?? ""})`}
+        title={`${t("ORDERS.ORDERS")} (${data?.length ?? ""})`}
       />
       <View style={styles.content}>
         {loading ? (

@@ -28,6 +28,7 @@ export default function AuthProvider({
     setToken("");
     dropTables();
     AsyncStorage.removeItem("auth0:token");
+    AsyncStorage.removeItem("auth0:user");
     AsyncStorage.removeItem("auth0:email");
     AsyncStorage.removeItem("lastSync");
     setIsLoggedIn(false);

@@ -2,15 +2,17 @@ import React from "react";
 import { Redirect, Stack } from "expo-router";
 import useAuth from "@hooks/Auth";
 import { useSQLite } from "@hooks/SQLite";
-import { useSyncData } from "@hooks/syncData";
 import { useLastSync } from "@hooks/lastSync";
 import { useSyncDataByPeriod } from "@hooks/SyncLocalData";
+import { useDriverFetch } from "@hooks/index";
+import { useCompanyFetch } from "@hooks/syncData/company";
 
 export default function AuthLayout() {
   // --- Hooks -----------------------------------------------------------------
   useSQLite();
-  useLastSync();
-  useSyncData();
+  useLastSync();  
+  useDriverFetch();
+  useCompanyFetch();
   useSyncDataByPeriod();
   const { isLoggedIn } = useAuth();
   // --- END: Hooks ------------------------------------------------------------

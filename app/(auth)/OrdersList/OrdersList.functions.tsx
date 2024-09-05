@@ -9,7 +9,7 @@ export function useOrdersListData(shipmentIds: number[], manifest: string) {
   // --- END: Local state ------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
-  useEffect(() => {    
+  useEffect(() => {
     if (shipmentIds?.length > 0) {
       getShipmentList({ manifestID: manifest }).then((values) => {
         setData(values)
@@ -17,11 +17,8 @@ export function useOrdersListData(shipmentIds: number[], manifest: string) {
     }
   }, [shipmentIds]);
 
-  useEffect(() => {    
-    if (data.length !== 0) {
-      console.log("DATA: ", data);
-      setLoading(false);
-    }
+  useEffect(() => {
+    if (data.length !== 0) setLoading(false);
   }, [data]);
   // --- END: Side effects -----------------------------------------------------
 
