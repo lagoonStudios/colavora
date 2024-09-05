@@ -74,7 +74,6 @@ export function useDriverFetch() {
   useEffect(() => {
     if (user !== null) {
       AsyncStorage.setItem("auth0:user", JSON.stringify(user));
-      setVisible(false);
     }
   }, [user]);
   // --- END: Side effects -----------------------------------------------------

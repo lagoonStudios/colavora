@@ -238,6 +238,7 @@ export function getShipmenDetailsById({ shipmentID }: { shipmentID: number }) {
     return new Promise((resolve: (value: Partial<IFetchShipmentByIdData>) => void, reject) => {
         db.getFirstAsync(`
             SELECT
+                shipmentID,
                 consigneeName,
                 zip,
                 senderName,

@@ -5,29 +5,32 @@ import { View, Text } from "@components/Themed";
 import { IFetchShipmentByIdData } from "@constants/types/shipments";
 
 import { styles } from "./OrderListItem.styles";
-import { Link } from "expo-router";
+import { useRouter } from "expo-router";
 import { Pressable } from "react-native";
 import { useStore } from "@stores/zustand";
+import { getShipmenDetailsById } from "@hooks/SQLite";
 
 export default function OrderListItem(props: IFetchShipmentByIdData) {
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
   const { addShipment } = useStore();
+  const { push } = useRouter();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
   const setShipmentHandler = () => {
-    if (props) addShipment(props);
+    if (props.shipmentID) {
+      getShipmenDetailsById({ shipmentID: props.shipmentID }).then((shipment) => {
+        console.log(shipment);
+        addShipment(shipment);
+        push({ pathname: "ShipmentDetails" })
+      })
+    }
   };
   // --- END: Data and handlers ------------------------------------------------
 
   return (
-    <Link
-      href={{
-        pathname: "ShipmentDetails",
-      }}
-      asChild
-    >
+    <View>
       <Pressable style={styles.container} onPress={setShipmentHandler}>
         <View>
           <Text style={styles.title}>{props.consigneeName}</Text>
@@ -45,6 +48,6 @@ export default function OrderListItem(props: IFetchShipmentByIdData) {
           </Text>
         </View>
       </Pressable>
-    </Link>
+    </View>
   );
 }
