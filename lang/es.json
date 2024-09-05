@@ -50,6 +50,7 @@
     },
     "TOAST": {
       "SYNC_SUCCESS": "Datos sincronizados con éxito",
+      "ERROR_BARCODES": "Error en los Codigos de barra",
       "SYNC_FAIL": "Error al sincronizar datos"
     },
     "LOGIN": {

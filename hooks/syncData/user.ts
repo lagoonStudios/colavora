@@ -16,7 +16,7 @@ export function useDriverFetch() {
   // --- Hooks -----------------------------------------------------------------
   const isConnected = useIsConnected();
   const { t } = useTranslation();
-  const { user, addUser, setModal, setVisible } = useStore();
+  const { user, addUser, setModal } = useStore();
   const { data: userInfo } = useAuth0UserInfoData(userEmail);
   const { data: users } = useDriverDataByAuth0(auth0Id);
   const { data: userData } = useUserData(userId);

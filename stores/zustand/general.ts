@@ -44,6 +44,7 @@ export interface SyncDataSlice {
   setSyncPeriod: (syncPeriod: SyncPeriod) => void;
   lastSyncDate: string | null;
   setLastSyncDate: (lastSyncDate: string) => void
+  resetLastSyncDate: () => void
 }
 
 export const createReasonIdsSlice: StateCreator<ReasonIdsSlice, [], []> = (
@@ -113,4 +114,5 @@ export const createSyncDataSlice: StateCreator<SyncDataSlice, [], []> = (set) =>
   setSyncPeriod: (syncPeriod: SyncPeriod) => set((state) => ({ ...state, syncPeriod })),
   lastSyncDate: null,
   setLastSyncDate: (lastSyncDate) =>  set((state) => ({ ...state, lastSyncDate  })),
+  resetLastSyncDate: () =>  set((state) => ({ ...state, lastSyncDate: null  })),
 });
