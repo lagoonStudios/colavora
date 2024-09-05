@@ -73,6 +73,7 @@ export default function useAuth() {
       });
     } catch (error) {
       handleErrorMessage({ error });
+      setLoading(false);
     }
   };
 

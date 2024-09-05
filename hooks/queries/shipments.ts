@@ -226,8 +226,6 @@ export function useCompleteOrder() {
         ?.split(" ")
         .filter((e) => e !== "" && e !== " ");
 
-        console.log({ barcode, barcodes });
-
       if (barcodes && barcodes?.length !== 0) {
         const results = [];
         for (const barcode of barcodes) {
