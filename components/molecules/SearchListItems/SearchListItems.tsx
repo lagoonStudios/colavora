@@ -4,19 +4,32 @@ import {
   useThemeColor,
   ActivityIndicator,
 } from "@components/Themed";
-import { Link } from "expo-router";
-import React from "react";
+import { Link, useRouter } from "expo-router";
+import React, { useCallback } from "react";
 import { FlatList, Pressable } from "react-native";
 import { SearchListItemProps } from "./SearchListItems.types";
 import { styles } from "./SearchListItems.styles";
 import { useTranslation } from "react-i18next";
+import { getShipmenDetailsById } from "@hooks/SQLite";
+import { useStore } from "@stores/zustand";
 
 export default function SearchListItems(props: SearchListItemProps) {
   const { loading, data } = props;
   // --- Hooks -----------------------------------------------------------------
-  const { default: backgroundColor } = useThemeColor({}, "background");
   const { t } = useTranslation();
+  const { push } = useRouter();
+  const { default: backgroundColor } = useThemeColor({}, "background");
+  const { addShipment } = useStore();
   // --- END: Hooks ------------------------------------------------------------
+
+  // --- Data Handlers ------------------------------------------------------------
+  const onPressItem = useCallback((shipmentID: string) => {
+    getShipmenDetailsById({ shipmentID: Number(shipmentID) }).then((value) => {
+      addShipment(value)
+      push("ShipmentDetails")
+    })
+  }, [])
+  // --- END: Data Handlers -------------------------------------------------------
 
   return (
     <View style={[styles.dataContainer, { backgroundColor }]}>
@@ -27,20 +40,20 @@ export default function SearchListItems(props: SearchListItemProps) {
       {!loading && data.length > 0 && (
         <FlatList
           data={data}
-          renderItem={({ item }) => (
-            <Link
-              href={{
-                pathname: "ShipmentDetails",
-                params: { shipmentID: item["value"] },
-              }}
-              style={[styles.listItemContainer]}
-              asChild
-            >
-              <Pressable>
-                <Text style={styles.contentText}>{item["label"]}</Text>
-              </Pressable>
-            </Link>
-          )}
+          renderItem={({ item }) => {
+            const handler = () => onPressItem(item["value"])
+
+            return (
+              <View
+                style={[styles.listItemContainer]}
+              >
+                <Pressable onPress={handler}>
+                  <Text style={styles.contentText}>{item["label"]}</Text>
+                </Pressable>
+              </View>
+
+            )
+          }}
           ItemSeparatorComponent={() => (
             <View style={styles.listItemSeparator} />
           )}
