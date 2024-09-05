@@ -102,8 +102,21 @@ export function getAllManifestsCount() {
                 COUNT(DISTINCT manifests.manifest) AS count 
             FROM 
                 manifests
+            INNER JOIN shipments ON
+                manifests.manifest = shipments.manifest
+            WHERE
+                shipments.status IS NOT NULL
+            AND
+                shipments.status != '${ShipmentStatus.COMPLETED}'
+            AND 
+                shipments.status != '${ShipmentStatus.CANCELLED}'
+            AND
+                shipments.status != '${ShipmentStatus.PARTIAL_DELIVERY}'
+            AND 
+                shipments.status != '${ShipmentStatus.DELIVERED}'
         `).then((res) => {
             const count = (res as { count: number });
+            console.log("RES COUNT: ", res);
             resolve(count);
         }).catch(error => {
             reject(error);
