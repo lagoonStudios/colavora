@@ -94,7 +94,28 @@ export interface ICompleteOrder extends IOptionalCommentsProps {
 
 export enum ShipmentStatus {
   CREATED = "Created",
+  PICKED_UP = "PickedUp",
+  INBOUND = "Inbound",
   ASSIGNED = "Assigned",
+  OUT_FOR_DELIVERY = "Our for Delivery",
+  /** Considered as Competed */
   DELIVERED = "Delivered",
+  /** Considered as Competed */
+  PARTIAL_DELIVERY = "Partial Delivery",
+  ROUNDTRIP = "Roundtrip",
+  /** Considered as Competed */
+  CANCELLED = "Canceled",
+  /** Considered as Competed */
   COMPLETED = "Completed",
+  UNASSIGN = "Unassign"
 }
+
+export type ShipmentStatusCompleted =
+  Extract<ShipmentStatus,
+    typeof ShipmentStatus.COMPLETED |
+    typeof ShipmentStatus.CANCELLED |
+    typeof ShipmentStatus.PARTIAL_DELIVERY |
+    typeof ShipmentStatus.DELIVERED
+  >
+
+

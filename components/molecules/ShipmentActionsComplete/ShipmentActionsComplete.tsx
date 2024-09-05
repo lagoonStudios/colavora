@@ -178,7 +178,7 @@ export default function ShipmentActionsComplete({
       if (shipmentID) {
         updateShipmentStatus({
           shipmentId: shipmentID,
-          status: ShipmentStatus.COMPLETED,
+          status: ShipmentStatus.DELIVERED,
           isSync: true,
         })
           .then(() => {
