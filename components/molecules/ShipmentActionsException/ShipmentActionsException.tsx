@@ -27,13 +27,15 @@ import ButtonImage from "@atoms/ButtonImage";
 import ArrowLeft from "@atoms/ArrowLeft";
 import { ShipmentActionsButtonItem } from "@organisms/ShipmentActions/ShipmentAction.constants";
 import Button from "@atoms/Button";
+import { insertMultipleComments } from "@hooks/SQLite/queries/comments.local.queries";
+import { fetchCommentsByIdData } from "@services/custom-api";
 export default function ShipmentActionsException({
   setSelectedTab,
   setOption,
 }: IShipmentActionsException) {
   // --- Hooks -----------------------------------------------------------------
   const {
-    shipment: { shipmentID, companyID },
+    shipment: { shipmentID },
     reasons,
     user,
     setModal: setStateModal,
@@ -50,6 +52,7 @@ export default function ShipmentActionsException({
 
   const selectedReason = methods.watch("reasonID");
   const photoImage = methods.watch("photoImage");
+  const addtionalCommentt = methods.watch("comment");
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local state -----------------------------------------------------------
@@ -97,7 +100,7 @@ export default function ShipmentActionsException({
     }
     setStateModal(t("MODAL.CREATING_EXCEPTION"));
     mutate({
-      companyID: companyID,
+      companyID: user?.companyID,
       userID: user?.userID,
       shipmentID,
       comment: data.comment,
@@ -115,10 +118,10 @@ export default function ShipmentActionsException({
   useEffect(() => {
     if (isSuccess)
       addComment({
-        companyID: companyID,
+        companyID: user?.companyID,
         userID: user?.userID,
         shipmentID,
-        comment: `Order Exception - ${selectedReasonLabel}`,
+        comment: `Order Exception - ${selectedReasonLabel} - ${addtionalCommentt}`,
       });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -132,12 +135,30 @@ export default function ShipmentActionsException({
   }, [error]);
 
   useEffect(() => {
-    if (isSuccessAddComment) {
-      setStateModalVisible(false);
-      setSelectedTab(ShipmentDetailsTabsItem.COMMENTS);
+    if (isSuccessAddComment && shipmentID) {
+      const getNewComments = async () => {
+        const createdDate = new Date().toISOString();
+        const comments = await fetchCommentsByIdData({ id: String(shipmentID) })
+
+        if (comments.data) {
+          const commentsToInsert = comments.data?.map((comment) => ({
+            comment,
+            createdDate,
+            companyID: user?.companyID,
+            shipmentID: shipmentID!
+          }))
+
+          insertMultipleComments(commentsToInsert).then(() => {
+            setStateModalVisible(false);
+            setSelectedTab(ShipmentDetailsTabsItem.COMMENTS);        
+          })
+        }
+      }
+
+      getNewComments();
+
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessAddComment]);
   // --- END: Side effects -----------------------------------------------------
   return (

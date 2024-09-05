@@ -21,7 +21,6 @@ export default function OrderListItem(props: IFetchShipmentByIdData) {
   const setShipmentHandler = () => {
     if (props.shipmentID) {
       getShipmenDetailsById({ shipmentID: props.shipmentID }).then((shipment) => {
-        console.log(shipment);
         addShipment(shipment);
         push({ pathname: "ShipmentDetails" })
       })
