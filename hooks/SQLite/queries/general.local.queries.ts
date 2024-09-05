@@ -6,6 +6,8 @@ import { createManifestsTable, dropManifestTable, getAllManifestsCount, insertMu
 import { createPiecesTable, dropPiecesTable, insertMultiplePieces } from "./pieces.local.queries";
 import { createShipmentTable, dropShipmentTable, getTodaysShipments, insertMultipleShipments } from "./shipments.local.queries";
 import { IFetchUserData } from "@constants/types/general";
+import { IFetchManifestByIdData } from "@constants/types/manifests";
+import { IFetchPiecesByIdData, IFetchShipmentByIdData, IRequiredCommentsProps } from "@constants/types/shipments";
 
 
 
@@ -46,7 +48,7 @@ export function dropTables() {
 }
 
 export function resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
-    return new Promise(async (resolve: (value: string) => void, reject) => {
+    return new Promise(async (resolve: (value: { manifests: IFetchManifestByIdData[], shipments: IFetchShipmentByIdData[], pieces: IFetchPiecesByIdData[], comments: IRequiredCommentsProps[] }) => void, reject) => {
         fetchData(user, options).then(data => {
             dropTables().then(() => {
                 createAllDBTables().then(() => {
@@ -60,7 +62,7 @@ export function resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
                                 insertMultiplePieces(pieces),
                                 insertMultipleComments(comments)
                             ]).then(() => {
-                                resolve("")
+                                resolve(data)
                             }).catch(error => {
                                 console.error("🚀 ~ file: general.local.queries.ts:54 ~ requiring pieces and comments ~ error:", error);
                                 reject(error)

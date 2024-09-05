@@ -1,7 +1,8 @@
 import { db } from "../db";
-import { IFetchShipmentByIdData, ShipmentStatus } from "@constants/types/shipments";
-import { IFetchOrderListItem } from "../SQLite.types";
 import { SQLiteRunResult } from "expo-sqlite";
+
+import { IFetchOrderListItem } from "../SQLite.types";
+import { IFetchShipmentByIdData, ShipmentStatus } from "@constants/types/shipments";
 
 /**
  * Creates the `shipments` table in the SQLite database if it doesn't exist.
@@ -150,8 +151,11 @@ export function getTodaysShipments() {
                 shipments
             WHERE 
                 shipments.status IS NOT NULL
+            AND
+                shipments.status != ${ShipmentStatus.COMPLETED}
             AND 
                 shipments.dueDate <= datetime('${endToday.toISOString()}')
+            
             `)
             .then((res) => {
                 const data = res as { count: number };
@@ -192,6 +196,8 @@ export function getShipmentList({ manifestID }: { manifestID?: string }) {
                 manifestPK = ?;
             AND
                 status IS NOT NULL
+            AND
+                shipments.status != ${ShipmentStatus.COMPLETED}
             `, [manifestID])
                 .then((res) => {
                     const data = res as IFetchOrderListItem[];
@@ -216,6 +222,8 @@ export function getShipmentList({ manifestID }: { manifestID?: string }) {
                     shipments                    
                 WHERE
                     status IS NOT NULL
+                AND
+                    shipments.status != ${ShipmentStatus.COMPLETED}
                 `,)
                 .then((res) => {
                     const data = res as IFetchOrderListItem[];
@@ -302,13 +310,14 @@ export function filterShipmentIds(ids: number[]) {
  * @param  options.status - The new status for the shipment.
  * @returns A Promise that resolves with a success message if the update is successful, or rejects with an error message if the update fails.
  */
-export function updateShipmentStatus({ shipmentId, status }: { shipmentId: number, status: ShipmentStatus }) {
+export function updateShipmentStatus({ shipmentId, status, isSync }: { shipmentId: number, status: ShipmentStatus, isSync: boolean }) {
     return new Promise((resolve: (value: string) => void, reject) => {
         db.runAsync(`
             UPDATE shipments
-            SET status = $status
+            SET status = $status,
+            is_sync = $isSync
             WHERE shipmentID = $shipmentId
-        `, { $status: status, $shipmentId: shipmentId })
+        `, { $status: status, $shipmentId: shipmentId, $isSync: isSync })
             .then((res) => {
                 if (res.changes === 0) {
                     console.error("🚀 ~ updateShipmentStatus ~ shipmentId not found:");

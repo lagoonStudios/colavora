@@ -109,7 +109,7 @@ export const createStateModalSlice: StateCreator<StateModalSlice, [], []> = (
 export const createSyncDataSlice: StateCreator<SyncDataSlice, [], []> = (set) => ({
   isSyncing: false,
   setSyncing: (isSyncing: boolean) => set((state) => ({ ...state, isSyncing })),
-  syncPeriod: 20,
+  syncPeriod: 60,
   setSyncPeriod: (syncPeriod: SyncPeriod) => set((state) => ({ ...state, syncPeriod })),
   lastSyncDate: null,
   setLastSyncDate: (lastSyncDate) =>  set((state) => ({ ...state, lastSyncDate  })),

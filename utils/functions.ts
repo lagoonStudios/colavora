@@ -183,7 +183,7 @@ function fetchPiecesDataFn(shipmentIds: number[], options?: fetchDataOptions) {
 function fetchCommentsData(shipmentIds: number[], user: IFetchUserData, createdDate: string, options?: fetchDataOptions) {
   return new Promise(async (resolve: (value: IRequiredCommentsProps[]) => void, reject) => {
     const comments = new Map<string, IRequiredCommentsProps>();
-    if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.SAVING_COMMENTS") || "Fetching shipments pieces")
+    if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_COMMENTS") || "Fetching shipments pieces")
 
     for (const shipmentId of shipmentIds) {
       try {
