@@ -27,15 +27,12 @@ export const useSyncDataByPeriod = () => {
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    console.log("Syncing data1", new Date().getSeconds());
-
     const id = setInterval(
       () => {
         if (!isConnected) {
           Toast.show(t("NETWORK_ERROR.TITLE"));
           return;
         }
-        console.log("Syncing data", new Date().toISOString());
         if (user && !isSyncing) {
           setSyncing(true);
           resetDatabase(user, { t, setModalMessage: setModal })

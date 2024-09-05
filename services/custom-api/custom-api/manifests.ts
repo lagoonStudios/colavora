@@ -10,7 +10,6 @@ export function fetchManifestData({
   companyID
 }: IOptionalProps): Promise<AxiosResponse<number[]>> {
   const date = createdDate?.split(".")[0]
-  console.log({ date, driverId, companyID });
   return axiosClient.get(`shipment/manifest`, {
     params: { createdDate: date, driverId, companyID },
   });

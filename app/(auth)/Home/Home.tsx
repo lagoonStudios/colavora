@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { FlatList, Pressable } from "react-native";
 
@@ -8,9 +8,10 @@ import { HomeItem } from "./Home.types";
 import { useHomeData } from "./Home.functions";
 import SearchInput from "@organisms/SearchInput";
 import { SafeAreaView } from "@atoms/SafeAreaView";
-import { ActivityIndicator, Text } from "@components/Themed";
+import { ActivityIndicator, Text, View } from "@components/Themed";
 import { useStore } from "@stores/zustand";
 import { useSyncData } from "@hooks/syncData";
+import { getShipmentList } from "@hooks/SQLite";
 
 export default function Home() {
   // --- Hooks -----------------------------------------------------------------
@@ -18,18 +19,23 @@ export default function Home() {
 
   const { t } = useTranslation();
   const { data, loading } = useHomeData();
-  const { addShipmentIds } = useStore()
+  const { addShipmentIds, addManifestId } = useStore()
+  const { push } = useRouter();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
   const renderItem = ({ item }: { item: HomeItem }) => {
     const setShipmentIdsHandler = () => {
-      if (item?.data) addShipmentIds(item.data);
+      getShipmentList({}).then((shipment) => {
+        addShipmentIds(shipment?.map(({ shipmentID }) => shipmentID!));
+        addManifestId("");
+        push({ pathname: "(tabs)/" + item.route })
+      })
     };
 
     return (
-      <Link href={"(tabs)/" + item.route} asChild disabled={item.isDisabled}>
-        <Pressable style={styles.item} onPress={setShipmentIdsHandler}>
+      <View>
+        <Pressable style={styles.item} onPress={setShipmentIdsHandler} disabled={item.isDisabled}>
           <Text style={styles.description}>{t(item.description)}</Text>
           {loading ? (
             <ActivityIndicator style={styles.loader} />
@@ -37,7 +43,7 @@ export default function Home() {
             <Text style={styles.counter}>{item.counter}</Text>
           )}
         </Pressable>
-      </Link>
+      </View>
     );
   };
   // --- END: Data and handlers ------------------------------------------------
