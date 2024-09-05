@@ -74,8 +74,6 @@ function fetchManifests(createdDate: string, user: IFetchUserData, options?: fet
       const manifestIdsFn = await fetchManifestData({ createdDate, companyID: user.companyID, driverId: String(user.driverID) })
       if (manifestIdsFn?.data != null) {
         for (const manifestId of manifestIdsFn?.data) {
-          // TODO Remove this continue. We use it just to prevent an API error.
-          if (manifestId as any == 80120240820) continue;
 
           if (user?.driverID && user?.companyID)
             manifests.set(manifestId, {
@@ -105,8 +103,6 @@ function fetchShipmentsIDs(manifestIds: string[], user: IFetchUserData, options?
     const shipmentsIdsPromises: Promise<AxiosResponse<number[], any>>[] = [];
 
     for (const manifestId of manifestIds) {
-      // TODO Remove this continue. We use it just to prevent an API error.
-      if (manifestId === "80120240820") continue;
       const shipmentIdPromise = fetchShipmentData({ manifest: String(manifestId), companyID: user.companyID, driverId: String(user.driverID) })
       shipmentsIdsPromises.push(shipmentIdPromise)
     }
