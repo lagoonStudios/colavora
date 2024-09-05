@@ -15,7 +15,7 @@ export function createShipmentTable() {
                 shipmentID INTEGER PRIMARY KEY UNIQUE,
                 waybill TEXT,
                 serviceType INTEGER,
-                ServiceTypeName TEXT,
+                serviceTypeName TEXT,
                 packageType INTEGER,
                 readyDate TEXT,
                 dueDate TEXT,
@@ -328,17 +328,16 @@ export function updateShipmentStatus({ shipmentId, status }: { shipmentId: numbe
  * @returns A promise that resolves to an array of shipments IDs.
  */
 export function getAllShipmentIds({ manifestID }: { manifestID: string }) {
-    return new Promise((resolve: (value: { shipmentID: number, manifest: string }[]) => void, reject) => {
+    return new Promise((resolve: (value: { shipmentID: number }[]) => void, reject) => {
         db.getAllAsync(`
             SELECT
-                shipmentID,
-                manifest
+                shipmentID
             FROM
                 shipments
             WHERE
                 manifest = ?
             `, [manifestID]).then((res) => {
-            const shipmentIds: { shipmentID: number, manifest: string }[] = res as { shipmentID: number, manifest: string }[];
+            const shipmentIds: { shipmentID: number }[] = res as { shipmentID: number }[];
             resolve(shipmentIds)
         }).catch(error => {
             reject(error);

@@ -1,26 +1,27 @@
 import { IFetchShipmentByIdData } from "@constants/types/shipments";
-import { useShipmentsByIdData } from "@hooks/queries";
+import { getShipmenDetailsById, getShipmentList } from "@hooks/SQLite";
 import { useEffect, useState } from "react";
 
-export function useOrdersListData(shipmentIds: number[]) {
-  // --- Hooks -----------------------------------------------------------------
-  const { data: dataShipments, pending } = useShipmentsByIdData(shipmentIds);
-  // --- END: Hooks ------------------------------------------------------------
-
+export function useOrdersListData(shipmentIds: number[], manifest: string) {
   // --- Local state -----------------------------------------------------------
-  const [data, setData] = useState<IFetchShipmentByIdData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<IFetchShipmentByIdData[]>([]);
   // --- END: Local state ------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
-  useEffect(() => {
-    if (pending === false && dataShipments) {
-      setData(dataShipments?.map((shipment) => shipment));
+  useEffect(() => {    
+    if (shipmentIds?.length > 0) {
+      getShipmentList({ manifestID: manifest }).then((values) => {
+        setData(values)
+      })
     }
-  }, [pending, dataShipments]);
+  }, [shipmentIds]);
 
-  useEffect(() => {
-    if (data.length !== 0) setLoading(false);
+  useEffect(() => {    
+    if (data.length !== 0) {
+      console.log("DATA: ", data);
+      setLoading(false);
+    }
   }, [data]);
   // --- END: Side effects -----------------------------------------------------
 

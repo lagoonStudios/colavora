@@ -45,7 +45,7 @@ export function dropTables() {
     });
 }
 
-export function resetDatabase(user: IFetchUserData, options?: fetchDataOptions) {
+export function resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
     return new Promise(async (resolve: (value: string) => void, reject) => {
         fetchData(user, options).then(data => {
             dropTables().then(() => {
