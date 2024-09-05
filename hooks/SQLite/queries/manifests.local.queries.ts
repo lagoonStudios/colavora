@@ -1,6 +1,6 @@
 import { db } from "../db";
 import { IFetchManifestByIdData } from "@constants/types/manifests";
-import { PaginatedData } from "@constants/types/general";
+import { PaginatedData, ShipmentStatus } from "@constants/types/general";
 
 
 /**
@@ -124,7 +124,7 @@ export function getManifestsList({ page, page_size }: PaginatedData) {
             SELECT 
                 manifests.manifest,
                 manifests.createdDate,
-                COUNT (CASE WHEN shipments.status IS NOT NULL THEN 1 ELSE 0 END) AS active_shipments
+                COUNT (CASE WHEN shipments.status IS NOT NULL AND shipments.status != ${ShipmentStatus.COMPLETED} THEN 1 ELSE 0 END) AS active_shipments
             FROM 
                 manifests
             INNER JOIN shipments ON 
