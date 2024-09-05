@@ -46,7 +46,7 @@ export function useDataFetch(user: IFetchUserData | null) {
         }
       }
 
-      setSyncing(false);
+      setSyncing(false);      
       setVisible(false);
     })
       .catch(() => {

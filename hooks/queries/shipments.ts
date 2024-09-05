@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
+import Toast from "react-native-root-toast";
 import {
   fetchShipmentData,
   fetchShipmentByIdData,
@@ -209,6 +208,8 @@ export function useSendCODs() {
 }
 
 export function useCompleteOrder() {
+  const { t } = useTranslation();
+
   const request = useMutation({
     mutationFn: async ({
       companyID,
@@ -225,23 +226,29 @@ export function useCompleteOrder() {
         ?.split(" ")
         .filter((e) => e !== "" && e !== " ");
 
-      if (barcodes) {
+        console.log({ barcode, barcodes });
+
+      if (barcodes && barcodes?.length !== 0) {
         const results = [];
         for (const barcode of barcodes) {
-          const result = await completeOrder({
-            companyID,
-            userID,
-            shipmentID,
-            barcode,
-            podName,
-            photoImage,
-            signatureImage,
-            comment,
-          });
-          results.push(result);
+          try {
+            const result = await completeOrder({
+              companyID,
+              userID,
+              shipmentID,
+              barcode,
+              podName,
+              photoImage,
+              signatureImage,
+              comment,
+            });
+            results.push(result);
+          } catch (error) {
+            console.error("🚀 ~ useCompleteOrder ~ e:", error)
+          }
         }
         return results;
-      }
+      } else Toast.show(t("TOAST.ERROR_BARCODES"));
     },
     onError: (e) => console.error("🚀 ~ useCompleteOrder ~ e:", e),
   });
