@@ -26,7 +26,9 @@ export async function fetchData(user: IFetchUserData, options: fetchDataOptions)
     date.setSeconds(0);
     date.setMilliseconds(0);
 
-    const createdDate = date.toISOString();
+    // const createdDate = date.toISOString();
+    //TODO FIX DATE ISSUE. NOW USING A FIXED DATE
+    const createdDate = new Date("2024-08-20T00:01:00").toISOString();
 
     console.log("Fetching data");
     try {
@@ -83,11 +85,11 @@ function fetchManifests(createdDate: string, user: IFetchUserData, options?: fet
         }
         resolve([...manifests.values()]);
       } else {
-        console.error("🚀 ~ file: functions.ts:130 ~ fetchManifests ~ error: Undefined data manifest Ids")
-        reject("🚀 ~ file: functions.ts:130 ~ fetchManifests ~ error: Undefined data manifest Ids")
+        console.error("🚀 ~ file: functions.ts:86 ~ fetchManifests ~ error: Undefined data manifest Ids")
+        reject("🚀 ~ file: functions.ts:87 ~ fetchManifests ~ error: Undefined data manifest Ids")
       }
     } catch (error) {
-      console.error("🚀 ~ file: functions.ts:122 ~ fetchManifests ~ error:", error);
+      console.error("🚀 ~ file: functions.ts:90 ~ fetchManifests ~ error:", error);
       reject(error)
     }
   });
