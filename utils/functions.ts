@@ -30,7 +30,6 @@ export async function fetchData(user: IFetchUserData, options: fetchDataOptions)
     //TODO FIX DATE ISSUE. NOW USING A FIXED DATE
     const createdDate = new Date("2024-08-20T00:01:00").toISOString();
 
-    console.log("Fetching data");
     try {
       fetchManifests(createdDate, user, options).then(manifests => {
         const manifestIds = manifests.map(v => v.manifest!).filter(id => id != null);
