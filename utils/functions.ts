@@ -74,6 +74,9 @@ function fetchManifests(createdDate: string, user: IFetchUserData, options?: fet
       const manifestIdsFn = await fetchManifestData({ createdDate, companyID: user.companyID, driverId: String(user.driverID) })
       if (manifestIdsFn?.data != null) {
         for (const manifestId of manifestIdsFn?.data) {
+          // TODO Remove this continue. We use it just to prevent an API error.
+          if (manifestId === 80120240820) continue;
+
           if (user?.driverID && user?.companyID)
             manifests.set(manifestId, {
               manifest: String(manifestId),
