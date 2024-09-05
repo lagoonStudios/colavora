@@ -3,6 +3,7 @@ import { Auth0Provider } from "react-native-auth0";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "@stores/AuthContext";
 import { dropTables } from "@hooks/SQLite";
+import { useStore } from "@stores/zustand";
 
 export default function AuthProvider({
   children,
@@ -13,6 +14,10 @@ export default function AuthProvider({
   domain: string;
   clientId: string;
 }) {
+  // --- Hooks -----------------------------------------------------------------  
+  const { resetLastSyncDate } = useStore();
+  // --- END: Hooks ------------------------------------------------------------
+
   // --- Local State -----------------------------------------------------------------
   const [token, setToken] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -31,6 +36,7 @@ export default function AuthProvider({
     AsyncStorage.removeItem("auth0:user");
     AsyncStorage.removeItem("auth0:email");
     AsyncStorage.removeItem("lastSync");
+    resetLastSyncDate();
     setIsLoggedIn(false);
   };
 
