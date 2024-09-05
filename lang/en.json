@@ -89,6 +89,8 @@
     "ACTIONS": {
       "ORDERS_EXCEPTION": "Order Exception",
       "ORDERS_COMPLETE": "Complete Order",
+      "ORDER_COMPLETED": "Order completed",
+      "COMPLETE_ORDER_FAIL": "Fail to complete order",
       "PLACEHOLDER": "Additional comment",
       "CHOOSE_FILE": "Choose File",
       "NO_FILE": "No file chosen",

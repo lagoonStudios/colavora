@@ -89,6 +89,8 @@
     "ACTIONS": {
       "ORDERS_EXCEPTION": "Excepción de pedido",
       "ORDERS_COMPLETE": "Completar pedido",
+      "ORDER_COMPLETED": "Orden completada",
+      "COMPLETE_ORDER_FAIL": "Fallo al completar orden",
       "PLACEHOLDER": "Comentario Adicional",
       "CHOOSE_FILE": "Seleccionar Archivo",
       "NO_FILE": "Sin Archivo",

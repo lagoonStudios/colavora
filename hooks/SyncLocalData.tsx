@@ -4,7 +4,7 @@ import { useEffect } from "react";
 /** Gets the sync period (in minutes) from the store and sets up a timer to sync the data every syncPeriod minutes */
 export const useSyncDataByPeriod = () => {
   // --- Hooks -----------------------------------------------------------------
-  const { syncPeriod, setSyncing } = useStore();
+  const { syncPeriod, setSyncing, user } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------

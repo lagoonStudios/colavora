@@ -32,6 +32,10 @@ import { IShipmentActionsException } from "@molecules/ShipmentActionsException/S
 import { ShipmentDetailsTabsItem } from "@templates/ShipmentDetailsTabs/ShipmentDetailsTabs.constants";
 import Button from "@atoms/Button";
 import { ShipmentActionsButtonItem } from "@organisms/ShipmentActions/ShipmentAction.constants";
+import { updateShipmentStatus } from "@hooks/SQLite";
+import { ShipmentStatus } from "@constants/types/shipments";
+import { useRouter } from "expo-router";
+import Toast from "react-native-root-toast";
 export default function ShipmentActionsComplete({
   setOption,
   setSelectedTab,
@@ -46,11 +50,13 @@ export default function ShipmentActionsComplete({
   // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
+  const router = useRouter();
   const {
     shipment: { shipmentID, barcode, companyID },
     setModal: setStateModal,
     setVisible,
     user,
+    setSyncing,
   } = useStore();
   const { ...methods } = useForm<IShipmentActionsComplete>({
     defaultValues,
@@ -154,14 +160,43 @@ export default function ShipmentActionsComplete({
   }, [codsSelected?.length, noSelectCOD, statusSendCODs]);
 
   useEffect(() => {
-    if (completeOrderStatus === "error") setVisible(false);
+    if (completeOrderStatus === "error") {
+      Toast.show(t("ACTIONS.COMPLETE_ORDER_FAIL"));
+      setVisible(false);
+    }
 
     if (completeOrderStatus === "success") {
-      onClear();
-      methods.reset();
-      setVisible(false);
-      setCondition(false);
-      setSelectedTab(ShipmentDetailsTabsItem.DETAILS);
+      const setDefaultState = () => {
+        Toast.show(t("ACTIONS.ORDER_COMPLETED"));
+        onClear();
+        methods.reset();
+        setVisible(false);
+        setCondition(false);
+        setSelectedTab(ShipmentDetailsTabsItem.DETAILS);
+      };
+      setSyncing(true);
+      if (shipmentID) {
+        updateShipmentStatus({
+          shipmentId: shipmentID,
+          status: ShipmentStatus.COMPLETED,
+          isSync: true,
+        })
+          .then(() => {
+            setDefaultState();
+            setSyncing(false);
+            router.replace("/");
+            console.log("UPDATED SHIPMENT LOCALLY");
+          })
+          .catch((error) => {
+            console.error(
+              "🚀 ~ file: ShipmentActionsComplete.tsx:179 ~ updateShipmentStatus ~ error:",
+              error
+            );
+            setDefaultState();
+          });
+      } else {
+        setDefaultState();
+      }
     }
   }, [completeOrderStatus]);
   // --- END: Side effects -----------------------------------------------------
@@ -224,7 +259,6 @@ export default function ShipmentActionsComplete({
             disabled={!signatureImage}
             label={t("ACTIONS.CLEAR")}
             labelStyle={styles.cancelButtonLabel}
-            colorTheme="danger"
             onPress={onClear}
           />
 
