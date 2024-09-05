@@ -99,7 +99,7 @@ export function getAllManifestsCount() {
     return new Promise((resolve: (value: { count: number }) => void, reject) => {
         db.getFirstAsync(`
         SELECT
-            manifests.manifest AS manifest_id,
+            COUNT(DISTINCT manifests.manifest) as count,
             COUNT(DISTINCT shipments.shipmentID) AS shipment_count
         FROM
             manifests
@@ -111,9 +111,8 @@ export function getAllManifestsCount() {
         HAVING
             shipment_count > 0;
         `).then((res) => {
-            const count = (res as { count: number });
-            console.log("RES COUNT: ", res);
-            resolve(count);
+            const data = (res as { count: number, shipment_count: number });
+            resolve({ count: data.count });
         }).catch(error => {
             console.error("🚀 ~ file: manifests.local.queries.ts:120 ~ getAllManifestsCount ~ error:", error);
             reject(error);
