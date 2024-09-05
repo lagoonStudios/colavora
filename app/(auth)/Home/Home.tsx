@@ -10,9 +10,12 @@ import SearchInput from "@organisms/SearchInput";
 import { SafeAreaView } from "@atoms/SafeAreaView";
 import { ActivityIndicator, Text } from "@components/Themed";
 import { useStore } from "@stores/zustand";
+import { useSyncData } from "@hooks/syncData";
 
 export default function Home() {
   // --- Hooks -----------------------------------------------------------------
+  useSyncData();
+
   const { t } = useTranslation();
   const { data, loading } = useHomeData();
   const { addShipmentIds } = useStore()

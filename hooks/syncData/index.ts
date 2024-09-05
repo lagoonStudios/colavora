@@ -8,9 +8,6 @@ import { useStore } from "@stores/zustand";
 export function useSyncData() {
   // --- Hooks -----------------------------------------------------------------
   const { user } = useStore();
-
-  useDriverFetch();
-  useCompanyFetch();
   
   useCODFetch(user);
   useReasonsFetch(user);

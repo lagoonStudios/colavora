@@ -10,11 +10,20 @@ export function useCommentsData() {
   // --- Hooks -----------------------------------------------------------------
   const {
     comments,
-    shipment: { shipmentID }
+    shipment: { shipmentID },
+    addComments
   } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
+  useEffect(() => {
+    if(shipmentID){
+      getCommentsByShipmentID({ shipmentID }).then((values) => {
+        addComments(values.map(({ comment }) => String(comment)))
+      })
+    }
+  }, [shipmentID])
+
   const data = useMemo(() => {
     if (comments) {
       const filterValue = " Order Notes:";

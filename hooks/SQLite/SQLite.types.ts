@@ -9,4 +9,5 @@ export type IFetchOrderListItem = Pick<IFetchShipmentByIdData,
     'addressLine1' |
     'addressLine2' |
     'referenceNo' |
+    'dueDate' |
     'qty'>

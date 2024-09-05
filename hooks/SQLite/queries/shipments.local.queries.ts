@@ -184,6 +184,7 @@ export function getShipmentList({ manifestID }: { manifestID?: string }) {
                 addressLine1,
                 addressLine2,
                 referenceNo,
+                dueDate,
                 qty
             FROM 
                 shipments

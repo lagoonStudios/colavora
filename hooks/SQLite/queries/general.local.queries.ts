@@ -19,7 +19,7 @@ export function createAllDBTables() {
             createExceptionsTable(),
             createCODTable(),
         ])
-            .then((res) => {
+            .then(() => {
                 resolve("Tables created correctly");
             })
             .catch((error) => {
