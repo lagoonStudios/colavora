@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { Pressable } from "react-native";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -19,7 +19,8 @@ export default function ManifestListItem(props: ManifestListItemProps) {
   // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
-  const { addShipmentIds } = useStore();
+  const { addShipmentIds, addManifestId } = useStore();
+  const { push } = useRouter();
   // --- END: Hooks ------------------------------------------------------------
 
   useEffect(() => {
@@ -37,13 +38,17 @@ export default function ManifestListItem(props: ManifestListItemProps) {
   }, [data]);
 
   const setShipmentIdsHandler = useCallback(() => {
-    if (data) addShipmentIds(data?.map((shipment) => Number(shipment.shipmentID)));
+    if (data) {
+      addShipmentIds(data?.map((shipment) => Number(shipment.shipmentID)));
+      addManifestId(code)
+      push("/OrdersList")
+    }
   }, [data]);
 
   // --- END: Data and handlers ------------------------------------------------
 
   return <>
-    {data?.length !== 0 && <Link href={"/OrdersList"} asChild>
+    {data?.length !== 0 && <View>
       <Pressable onPress={setShipmentIdsHandler}>
         <Card style={styles.container}>
           <FontAwesome name="list-ul" size={25} color="gray" />
@@ -54,6 +59,6 @@ export default function ManifestListItem(props: ManifestListItemProps) {
           </View>
         </Card>
       </Pressable>
-    </Link>}
+    </View>}
   </>
 }

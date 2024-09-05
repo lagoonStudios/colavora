@@ -185,7 +185,6 @@ export default function ShipmentActionsComplete({
             setDefaultState();
             setSyncing(false);
             router.replace("/");
-            console.log("UPDATED SHIPMENT LOCALLY");
           })
           .catch((error) => {
             console.error(
