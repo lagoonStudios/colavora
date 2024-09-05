@@ -1,5 +1,5 @@
 import { IFetchShipmentByIdData } from "@constants/types/shipments";
-import { getShipmenDetailsById, getShipmentList } from "@hooks/SQLite";
+import { getShipmentList } from "@hooks/SQLite";
 import { useEffect, useState } from "react";
 
 export function useOrdersListData(shipmentIds: number[], manifest: string) {

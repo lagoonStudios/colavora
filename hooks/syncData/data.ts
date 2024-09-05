@@ -48,7 +48,18 @@ export function useDataFetch(user: IFetchUserData | null) {
           if (manifestIdsFromFetching.length > 0) {
             addManifestIds(values.manifests.map(({ manifest }) => Number(manifest)))
             addManifestId(String(manifestIdsFromFetching[0]));
+            const firstManifest = manifestIdsFromFetching.sort((a, b) => a - b)?.[0];
+  
+            if (firstManifest) {
+              addManifestId(String(firstManifest));
+              getAllShipmentIds({ manifestID: String(firstManifest) }).then((shipmentsIdsLocal) => {
+                const shipmentIds = shipmentsIdsLocal?.map(({ shipmentID }) => shipmentID)
+  
+                if (shipmentIds?.length > 0) addShipmentIds(shipmentIds)
+              })
+            }
           }
+
 
         });
       });
