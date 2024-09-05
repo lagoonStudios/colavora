@@ -38,7 +38,7 @@ export async function fetchData(user: IFetchUserData, options: fetchDataOptions)
 
           Promise.all([
             fetchShipmentsData(shipmentsIDs, options),
-            fetchPiecesDataFn(shipmentsIDs, options),
+            fetchPiecesDataFn(shipmentsIDs, user, options),
             fetchCommentsData(shipmentsIDs, user, createdDate, options)
           ]).then(([shipments, pieces, comments]) => {
             resolve({
@@ -144,7 +144,7 @@ function fetchShipmentsData(shipmentIds: number[], options?: fetchDataOptions) {
 
 }
 
-function fetchPiecesDataFn(shipmentIds: number[], options?: fetchDataOptions) {
+function fetchPiecesDataFn(shipmentIds: number[], user: IFetchUserData, options?: fetchDataOptions) {
   return new Promise(async (resolve: (value: IFetchPiecesByIdData[]) => void, reject) => {
 
     if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_PIECES") || "Fetching shipments pieces")
@@ -153,7 +153,7 @@ function fetchPiecesDataFn(shipmentIds: number[], options?: fetchDataOptions) {
     const pieces = new Map<number, IFetchPiecesByIdData>();
 
     for (const id of shipmentIds) {
-      const piecesIDPromise = fetchPiecesData({ id: String(id) })
+      const piecesIDPromise = fetchPiecesData({ id: String(id), companyID: user.companyID })
       promisesPiecesIDs.push(piecesIDPromise)
     }
 
