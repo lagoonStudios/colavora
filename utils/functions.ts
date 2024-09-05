@@ -34,7 +34,7 @@ export async function fetchData(user: IFetchUserData, options: fetchDataOptions)
       fetchManifests(createdDate, user, options).then(manifests => {
         const manifestIds = manifests.map(v => v.manifest!).filter(id => id != null);
 
-        fetchShipmentsIDs(manifestIds, options).then(shipmentsIDs => {
+        fetchShipmentsIDs(manifestIds, user, options).then(shipmentsIDs => {
 
           Promise.all([
             fetchShipmentsData(shipmentsIDs, options),
@@ -94,7 +94,7 @@ function fetchManifests(createdDate: string, user: IFetchUserData, options?: fet
   });
 }
 
-function fetchShipmentsIDs(manifestIds: string[], options?: fetchDataOptions) {
+function fetchShipmentsIDs(manifestIds: string[], user: IFetchUserData, options?: fetchDataOptions) {
   return new Promise(async (resolve: (value: number[]) => void, reject) => {
     if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_SHIPMENTS") || "Fetching shipments")
 
@@ -102,7 +102,9 @@ function fetchShipmentsIDs(manifestIds: string[], options?: fetchDataOptions) {
     const shipmentsIdsPromises: Promise<AxiosResponse<number[], any>>[] = [];
 
     for (const manifestId of manifestIds) {
-      const shipmentIdPromise = fetchShipmentData({ manifest: String(manifestId) })
+      // TODO Remove this continue. We use it just to prevent an API error.
+      if (manifestId === "80120240820") continue;
+      const shipmentIdPromise = fetchShipmentData({ manifest: String(manifestId), companyID: user.companyID, driverId: String(user.driverID) })
       shipmentsIdsPromises.push(shipmentIdPromise)
     }
 

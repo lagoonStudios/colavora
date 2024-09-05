@@ -102,7 +102,6 @@ export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
     return new Promise((resolve, reject) => {
         const incomingIds = shipments.map(v => v.shipmentID).filter(id => id != null);
         filterShipmentIds(incomingIds).then((returnedData) => {
-
             if (returnedData.length > 0) {
                 const shipmentsToInsert = shipments.filter((v) =>
                     returnedData.find(id => id === v.shipmentID)
@@ -110,7 +109,7 @@ export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
                 const promises: Promise<SQLiteRunResult>[] = [];
 
                 for (const item of shipmentsToInsert) {
-                    const parsedItem = { ...item, manifest: item.manifestPk }
+                    const parsedItem = { ...item, manifest: item.manifestDL }
                     const keys = Object.keys(parsedItem).join(',');
                     const placeholders = Object.keys(parsedItem).map(() => "?").join(',');
                     const values: any = Object.values(parsedItem);
@@ -199,7 +198,7 @@ export function getShipmentList({ manifestID }: { manifestID?: string }) {
             FROM 
                 shipments
             WHERE 
-                manifestPK = ?;
+                manifestDL = ?;
             AND
                 status IS NOT NULL
             AND
@@ -309,6 +308,7 @@ export function filterShipmentIds(ids: number[]) {
     return new Promise((resolve: (value: number[]) => void, reject) => {
         db.getAllAsync(`SELECT shipmentID FROM shipments WHERE shipmentID IN (${ids.map(v => '?').join(',')})
         `, [...ids]).then((data) => {
+
             try {
                 const responseData = data as { shipmentID: number }[];
                 const setIncomingIds = new Set(ids);
