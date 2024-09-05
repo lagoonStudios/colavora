@@ -17,18 +17,18 @@ export default function Home() {
   // --- Hooks -----------------------------------------------------------------
   useSyncData();
 
+  const { push } = useRouter();
   const { t } = useTranslation();
   const { data, loading } = useHomeData();
-  const { addShipmentIds, addManifestId } = useStore()
-  const { push } = useRouter();
+  const { addShipmentIds, resetManifestId } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
   const renderItem = ({ item }: { item: HomeItem }) => {
     const setShipmentIdsHandler = () => {
       getShipmentList({}).then((shipment) => {
+        resetManifestId();
         addShipmentIds(shipment?.map(({ shipmentID }) => shipmentID!));
-        addManifestId("");
         push({ pathname: "(tabs)/" + item.route })
       })
     };
