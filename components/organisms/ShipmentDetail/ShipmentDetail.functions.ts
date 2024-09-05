@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { defaultLocation } from "@constants/Constants";
 import { useStore } from "@stores/zustand";
+import { IFetchShipmentByIdData } from "@constants/types/shipments";
 
 export function useCoordinatesFromAddress({
   address,
@@ -48,7 +49,7 @@ export function useCoordinatesFromAddress({
 
 export const useShipmentData = () => {
   const { shipment: rawShipment } = useStore();
-  const shipment = useMemo(() => {
+  const shipment: Partial<IFetchShipmentByIdData & { invoiceBarcode: string }> = useMemo(() => {
     return {
       ...rawShipment,
       dueDate: new Date(rawShipment?.dueDate ?? "").toLocaleString(),

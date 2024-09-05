@@ -261,10 +261,10 @@ export function getShipmentList({ manifestID }: { manifestID?: string }) {
  * @returns A Promise that resolves to a partial object of IFetchShipmentByIdData, or rejects with an error.
  */
 export function getShipmenDetailsById({ shipmentID }: { shipmentID: number }) {
-    return new Promise((resolve: (value: Partial<IFetchShipmentByIdData>) => void, reject) => {
+    return new Promise((resolve: (value: Partial<IFetchShipmentByIdData & { invoiceBarcode: string }>) => void, reject) => {
         db.getFirstAsync(`
             SELECT
-                shipmentID,
+                shipments.shipmentID as shipmentID,
                 consigneeName,
                 zip,
                 senderName,
@@ -278,14 +278,20 @@ export function getShipmenDetailsById({ shipmentID }: { shipmentID: number }) {
                 waybill,
                 serviceTypeName,
                 qty,
-                codAmount
+                codAmount,
+                shipments.barcode,
+                pieces.barcode as invoiceBarcode
             FROM
                 shipments
+            LEFT JOIN pieces ON 
+                pieces.ShipmentID = shipments.shipmentID
             WHERE
-                shipmentID = ?
+                shipments.shipmentID = ?
+            AND 
+                pieces.packageTypeName = "Invoice"
             `, [shipmentID])
             .then((res) => {
-                const data = res as Partial<IFetchShipmentByIdData>;
+                const data = res as Partial<IFetchShipmentByIdData & { invoiceBarcode: string }>
                 resolve(data);
             }).catch(error => {
                 console.error("🚀 ~ getShipmenDetailsById ~ error:", error);
