@@ -40,13 +40,17 @@
       "CREATING_EXCEPTION": "Creando excepción",
       "FETCHING_MANIFESTS": "Buscando manifiestos...",
       "FETCHING_SHIPMENTS": "Buscando ordenes...",
-      "FETCHING_PIECES": "Buscando piezas...",
-      "FETCHING_COMMENTS": "Buscando comentarios...",
+      "FETCHING_PIECES": "Buscando piezas y comentarios..",
+      "FETCHING_COMMENTS": "Buscando piezas y comentarios...",
       "SAVING_MANIFESTS": "Guardando manifiestos...",
       "SAVING_SHIPMENTS": "Guardando ordenes...",
       "SAVING_PIECES": "Guardando piezas...",
       "SAVING_COMMENTS": "Guardando comentarios...",
       "FETCHING_USER": "Buscando informacion del usuario"
+    },
+    "TOAST": {
+      "SYNC_SUCCESS": "Datos sincronizados con éxito",
+      "SYNC_FAIL": "Error al sincronizar datos"
     },
     "LOGIN": {
       "LOGIN": "Iniciar sesión",

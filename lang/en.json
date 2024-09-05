@@ -40,13 +40,17 @@
       "CREATING_EXCEPTION": "Creating exception",
       "FETCHING_MANIFESTS": "Fetching manifests...",
       "FETCHING_SHIPMENTS": "Fetching shipments...",
-      "FETCHING_PIECES": "Fetching pieces...",
-      "FETCHING_COMMENTS": "Fetching comments...",
+      "FETCHING_PIECES": "Fetching pieces and comments...",
+      "FETCHING_COMMENTS": "Fetching pieces and comments...",
       "SAVING_MANIFESTS": "Saving manifests...",
       "SAVING_SHIPMENTS": "Saving shipments...",
       "SAVING_PIECES": "Saving pieces...",
       "SAVING_COMMENTS": "Saving comments...",
       "FETCHING_USER": "Fetching user info..."
+    },
+    "TOAST": {
+      "SYNC_SUCCESS": "Data synced successfully",
+      "SYNC_FAIL": "Error syncing data"
     },
     "LOGIN": {
       "LOGIN": "Login",
