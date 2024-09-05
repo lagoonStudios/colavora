@@ -4,17 +4,9 @@ import { useState, useEffect, useCallback } from "react";
 import { useStore } from "@stores/zustand";
 import { IFetchUserData } from "@constants/types/general";
 import { useTranslation } from "react-i18next";
-import { fetchData } from "@utils/functions";
-import { getAllManifestIds, getAllShipmentIds, getShipmentList, insertMultipleManifests, insertMultipleShipments } from "@hooks/SQLite";
-import { insertMultipleComments } from "@hooks/SQLite/queries/comments.local.queries";
-import { insertMultiplePieces } from "@hooks/SQLite/queries/pieces.local.queries";
-
-
+import { getAllManifestIds, getAllShipmentIds, resetDatabase } from "@hooks/SQLite";
 
 export function useDataFetch(user: IFetchUserData | null) {
-  // --- Local state -----------------------------------------------------------
-  const [success, setSuccess] = useState(false);
-  // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
   const {
@@ -33,36 +25,26 @@ export function useDataFetch(user: IFetchUserData | null) {
   // --- Data and handlers -----------------------------------------------------------
   const fetchDataLocally = useCallback((user: IFetchUserData) => {
     setSyncing(true);
-    fetchData(user, {
+    resetDatabase(user, {
       t,
       setModalMessage: setModal,
     }).then((values) => {
       setLastSyncDate(new Date().toISOString());
       const manifestIdsFromFetching = values.manifests.map(({ manifest }) => Number(manifest))
 
-      insertMultipleManifests(values.manifests).then(() => {
-        insertMultipleShipments(values.shipments).then(() => {
-          insertMultipleComments(values.comments);
-          insertMultiplePieces(values.pieces);
+      if (manifestIdsFromFetching.length > 0) {
+        addManifestIds(values.manifests.map(({ manifest }) => Number(manifest)))
+        const firstManifest = manifestIdsFromFetching.sort((a, b) => a - b)?.[0];
 
-          if (manifestIdsFromFetching.length > 0) {
-            addManifestIds(values.manifests.map(({ manifest }) => Number(manifest)))
-            addManifestId(String(manifestIdsFromFetching[0]));
-            const firstManifest = manifestIdsFromFetching.sort((a, b) => a - b)?.[0];
-  
-            if (firstManifest) {
-              addManifestId(String(firstManifest));
-              getAllShipmentIds({ manifestID: String(firstManifest) }).then((shipmentsIdsLocal) => {
-                const shipmentIds = shipmentsIdsLocal?.map(({ shipmentID }) => shipmentID)
-  
-                if (shipmentIds?.length > 0) addShipmentIds(shipmentIds)
-              })
-            }
-          }
+        if (firstManifest) {
+          addManifestId(String(firstManifest));
+          getAllShipmentIds({ manifestID: String(firstManifest) }).then((shipmentsIdsLocal) => {
+            const shipmentIds = shipmentsIdsLocal?.map(({ shipmentID }) => shipmentID)
 
-
-        });
-      });
+            if (shipmentIds?.length > 0) addShipmentIds(shipmentIds)
+          })
+        }
+      }
 
       setSyncing(false);
       setVisible(false);
@@ -108,5 +90,5 @@ export function useDataFetch(user: IFetchUserData | null) {
   }, [user, lastSyncDate])
   // --- END: Side effects -----------------------------------------------------
 
-  return { success };
+  return;
 }
