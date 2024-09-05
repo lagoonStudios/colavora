@@ -62,7 +62,7 @@ export default function ShipmentDetails() {
               {t("SHIPMENT_DETAILS.WAYBILL")}: {shipment?.waybill ?? ""}
             </Text>
             <Text style={styles.textBody}>
-              {t("SHIPMENT_DETAILS.INVOICE")}: {shipment?.waybill ?? ""}
+              {t("SHIPMENT_DETAILS.INVOICE")}: {shipment?.invoiceBarcode ?? ""}
             </Text>
             <Text style={styles.textBody}>
               {t("SHIPMENT_DETAILS.SERVICE_TYPE")}:{" "}
