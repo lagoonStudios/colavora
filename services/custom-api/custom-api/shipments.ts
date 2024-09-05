@@ -15,16 +15,18 @@ import { BASE_URL } from "@constants/url";
 export function fetchShipmentData({
   manifest,
   companyID,
+  driverId
 }: IOptionalShipmentProps): Promise<AxiosResponse<number[]>> {
   return axiosClient.get(`shipment/`, {
-    params: { manifest, companyID },
+    params: { manifest, companyID, driverId },
   });
 }
 export function fetchPiecesData({
   id: shipmentId,
+  companyID
 }: IOptionalPiecesProps): Promise<AxiosResponse<number[]>> {
   return axiosClient.get(`shipment/piece`, {
-    params: { shipmentId },
+    params: { shipmentId, companyID },
   });
 }
 
