@@ -10,6 +10,7 @@ export function useOrdersListData(shipmentIds: number[], manifest: string) {
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
+    /* TODO: Pedir la nueva data cuando hago click en la manifest list */
     if (shipmentIds?.length > 0) {
       getShipmentList({ manifestID: manifest }).then((values) => {
         setData(values)
