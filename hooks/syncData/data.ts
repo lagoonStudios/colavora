@@ -1,5 +1,5 @@
 import { differenceInCalendarDays } from 'date-fns';
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import { useStore } from "@stores/zustand";
 import { IFetchUserData } from "@constants/types/general";
@@ -24,30 +24,17 @@ export function useDataFetch(user: IFetchUserData | null) {
     setLastSyncDate,
     addManifestIds,
     addShipmentIds,
-    manifestIds,
+    addManifestId,
     lastSyncDate
   } = useStore();
   const { t } = useTranslation();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------------
-  const createdDate = useMemo(() => {
-    const date = new Date();
-
-    date.setTime(date.getTime() - 14 * 24 * 60 * 60 * 1000);
-    date.setHours(1);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    date.setMilliseconds(0);
-
-    return date.toISOString();
-  }, [])
-
   const fetchDataLocally = useCallback((user: IFetchUserData) => {
     setSyncing(true);
     fetchData(user, {
       t,
-      optionalDate: createdDate,
       setModalMessage: setModal,
     }).then((values) => {
       setLastSyncDate(new Date().toISOString());
@@ -58,8 +45,10 @@ export function useDataFetch(user: IFetchUserData | null) {
           insertMultipleComments(values.comments);
           insertMultiplePieces(values.pieces);
 
-          if (manifestIdsFromFetching.length > 0)
+          if (manifestIdsFromFetching.length > 0) {
             addManifestIds(values.manifests.map(({ manifest }) => Number(manifest)))
+            addManifestId(String(manifestIdsFromFetching[0]));
+          }
 
         });
       });
@@ -88,12 +77,18 @@ export function useDataFetch(user: IFetchUserData | null) {
         getAllManifestIds().then((manifestIds) => {
           if (manifestIds.length > 0)
             addManifestIds(manifestIds)
-        }).then(() => {
-          const firstManifest = manifestIds[0];
-          if (firstManifest)
-            getAllShipmentIds({ manifestID: String(firstManifest) }).then((shipmentsIds) => {
+
+          const firstManifest = manifestIds.sort((a, b) => a - b)?.[0];
+
+          if (firstManifest) {
+            addManifestId(String(firstManifest));
+            getAllShipmentIds({ manifestID: String(firstManifest) }).then((shipmentsIdsLocal) => {
+              const shipmentIds = shipmentsIdsLocal?.map(({ shipmentID }) => shipmentID)
+
+              if (shipmentIds?.length > 0) addShipmentIds(shipmentIds)
             })
-        }).finally(() => {
+          }
+
           setSyncing(false);
           setVisible(false);
         })

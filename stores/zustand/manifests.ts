@@ -9,13 +9,16 @@ export interface ManifestIdsSlice {
 
 export interface ManifestsSlice {
   manifests: IFetchManifestByIdData[];
+  manifest: string;
   addManifest: (manifestIds: IFetchManifestByIdData) => void;
+  addManifestId: (manifest: string) => void;
   resetManifests: () => void;
 }
 export const createManifestIdsSlice: StateCreator<ManifestIdsSlice, [], []> = (
   set,
 ) => ({
   manifestIds: [],
+  manifest: "",
   addManifestIds: (manifestIds: number[]) =>
     set((state) => ({ ...state, manifestIds })),
   resetManifestIds: () => set((state) => ({ ...state, manifestIds: [] })),
@@ -25,6 +28,7 @@ export const createManifestsSlice: StateCreator<ManifestsSlice, [], []> = (
   set,
 ) => ({
   manifests: [],
+  manifest:  "",
   addManifest: (manifest: IFetchManifestByIdData) =>
     set(({ manifests }) => {
       const newManifests = manifests;
@@ -32,5 +36,6 @@ export const createManifestsSlice: StateCreator<ManifestsSlice, [], []> = (
 
       return { manifests: newManifests };
     }),
+  addManifestId: (manifest: string) => set((state) => ({ ...state, manifest })),
   resetManifests: () => set((state) => ({ ...state, manifests: [] })),
 });

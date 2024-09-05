@@ -30,7 +30,7 @@ export function useCODFetch(user: IFetchUserData | null) {
   useEffect(() => {
     if (CODs)
       if (CODs?.length !== 0)
-        insertMultipleCOD(CODs)
+        insertMultipleCOD(CODs?.map((COD) => ({ ...COD, lang: i18next.language })))
   }, [CODs])
   // --- END: Side effects -----------------------------------------------------
 }

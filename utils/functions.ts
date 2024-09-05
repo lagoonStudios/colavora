@@ -9,17 +9,26 @@ export type fetchDataOptions = {
   setModalMessage?: (message: string) => void
   /** Used to translate the text */
   t?: (key: string) => string
-  optionalDate?: string
 }
 
-export async function fetchData(user: IFetchUserData, options?: fetchDataOptions) {
+export async function fetchData(user: IFetchUserData, options: fetchDataOptions) {
   return new Promise(async (resolve: (value: {
     manifests: IFetchManifestByIdData[],
     shipments: IFetchShipmentByIdData[],
     pieces: IFetchPiecesByIdData[],
     comments: IRequiredCommentsProps[]
   }) => void, reject) => {
-    const createdDate = options?.optionalDate ?? new Date("2024-08-20T00:01:00").toISOString();
+    const date = new Date();
+
+    date.setTime(date.getTime() - 14 * 24 * 60 * 60 * 1000);
+    date.setHours(1);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+
+    const createdDate = date.toISOString();
+
+    console.log("Fetching data");
     try {
       fetchManifests(createdDate, user, options).then(manifests => {
         const manifestIds = manifests.map(v => v.manifest!).filter(id => id != null);
@@ -61,7 +70,7 @@ function fetchManifests(createdDate: string, user: IFetchUserData, options?: fet
     const manifests = new Map<number, IFetchManifestByIdData>();
     if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_MANIFESTS") || "Fetching manifests")
     try {
-      const manifestIdsFn = await fetchManifestData({ createdDate, companyID: user?.companyID, driverId: String(user?.driverID) })
+      const manifestIdsFn = await fetchManifestData({ createdDate, companyID: user.companyID, driverId: String(user.driverID) })
       if (manifestIdsFn?.data != null) {
         for (const manifestId of manifestIdsFn?.data) {
           if (user?.driverID && user?.companyID)

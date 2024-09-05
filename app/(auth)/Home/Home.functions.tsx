@@ -7,11 +7,12 @@ import { HomeItem } from "./Home.types";
 
 export function useHomeData() {
   // --- Hooks -----------------------------------------------------------------  
-  const { manifestIds, isSyncing } = useStore();
+  const { manifestIds, shipmentIds, isSyncing } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local state -----------------------------------------------------------
   const [loading, setLoading] = useState(true);
+
   const [totalManifests, setTotalManifests] = useState<number>();
   const [totalOrdersForToday, setTotalOrdersForToday] = useState<number>();
   // --- END: Local state ------------------------------------------------------
@@ -43,14 +44,13 @@ export function useHomeData() {
         description: "HOME.DELIVERIES_FOR_TODAY",
         route: "ordersForToday",
         isDisabled: false,
-        data: manifestIds,
+        data: shipmentIds,
       },
       {
         counter: `${totalManifests}`,
         description: "HOME.DELIVERY_MANIFEST",
         route: "manifests",
         isDisabled: false,
-        data: manifestIds,
       },
       // TO DO: Para otra iteracion
       /* {
@@ -66,7 +66,7 @@ export function useHomeData() {
         isDisabled: true,
       }, */
     ],
-    [manifestIds, totalManifests, totalOrdersForToday]
+    [shipmentIds, manifestIds, totalManifests, totalOrdersForToday]
   );
   // --- END: Data and handlers ------------------------------------------------
 

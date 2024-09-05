@@ -29,7 +29,7 @@ export function useReasonsFetch(user: IFetchUserData | null) {
   useEffect(() => {
     if (reasons)
       if (reasons?.length !== 0)
-        insertMultipleExceptions(reasons)
+        insertMultipleExceptions(reasons?.map((reason) => ({ ...reason, lang: i18next.language })))
   }, [reasons])
   // --- END: Side effects -----------------------------------------------------
 }

@@ -9,18 +9,24 @@ import { useHomeData } from "./Home.functions";
 import SearchInput from "@organisms/SearchInput";
 import { SafeAreaView } from "@atoms/SafeAreaView";
 import { ActivityIndicator, Text } from "@components/Themed";
+import { useStore } from "@stores/zustand";
 
 export default function Home() {
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
   const { data, loading } = useHomeData();
+  const { addShipmentIds } = useStore()
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
   const renderItem = ({ item }: { item: HomeItem }) => {
+    const setShipmentIdsHandler = () => {
+      if (item?.data) addShipmentIds(item.data);
+    };
+
     return (
       <Link href={"(tabs)/" + item.route} asChild disabled={item.isDisabled}>
-        <Pressable style={styles.item}>
+        <Pressable style={styles.item} onPress={setShipmentIdsHandler}>
           <Text style={styles.description}>{t(item.description)}</Text>
           {loading ? (
             <ActivityIndicator style={styles.loader} />

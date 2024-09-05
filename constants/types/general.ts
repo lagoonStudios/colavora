@@ -71,14 +71,14 @@ export interface IReasonsByIdData {
   reasonDesc: string;
   reasonCodeDesc: string;
   completeOrder: boolean;
-  lang: Language
+  lang: string
 }
 
 export interface ICODData {
   companyID: string;
   codTypeID: number;
   codType: string;
-  lang: Language;
+  lang: string;
 }
 
 export type PaginatedData = {

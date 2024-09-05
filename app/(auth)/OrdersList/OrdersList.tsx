@@ -14,8 +14,8 @@ import { IFetchShipmentByIdData } from "@constants/types/shipments";
 export default function OrdersList() {
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
-  const { shipmentIds } = useStore();
-  const { data, loading } = useOrdersListData(shipmentIds);
+  const { shipmentIds, manifest } = useStore();
+  const { data, loading } = useOrdersListData(shipmentIds, manifest);
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
