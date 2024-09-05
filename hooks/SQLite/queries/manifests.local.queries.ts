@@ -98,27 +98,24 @@ export function insertMultipleManifests(manifests: IFetchManifestByIdData[]) {
 export function getAllManifestsCount() {
     return new Promise((resolve: (value: { count: number }) => void, reject) => {
         db.getFirstAsync(`
-            SELECT 
-                COUNT(DISTINCT manifests.manifest) AS count 
-            FROM 
-                manifests
-            INNER JOIN shipments ON
-                manifests.manifest = shipments.manifest
-            WHERE
-                shipments.status IS NOT NULL
-            AND
-                shipments.status != '${ShipmentStatus.COMPLETED}'
-            AND 
-                shipments.status != '${ShipmentStatus.CANCELLED}'
-            AND
-                shipments.status != '${ShipmentStatus.PARTIAL_DELIVERY}'
-            AND 
-                shipments.status != '${ShipmentStatus.DELIVERED}'
+        SELECT
+            manifests.manifest AS manifest_id,
+            COUNT(DISTINCT shipments.shipmentID) AS shipment_count
+        FROM
+            manifests
+        INNER JOIN shipments ON
+            (manifests.manifest = shipments.manifestPK OR manifests.manifest = shipments.manifestDL)
+        WHERE
+            shipments.status IS NOT NULL
+            AND shipments.status NOT IN ('${ShipmentStatus.COMPLETED}', '${ShipmentStatus.CANCELLED}', '${ShipmentStatus.PARTIAL_DELIVERY}', '${ShipmentStatus.DELIVERED}')
+        HAVING
+            shipment_count > 0;
         `).then((res) => {
             const count = (res as { count: number });
             console.log("RES COUNT: ", res);
             resolve(count);
         }).catch(error => {
+            console.error("🚀 ~ file: manifests.local.queries.ts:120 ~ getAllManifestsCount ~ error:", error);
             reject(error);
         });
     });
@@ -139,14 +136,8 @@ export function getManifestsList({ page, page_size }: PaginatedData) {
                 COUNT (
                     CASE WHEN
                         shipments.status IS NOT NULL
-                    AND
-                        shipments.status != '${ShipmentStatus.COMPLETED}'
                     AND 
-                        shipments.status != '${ShipmentStatus.CANCELLED}'
-                    AND
-                        shipments.status != '${ShipmentStatus.PARTIAL_DELIVERY}'
-                    AND 
-                        shipments.status != '${ShipmentStatus.DELIVERED}'
+                        shipments.status NOT IN ('${ShipmentStatus.COMPLETED}', '${ShipmentStatus.CANCELLED}', '${ShipmentStatus.PARTIAL_DELIVERY}', '${ShipmentStatus.DELIVERED}')
                     THEN 1 ELSE 0 END
                     ) AS active_shipments
             FROM 

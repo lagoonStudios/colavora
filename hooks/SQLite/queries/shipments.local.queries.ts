@@ -150,14 +150,8 @@ export function getTodaysShipments() {
                 shipments
             WHERE 
                 shipments.status IS NOT NULL
-            AND
-                shipments.status != '${ShipmentStatus.COMPLETED}'
             AND 
-                shipments.status != '${ShipmentStatus.CANCELLED}'
-            AND
-                shipments.status != '${ShipmentStatus.PARTIAL_DELIVERY}'
-            AND 
-                shipments.status != '${ShipmentStatus.DELIVERED}'
+                shipments.status NOT IN ('${ShipmentStatus.COMPLETED}', '${ShipmentStatus.CANCELLED}', '${ShipmentStatus.PARTIAL_DELIVERY}', '${ShipmentStatus.DELIVERED}')
             AND 
                 shipments.dueDate <= datetime('${endToday.toISOString()}')
             
@@ -199,16 +193,8 @@ export function getShipmentList({ manifestID }: { manifestID?: string }) {
                 shipments
             WHERE 
                 (manifestDL = $manifestId OR manifestPK = $manifestId);
-            AND
-                status IS NOT NULL
-            AND
-                shipments.status != '${ShipmentStatus.COMPLETED}'
-            AND
-                shipments.status != '${ShipmentStatus.CANCELLED}'
-            AND
-                shipments.status != '${ShipmentStatus.PARTIAL_DELIVERY}'
-            AND 
-                shipments.status != '${ShipmentStatus.DELIVERED}'
+                AND status IS NOT NULL
+                AND shipments.status NOT IN ('${ShipmentStatus.COMPLETED}', '${ShipmentStatus.CANCELLED}', '${ShipmentStatus.PARTIAL_DELIVERY}', '${ShipmentStatus.DELIVERED}')
             `, { $manifestId: manifestID })
                 .then((res) => {
                     const data = res as IFetchOrderListItem[];
@@ -233,17 +219,12 @@ export function getShipmentList({ manifestID }: { manifestID?: string }) {
                     shipments                    
                 WHERE
                     status IS NOT NULL
-                AND
-                    shipments.status != '${ShipmentStatus.COMPLETED}'
-                AND
-                    shipments.status != '${ShipmentStatus.CANCELLED}'
-                AND
-                    shipments.status != '${ShipmentStatus.PARTIAL_DELIVERY}'
                 AND 
-                    shipments.status != '${ShipmentStatus.DELIVERED}'
+                    shipments.status NOT IN ('${ShipmentStatus.COMPLETED}', '${ShipmentStatus.CANCELLED}', '${ShipmentStatus.PARTIAL_DELIVERY}', '${ShipmentStatus.DELIVERED}')
                 `,)
                 .then((res) => {
                     const data = res as IFetchOrderListItem[];
+
                     resolve(data);
                 }).catch(error => {
                     console.error("🚀 ~ getShipmentListItemByManifestID ~ error:", error);
@@ -279,6 +260,7 @@ export function getShipmenDetailsById({ shipmentID }: { shipmentID: number }) {
                 qty,
                 codAmount,
                 shipments.barcode,
+                shipments.companyID,
                 pieces.barcode as invoiceBarcode
             FROM
                 shipments
