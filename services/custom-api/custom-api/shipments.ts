@@ -10,13 +10,14 @@ import {
   ISendCOD,
   ICompleteOrder,
 } from "@constants/types/shipments";
-import { API_KEY, BASE_URL } from "@constants/url";
+import { BASE_URL } from "@constants/url";
 
 export function fetchShipmentData({
   manifest,
+  companyID,
 }: IOptionalShipmentProps): Promise<AxiosResponse<number[]>> {
   return axiosClient.get(`shipment/`, {
-    params: { manifest },
+    params: { manifest, companyID },
   });
 }
 export function fetchPiecesData({
@@ -58,7 +59,7 @@ export function addCommentdData({
   data.append('comment', String(comment));
 
   const url = `${BASE_URL}shipment/shipment/comment/post`;
-  
+
   return axiosClient.postForm(url, data);
 }
 
@@ -68,7 +69,7 @@ export function orderException({
   shipmentID,
   userID,
   reasonID,
-  photoImage  
+  photoImage
 }: IOptionalExceptionProps): Promise<AxiosResponse<unknown>> {
   let data = new FormData();
   data.append('companyID', String(companyID));
@@ -76,11 +77,11 @@ export function orderException({
   data.append('shipmentID', String(shipmentID));
   data.append('comment', String(comment));
   data.append('reasonID', String(reasonID));
-  
-  if(photoImage) data.append('photoImage', String(photoImage));
+
+  if (photoImage) data.append('photoImage', String(photoImage));
 
   const url = `${BASE_URL}shipment/event/exception/post`;
-  
+
   return axiosClient.postForm(url, data);
 }
 
@@ -99,10 +100,10 @@ export function sendCOD({
   data.append('codAmount', String(codAmount));
   data.append('codTypeID', String(codTypeID));
 
-  if(codCheck) data.append('createdSource', String(codCheck));
+  if (codCheck) data.append('createdSource', String(codCheck));
 
   const url = `${BASE_URL}shipment/event/cod/post`;
-  
+
   return axiosClient.postForm(url, data);
 }
 
@@ -124,9 +125,9 @@ export function completeOrder({
   data.append('podName', String(podName));
   data.append('signatureImage', String(signatureImage));
 
-  if(comment) data.append('comment', String(comment));
-  if(photoImage) data.append('photoImage', String(photoImage));
-  
+  if (comment) data.append('comment', String(comment));
+  if (photoImage) data.append('photoImage', String(photoImage));
+
   const url = `${BASE_URL}shipment/event/dispatch/post`;
 
   return axiosClient.postForm(url, data);

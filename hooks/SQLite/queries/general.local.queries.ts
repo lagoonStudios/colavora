@@ -56,7 +56,7 @@ export function resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
                     if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.SAVING_MANIFESTS") || "Saving manifests")
                     insertMultipleManifests(manifests).then(() => {
                         if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.SAVING_SHIPMENTS") || "Saving shipments")
-                        insertMultipleShipments(shipments.splice(30, 30)).then(() => {
+                        insertMultipleShipments(shipments).then(() => {
                             if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.SAVING_PIECES") || "Saving pieces")
                             Promise.all([
                                 insertMultiplePieces(pieces),
