@@ -198,7 +198,7 @@ export function getShipmentList({ manifestID }: { manifestID?: string }) {
             FROM 
                 shipments
             WHERE 
-                manifestDL = ?;
+                (manifestDL = $manifestId OR manifestPK = $manifestId);
             AND
                 status IS NOT NULL
             AND
@@ -209,7 +209,7 @@ export function getShipmentList({ manifestID }: { manifestID?: string }) {
                 shipments.status != '${ShipmentStatus.PARTIAL_DELIVERY}'
             AND 
                 shipments.status != '${ShipmentStatus.DELIVERED}'
-            `, [manifestID])
+            `, { $manifestId: manifestID })
                 .then((res) => {
                     const data = res as IFetchOrderListItem[];
                     resolve(data);
