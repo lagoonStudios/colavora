@@ -127,13 +127,13 @@ export function getManifestsList({ page, page_size }: PaginatedData) {
                     CASE WHEN
                         shipments.status IS NOT NULL
                     AND
-                        shipments.status != ${ShipmentStatus.COMPLETED}
+                        shipments.status != '${ShipmentStatus.COMPLETED}'
                     AND 
-                        shipments.status != ${ShipmentStatus.CANCELLED}
+                        shipments.status != '${ShipmentStatus.CANCELLED}'
                     AND
-                        shipments.status != ${ShipmentStatus.PARTIAL_DELIVERY}
+                        shipments.status != '${ShipmentStatus.PARTIAL_DELIVERY}'
                     AND 
-                        shipments.status != ${ShipmentStatus.DELIVERED}
+                        shipments.status != '${ShipmentStatus.DELIVERED}'
                     THEN 1 ELSE 0 END
                     ) AS active_shipments
             FROM 
