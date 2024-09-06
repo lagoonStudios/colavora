@@ -28,8 +28,8 @@ export const styles = StyleSheet.create({
     fontSize: 16,
   },
   textSubtitle: {
-    fontWeight: 600,
-    fontSize: 14,
+    fontWeight: 900,
+    fontSize: 16,
   },
   textBody: {
     fontWeight: 600,

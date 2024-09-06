@@ -9,12 +9,17 @@ import { useRouter } from "expo-router";
 import { Pressable } from "react-native";
 import { useStore } from "@stores/zustand";
 import { getShipmenDetailsById } from "@hooks/SQLite";
+import { useCoordinatesFromAddress } from "@organisms/ShipmentDetail/ShipmentDetail.functions";
 
 export default function OrderListItem(props: IFetchShipmentByIdData) {
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
   const { addShipment } = useStore();
   const { push } = useRouter();
+  const { city } = useCoordinatesFromAddress({
+    address: props?.addressLine1?.concat(props?.addressLine2 ?? "") ?? "",
+    zipCode: props?.zip ?? "",
+  })
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
@@ -33,7 +38,7 @@ export default function OrderListItem(props: IFetchShipmentByIdData) {
       <Pressable style={styles.container} onPress={setShipmentHandler}>
         <View>
           <Text style={styles.title}>{props.consigneeName}</Text>
-          <Text style={styles.title}>City, {props.zip}</Text>
+          <Text style={styles.title}>{city}</Text>
         </View>
         <View>
           <Text style={styles.bodyText}>

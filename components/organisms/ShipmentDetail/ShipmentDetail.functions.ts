@@ -14,6 +14,7 @@ export function useCoordinatesFromAddress({
   const [location, setLocation] = useState<{ lat: number; lng: number }>(
     defaultLocation,
   );
+  const [city, setCity] = useState<string>();
   const [error, setError] = useState<unknown>(null);
 
   useEffect(() => {
@@ -44,7 +45,31 @@ export function useCoordinatesFromAddress({
     getLocation();
   }, [address, zipCode]);
 
-  return { loading, location, error };
+  useEffect(() => {
+    const getCity = async () => {
+      setLoading(true);
+      const apiKey = process.env.EXPO_PUBLIC_GOOGLE_CLOUD_API_KEY!;
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${zipCode}&key=${apiKey}`;
+      try {
+        const response = await fetch(url);
+        const json = await response.json();
+        const { results } = json;
+        if (results.length > 0) {
+          const { formatted_address } = results[0];
+
+          setCity(formatted_address);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error("🚀 ~ useEffect ~ Error al obtener las coordenadas:", error)
+        setError(error);
+        setLoading(false);
+      }
+    };
+    getCity();
+  }, [city]);
+
+  return { loading, location, city, error };
 }
 
 export const useShipmentData = () => {
