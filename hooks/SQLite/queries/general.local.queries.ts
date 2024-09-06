@@ -8,6 +8,7 @@ import { createShipmentTable, dropShipmentTable, getTodaysShipments, insertMulti
 import { IFetchUserData } from "@constants/types/general";
 import { IFetchManifestByIdData } from "@constants/types/manifests";
 import { IFetchPiecesByIdData, IRequiredCommentsProps, IShipmentDataFromAPI } from "@constants/types/shipments";
+import { createEventsQueueTable } from "@hooks/eventsQueue";
 
 
 
@@ -20,6 +21,7 @@ export function createAllDBTables() {
             createPiecesTable(),
             createExceptionsTable(),
             createCODTable(),
+            createEventsQueueTable(),
         ])
             .then(() => {
                 resolve("Tables created correctly");
