@@ -33,6 +33,7 @@ export interface IFetchShipmentByIdData {
   qty?: number;
   items?: null | object;
   templateID?: number;
+  manifest?: string;
   manifestDL?: string;
   manifestPk?: string;
   assignPK?: number;
@@ -42,15 +43,17 @@ export interface IFetchShipmentByIdData {
   reason?: null | string;
   barcode?: string;
   referenceNo?: null | string;
+  pieces: IFetchPiecesByIdData[]
+  comments: string[]
 }
 
 export interface IFetchPiecesByIdData {
-  companyID?: string;
-  shipmentID?: number;
-  pieceID?: number;
-  barcode?: string;
-  packageType?: number;
-  packageTypeName?: string;
+  companyID: string;
+  shipmentID: number;
+  pieceID: number
+  barcode: string
+  packageType: number
+  packageTypeName: string
   comments?: null | string | [string];
   pwBack?: string;
   pod?: string;

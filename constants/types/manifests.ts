@@ -1,11 +1,18 @@
-export interface IFetchManifestByIdData {
+import { IFetchShipmentByIdData } from "./shipments";
+export interface IFetchManifestOfflineData {
+  manifestId: string
+  manifestType: string
+  manifestDate: string
+  shipments?: IFetchShipmentByIdData[]
+}
+
+export interface IFetchManifestByIdData extends IFetchManifestOfflineData {
   companyID?: string;
   shipmentID?: number;
-  manifestID?: number;
   manifest?: string;
   driverID?: number;
-  createdDate?: string;
 }
+
 
 export interface IOptionalProps {
   driverId?: string;
