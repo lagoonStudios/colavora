@@ -16,4 +16,5 @@ export interface IOptionalProps {
   manifest?: string;
   optionalKey?: string;
   language?: string;
+  authId?: string;
 }
