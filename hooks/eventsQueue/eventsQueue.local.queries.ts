@@ -7,16 +7,17 @@ import { EventsQueueType, TEventQueueData, TInsertEventParams } from "./eventsQu
 export function createEventsQueueTable() {
     return new Promise((resolve: (value: string) => void, reject) => {
         db.runAsync(`
-            DROP TABLE IF EXISTS eventsQueue;
             CREATE TABLE IF NOT EXISTS eventsQueue (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                eventType CHECK (eventType IN (${EventsQueueType.ORDER_EXCEPTION}, ${EventsQueueType.ORDER_COMPLETED})),
-                body TEXT,
-                shipmentID INTEGER,
-                FOREIGN KEY (shipmentId) REFERENCES shipments(shipmentID)
+                eventType CHECK (eventType IN ('${EventsQueueType.ORDER_EXCEPTION}', '${EventsQueueType.ORDER_COMPLETED}', '${EventsQueueType.ADD_COMMENT}')) NOT NULL,
+                body TEXT NOT NULL,
+                shipmentID INTEGER NOT NULL,
+                FOREIGN KEY (shipmentID) REFERENCES shipments(shipmentID)
             )
             `).then(
-            () => resolve('Events table created sucsessfully')
+                () => {
+                    resolve('Events table created sucsessfully')
+                }
         ).catch(error => {
             console.error("🚀 ~ file: eventsQueue.loca.queries.ts:8 ~ returnnewPromise ~ error:", error);
             reject(error)
@@ -46,14 +47,13 @@ export function dropEventsQueueTable() {
  */
 export function insertEvent({ eventType, body, shipmentID }: TInsertEventParams) {
     return new Promise((resolve: ({ id, message }: { id: number, message: string }) => void, reject) => {
-
         db.runAsync(`
             INSERT INTO eventsQueue (
                 eventType,
                 body,
                 shipmentID
             ) VALUES (
-                ?
+                ?,
                 ?,
                 ?
             )
@@ -88,7 +88,7 @@ export function removeEvent(id: number) {
     });
 }
 
-function getEventsQueue() {
+export function getEventsQueue() {
     return new Promise((resolve: (value: TEventQueueData[]) => void, reject) => {
         db.getAllAsync(`
         SELECT 

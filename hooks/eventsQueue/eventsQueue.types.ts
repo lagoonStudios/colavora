@@ -3,6 +3,7 @@ import { IOptionalExceptionProps } from "@constants/types/shipments"
 export enum EventsQueueType {
     ORDER_EXCEPTION = 'ORDER_EXCEPTION',
     ORDER_COMPLETED = 'ORDER_COMPLETED',
+    ADD_COMMENT = "ADD_COMMENT"
 }
 
 export type TEventQueueData = {
@@ -18,9 +19,10 @@ export type TOrderExceptionsProps =
     Required<
         Pick<
             IOptionalExceptionProps,
-            "shipmentID" | "comment" |
-            "reasonID" |
-            "photoImage"
+            "shipmentID" |
+            "comment" |
+            "reasonID"
         >>
+    & Pick<IOptionalExceptionProps, "photoImage">
     &
-    { commentCreatedDate: string }
+    { commentCreatedDate: string, reasonCode: string }
