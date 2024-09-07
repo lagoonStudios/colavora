@@ -12,10 +12,10 @@ import { IReasonsByIdData, } from "@constants/types/general";
 import { IOptionalProps } from "@constants/types/manifests";
 import { AUTH0_DOMAIN } from "@constants/url";
 
-export async function fetchAuth0UserInfo(){
+export async function fetchAuth0UserInfo() {
   const token = await AsyncStorage.getItem("auth0:token");
 
-  if(token) {
+  if (token) {
     const axiosClient = axios.create({
       baseURL: AUTH0_DOMAIN,
       headers: {
@@ -27,10 +27,8 @@ export async function fetchAuth0UserInfo(){
   }
 }
 
-export function fetchDriverDataByAuth0(
-  id: string,
-): Promise<AxiosResponse<number[]>> {
-  return axiosClient.get(`common/driver`, { params: { auth0: id } });
+export function fetchDriverDataByAuth0({ id: auth0 }: IOptionalProps): Promise<AxiosResponse<number[]>> {
+  return axiosClient.get(`common/driver`, { params: { auth0 } });
 }
 export function fetchUserData(
   id: string,

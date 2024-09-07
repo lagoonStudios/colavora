@@ -12,6 +12,7 @@ import {
   fetchAuth0UserInfo
 } from "@/services/custom-api";
 import { queryKeys } from "@constants/Constants";
+import { IOptionalProps } from "@constants/types/manifests";
 
 export function useAuth0UserInfoData(user: string | undefined) {
   const driverData = useQuery({
@@ -47,11 +48,11 @@ export function useUserData(id?: number) {
   return userData;
 }
 
-export function useDriverDataByAuth0(authId?: string) {
+export function useDriverDataByAuth0({ authId }: IOptionalProps) {
   const driverDataId = useQuery({
     queryKey: [`${queryKeys.driverData}-id`],
     queryFn: async () => {
-      const { data: rawData } = await fetchDriverDataByAuth0(authId ?? "");
+      const { data: rawData } = await fetchDriverDataByAuth0({ id: authId });
       return rawData ?? {};
     },
     retry: 0,

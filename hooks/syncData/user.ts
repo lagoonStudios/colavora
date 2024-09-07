@@ -8,18 +8,20 @@ import { IFetchUserData } from "@constants/types/general";
 
 export function useDriverFetch() {
   // --- Local state -----------------------------------------------------------
-  const [userEmail, setUserEmail] = useState<string>();
   const [userId, setUserId] = useState<number>();
   const [auth0Id, setAuth0Id] = useState<string>();
+  const [userEmail, setUserEmail] = useState<string>();
+  const [setOnce, blockAction] = useState<boolean>(false);
   // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
-  const isConnected = useIsConnected();
   const { t } = useTranslation();
+  const isConnected = useIsConnected();
+
   const { user, addUser, setModal } = useStore();
-  const { data: userInfo } = useAuth0UserInfoData(userEmail);
-  const { data: users } = useDriverDataByAuth0(auth0Id);
   const { data: userData } = useUserData(userId);
+  const { data: users } = useDriverDataByAuth0({ companyID: user?.companyID, authId: auth0Id });
+  const { data: userInfo } = useAuth0UserInfoData(userEmail);
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
@@ -27,27 +29,32 @@ export function useDriverFetch() {
     const getData = async () => {
       try {
         const jsonValue = await AsyncStorage.getItem("auth0:email");
-        if (jsonValue != null) setUserEmail(jsonValue);
-      } catch (e) {}
+        if (jsonValue != null) {
+          blockAction(true)
+          setUserEmail(jsonValue);
+        }
+      } catch (e) { }
     };
 
     const getLocalData = async () => {
       try {
         const jsonValue = await AsyncStorage.getItem("auth0:user");
         if (jsonValue != null) {
+          blockAction(true)
           const localUser = JSON.parse(jsonValue) as IFetchUserData
           addUser(localUser)
         }
-      } catch (e) {}
+      } catch (e) { }
     }
 
-    if (isConnected && user === null) getData();
-    else if(user === null) getLocalData();
-  }, [isConnected, user])
+    if (setOnce === false)
+      if (Boolean(isConnected) && user === null) getData();
+      else if (user === null) getLocalData();
+  }, [setOnce])
 
   useEffect(() => {
     if (isConnected)
-      if (userInfo) {
+      if (userInfo && userInfo.sub) {
         setModal(t("MODAL.FETCHING_USER"))
         setAuth0Id(userInfo?.sub)
       }
@@ -55,7 +62,8 @@ export function useDriverFetch() {
 
   useEffect(() => {
     if (isConnected)
-      if (users && users?.length !== 0) setUserId(users?.[0])
+      if (users && users?.length !== 0)
+        setUserId(users?.[0])
   }, [isConnected, users])
 
   useEffect(() => {
@@ -72,9 +80,9 @@ export function useDriverFetch() {
   }, [userData, userInfo]);
 
   useEffect(() => {
-    if (user !== null) {
+    if (user !== null)
       AsyncStorage.setItem("auth0:user", JSON.stringify(user));
-    }
+
   }, [user]);
   // --- END: Side effects -----------------------------------------------------
 
