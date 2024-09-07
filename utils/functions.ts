@@ -1,7 +1,7 @@
 import { IFetchUserData } from "@constants/types/general";
 import { IFetchManifestByIdData } from "@constants/types/manifests";
 import { IFetchPiecesByIdData, IFetchShipmentByIdData, IRequiredCommentsProps } from "@constants/types/shipments";
-import { fetchCommentsByIdData, fetchManifestData, fetchPiecesByIdData, fetchPiecesData, fetchShipmentByIdData, fetchShipmentData } from "@services/custom-api";
+import { fetchCommentsByIdData, fetchManifestByIdData, fetchManifestData, fetchManifestOfflineData, fetchPiecesByIdData, fetchPiecesData, fetchShipmentByIdData, fetchShipmentData } from "@services/custom-api";
 import { AxiosResponse } from "axios";
 
 export type fetchDataOptions = {
@@ -31,10 +31,23 @@ export async function fetchData(user: IFetchUserData, options: fetchDataOptions)
     const createdDate = new Date("2024-08-20T00:01:00").toISOString();
 
     try {
-      fetchManifests(createdDate, user, options).then(manifests => {
-        const manifestIds = manifests.map(v => v.manifest!).filter(id => id != null);
+      fetchManifests(createdDate, user, options).then(rawManifests => {
+        const manifests:IFetchManifestByIdData[] = [];
+        const shipments: IFetchShipmentByIdData[] = [];
+        const pieces: IFetchPiecesByIdData[] = [];
+        const comments: IRequiredCommentsProps[] = [];
 
-        fetchShipmentsIDs(manifestIds, user, options).then(shipmentsIDs => {
+        /* TODO: Continuar desde aqui */
+        console.log("Shipments: ", { shipments: manifests.map(({ shipments }) => ({ ...shipments })) });
+
+        resolve({
+          manifests,
+          shipments,
+          pieces,
+          comments
+        })
+
+        /* fetchShipmentsIDs(manifestIds, user, options).then(shipmentsIDs => {
 
           Promise.all([
             fetchShipmentsData(shipmentsIDs, options),
@@ -48,13 +61,13 @@ export async function fetchData(user: IFetchUserData, options: fetchDataOptions)
               comments
             })
           }).catch(error => {
-            console.error("🚀 ~ file: functions.ts:100 ~ Promise.all ~ error:", error);
-            reject("🚀 ~ file: functions.ts:100 ~ fetchData ~ error: " + error)
+            console.error("🚀 ~ file: functions.ts:39 ~ Promise.all ~ error:", error);
+            reject("🚀 ~ file: functions.ts:39 ~ fetchData ~ error: " + error)
           })
         }).catch(error => {
           console.error("🚀 ~ file: functions.ts:45 ~ fetchShipmentsIDs ~ error:", error);
           reject(error)
-        })
+        }) */
       }).catch(error => {
         console.error("🚀 ~ file: functions.ts:49 ~ fetchManifests ~ error:", error);
         reject(error)
@@ -68,20 +81,20 @@ export async function fetchData(user: IFetchUserData, options: fetchDataOptions)
 
 function fetchManifests(createdDate: string, user: IFetchUserData, options?: fetchDataOptions) {
   return new Promise(async (resolve: (value: IFetchManifestByIdData[]) => void, reject) => {
-    const manifests = new Map<number, IFetchManifestByIdData>();
+    const manifests = new Map<string, IFetchManifestByIdData>();
     if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_MANIFESTS") || "Fetching manifests")
     try {
-      const manifestIdsFn = await fetchManifestData({ createdDate, companyID: user.companyID, driverId: String(user.driverID) })
+      const manifestIdsFn = await fetchManifestOfflineData({ createdDate, companyID: user.companyID, driverId: String(user.driverID) })
       if (manifestIdsFn?.data != null) {
-        for (const manifestId of manifestIdsFn?.data) {
-
-          if (user?.driverID && user?.companyID)
-            manifests.set(manifestId, {
-              manifest: String(manifestId),
-              companyID: user.companyID,
-              driverID: user.driverID,
-              createdDate
-            })
+        for (const manifest of manifestIdsFn?.data) {          
+          if (manifest != null) 
+            if (user?.driverID && user?.companyID)
+              manifests.set(manifest.manifestId, {
+                ...manifest,
+                manifest: manifest.manifestId,
+                driverID: user.driverID,
+              })
+          
         }
         resolve([...manifests.values()]);
       } else {
