@@ -6,11 +6,10 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { Alert, Pressable } from "react-native";
+import { Alert } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Picker } from "@react-native-picker/picker";
 
-import SaveButton from "@molecules/SaveButton";
 import TextInput from "@molecules/TextInput";
 
 import { useStore } from "@stores/zustand";
@@ -24,11 +23,12 @@ import {
   IShipmentActionsException,
 } from "./ShipmentActionsException.types";
 import ButtonImage from "@atoms/ButtonImage";
-import ArrowLeft from "@atoms/ArrowLeft";
 import { ShipmentActionsButtonItem } from "@organisms/ShipmentActions/ShipmentAction.constants";
 import Button from "@atoms/Button";
 import { insertMultipleComments } from "@hooks/SQLite/queries/comments.local.queries";
 import { fetchCommentsByIdData } from "@services/custom-api";
+import useEventsQueue from "@hooks/eventsQueue/eventsQueue";
+
 export default function ShipmentActionsException({
   setSelectedTab,
   setOption,
@@ -53,6 +53,8 @@ export default function ShipmentActionsException({
   const selectedReason = methods.watch("reasonID");
   const photoImage = methods.watch("photoImage");
   const addtionalCommentt = methods.watch("comment");
+
+  const { orderException } = useEventsQueue();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local state -----------------------------------------------------------
@@ -64,6 +66,7 @@ export default function ShipmentActionsException({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       quality: 0.1,
+      base64: true,
     });
 
     if (!result.canceled) methods.setValue("photoImage", result.assets[0]);
@@ -94,19 +97,40 @@ export default function ShipmentActionsException({
       Alert.alert("Error", "Please enter a comment");
       return;
     }
-    if (!data?.reasonID || data?.reasonID === -1) {
-      Alert.alert("Error", "Please select a reason");
-      return;
+    // if (!data?.reasonID || data?.reasonID === -1) {
+    //   Alert.alert("Error", "Please select a reason");
+    //   return;
+    // }
+    if (shipmentID) {
+      setStateModal(t("MODAL.CREATING_EXCEPTION"));
+      orderException({
+        shipmentID,
+        comment: data.comment,
+        reasonID: data.reasonID,
+        photoImage: photoImage?.base64?.replace("data:image/png;base64,", ""),
+        commentCreatedDate: new Date().toISOString(),
+        reasonCode: String(selectedReason),
+      })
+        .then((res) => {
+          setSelectedTab(ShipmentDetailsTabsItem.COMMENTS);
+          setStateModalVisible(false);
+        })
+        .catch((error) => {
+          setStateModalVisible(false);
+          console.error(
+            "🚀 ~ file: ShipmentActionsException.tsx:120 ~ error:",
+            error
+          );
+        });
     }
-    setStateModal(t("MODAL.CREATING_EXCEPTION"));
-    mutate({
-      companyID: user?.companyID,
-      userID: user?.userID,
-      shipmentID,
-      comment: data.comment,
-      reasonID: data.reasonID,
-      photoImage: photoImage?.base64?.replace("data:image/png;base64,", ""),
-    });
+    // mutate({
+    //   companyID: user?.companyID,
+    //   userID: user?.userID,
+    //   shipmentID,
+    //   comment: data.comment,
+    //   reasonID: data.reasonID,
+    //   photoImage: photoImage?.base64?.replace("data:image/png;base64,", ""),
+    // });
   };
 
   const onError: SubmitErrorHandler<IOrderExceptionForm> = (errors) =>
@@ -115,17 +139,17 @@ export default function ShipmentActionsException({
   // --- END: Data and handlers ------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
-  useEffect(() => {
-    if (isSuccess)
-      addComment({
-        companyID: user?.companyID,
-        userID: user?.userID,
-        shipmentID,
-        comment: `Order Exception - ${selectedReasonLabel} - ${addtionalCommentt}`,
-      });
+  // useEffect(() => {
+  //   if (isSuccess)
+  //     addComment({
+  //       companyID: user?.companyID,
+  //       userID: user?.userID,
+  //       shipmentID,
+  //       comment: `Order Exception - ${selectedReasonLabel} - ${addtionalCommentt}`,
+  //     });
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess]);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [isSuccess]);
 
   useEffect(() => {
     if (error) {
@@ -136,29 +160,7 @@ export default function ShipmentActionsException({
 
   useEffect(() => {
     if (isSuccessAddComment && shipmentID) {
-      const getNewComments = async () => {
-        const createdDate = new Date().toISOString();
-        const comments = await fetchCommentsByIdData({ id: String(shipmentID) })
-
-        if (comments.data) {
-          const commentsToInsert = comments.data?.map((comment) => ({
-            comment,
-            createdDate,
-            companyID: user?.companyID,
-            shipmentID: shipmentID!
-          }))
-
-          insertMultipleComments(commentsToInsert).then(() => {
-            setStateModalVisible(false);
-            setSelectedTab(ShipmentDetailsTabsItem.COMMENTS);        
-          })
-        }
-      }
-
-      getNewComments();
-
     }
-
   }, [isSuccessAddComment]);
   // --- END: Side effects -----------------------------------------------------
   return (

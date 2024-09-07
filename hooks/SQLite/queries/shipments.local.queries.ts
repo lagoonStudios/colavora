@@ -352,6 +352,27 @@ export function updateShipmentStatus({ shipmentId, status, isSync }: { shipmentI
     });
 }
 
+export function updateShipmentByException({ isSync, shipmentID, reasonCode }: { isSync: boolean, shipmentID: number, reasonCode: string }) {
+    return new Promise((resolve, reject) => {
+        db.runAsync(`
+            UPDATE shipments
+                SET is_sync = $isSync, reason = $reasonCode
+            WHERE
+                shipmentID = $shipmentId
+            `, { $isSync: isSync, $shipmentID: shipmentID, $reasonCode: reasonCode })
+            .then(() => {
+                resolve({
+                    message: "is_sync state updated",
+                    changes: { is_sync: isSync }
+                })
+            })
+            .catch(error => {
+                console.error("🚀 ~ file: shipments.local.queries.ts:358 ~ updateShipmentIsSyncState ~ error:", error);
+                reject(error)
+            });
+    });
+}
+
 /**
  * Retrieves all the shipment IDs from the 'shipments' table where manifest match with the given one.
  * @returns A promise that resolves to an array of shipments IDs.
