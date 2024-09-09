@@ -1,5 +1,11 @@
 import { IOptionalExceptionProps } from "@constants/types/shipments"
 
+export type TRemoveEventOptions = {
+    eventId: number,
+    removeFromQueue: (id: number) => void,
+    removeIdFromHandleList: (id: number) => void,
+}
+
 export enum EventsQueueType {
     ORDER_EXCEPTION = 'ORDER_EXCEPTION',
     ORDER_COMPLETED = 'ORDER_COMPLETED',
@@ -23,6 +29,5 @@ export type TOrderExceptionsProps =
             "comment" |
             "reasonID"
         >>
-    & Pick<IOptionalExceptionProps, "photoImage">
-    &
-    { commentCreatedDate: string, reasonCode: string }
+    & Partial<Pick<IOptionalExceptionProps, "photoImage">>
+    & { commentCreatedDate: string, reasonCode: string }

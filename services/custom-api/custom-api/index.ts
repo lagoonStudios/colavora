@@ -14,7 +14,7 @@ export {
 export { fetchManifestByIdData, fetchManifestData, fetchManifestOfflineData } from "./manifests";
 
 export {
-  addCommentdData,
+  addCommentData,
   fetchCommentsByIdData,
   fetchPiecesByIdData,
   fetchPiecesData,

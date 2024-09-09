@@ -7,7 +7,7 @@ import {
   fetchPiecesData,
   fetchPiecesByIdData,
   fetchCommentsByIdData,
-  addCommentdData,
+  addCommentData,
   orderException,
   sendCOD,
   completeOrder,
@@ -17,11 +17,11 @@ import {
   ICompleteOrder,
   IFetchPiecesByIdData,
   IFetchShipmentByIdData,
-  IOptionalCommentsProps,
-  IOptionalExceptionProps,
-  ISendCOD,
+  IOptionalCommentsProps, ISendCOD
 } from "@constants/types/shipments";
 import { IOptionalProps } from "@constants/types/manifests";
+import { TOrderExceptionsProps, TRemoveEventOptions } from "@hooks/eventsQueue/eventsQueue.types";
+import { useStore } from "@stores/zustand";
 
 export function useShipmentsIdData({ manifest }: IOptionalProps) {
   const queryKey = [`${queryKeys.shipmentsIdData}-${manifest}`];
@@ -122,7 +122,7 @@ export function usePiecesByIdData(ids: number[]) {
   return { ...piecesByIdData, data: piecesByIdData?.data ?? [] };
 }
 
-export function useCommentsIdData({ id }: IOptionalProps) {
+export function useCommentsIdData({ id }: { id: number }) {
   const queryKey = [`${queryKeys.commnetsByIdData}-${id}`];
 
   const piecesIdData = useQuery({
@@ -150,40 +150,59 @@ export function useAddComment() {
       comment,
       userID,
       shipmentID,
-    }: IOptionalCommentsProps) => {
-      return await addCommentdData({
+    }: IOptionalCommentsProps & TRemoveEventOptions) => {
+      return await addCommentData({
         companyID,
         comment,
         userID,
         shipmentID,
       });
     },
-    onError: (e) => console.error("🚀 ~ useAddComment ~ e:", e),
+    onError: (e, { removeIdFromHandleList, eventId }) => {
+      console.error("🚀 ~ file: shipments.ts:162 ~ useAddComment ~ e:", e);
+      removeIdFromHandleList(eventId)
+    },
+    onSuccess: ((_, { eventId, removeFromQueue, removeIdFromHandleList }) => {
+      removeIdFromHandleList(eventId)
+      removeFromQueue(eventId)
+    })
   });
 
   return request;
 }
 
 export function useOrderException() {
+  const { user } = useStore();
   const request = useMutation({
     mutationFn: async ({
-      companyID,
       comment,
-      userID,
       shipmentID,
       reasonID,
-      photoImage
-    }: IOptionalExceptionProps) => {
+      photoImage,
+    }: TOrderExceptionsProps & TRemoveEventOptions) => {
+      if (user == null || user.companyID == null || user.userID == null) {
+        console.error("🚀 ~ file: shipments.ts:181 ~ useOrderException ~ user not defined:", user);
+        throw new Error("User not found");
+      };
       return await orderException({
-        companyID,
         comment,
-        userID,
         shipmentID,
         reasonID,
-        photoImage
+        photoImage,
+        userID: user?.userID,
+        companyID: user?.companyID,
       });
     },
-    onError: (e) => console.error("🚀 ~ useOrderException ~ e:", e),
+    onError: (e, { removeIdFromHandleList, eventId }) => {
+      console.error("🚀 ~ file: shipments.ts:187 ~ useOrderException ~ e:", e)
+      removeIdFromHandleList(eventId)
+    },
+    onSuccess: ((_, { removeFromQueue, eventId, removeIdFromHandleList }) => {
+      removeIdFromHandleList(eventId)
+      removeFromQueue(eventId)
+
+    }),
+
   });
 
   return request;

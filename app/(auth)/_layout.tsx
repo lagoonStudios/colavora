@@ -6,14 +6,17 @@ import { useLastSync } from "@hooks/lastSync";
 import { useSyncDataByPeriod } from "@hooks/SyncLocalData";
 import { useDriverFetch } from "@hooks/index";
 import { useCompanyFetch } from "@hooks/syncData/company";
+import useEventsQueue from "@hooks/eventsQueue";
 
 export default function AuthLayout() {
   // --- Hooks -----------------------------------------------------------------
   useSQLite();
-  useLastSync();  
+  useLastSync();
   useDriverFetch();
   useCompanyFetch();
   useSyncDataByPeriod();
+  useEventsQueue();
+
   const { isLoggedIn } = useAuth();
   // --- END: Hooks ------------------------------------------------------------
 

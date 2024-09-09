@@ -5,6 +5,7 @@ import {
   insertEvent,
   removeEvent,
   getEventsQueue,
+  getEventsQueuedIds,
 } from "./eventsQueue.local.queries";
 
 import {
@@ -19,29 +20,21 @@ import {
 } from "@hooks/queries";
 import { useStore } from "@stores/zustand";
 import { insertMultipleComments } from "@hooks/SQLite/queries/comments.local.queries";
-import { updateShipmentByException } from "@hooks/SQLite";
+import { updateShipmentByException } from "@hooks/SQLite/queries/shipments.local.queries";
+import { IOptionalCommentsProps } from "@constants/types/shipments";
 
 export default function useEventsQueue() {
   // --- Hooks -----------------------------------------------------------------
   const isConnected = useIsConnected();
   const { user } = useStore();
+  /** Represents all the events ids that are in the queue. */
   const [queueIds, setQueueIds] = useState<number[]>([]);
+  /** Represents all the ids that are being handled. For example all events that are waiting for an api response. */
+  const [idsHandled, setHandledIds] = useState<number[]>([]);
 
-  const {
-    mutate: completeOrderMutation,
-    status: completeOrderStatus,
-    error: completeOrderError,
-  } = useCompleteOrder();
-  const {
-    mutate: orderExceptionMutation,
-    status: orderExceptionStatus,
-    error: orderExceptionError,
-  } = useOrderException();
-  const {
-    mutate: addCommentMutation,
-    status: addCommentStatus,
-    error: addCommentError,
-  } = useAddComment();
+  const { mutate: completeOrderMutation } = useCompleteOrder();
+  const { mutate: orderExceptionMutation } = useOrderException();
+  const { mutate: addCommentMutation } = useAddComment();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
@@ -55,9 +48,19 @@ export default function useEventsQueue() {
 
   const removeEventFromQueue = useCallback((id: number) => {
     removeEvent(id).then(() => {
+      removeIdFromHandleList(id);
       setQueueIds(queueIds.filter((item) => item !== id));
     });
   }, []);
+
+  const setIdToHandleList = useCallback(
+    (id: number) => setHandledIds((ids) => [...ids, id]),
+    []
+  );
+  const removeIdFromHandleList = useCallback(
+    (id: number) => setHandledIds((ids) => ids.filter((item) => item !== id)),
+    []
+  );
 
   /** Stores an completeOrder event in the queue. */
   const completeOrder = useCallback((id: number) => {}, []);
@@ -114,6 +117,7 @@ export default function useEventsQueue() {
         }),
       ])
         .then((res) => {
+          console.log("order exception queued");
           resolve({
             message: "Order exception stored locally",
             code: 200,
@@ -128,25 +132,82 @@ export default function useEventsQueue() {
         });
     });
   }, []);
+
+  const handleEventsQueue = useCallback(() => {
+    console.log("invoking handleEventsQueue");
+    getEventsQueue().then((events) => {
+      events.forEach((event) => {
+        console.log("event type: ", event.eventType);
+
+        // If the event is already handled, skip it
+        if (idsHandled.includes(event.id)) return;
+
+        // Sets the eventId to the handledIds array
+        setIdToHandleList(event.id);
+
+        // Handles the event based on its type
+        switch (event.eventType) {
+          // Order Exception
+          case EventsQueueType.ORDER_EXCEPTION:
+            const exceptionBody: TOrderExceptionsProps = JSON.parse(event.body);
+            console.log("handling event: ", event.id);
+            orderExceptionMutation({
+              ...exceptionBody,
+              removeFromQueue: removeEventFromQueue,
+              eventId: event.id,
+              removeIdFromHandleList,
+            });
+            break;
+
+          // Complete Order
+          case EventsQueueType.ORDER_COMPLETED:
+            break;
+
+          // Add Comment
+          case EventsQueueType.ADD_COMMENT:
+            const commentBody: IOptionalCommentsProps = JSON.parse(event.body);
+            addCommentMutation({
+              ...commentBody,
+              removeFromQueue: removeEventFromQueue,
+              eventId: event.id,
+              removeIdFromHandleList,
+            });
+            break;
+
+          // Shows an error message if the event type is not handled
+          default:
+            console.error(
+              "🚀 ~ file: eventsQueue.tsx ~ handleEventsQueue ~ error:",
+              "Event type not found or not handled"
+            );
+            break;
+        }
+      });
+    });
+  }, []);
   // --- END: Data and handlers ------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    const asd = () => {
-      getEventsQueue().then((res) => {
-        console.log("queue length: ", res);
-      });
-      asd();
-    };
-  }, [queueLength]);
+    if (isConnected) handleEventsQueue();
+  }, [isConnected, queueLength]);
 
-  //TODO llenar la cola al iniciar la app
-  useEffect(() => {}, []);
-  useEffect(() => {}, [isConnected]);
+  useEffect(() => {
+    // To fill all the state when the app is started
+    const getIds = () => {
+      getEventsQueuedIds().then((res) => {
+        console.log("ids: ", res);
+        setQueueIds(res);
+      });
+    };
+    getIds();
+  }, []);
+
   // -- END: Side effects -----------------------------------------------------
 
   return {
     completeOrder,
     orderException,
+    removeEventFromQueue,
   };
 }

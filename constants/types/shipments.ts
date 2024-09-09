@@ -67,9 +67,9 @@ export interface IOptionalShipmentProps extends IOptionalProps {
 }
 export interface IOptionalPiecesProps extends IOptionalShipmentProps { }
 export interface IOptionalCommentsProps extends IOptionalShipmentProps {
-  userID?: number;
-  shipmentID?: number;
-  comment?: string;
+  userID: number;
+  shipmentID: number;
+  comment: string;
   createdDate?: string;
 }
 export interface IRequiredCommentsProps {
@@ -79,10 +79,8 @@ export interface IRequiredCommentsProps {
   createdDate: string;
 }
 
-export interface IOptionalExceptionProps extends IOptionalCommentsProps {
-  reasonID?: number;
-  photoImage?: string;
-}
+export type IOptionalExceptionProps = Required<Pick<IOptionalCommentsProps, "companyID" | "userID" | "shipmentID" | "comment">>
+  & { reasonID: string, photoImage?: string }
 
 export interface ISendCOD extends IOptionalCommentsProps {
   codTypeID?: number;
