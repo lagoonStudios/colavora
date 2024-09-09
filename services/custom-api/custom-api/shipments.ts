@@ -43,17 +43,18 @@ export function fetchPiecesByIdData({
 
 export function fetchCommentsByIdData({
   id
-}: IOptionalCommentsProps): Promise<AxiosResponse<string[]>> {
+}: { id: number }): Promise<AxiosResponse<string[]>> {
   return axiosClient.get(`shipment/shipment/comment`, {
     params: { shipmentId: Number(id) },
   });
 }
-export function addCommentdData({
+export function addCommentData({
   comment,
   companyID,
   shipmentID,
   userID,
 }: IOptionalCommentsProps): Promise<AxiosResponse<unknown>> {
+  console.log("Uploading comment to API: ", comment);
   let data = new FormData();
   data.append('companyID', String(companyID));
   data.append('userID', String(userID));
@@ -81,7 +82,7 @@ export function orderException({
   data.append('reasonID', String(reasonID));
 
   if (photoImage) data.append('photoImage', String(photoImage));
-
+  console.log("SUBIENDO DATA A LA API: ", shipmentID + ' ' + reasonID + ' ' + comment);
   const url = `${BASE_URL}shipment/event/exception/post`;
 
   return axiosClient.postForm(url, data);

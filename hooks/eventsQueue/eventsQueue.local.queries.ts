@@ -110,3 +110,17 @@ export function getEventsQueue() {
     });
 
 };
+
+export function getEventsQueuedIds() {
+    return new Promise((resolve: (value: number[]) => void, reject) => {
+        db.getAllAsync(`
+            SELECT id from eventsQueue
+            `).then((res) => {
+            const data = res as { id: number }[];
+            resolve(data.map(({ id }) => id));
+        }).catch(error => {
+            console.error("🚀 ~ file: eventsQueue.local.queries.ts:100 ~ getEventsQueue ~ error:", error);
+            reject(error);
+        });
+    })
+}
