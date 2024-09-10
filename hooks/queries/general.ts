@@ -6,13 +6,13 @@ import {
   fetchStatusData,
   fetchStatusByIdData,
   fetchCODByIdData,
-  fetchCODData,
   fetchReasonsByIdData,
   fetchReasonsData,
   fetchAuth0UserInfo
 } from "@/services/custom-api";
 import { queryKeys } from "@constants/Constants";
 import { IOptionalProps } from "@constants/types/manifests";
+import { fetchCODData } from "@services/custom-api/custom-api";
 
 export function useAuth0UserInfoData(user: string | undefined) {
   const driverData = useQuery({

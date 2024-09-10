@@ -66,7 +66,7 @@ export function insertMultipleManifests(manifests: IFetchManifestByIdData[]) {
                 companyID,
                 driverID,
                 createdDate
-                ) VALUES ${notExistingManifests.map(v => `('${v.manifest}', '${v.companyID}', ${v.driverID}, datetime('${v.createdDate}'))`).join(',')};
+                ) VALUES ${notExistingManifests.map(v => `('${v.manifest}', '${v.companyID}', ${v.driverID}, datetime('now'))`).join(',')};
                 `,
                 ).then(() => {
                     resolve({
