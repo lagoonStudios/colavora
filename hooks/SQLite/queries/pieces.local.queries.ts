@@ -67,7 +67,6 @@ export function insertMultiplePieces(pieces: IFetchPiecesByIdData[]) {
         for (const piece of pieces) {
             if (mapPieces.has(piece?.pieceID) === false) mapPieces.set(piece?.pieceID, piece)
         }
-
         const incomingIds = pieces.map(v => v.pieceID).filter(id => id != null);
         db.getAllAsync(`SELECT pieceID FROM pieces WHERE pieceID IN (${incomingIds})`).then((returnedData) => {
             const setExistingIds = new Set<number>();
@@ -108,7 +107,7 @@ export function insertMultiplePieces(pieces: IFetchPiecesByIdData[]) {
                     `,
                 ).then((_) => {
                     resolve({
-                        message: `Ids inserted correctly}`,
+                        message: `Ids inserted correctly`,
                         idsInserted: notExistingIds
                     });
                 }).catch(error => {

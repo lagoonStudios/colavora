@@ -4,7 +4,7 @@ import {
   useThemeColor,
   ActivityIndicator,
 } from "@components/Themed";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import React, { useCallback } from "react";
 import { FlatList, Pressable } from "react-native";
 import { SearchListItemProps } from "./SearchListItems.types";
