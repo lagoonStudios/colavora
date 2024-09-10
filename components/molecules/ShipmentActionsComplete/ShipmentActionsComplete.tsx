@@ -125,7 +125,7 @@ export default function ShipmentActionsComplete({
     if (cods?.length !== 0) {
       const completeCODs = cods?.map((cod) => ({
         ...cod,
-        shipmentID,
+        shipmentID: shipmentID!,
         companyID,
         userID: user?.userID,
       }));
@@ -148,10 +148,10 @@ export default function ShipmentActionsComplete({
         barcode,
         podName,
         comment,
-        companyID,
-        shipmentID,
+        companyID: companyID!,
+        shipmentID: shipmentID!,
         signatureImage,
-        userID: user?.userID,
+        userID: user?.userID!,
         photoImage: photoImage?.base64?.replace("data:image/png;base64", ""),
       });
 

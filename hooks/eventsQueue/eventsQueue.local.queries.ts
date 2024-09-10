@@ -9,8 +9,9 @@ export function createEventsQueueTable() {
         db.runAsync(`
             CREATE TABLE IF NOT EXISTS eventsQueue (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                eventType CHECK (eventType IN ('${EventsQueueType.ORDER_EXCEPTION}', '${EventsQueueType.ORDER_COMPLETED}', '${EventsQueueType.ADD_COMMENT}')) NOT NULL,
+                eventType CHECK (eventType IN ('${EventsQueueType.ORDER_EXCEPTION}', '${EventsQueueType.ORDER_COMPLETED}', '${EventsQueueType.ADD_COMMENT}', '${EventsQueueType.SEND_CODS}')) NOT NULL,
                 body TEXT NOT NULL,
+                tries INTEGER NOT NULL DEFAULT 0,
                 shipmentID INTEGER NOT NULL,
                 FOREIGN KEY (shipmentID) REFERENCES shipments(shipmentID)
             )
@@ -22,23 +23,24 @@ export function createEventsQueueTable() {
             console.error("🚀 ~ file: eventsQueue.loca.queries.ts:8 ~ returnnewPromise ~ error:", error);
             reject(error)
         })
+
     });
 }
 
-export function dropEventsQueueTable() {
-    return new Promise((resolve: ({ status, message }: { status: number, message: string }) => void, reject) => {
-        db.execAsync(`DROP TABLE IF EXISTS eventsQueue;`)
-            .then(() => {
-                resolve({
-                    status: 200,
-                    message: "Table dropped correctly"
-                });
-            }).catch(error => {
-                console.error("🚀 ~ file: eventsQueue.local.queries.ts:44 ~ dropEventsQueueTable ~ error:", error);
-                reject(error)
-            });
-    });
-};
+// export function dropEventsQueueTable() {
+//     return new Promise((resolve: ({ status, message }: { status: number, message: string }) => void, reject) => {
+//         db.execAsync(`DROP TABLE IF EXISTS eventsQueue;`)
+//             .then(() => {
+//                 resolve({
+//                     status: 200,
+//                     message: "Table dropped correctly"
+//                 });
+//             }).catch(error => {
+//                 console.error("🚀 ~ file: eventsQueue.local.queries.ts:44 ~ dropEventsQueueTable ~ error:", error);
+//                 reject(error)
+//             });
+//     });
+// };
 
 /**
  * Inserts the event into the eventsQueue table.

@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
 import { useIsConnected } from "react-native-offline";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   insertEvent,
@@ -7,21 +7,23 @@ import {
   getEventsQueue,
   getEventsQueuedIds,
 } from "./eventsQueue.local.queries";
+import { insertMultipleComments } from "@hooks/SQLite/queries/comments.local.queries";
+import { updateShipmentByException } from "@hooks/SQLite/queries/shipments.local.queries";
+import {
+  useAddComment,
+  useCompleteOrder,
+  useOrderException,
+  useSendCODs,
+} from "@hooks/queries";
+
+import { useStore } from "@stores/zustand";
 
 import {
   EventsQueueType,
   TInsertEventParams,
   TOrderExceptionsProps,
 } from "./eventsQueue.types";
-import {
-  useAddComment,
-  useCompleteOrder,
-  useOrderException,
-} from "@hooks/queries";
-import { useStore } from "@stores/zustand";
-import { insertMultipleComments } from "@hooks/SQLite/queries/comments.local.queries";
-import { updateShipmentByException } from "@hooks/SQLite/queries/shipments.local.queries";
-import { IOptionalCommentsProps } from "@constants/types/shipments";
+import { IOptionalCommentsProps, ISendCOD } from "@constants/types/shipments";
 
 export default function useEventsQueue() {
   // --- Hooks -----------------------------------------------------------------
@@ -32,6 +34,7 @@ export default function useEventsQueue() {
   /** Represents all the ids that are being handled. For example all events that are waiting for an api response. */
   const [idsHandled, setHandledIds] = useState<number[]>([]);
 
+  const { mutate: sendCODMutation } = useSendCODs();
   const { mutate: completeOrderMutation } = useCompleteOrder();
   const { mutate: orderExceptionMutation } = useOrderException();
   const { mutate: addCommentMutation } = useAddComment();
@@ -62,8 +65,60 @@ export default function useEventsQueue() {
     []
   );
 
+  const sendCODS = useCallback((cods: ISendCOD[]) => {
+    return new Promise((resolve, reject) => {
+      if (user == null) {
+        console.error(
+          "🚀 ~ file: eventsQueue.tsx:69 ~ orderException ~ user not defined:",
+          user
+        );
+        reject("User not found");
+        throw new Error("User not found");
+      }
+
+      const promises: Promise<void>[] = [];
+      console.log("storing cods");
+
+      cods.forEach((cod) => {
+        const bodyCODs = JSON.stringify({
+          ...cod,
+          companyID: user.companyID,
+          userID: user.userID,
+          shipmentID: cod.shipmentID,
+          codAmount: cod.codAmount,
+          codCheck: cod.codCheck,
+          codTypeID: cod.codTypeID,
+        });
+        const promise = addEventToQueue({
+          body: bodyCODs,
+          shipmentID: cod.shipmentID,
+          eventType: EventsQueueType.SEND_CODS,
+        });
+        promises.push(promise);
+      });
+      Promise.all(promises)
+        .then((res) => {
+          console.log("res CODS: ", res);
+          resolve({
+            message: "CODS stored locally",
+            code: 200,
+          });
+        })
+        .catch((error) => {
+          console.error(
+            "🚀 ~ file: eventsQueue.tsx:108 ~ sendCODS ~ error:",
+            error
+          );
+        });
+    });
+  }, []);
+
   /** Stores an completeOrder event in the queue. */
-  const completeOrder = useCallback((id: number) => {}, []);
+  const completeOrder = useCallback(() => {
+    return new Promise((resolve, reject) => {
+      reject("Not implemented");
+    });
+  }, []);
 
   /** Stores an orderException event in the queue. */
   const orderException = useCallback((data: TOrderExceptionsProps) => {
@@ -134,7 +189,6 @@ export default function useEventsQueue() {
   }, []);
 
   const handleEventsQueue = useCallback(() => {
-    console.log("invoking handleEventsQueue");
     getEventsQueue().then((events) => {
       events.forEach((event) => {
         console.log("event type: ", event.eventType);
@@ -144,13 +198,12 @@ export default function useEventsQueue() {
 
         // Sets the eventId to the handledIds array
         setIdToHandleList(event.id);
-
+        console.log(`handling event: ${event.id} - type: ${event.eventType}`);
         // Handles the event based on its type
         switch (event.eventType) {
           // Order Exception
           case EventsQueueType.ORDER_EXCEPTION:
             const exceptionBody: TOrderExceptionsProps = JSON.parse(event.body);
-            console.log("handling event: ", event.id);
             orderExceptionMutation({
               ...exceptionBody,
               removeFromQueue: removeEventFromQueue,
@@ -189,11 +242,7 @@ export default function useEventsQueue() {
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    if (isConnected) handleEventsQueue();
-  }, [isConnected, queueLength]);
-
-  useEffect(() => {
-    // To fill all the state when the app is started
+    // To fill the queueIds state when hook is called for the first time.
     const getIds = () => {
       getEventsQueuedIds().then((res) => {
         console.log("ids: ", res);
@@ -203,11 +252,19 @@ export default function useEventsQueue() {
     getIds();
   }, []);
 
+  useEffect(() => {
+    // Calls the function when the user is connected and the queue changes.
+    if (isConnected) handleEventsQueue();
+  }, [isConnected, queueLength]);
+
+  useEffect(() => {
+    console.log("idsHandled", idsHandled);
+  }, [idsHandled]);
   // -- END: Side effects -----------------------------------------------------
 
   return {
     completeOrder,
+    sendCODS,
     orderException,
-    removeEventFromQueue,
   };
 }

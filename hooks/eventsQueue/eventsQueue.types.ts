@@ -9,7 +9,8 @@ export type TRemoveEventOptions = {
 export enum EventsQueueType {
     ORDER_EXCEPTION = 'ORDER_EXCEPTION',
     ORDER_COMPLETED = 'ORDER_COMPLETED',
-    ADD_COMMENT = "ADD_COMMENT"
+    ADD_COMMENT = "ADD_COMMENT",
+    SEND_CODS = "SEND_CODS"
 }
 
 export type TEventQueueData = {

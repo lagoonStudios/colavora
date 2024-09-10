@@ -62,6 +62,12 @@ export interface IFetchPiecesByIdData {
   pod?: string;
 }
 
+export type TGeneralOptionsProps = {
+  userID: number,
+  companyID: string,
+  shipmentID: number
+}
+
 export interface IOptionalShipmentProps extends IOptionalProps {
   readyDate?: string;
 }
@@ -79,21 +85,23 @@ export interface IRequiredCommentsProps {
   createdDate: string;
 }
 
-export type IOptionalExceptionProps = Required<Pick<IOptionalCommentsProps, "companyID" | "userID" | "shipmentID" | "comment">>
-  & { reasonID: string, photoImage?: string }
+export type IOptionalExceptionProps = Required<Pick<TGeneralOptionsProps, "companyID" | "userID" | "shipmentID">>
+  & { reasonID: string, photoImage?: string, comment?: string }
 
-export interface ISendCOD extends IOptionalCommentsProps {
-  codTypeID?: number;
-  codAmount?: number;
-  codCheck?: string;
-  createdSource?: string;
-}
 
-export interface ICompleteOrder extends IOptionalCommentsProps {
+export type ISendCOD = Required<Pick<TGeneralOptionsProps, "shipmentID">>
+  & {
+    codAmount: number,
+    codTypeID: number,
+    codCheck?: string,
+  }
+
+export interface ICompleteOrder extends TGeneralOptionsProps {
   barcode?: string;
   photoImage?: string;
   signatureImage?: string;
   podName?: string;
+  comment?: string
 }
 
 export enum ShipmentStatus {
