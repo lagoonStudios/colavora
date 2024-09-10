@@ -98,6 +98,7 @@ export type ISendCOD = Required<Pick<TGeneralOptionsProps, "shipmentID" | "userI
 
 export interface ICompleteOrder extends TGeneralOptionsProps {
   barcode?: string;
+  barcodes?: string[];
   photoImage?: string;
   signatureImage?: string;
   podName?: string;

@@ -26,6 +26,7 @@ export function useCommentsData() {
 
   const data = useMemo(() => {
     if (comments) {
+      console.log({ comments });
       const filterValue = " Order Notes:";
       const notes = comments.find((value) => value.includes(filterValue));
       const filterComments = comments.filter(
