@@ -200,7 +200,6 @@ export function useOrderException() {
     onSuccess: ((_, { removeFromQueue, eventId, removeIdFromHandleList }) => {
       removeIdFromHandleList(eventId)
       removeFromQueue(eventId)
-
     }),
 
   });
