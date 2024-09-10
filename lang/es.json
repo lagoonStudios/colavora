@@ -89,7 +89,8 @@
     "COMMENTS": {
       "COMMENTS": "Comentarios",
       "ORDERS": "Notas del Pedido",
-      "SAVE": "Guardar"
+      "SAVE": "Guardar",
+      "NO_NOTES": "Sin notas de la orden"
     },
     "ACTIONS": {
       "ORDERS_EXCEPTION": "Excepción de pedido",
