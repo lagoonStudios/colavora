@@ -1,8 +1,39 @@
+import { AxiosResponse } from "axios";
+import { parse, isValid, format } from 'date-fns';
+
 import { IFetchUserData } from "@constants/types/general";
 import { IFetchManifestByIdData } from "@constants/types/manifests";
 import { IFetchPiecesByIdData, IFetchShipmentByIdData, IRequiredCommentsProps, IShipmentDataFromAPI } from "@constants/types/shipments";
 import { fetchCommentsByIdData, fetchManifestOfflineData, fetchPiecesByIdData, fetchPiecesData, fetchShipmentByIdData, fetchShipmentData } from "@services/custom-api";
-import { AxiosResponse } from "axios";
+export function parserStringToDateComment(value: string) {
+  const regex = /\(([^)]+)\)(.*)/;
+  const match = value.match(regex);
+
+  if (!match) {
+    return {
+      createdDate: "",
+      comment: value
+    }; 
+  }
+
+  const stringDate = match[1].trim();
+  const restoCadena = match[2].trim();
+
+  const date = parse(stringDate, 'MM/dd/yy hh:mm:ss aa', new Date());
+
+  if (!isValid(date)) {
+    return {
+      createdDate: "",
+      comment: value
+    }; 
+  }
+
+  const ISODate = format(date, 'yyyy-MM-ddTHH:mm:ss');
+  return {
+    createdDate: ISODate,
+    comment: restoCadena
+  };
+}
 
 export type TCommentForDB = Pick<IRequiredCommentsProps, "comment" | "shipmentID" | "createdDate">
 
