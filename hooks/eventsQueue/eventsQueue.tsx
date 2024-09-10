@@ -77,7 +77,6 @@ export default function useEventsQueue() {
       }
 
       const promises: Promise<void>[] = [];
-      console.log("storing cods");
 
       cods.forEach((cod) => {
         const bodyCODs = JSON.stringify({
@@ -98,7 +97,6 @@ export default function useEventsQueue() {
       });
       Promise.all(promises)
         .then((res) => {
-          console.log("res CODS: ", res);
           resolve({
             message: "CODS stored locally",
             code: 200,
@@ -172,7 +170,6 @@ export default function useEventsQueue() {
         }),
       ])
         .then((res) => {
-          console.log("order exception queued");
           resolve({
             message: "Order exception stored locally",
             code: 200,
@@ -191,14 +188,11 @@ export default function useEventsQueue() {
   const handleEventsQueue = useCallback(() => {
     getEventsQueue().then((events) => {
       events.forEach((event) => {
-        console.log("event type: ", event.eventType);
-
         // If the event is already handled, skip it
         if (idsHandled.includes(event.id)) return;
 
         // Sets the eventId to the handledIds array
         setIdToHandleList(event.id);
-        console.log(`handling event: ${event.id} - type: ${event.eventType}`);
         // Handles the event based on its type
         switch (event.eventType) {
           // Order Exception
@@ -245,7 +239,6 @@ export default function useEventsQueue() {
     // To fill the queueIds state when hook is called for the first time.
     const getIds = () => {
       getEventsQueuedIds().then((res) => {
-        console.log("ids: ", res);
         setQueueIds(res);
       });
     };
@@ -257,9 +250,9 @@ export default function useEventsQueue() {
     if (isConnected) handleEventsQueue();
   }, [isConnected, queueLength]);
 
-  useEffect(() => {
-    console.log("idsHandled", idsHandled);
-  }, [idsHandled]);
+  // useEffect(() => {
+  //   console.log("idsHandled", idsHandled);
+  // }, [idsHandled]);
   // -- END: Side effects -----------------------------------------------------
 
   return {
