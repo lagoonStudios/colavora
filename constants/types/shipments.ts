@@ -89,7 +89,7 @@ export type IOptionalExceptionProps = Required<Pick<TGeneralOptionsProps, "compa
   & { reasonID: string, photoImage?: string, comment?: string }
 
 
-export type ISendCOD = Required<Pick<TGeneralOptionsProps, "shipmentID">>
+export type ISendCOD = Required<Pick<TGeneralOptionsProps, "shipmentID" | "userID" | "companyID">>
   & {
     codAmount: number,
     codTypeID: number,
