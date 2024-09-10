@@ -13,14 +13,11 @@ export default function OrderNotes({ notes }: IOrderNotes) {
   }, [notes]);
   // --- END: Data and handlers ------------------------------------------------
 
-  return (
-    <>
-      {orderNotesContent && <View style={styles.container}>
-        <Text style={styles.noteTitle}>{t("COMMENTS.ORDERS")}</Text>
-        <View style={styles.notesContainer}>
-          <Text style={styles.bodyText}>{orderNotesContent}</Text>
-        </View>
-      </View>}
-    </>
+  return (<View style={styles.container}>
+    <Text style={styles.noteTitle}>{t("COMMENTS.ORDERS")}</Text>
+    <View style={styles.notesContainer}>
+      <Text style={styles.bodyText}>{orderNotesContent ?? t("COMMENTS.NO_NOTES")}</Text>
+    </View>
+  </View>
   );
 }
