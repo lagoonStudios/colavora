@@ -111,7 +111,7 @@ export function usePiecesByIdData(ids: number[]) {
     combine: (results) => {
       return {
         data: results.map((result) => {
-          const data: IFetchPiecesByIdData = result?.data ?? {};
+          const data: IFetchPiecesByIdData | {} = result?.data ?? {};
           return data;
         }),
         pending: results.some((result) => result.isPending),
@@ -233,17 +233,12 @@ export function useCompleteOrder() {
       companyID,
       userID,
       shipmentID,
-      barcode,
+      barcodes,
       podName,
       photoImage,
       signatureImage,
       comment,
     }: ICompleteOrder) => {
-      const barcodes = barcode
-        ?.replaceAll(",", "")
-        ?.split(" ")
-        .filter((e) => e !== "" && e !== " ");
-
       if (barcodes && barcodes?.length !== 0) {
         const results = [];
         for (const barcode of barcodes) {

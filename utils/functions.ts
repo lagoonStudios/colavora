@@ -13,7 +13,7 @@ export function parserStringToDateComment(value: string) {
     return {
       createdDate: "",
       comment: value
-    }; 
+    };
   }
 
   const stringDate = match[1].trim();
@@ -25,7 +25,7 @@ export function parserStringToDateComment(value: string) {
     return {
       createdDate: "",
       comment: value
-    }; 
+    };
   }
 
   const ISODate = format(date, 'yyyy-MM-ddTHH:mm:ss');
@@ -55,19 +55,20 @@ export function parseOfflineData(rawManifests: IFetchManifestByIdData[]) {
 
     if (rawManifest?.shipments)
       for (const rawShipment of rawManifest?.shipments) {
-        const shipment = {...rawShipment, manifest: manifest.manifest};
+        const shipment = { ...rawShipment, manifest: manifest.manifest };
 
         if (shipment?.companyID && shipment?.shipmentID) {
           if (rawShipment?.comments)
-            for (const rawComment of rawShipment?.comments)
+            for (const rawComment of rawShipment?.comments) {
               comments.push({
                 shipmentID: shipment.shipmentID,
                 comment: rawComment,
                 createdDate: new Date().toISOString()
               })
+            }
 
           if (rawShipment?.pieces)
-            for (const rawPiece of rawShipment?.pieces)
+            for (const rawPiece of rawShipment?.pieces) {
               pieces.push({
                 ...rawPiece,
                 shipmentID: shipment.shipmentID,
@@ -75,13 +76,17 @@ export function parseOfflineData(rawManifests: IFetchManifestByIdData[]) {
                 pod: rawPiece?.pod ?? "",
                 pwBack: rawPiece?.pwBack ?? ""
               })
+            }
+            
+          }
+          
+          shipments.push(shipment)
         }
-
-        shipments.push(shipment)
+        
+        manifests.push(manifest)
       }
 
-    manifests.push(manifest)
-  }
+    console.log({ pieces });
 
   return {
     manifests,
@@ -263,7 +268,7 @@ export function fetchCommentsData(shipmentIds: number[], user: IFetchUserData, c
 
     for (const shipmentId of shipmentIds) {
       try {
-        const commentsByShipment = (await fetchCommentsByIdData({ id: String(shipmentId) })).data
+        const commentsByShipment = (await fetchCommentsByIdData({ id: Number(shipmentId) })).data
         if (commentsByShipment != null) {
           for (const comment of commentsByShipment) {
             comments.set(shipmentId + '-' + comment, {

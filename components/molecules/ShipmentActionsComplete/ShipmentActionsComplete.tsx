@@ -52,7 +52,8 @@ export default function ShipmentActionsComplete({
   // --- Hooks -----------------------------------------------------------------
   const router = useRouter();
   const {
-    shipment: { shipmentID, barcode, companyID },
+    shipment: { shipmentID, companyID },
+    pieces,
     setModal: setStateModal,
     setVisible,
     user,
@@ -72,6 +73,7 @@ export default function ShipmentActionsComplete({
   const codsSelected = methods.watch("cods");
   const photoImage = methods.watch("photoImage");
   const signatureImage = methods.watch("signatureImage");
+  const barcodes = pieces.map(({ barcode }) => barcode)
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
@@ -122,16 +124,17 @@ export default function ShipmentActionsComplete({
 
     setStateModal("MODAL.COMPLETING");
 
-    if (cods?.length !== 0) {
-      const completeCODs = cods?.map((cod) => ({
-        ...cod,
-        shipmentID: shipmentID!,
-        companyID,
-        userID: user?.userID,
-      }));
+    if (companyID && user?.userID && shipmentID)
+      if (cods?.length !== 0) {
+        const completeCODs = cods?.map((cod) => ({
+          ...cod,
+          shipmentID: shipmentID!,
+          companyID,
+          userID: user?.userID,
+        }));
 
-      mutate(completeCODs);
-    } else setCondition(true);
+        mutate(completeCODs);
+      } else setCondition(true);
   };
 
   const onError: SubmitErrorHandler<IShipmentActionsComplete> = (errors) =>
@@ -143,21 +146,21 @@ export default function ShipmentActionsComplete({
     const isCompleteWithOutCODsAllow =
       codsSelected?.length === 0 && noSelectCOD;
 
-    if (statusSendCODs === "success" || isCompleteWithOutCODsAllow)
-      completeOrder({
-        barcode,
-        podName,
-        comment,
-        companyID: companyID!,
-        shipmentID: shipmentID!,
-        signatureImage,
-        userID: user?.userID!,
-        photoImage: photoImage?.base64?.replace("data:image/png;base64", ""),
-      });
+    if (companyID)
+      if (statusSendCODs === "success" || isCompleteWithOutCODsAllow)
+        completeOrder({
+          barcodes,
+          podName,
+          comment,
+          companyID: companyID!,
+          shipmentID: shipmentID!,
+          signatureImage,
+          userID: user?.userID!,
+          photoImage: photoImage?.base64?.replace("data:image/png;base64", ""),
+        });
 
     if (statusSendCODs === "error") setVisible(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [codsSelected?.length, noSelectCOD, statusSendCODs]);
+  }, [codsSelected?.length, noSelectCOD, statusSendCODs, companyID]);
 
   useEffect(() => {
     if (completeOrderStatus === "error") {
