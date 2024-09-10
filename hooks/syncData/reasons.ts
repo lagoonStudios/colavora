@@ -1,35 +1,42 @@
-import { mockCompanyId } from "@constants/Constants";
-import { useReasonsIdData, useReasonsByIdData } from "@hooks/queries";
 import i18next from "i18next";
 import { useEffect } from "react";
 import { useStore } from "@stores/zustand";
 import { insertMultipleExceptions } from "@hooks/SQLite";
-import { IFetchUserData } from "@constants/types/general";
+import { IFetchUserData, IReasonsByIdData } from "@constants/types/general";
+import { useReasonsIdData, useReasonsByIdData } from "@hooks/queries";
 
 export function useReasonsFetch(user: IFetchUserData | null) {
   // --- Hooks -----------------------------------------------------------------
-  const { addReasonIds, reasonIds, addReason, reasons } = useStore();
+  const { addReasonIds, reasonIds, setReasons } = useStore();
 
   const { data: reasonsIds } = useReasonsIdData(user?.companyID);
   const { data: reasonsResponse, pending } = useReasonsByIdData(reasonIds, i18next.language);
   // --- END: Hooks ------------------------------------------------------------
 
+  // --- Local State ------------------------------------------------------------    
+  const lang = i18next.language
+  const values = new Map<number, IReasonsByIdData>()
+  // --- END: Local State -------------------------------------------------------
+
+
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    if (reasonsIds) addReasonIds(reasonsIds);
+    if (user && reasonsIds) addReasonIds(reasonsIds);
   }, [reasonsIds]);
 
   useEffect(() => {
-    if (pending === false)
-      reasonsResponse?.map((reason) => {
-        if (reason) addReason(reason);
+    if (!pending && reasonsResponse)
+      reasonsResponse.map((reason) => {
+        if (reason)
+          values.set(reason.reasonID, { ...reason, lang })
       });
   }, [pending, reasonsResponse]);
 
   useEffect(() => {
-    if (reasons)
-      if (reasons?.length !== 0)
-        insertMultipleExceptions(reasons?.map((reason) => ({ ...reason, lang: i18next.language })))
-  }, [reasons])
+    if (values.size !== 0) {
+      insertMultipleExceptions([...values.values()])
+      setReasons([...values.values()])
+    }
+  }, [values])
   // --- END: Side effects -----------------------------------------------------
 }

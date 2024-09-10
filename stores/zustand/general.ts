@@ -25,6 +25,7 @@ export interface CODIdsSlice {
 export interface CODSlice {
   CODs: ICODData[];
   addCOD: (COD: ICODData) => void;
+  setCODs: (COD: ICODData[]) => void;
   resetCODs: () => void;
 }
 
@@ -85,6 +86,7 @@ export const createCODSlice: StateCreator<CODSlice, [], []> = (set) => ({
 
       return { CODs: newCODs };
     }),
+  setCODs: (CODs) => set((state) => ({ ...state, CODs })),
   resetCODs: () => set((state) => ({ ...state, CODs: [] })),
 });
 
