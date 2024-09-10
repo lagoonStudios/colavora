@@ -282,8 +282,6 @@ export function getShipmenDetailsById({ shipmentID }: { shipmentID: number }) {
                 pieces.ShipmentID = shipments.shipmentID
             WHERE
                 shipments.shipmentID = ?
-            AND 
-                pieces.packageTypeName = "Invoice"
             `, [shipmentID])
             .then((res) => {
                 const data = res as Partial<IFetchShipmentByIdData & { invoiceBarcode: string }>

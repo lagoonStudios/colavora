@@ -1,6 +1,8 @@
 import { formatISO, isValid } from "date-fns";
 import { db } from "../db";
 import { IOptionalCommentsProps } from "@constants/types/shipments";
+import { parserStringToDateComment } from "@utils/functions";
+import { SQLiteRunResult } from "expo-sqlite";
 
 /**
  * Creates a comments table in the provided SQLite database if it doesn't exist.
@@ -60,25 +62,24 @@ export function insertMultipleComments(comments: { shipmentID: number, comment: 
     return new Promise((resolve, reject) => {
         filterComments(comments).then((filteredComments) => {
             if (filteredComments.length > 0) {
-                // TODO FIX DATE ISSUE, actualmente está usando la fecha actual, debería usar la del comment.
-                const commentsToInsert = filteredComments.map(v => {
-                    const date = isValid(v.createdDate) ? formatISO(v.createdDate) : formatISO(new Date());
-                    return `(${v.shipmentID},'${v.comment}',datetime('${date}'))`
-                })
-                db.runAsync(`
-                    INSERT INTO comments
-                        (
-                        shipmentId,
-                        comment,
-                        createdDate
-                        )
-                    VALUES ${commentsToInsert.join(',')};
-                `,
-                    commentsToInsert
-                ).then((res) => {
+                const promises: Promise<SQLiteRunResult>[] = [];
+
+                for (const item of filteredComments) {
+                    const parser = { ...parserStringToDateComment(item.comment) }
+                    const promise = db.runAsync(`
+                        INSERT INTO comments (
+                            shipmentId,
+                            comment,
+                            createdDate
+                        ) VALUES (?,?,datetime(?))`, 
+                        [item.shipmentID, parser.comment, parser.createdDate]
+                    )
+
+                    promises.push(promise);
+                }
+                Promise.all(promises).then(() => {
                     resolve({
-                        message: `Comments inserted correctly}`,
-                        rowsInserted: res.changes
+                        message: `Comments inserted correctly}`
                     });
                 }).catch(error => {
                     console.error("🚀 comments.local.queries.ts ~ inserMultipleComments ~ line 63 ~ error:", error);

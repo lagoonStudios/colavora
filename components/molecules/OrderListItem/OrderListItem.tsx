@@ -24,7 +24,7 @@ export default function OrderListItem(props: IFetchShipmentByIdData) {
 
   // --- Data and handlers -----------------------------------------------------
   const setShipmentHandler = () => {
-    if (props.shipmentID) {
+    if (props.shipmentID && props.shipmentID !== null) {
       getShipmenDetailsById({ shipmentID: props.shipmentID }).then((shipment) => {
         addShipment(shipment);
         push({ pathname: "ShipmentDetails" })
