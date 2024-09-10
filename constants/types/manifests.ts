@@ -1,9 +1,9 @@
-import { IFetchShipmentByIdData } from "./shipments";
+import { IShipmentDataFromAPI } from "./shipments";
 export interface IFetchManifestOfflineData {
   manifestId: string
   manifestType: string
   manifestDate: string
-  shipments?: IFetchShipmentByIdData[]
+  shipments?: IShipmentDataFromAPI[]
 }
 
 export interface IFetchManifestByIdData extends IFetchManifestOfflineData {

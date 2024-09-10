@@ -33,7 +33,6 @@ export interface IFetchShipmentByIdData {
   qty?: number;
   items?: null | object;
   templateID?: number;
-  manifest?: string;
   manifestDL?: string;
   manifestPk?: string;
   assignPK?: number;
@@ -43,8 +42,12 @@ export interface IFetchShipmentByIdData {
   reason?: null | string;
   barcode?: string;
   referenceNo?: null | string;
-  pieces: IFetchPiecesByIdData[]
-  comments: string[]
+}
+export interface IShipmentDataFromAPI extends IFetchShipmentByIdData {
+  driverAssign?: number;
+  pieces?: IFetchPiecesByIdData[];
+  comments?: string[];  
+  manifest?: string;
 }
 
 export interface IFetchPiecesByIdData {

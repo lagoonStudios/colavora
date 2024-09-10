@@ -7,7 +7,7 @@ import { createPiecesTable, dropPiecesTable, insertMultiplePieces } from "./piec
 import { createShipmentTable, dropShipmentTable, getTodaysShipments, insertMultipleShipments } from "./shipments.local.queries";
 import { IFetchUserData } from "@constants/types/general";
 import { IFetchManifestByIdData } from "@constants/types/manifests";
-import { IFetchPiecesByIdData, IFetchShipmentByIdData, IRequiredCommentsProps } from "@constants/types/shipments";
+import { IFetchPiecesByIdData, IRequiredCommentsProps, IShipmentDataFromAPI } from "@constants/types/shipments";
 
 
 
@@ -48,7 +48,7 @@ export function dropTables() {
 }
 
 export function resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
-    return new Promise(async (resolve: (value: { manifests: IFetchManifestByIdData[], shipments: IFetchShipmentByIdData[], pieces: IFetchPiecesByIdData[], comments: IRequiredCommentsProps[] }) => void, reject) => {
+    return new Promise(async (resolve: (value: { manifests: IFetchManifestByIdData[], shipments: IShipmentDataFromAPI[], pieces: IFetchPiecesByIdData[], comments: IRequiredCommentsProps[] }) => void, reject) => {
         fetchData(user, options).then(data => {
             dropTables().then(() => {
                 createAllDBTables().then(() => {
@@ -68,10 +68,10 @@ export function resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
                                 reject(error)
                             })
                         })
-                            .catch(error => {
-                                console.error("🚀 ~ file: general.local.queries.ts:55 ~ insertMultipleShipments ~ error:", error);
-                                reject(error);
-                            });
+                        .catch(error => {
+                            console.error("🚀 ~ file: general.local.queries.ts:55 ~ insertMultipleShipments ~ error:", error);
+                            reject(error);
+                        });
                     }).catch(error => {
                         console.error("🚀 ~ file: general.local.queries.ts:49 ~ insertMultipleManifests ~ error:", error);
                         reject(error);
