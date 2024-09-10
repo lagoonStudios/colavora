@@ -1,14 +1,63 @@
 import { IFetchUserData } from "@constants/types/general";
 import { IFetchManifestByIdData } from "@constants/types/manifests";
-import { IFetchPiecesByIdData, IFetchShipmentByIdData, IRequiredCommentsProps } from "@constants/types/shipments";
-import { fetchCommentsByIdData, fetchManifestByIdData, fetchManifestData, fetchManifestOfflineData, fetchPiecesByIdData, fetchPiecesData, fetchShipmentByIdData, fetchShipmentData } from "@services/custom-api";
+import { IFetchPiecesByIdData, IFetchShipmentByIdData, IRequiredCommentsProps, IShipmentDataFromAPI } from "@constants/types/shipments";
+import { fetchCommentsByIdData, fetchManifestOfflineData, fetchPiecesByIdData, fetchPiecesData, fetchShipmentByIdData, fetchShipmentData } from "@services/custom-api";
 import { AxiosResponse } from "axios";
+
+export type TCommentForDB = Pick<IRequiredCommentsProps, "comment" | "shipmentID" | "createdDate">
 
 export type fetchDataOptions = {
   /** Used to update the state modal message */
   setModalMessage?: (message: string) => void
   /** Used to translate the text */
   t?: (key: string) => string
+}
+
+export function parseOfflineData(rawManifests: IFetchManifestByIdData[]) {
+  const manifests: IFetchManifestByIdData[] = [];
+  const shipments: IShipmentDataFromAPI[] = [];
+  const comments: TCommentForDB[] = [];
+  const pieces: IFetchPiecesByIdData[] = [];
+
+  for (const rawManifest of rawManifests) {
+    const manifest = rawManifest as IFetchManifestByIdData;
+
+    if (rawManifest?.shipments)
+      for (const rawShipment of rawManifest?.shipments) {
+        const shipment = {...rawShipment, manifest: manifest.manifest};
+
+        if (shipment?.companyID && shipment?.shipmentID) {
+          if (rawShipment?.comments)
+            for (const rawComment of rawShipment?.comments)
+              comments.push({
+                shipmentID: shipment.shipmentID,
+                comment: rawComment,
+                createdDate: new Date().toISOString()
+              })
+
+          if (rawShipment?.pieces)
+            for (const rawPiece of rawShipment?.pieces)
+              pieces.push({
+                ...rawPiece,
+                shipmentID: shipment.shipmentID,
+                companyID: shipment.companyID,
+                pod: rawPiece?.pod ?? "",
+                pwBack: rawPiece?.pwBack ?? ""
+              })
+        }
+
+        shipments.push(shipment)
+      }
+
+    manifests.push(manifest)
+  }
+
+  return {
+    manifests,
+    shipments,
+    pieces,
+    comments
+  }
 }
 
 export async function fetchData(user: IFetchUserData, options: fetchDataOptions) {
@@ -32,42 +81,17 @@ export async function fetchData(user: IFetchUserData, options: fetchDataOptions)
 
     try {
       fetchManifests(createdDate, user, options).then(rawManifests => {
-        const manifests:IFetchManifestByIdData[] = [];
-        const shipments: IFetchShipmentByIdData[] = [];
-        const pieces: IFetchPiecesByIdData[] = [];
-        const comments: IRequiredCommentsProps[] = [];
+        const data = parseOfflineData(rawManifests);
 
-        /* TODO: Continuar desde aqui */
-        console.log("Shipments: ", { shipments: manifests.map(({ shipments }) => ({ ...shipments })) });
-
-        resolve({
-          manifests,
-          shipments,
-          pieces,
-          comments
+        const comments = data.comments.map((rawComment) => {
+          const comment = rawComment as IRequiredCommentsProps;
+          return comment
         })
 
-        /* fetchShipmentsIDs(manifestIds, user, options).then(shipmentsIDs => {
-
-          Promise.all([
-            fetchShipmentsData(shipmentsIDs, options),
-            fetchPiecesDataFn(shipmentsIDs, user, options),
-            fetchCommentsData(shipmentsIDs, user, createdDate, options)
-          ]).then(([shipments, pieces, comments]) => {
-            resolve({
-              manifests,
-              shipments,
-              pieces,
-              comments
-            })
-          }).catch(error => {
-            console.error("🚀 ~ file: functions.ts:39 ~ Promise.all ~ error:", error);
-            reject("🚀 ~ file: functions.ts:39 ~ fetchData ~ error: " + error)
-          })
-        }).catch(error => {
-          console.error("🚀 ~ file: functions.ts:45 ~ fetchShipmentsIDs ~ error:", error);
-          reject(error)
-        }) */
+        resolve({
+          ...data,
+          comments
+        })
       }).catch(error => {
         console.error("🚀 ~ file: functions.ts:49 ~ fetchManifests ~ error:", error);
         reject(error)
@@ -82,19 +106,25 @@ export async function fetchData(user: IFetchUserData, options: fetchDataOptions)
 function fetchManifests(createdDate: string, user: IFetchUserData, options?: fetchDataOptions) {
   return new Promise(async (resolve: (value: IFetchManifestByIdData[]) => void, reject) => {
     const manifests = new Map<string, IFetchManifestByIdData>();
+
     if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_MANIFESTS") || "Fetching manifests")
     try {
-      const manifestIdsFn = await fetchManifestOfflineData({ createdDate, companyID: user.companyID, driverId: String(user.driverID) })
+      const manifestIdsFn = await fetchManifestOfflineData({
+        createdDate,
+        companyID: user.companyID,
+        driverId: String(user.driverID)
+      })
+
       if (manifestIdsFn?.data != null) {
-        for (const manifest of manifestIdsFn?.data) {          
-          if (manifest != null) 
+        for (const manifest of manifestIdsFn?.data) {
+          if (manifest != null)
             if (user?.driverID && user?.companyID)
               manifests.set(manifest.manifestId, {
                 ...manifest,
                 manifest: manifest.manifestId,
                 driverID: user.driverID,
               })
-          
+
         }
         resolve([...manifests.values()]);
       } else {
@@ -108,7 +138,7 @@ function fetchManifests(createdDate: string, user: IFetchUserData, options?: fet
   });
 }
 
-function fetchShipmentsIDs(manifestIds: string[], user: IFetchUserData, options?: fetchDataOptions) {
+export function fetchShipmentsIDs(manifestIds: string[], user: IFetchUserData, options?: fetchDataOptions) {
   return new Promise(async (resolve: (value: number[]) => void, reject) => {
     if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_SHIPMENTS") || "Fetching shipments")
 
@@ -132,7 +162,7 @@ function fetchShipmentsIDs(manifestIds: string[], user: IFetchUserData, options?
 }
 
 
-function fetchShipmentsData(shipmentIds: number[], options?: fetchDataOptions) {
+export function fetchShipmentsData(shipmentIds: number[], options?: fetchDataOptions) {
   return new Promise(async (resolve: (value: IFetchShipmentByIdData[]) => void, reject) => {
     if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_SHIPMENTS") || "Fetching shipments")
     const promises: Promise<AxiosResponse<IFetchShipmentByIdData, any>>[] = [];
@@ -157,7 +187,7 @@ function fetchShipmentsData(shipmentIds: number[], options?: fetchDataOptions) {
 
 }
 
-function fetchPiecesDataFn(shipmentIds: number[], user: IFetchUserData, options?: fetchDataOptions) {
+export function fetchPiecesDataFn(shipmentIds: number[], user: IFetchUserData, options?: fetchDataOptions) {
   return new Promise(async (resolve: (value: IFetchPiecesByIdData[]) => void, reject) => {
 
     if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_PIECES") || "Fetching shipments pieces")
@@ -195,7 +225,7 @@ function fetchPiecesDataFn(shipmentIds: number[], user: IFetchUserData, options?
 }
 
 
-function fetchCommentsData(shipmentIds: number[], user: IFetchUserData, createdDate: string, options?: fetchDataOptions) {
+export function fetchCommentsData(shipmentIds: number[], user: IFetchUserData, createdDate: string, options?: fetchDataOptions) {
   return new Promise(async (resolve: (value: IRequiredCommentsProps[]) => void, reject) => {
     const comments = new Map<string, IRequiredCommentsProps>();
     if (options?.setModalMessage) options?.setModalMessage(options?.t?.("MODAL.FETCHING_COMMENTS") || "Fetching shipments pieces")

@@ -49,7 +49,8 @@ export function useDataFetch(user: IFetchUserData | null) {
       setSyncing(false);      
       setVisible(false);
     })
-      .catch(() => {
+    .catch((error) => {
+        console.error("🚀 ~ file: data.ts:28 ~ fetchDataLocally ~ error:", error);
         setSyncing(false);
         setVisible(false);
       })

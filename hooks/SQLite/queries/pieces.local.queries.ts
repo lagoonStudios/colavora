@@ -61,6 +61,12 @@ export function dropPiecesTable() {
  */
 export function insertMultiplePieces(pieces: IFetchPiecesByIdData[]) {
     return new Promise((resolve, reject) => {
+        const mapPieces = new Map<number, IFetchPiecesByIdData>();
+
+        for (const piece of pieces) {
+            if(mapPieces.has(piece?.pieceID) !== false) mapPieces.set(piece?.pieceID, piece)
+        }
+
         const incomingIds = pieces.map(v => v.pieceID).filter(id => id != null);
         db.getAllAsync(`SELECT pieceID FROM pieces WHERE pieceID IN (${incomingIds})`).then((returnedData) => {
             const setExistingIds = new Set<number>();
@@ -69,7 +75,7 @@ export function insertMultiplePieces(pieces: IFetchPiecesByIdData[]) {
             });
             const setIncomingIds = new Set(pieces.map(v => v.pieceID));
             const notExistingIds = [...setIncomingIds].filter(id => !setExistingIds.has(id!));
-            const piecesToInsert = pieces.filter((v) =>
+            const piecesToInsert = [...mapPieces.values()].filter((v) =>
                 notExistingIds.find(id => id === v.pieceID)
             ).map(v => `
                 (

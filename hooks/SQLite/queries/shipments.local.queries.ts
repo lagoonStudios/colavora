@@ -2,7 +2,7 @@ import { db } from "../db";
 import { SQLiteRunResult } from "expo-sqlite";
 
 import { IFetchOrderListItem } from "../SQLite.types";
-import { IFetchShipmentByIdData, ShipmentStatus } from "@constants/types/shipments";
+import { IFetchShipmentByIdData, IShipmentDataFromAPI, ShipmentStatus } from "@constants/types/shipments";
 
 /**
  * Creates the `shipments` table in the SQLite database if it doesn't exist.
@@ -98,7 +98,7 @@ export function dropShipmentTable() {
  *
  * @throws {Error}  - Rejects with an error if there is a problem with the database operation.
  */
-export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
+export function insertMultipleShipments(shipments: IShipmentDataFromAPI[]) {
     return new Promise((resolve, reject) => {
         const incomingIds = shipments.map(v => v.shipmentID).filter(id => id != null);
         filterShipmentIds(incomingIds).then((returnedData) => {
@@ -109,7 +109,21 @@ export function insertMultipleShipments(shipments: IFetchShipmentByIdData[]) {
                 const promises: Promise<SQLiteRunResult>[] = [];
 
                 for (const item of shipmentsToInsert) {
-                    const parsedItem = { ...item, manifest: item.manifestDL }
+                    const rawItem = item
+                    
+                    delete rawItem.driverAssign
+                    delete rawItem.comments
+                    delete rawItem.pieces
+
+                    const parsedItem: IFetchShipmentByIdData = {
+                        ...rawItem, 
+                        manifestDL: item.manifest,
+                        manifestPk: item.manifest,
+                        assignPK: item?.assignPK ?? 0,
+                        assignDL: item?.assignDL ?? 0,
+                        division: item?.division ?? "",
+                        barcode: item?.barcode ?? "",
+                    }
                     const keys = Object.keys(parsedItem).join(',');
                     const placeholders = Object.keys(parsedItem).map(() => "?").join(',');
                     const values: any = Object.values(parsedItem);
