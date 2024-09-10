@@ -61,10 +61,11 @@ export function dropPiecesTable() {
  */
 export function insertMultiplePieces(pieces: IFetchPiecesByIdData[]) {
     return new Promise((resolve, reject) => {
+
         const mapPieces = new Map<number, IFetchPiecesByIdData>();
 
         for (const piece of pieces) {
-            if(mapPieces.has(piece?.pieceID) !== false) mapPieces.set(piece?.pieceID, piece)
+            if (mapPieces.has(piece?.pieceID) === false) mapPieces.set(piece?.pieceID, piece)
         }
 
         const incomingIds = pieces.map(v => v.pieceID).filter(id => id != null);
