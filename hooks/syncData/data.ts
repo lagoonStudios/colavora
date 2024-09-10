@@ -10,7 +10,7 @@ export function useDataFetch(user: IFetchUserData | null) {
 
   // --- Hooks -----------------------------------------------------------------
   const {
-    setModal,
+    setModal: setModalMessage,
     setVisible,
     setSyncing,
     setLastSyncDate,
@@ -27,7 +27,7 @@ export function useDataFetch(user: IFetchUserData | null) {
     setSyncing(true);
     resetDatabase(user, {
       t,
-      setModalMessage: setModal,
+      setModalMessage,
     }).then((values) => {
       setLastSyncDate(new Date().toISOString());
       const manifestIdsFromFetching = values.manifests.map(({ manifest }) => Number(manifest))
@@ -46,28 +46,27 @@ export function useDataFetch(user: IFetchUserData | null) {
         }
       }
 
-      setSyncing(false);      
+      setSyncing(false);
       setVisible(false);
     })
-    .catch((error) => {
+      .catch((error) => {
         console.error("🚀 ~ file: data.ts:28 ~ fetchDataLocally ~ error:", error);
         setSyncing(false);
         setVisible(false);
       })
-  }, [])
+  }, [t, setModalMessage, user])
   // --- END: Data and handlers ------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    if (user && lastSyncDate === null) {
-      fetchDataLocally(user)
-    } else if (user && lastSyncDate !== null) {
+    if (user && lastSyncDate === null) fetchDataLocally(user)
+    else if (user && lastSyncDate !== null) {
       const actualDate = new Date();
       const lastDate = new Date(lastSyncDate);
       const difference = differenceInCalendarDays(actualDate, lastDate)
       /* TO DO: si la diferencia de fecha es 0 requerir la local data para meterla en zustand */
       if (difference > 0) fetchDataLocally(user)
-      else if (difference === 0) {
+      else if (difference === 0)
         getAllManifestIds().then((manifestIds) => {
           if (manifestIds.length > 0)
             addManifestIds(manifestIds)
@@ -86,8 +85,8 @@ export function useDataFetch(user: IFetchUserData | null) {
           setSyncing(false);
           setVisible(false);
         })
-      }
     }
+
   }, [user, lastSyncDate])
   // --- END: Side effects -----------------------------------------------------
 

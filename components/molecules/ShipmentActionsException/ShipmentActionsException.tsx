@@ -10,13 +10,14 @@ import { Alert } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Picker } from "@react-native-picker/picker";
 
-import { useStore } from "@stores/zustand";
-
-import useEventsQueue from "@hooks/eventsQueue/eventsQueue";
 
 import Button from "@atoms/Button";
+import { useStore } from "@stores/zustand";
 import ButtonImage from "@atoms/ButtonImage";
 import TextInput from "@molecules/TextInput";
+import { IReasonsByIdData } from "@constants/types/general";
+import useEventsQueue from "@hooks/eventsQueue/eventsQueue";
+import { useOrderException, useAddComment } from "@hooks/queries";
 import { ActivityIndicator, Text, View } from "@components/Themed";
 import { ShipmentActionsButtonItem } from "@organisms/ShipmentActions/ShipmentAction.constants";
 import { ShipmentDetailsTabsItem } from "@templates/ShipmentDetailsTabs/ShipmentDetailsTabs.constants";
@@ -35,7 +36,6 @@ export default function ShipmentActionsException({
   const {
     shipment: { shipmentID },
     reasons,
-    user,
     setModal: setStateModal,
     setVisible: setStateModalVisible,
   } = useStore();
@@ -46,13 +46,8 @@ export default function ShipmentActionsException({
   const [loading, setLoading] = useState(false);
   const selectedReason = methods.watch("reasonID");
   const photoImage = methods.watch("photoImage");
-  const addtionalCommentt = methods.watch("comment");
-
-  const { orderException } = useEventsQueue();
+  // const addtionalCommentt = methods.watch("comment");
   // --- END: Hooks ------------------------------------------------------------
-
-  // --- Local state -----------------------------------------------------------
-  // --- END: Local state ------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
   const pickImage = async () => {
@@ -66,23 +61,30 @@ export default function ShipmentActionsException({
     if (!result.canceled) methods.setValue("photoImage", result.assets[0]);
   };
 
-  const selectedReasonLabel = useMemo(() => {
-    if (selectedReason)
-      return reasons?.find(({ reasonID }) => reasonID === selectedReason)
-        ?.reasonCodeDesc;
-  }, [reasons, selectedReason]);
+  // const selectedReasonLabel = useMemo(() => {
+  //   if (selectedReason)
+  //     return [...reasons.values()]?.find(({ reasonID }) => reasonID === selectedReason)
+  //       ?.reasonCodeDesc;
+  // }, [reasons, selectedReason]);
 
   const reasonItems = useMemo(
-    () =>
-      reasons
-        ?.sort((a, b) => a.reasonID - b.reasonID)
+    () => {
+      const reasonsMap = new Map<number, IReasonsByIdData>();
+
+      if (reasons && reasons?.length !== 0)
+        reasons.forEach((reason) => reasonsMap.set(reason.reasonID, reason))
+
+      const reasonArray = [...reasonsMap.values()]?.sort((a, b) => a.reasonID - b.reasonID)
+
+      return reasonArray
         ?.map(({ reasonID: value, reasonCodeDesc: label }) => (
           <Picker.Item
             label={label}
             value={value}
             key={`picker-value-${value}`}
           />
-        )),
+        ))
+    },
     [reasons]
   );
 
@@ -102,11 +104,11 @@ export default function ShipmentActionsException({
         shipmentID,
         comment: data.comment,
         reasonID: String(data.reasonID),
-        photoImage: photoImage?.base64?.replace("data:image/png;base64,", ""),
-        commentCreatedDate: new Date().toISOString(),
         reasonCode: String(selectedReason),
+        commentCreatedDate: new Date().toISOString(),
+        photoImage: photoImage?.base64?.replace("data:image/png;base64,", ""),
       })
-        .then((res) => {
+        .then(() => {
           setSelectedTab(ShipmentDetailsTabsItem.COMMENTS);
           setStateModalVisible(false);
           setLoading(false);
@@ -126,6 +128,31 @@ export default function ShipmentActionsException({
     console.error("🚀 ~ ShipmentActionsException ~ errors:", errors);
 
   // --- END: Data and handlers ------------------------------------------------
+
+  // --- Side effects ----------------------------------------------------------
+  // useEffect(() => {
+  //   if (isSuccess)
+  //     addComment({
+  //       companyID: user?.companyID,
+  //       userID: user?.userID,
+  //       shipmentID,
+  //       comment: `Order Exception - ${selectedReasonLabel} - ${addtionalCommentt}`,
+  //     });
+
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [isSuccess]);
+
+  useEffect(() => {
+    if (error) {
+      console.error("🚀 ShipmentActionsException ~ error: ", error);
+      setStateModalVisible(false);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (isSuccessAddComment && shipmentID) { }
+  }, [isSuccessAddComment]);
+  // --- END: Side effects -----------------------------------------------------
   return (
     <FormProvider {...methods}>
       <View style={styles.providerContainer}>
