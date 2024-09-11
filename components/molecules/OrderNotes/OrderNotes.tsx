@@ -9,7 +9,7 @@ export default function OrderNotes({ notes }: IOrderNotes) {
   // --- END: Hooks ------------------------------------------------------------
   // --- Data and handlers -----------------------------------------------------
   const orderNotesContent = useMemo(() => {
-    return notes?.replace(" Order Notes:", "");
+    return notes?.comment && notes?.comment.replace(" Order Notes:", "");
   }, [notes]);
   // --- END: Data and handlers ------------------------------------------------
 

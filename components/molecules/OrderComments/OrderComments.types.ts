@@ -1,4 +1,6 @@
+import { IOptionalCommentsProps } from "@constants/types/shipments";
+
 export interface IOrderNotes {
-  comments?: string[];
+  comments?: Pick<IOptionalCommentsProps, "shipmentID" | "comment" | "createdDate">[];
   loading: boolean;
 }

@@ -4,17 +4,18 @@ import { IOrderNotes } from "./OrderComments.types";
 import { styles } from "./OrderComments.styles";
 import { FlatList } from "react-native";
 import { useTranslation } from "react-i18next";
+import { IOptionalCommentsProps } from "@constants/types/shipments";
 export default function OrderComments({ comments, loading }: IOrderNotes) {
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
-  const renderItem = ({ item }: { item: string }) => {
+  const renderItem = ({ item }: { item: Pick<IOptionalCommentsProps, "shipmentID" | "comment" | "createdDate"> }) => {
     return (
       <View style={styles.notesContainer}>
-        <Text style={styles.bodyText}>{item}</Text>
-        {/* <Text style={styles.dateText}>{date}</Text> */}
+        <Text style={styles.bodyText}>{item.comment}</Text>
+        {item.createdDate && <Text style={styles.dateText}>{item.createdDate}</Text>}
       </View>
     );
   };
@@ -30,7 +31,7 @@ export default function OrderComments({ comments, loading }: IOrderNotes) {
           <FlatList
             data={comments}
             renderItem={renderItem}
-            keyExtractor={(item: string) => item.trim().toLowerCase()}
+            keyExtractor={(item) => String(item.comment.trim().toLowerCase())}
             style={styles.container}
           />
         </>
