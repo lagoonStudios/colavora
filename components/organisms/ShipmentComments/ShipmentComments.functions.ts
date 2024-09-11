@@ -19,7 +19,7 @@ export function useCommentsData() {
   useEffect(() => {
     if(shipmentID){
       getCommentsByShipmentID({ shipmentID }).then((values) => {
-        addComments(values.map(({ comment }) => String(comment)))
+        addComments(values)
       })
     }
   }, [shipmentID])
@@ -27,9 +27,9 @@ export function useCommentsData() {
   const data = useMemo(() => {
     if (comments) {
       const filterValue = " Order Notes:";
-      const notes = comments.find((value) => value.includes(filterValue));
+      const notes = comments.find(({ comment }) => comment && comment.includes(filterValue));
       const filterComments = comments.filter(
-        (value) => !value.includes(filterValue),
+        ({ comment }) => comment && !comment.includes(filterValue),
       );
 
       return { notes, comments: filterComments };

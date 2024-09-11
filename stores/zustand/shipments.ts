@@ -1,6 +1,7 @@
 import {
   IFetchPiecesByIdData,
   IFetchShipmentByIdData,
+  IOptionalCommentsProps,
 } from "@constants/types/shipments";
 import { StateCreator } from "zustand";
 
@@ -29,8 +30,8 @@ export interface PiecesSlice {
 }
 
 export interface CommentsSlice {
-  comments: string[];
-  addComments: (comments: string[]) => void;
+  comments: Pick<IOptionalCommentsProps, "shipmentID" | "comment" | "createdDate">[];
+  addComments: (comments: Pick<IOptionalCommentsProps, "shipmentID" | "comment" | "createdDate">[]) => void;
   resetCommnets: () => void;
 }
 
