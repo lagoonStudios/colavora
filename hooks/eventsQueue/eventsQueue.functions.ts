@@ -16,7 +16,7 @@ export function useHandleCompleteOrderEvent({ removeFromQueue, removeIdFromHandl
     const completeOrderToApi = useCallback(({ order, options: { eventId } }: TCompleteOrderToApiProps) => {
         const cods = order.completeCODs;
         if (cods.length > 0) {
-            sendCODMutation({ CODs: cods, eventId, removeIdFromHandleList, removeFromQueue });
+            sendCODMutation({ CODs: cods, eventId, removeIdFromHandleList, removeFromQueue, callback: handleUploadCompleteOrder });
         } else {
             handleUploadCompleteOrder();
         }
@@ -89,12 +89,6 @@ export function useHandleCompleteOrderEvent({ removeFromQueue, removeIdFromHandl
             setError(sendCODError);
         }
     }, [sendCODError, sendCODStatus])
-
-    useEffect(() => {
-        if (sendCODStatus === "success") {
-            handleUploadCompleteOrder();
-        }
-    }, [sendCODStatus])
     // --- END: Side effects -----------------------------------------------------
 
     return {
