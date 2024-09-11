@@ -9,12 +9,7 @@ import {
 } from "./eventsQueue.local.queries";
 import { insertMultipleComments } from "@hooks/SQLite/queries/comments.local.queries";
 import { updateShipmentByException } from "@hooks/SQLite/queries/shipments.local.queries";
-import {
-  useAddComment,
-  useCompleteOrder,
-  useOrderException,
-  useSendCODs,
-} from "@hooks/queries";
+import { useAddComment, useOrderException } from "@hooks/queries";
 
 import { useStore } from "@stores/zustand";
 
@@ -24,11 +19,7 @@ import {
   TInsertEventParams,
   TOrderExceptionsProps,
 } from "./eventsQueue.types";
-import {
-  ICompleteOrder,
-  IOptionalCommentsProps,
-  ISendCOD,
-} from "@constants/types/shipments";
+import { IOptionalCommentsProps } from "@constants/types/shipments";
 import { useHandleCompleteOrderEvent } from "./eventsQueue.functions";
 
 export default function useEventsQueue() {
@@ -75,52 +66,6 @@ export default function useEventsQueue() {
       removeIdFromHandleList,
       addEventToQueue,
     });
-
-  // const sendCODS = useCallback((cods: ISendCOD[]) => {
-  //   return new Promise((resolve, reject) => {
-  //     if (user == null) {
-  //       console.error(
-  //         "🚀 ~ file: eventsQueue.tsx:69 ~ orderException ~ user not defined:",
-  //         user
-  //       );
-  //       reject("User not found");
-  //       throw new Error("User not found");
-  //     }
-
-  //     const promises: Promise<void>[] = [];
-
-  //     cods.forEach((cod) => {
-  //       const bodyCODs = JSON.stringify({
-  //         ...cod,
-  //         companyID: user.companyID,
-  //         userID: user.userID,
-  //         shipmentID: cod.shipmentID,
-  //         codAmount: cod.codAmount,
-  //         codCheck: cod.codCheck,
-  //         codTypeID: cod.codTypeID,
-  //       });
-  //       const promise = addEventToQueue({
-  //         body: bodyCODs,
-  //         shipmentID: cod.shipmentID,
-  //         eventType: EventsQueueType.SEND_CODS,
-  //       });
-  //       promises.push(promise);
-  //     });
-  //     Promise.all(promises)
-  //       .then((res) => {
-  //         resolve({
-  //           message: "CODS stored locally",
-  //           code: 200,
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         console.error(
-  //           "🚀 ~ file: eventsQueue.tsx:108 ~ sendCODS ~ error:",
-  //           error
-  //         );
-  //       });
-  //   });
-  // }, []);
 
   /** Stores an completeOrder event in the queue. */
   const completeOrder = useCallback((order: TCompleteOrderProps) => {
