@@ -54,7 +54,7 @@ export function addCommentData({
   shipmentID,
   userID,
 }: IOptionalCommentsProps): Promise<AxiosResponse<unknown>> {
-  let data = new FormData();
+  const data = new FormData();
   data.append('companyID', String(companyID));
   data.append('userID', String(userID));
   data.append('shipmentID', String(shipmentID));
@@ -73,7 +73,7 @@ export function orderException({
   reasonID,
   photoImage
 }: IOptionalExceptionProps): Promise<AxiosResponse<unknown>> {
-  let data = new FormData();
+  const data = new FormData();
   data.append('companyID', String(companyID));
   data.append('userID', String(userID));
   data.append('shipmentID', String(shipmentID));
@@ -94,7 +94,7 @@ export function sendCOD({
   codCheck,
   codTypeID,
 }: ISendCOD): Promise<AxiosResponse<unknown>> {
-  let data = new FormData();
+  const data = new FormData();
   data.append('companyID', String(companyID));
   data.append('shipmentID', String(shipmentID));
   data.append('userID', String(userID));
@@ -117,8 +117,8 @@ export function completeOrder({
   signatureImage,
   podName,
   comment,
-}: ICompleteOrder): Promise<AxiosResponse<unknown>> {
-  let data = new FormData();
+}: ICompleteOrder & { barcode: string }): Promise<AxiosResponse<unknown>> {
+  const data = new FormData();
   data.append('companyID', String(companyID));
   data.append('userID', String(userID));
   data.append('shipmentID', String(shipmentID));

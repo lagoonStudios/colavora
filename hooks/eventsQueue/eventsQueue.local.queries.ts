@@ -9,7 +9,7 @@ export function createEventsQueueTable() {
         db.runAsync(`
             CREATE TABLE IF NOT EXISTS eventsQueue (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                eventType CHECK (eventType IN ('${EventsQueueType.ORDER_EXCEPTION}', '${EventsQueueType.ORDER_COMPLETED}', '${EventsQueueType.ADD_COMMENT}', '${EventsQueueType.SEND_CODS}')) NOT NULL,
+                eventType CHECK (eventType IN ('${EventsQueueType.ORDER_EXCEPTION}', '${EventsQueueType.ORDER_COMPLETED}', '${EventsQueueType.ADD_COMMENT}')) NOT NULL,
                 body TEXT NOT NULL,
                 tries INTEGER NOT NULL DEFAULT 0,
                 shipmentID INTEGER NOT NULL,
@@ -17,7 +17,7 @@ export function createEventsQueueTable() {
             )
             `).then(
                 () => {
-                    resolve('Events table created sucsessfully')
+                    resolve('Events table created successfully')
                 }
         ).catch(error => {
             console.error("🚀 ~ file: eventsQueue.loca.queries.ts:8 ~ returnnewPromise ~ error:", error);
@@ -125,4 +125,18 @@ export function getEventsQueuedIds() {
             reject(error);
         });
     })
+}
+
+export function getEventsByType(type: EventsQueueType) {
+    return new Promise((resolve: (value: TEventQueueData[]) => void, reject) => {
+        try {
+            const res = db.getAllSync(`SELECT id, eventType, body, shipmentID FROM eventsQueue WHERE eventType = '${type}'`);
+            const data: TEventQueueData[] = res as any[];
+            resolve(data);
+        } catch (error) {
+            console.error("🚀 ~ file: eventsQueue.local.queries.ts:140 ~ getEventsByType ~ error:", error);
+            reject(error);
+        }
+
+    });
 }
