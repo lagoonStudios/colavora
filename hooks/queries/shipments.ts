@@ -208,7 +208,7 @@ export function useOrderException() {
 
 export function useSendCODs() {
   const request = useMutation({
-    mutationFn: async ({ CODs }: { CODs: ISendCOD[] } & TRemoveEventOptions) => {
+    mutationFn: async ({ CODs }: { CODs: ISendCOD[] } & TRemoveEventOptions & { callback(): void }) => {
       const results = await Promise.all(
         CODs.map(async (cod) => {
           return await sendCOD({
@@ -222,9 +222,10 @@ export function useSendCODs() {
       console.error("🚀 ~ file: shipments.ts:187 ~ useSendCODs ~ e:", e)
       removeIdFromHandleList(eventId)
     },
-    onSuccess: ((_, { removeFromQueue, eventId, removeIdFromHandleList }) => {
+    onSuccess: ((_, { removeFromQueue, eventId, removeIdFromHandleList, callback }) => {
       removeIdFromHandleList(eventId)
       removeFromQueue(eventId)
+      callback();
     }),
   });
 
