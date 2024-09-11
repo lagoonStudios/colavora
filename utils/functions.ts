@@ -77,16 +77,14 @@ export function parseOfflineData(rawManifests: IFetchManifestByIdData[]) {
                 pwBack: rawPiece?.pwBack ?? ""
               })
             }
-            
-          }
-          
-          shipments.push(shipment)
+
         }
-        
-        manifests.push(manifest)
+
+        shipments.push(shipment)
       }
 
-    console.log({ pieces });
+    manifests.push(manifest)
+  }
 
   return {
     manifests,

@@ -14,8 +14,7 @@ import {
 } from "@/services/custom-api";
 import { queryKeys } from "@constants/Constants";
 import {
-  ICompleteOrder,
-  IFetchPiecesByIdData,
+  CompleteOrderMutationProps, IFetchPiecesByIdData,
   IFetchShipmentByIdData,
   IOptionalCommentsProps, ISendCOD
 } from "@constants/types/shipments";
@@ -209,7 +208,7 @@ export function useOrderException() {
 
 export function useSendCODs() {
   const request = useMutation({
-    mutationFn: async (CODs: ISendCOD[]) => {
+    mutationFn: async ({ CODs }: { CODs: ISendCOD[] } & TRemoveEventOptions) => {
       const results = await Promise.all(
         CODs.map(async (cod) => {
           return await sendCOD({
@@ -219,7 +218,14 @@ export function useSendCODs() {
       );
       return results;
     },
-    onError: (e) => console.error("🚀 ~ useSendCODs ~ e:", e),
+    onError: (e, { removeIdFromHandleList, eventId }) => {
+      console.error("🚀 ~ file: shipments.ts:187 ~ useSendCODs ~ e:", e)
+      removeIdFromHandleList(eventId)
+    },
+    onSuccess: ((_, { removeFromQueue, eventId, removeIdFromHandleList }) => {
+      removeIdFromHandleList(eventId)
+      removeFromQueue(eventId)
+    }),
   });
 
   return request;
@@ -230,15 +236,15 @@ export function useCompleteOrder() {
 
   const request = useMutation({
     mutationFn: async ({
-      companyID,
-      userID,
-      shipmentID,
-      barcodes,
-      podName,
-      photoImage,
-      signatureImage,
-      comment,
-    }: ICompleteOrder) => {
+      order: { companyID,
+        userID,
+        shipmentID,
+        barcodes,
+        podName,
+        photoImage,
+        signatureImage,
+        comment, }
+    }: CompleteOrderMutationProps) => {
       if (barcodes && barcodes?.length !== 0) {
         const results = [];
         for (const barcode of barcodes) {
@@ -247,6 +253,7 @@ export function useCompleteOrder() {
               companyID,
               userID,
               shipmentID,
+              barcodes,
               barcode,
               podName,
               photoImage,
@@ -255,13 +262,21 @@ export function useCompleteOrder() {
             });
             results.push(result);
           } catch (error) {
-            console.error("🚀 ~ useCompleteOrder ~ e:", error)
+            console.error("🚀 ~ file: shipments.ts:266 ~ useCompleteOrder ~ error:", error);
           }
         }
         return results;
       } else Toast.show(t("TOAST.ERROR_BARCODES"));
     },
-    onError: (e) => console.error("🚀 ~ useCompleteOrder ~ e:", e),
+    onError: (e, { options: { removeIdFromHandleList, eventId } }) => {
+      //TODO arreglar el estado del shipment en el local query cuándo da error y ponerlo en un estado diferente a completado.
+      console.error("🚀 ~ file: shipments.ts:187 ~ useSendCODs ~ e:", e)
+      removeIdFromHandleList(eventId)
+    },
+    onSuccess: ((_, { order: { shipmentID }, options: { removeFromQueue, eventId, removeIdFromHandleList } }) => {
+      removeIdFromHandleList(eventId)
+      removeFromQueue({ shipmentID, eventId })
+    }),
   });
 
   return request;

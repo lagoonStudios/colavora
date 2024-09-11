@@ -11,7 +11,7 @@ import {
   useForm,
 } from "react-hook-form";
 import { SignatureViewRef } from "react-native-signature-canvas";
-import React, { useEffect, useMemo, useReducer, useRef, useState } from "react";
+import React, { useMemo, useReducer, useRef, useState } from "react";
 
 import Colors from "@constants/Colors";
 import Signature from "@atoms/Signature";
@@ -23,19 +23,16 @@ import { Text, View } from "@components/Themed";
 import DefaultCODLabels from "@atoms/DefaultCODLabels";
 
 import { useStore } from "@stores/zustand";
-import { useSendCODs, useCompleteOrder } from "@hooks/index";
 
 import { styles } from "./ShipmentActionsComplete.styles";
 import { IShipmentActionsComplete } from "./ShipmentActionsComplete.types";
 import { defaultFieldValues as defaultValues } from "./ShipmentActionsComplete.constants";
 import { IShipmentActionsException } from "@molecules/ShipmentActionsException/ShipmentActionsException.types";
-import { ShipmentDetailsTabsItem } from "@templates/ShipmentDetailsTabs/ShipmentDetailsTabs.constants";
 import Button from "@atoms/Button";
 import { ShipmentActionsButtonItem } from "@organisms/ShipmentActions/ShipmentAction.constants";
-import { updateShipmentStatus } from "@hooks/SQLite";
-import { ShipmentStatus } from "@constants/types/shipments";
 import { useRouter } from "expo-router";
 import Toast from "react-native-root-toast";
+import useEventsQueue from "@hooks/eventsQueue";
 export default function ShipmentActionsComplete({
   setOption,
   setSelectedTab,
@@ -46,7 +43,6 @@ export default function ShipmentActionsComplete({
 
   // --- Local state -----------------------------------------------------------
   const [showModal, setModal] = useReducer((e) => !e, false);
-  const [noSelectCOD, setCondition] = useState<boolean>(false);
   // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
@@ -63,21 +59,20 @@ export default function ShipmentActionsComplete({
     defaultValues,
   });
 
+  const { completeOrder } = useEventsQueue();
+
   const { t } = useTranslation();
-  const { mutate, status: statusSendCODs } = useSendCODs();
-  const { mutate: completeOrder, status: completeOrderStatus } =
-    useCompleteOrder();
 
   const podName = methods.watch("podName");
   const comment = methods.watch("comment");
   const codsSelected = methods.watch("cods");
   const photoImage = methods.watch("photoImage");
   const signatureImage = methods.watch("signatureImage");
-  const barcodes = pieces.map(({ barcode }) => barcode)
+  const barcodes = pieces.map(({ barcode }) => barcode);
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
-  const onPressDeafultLabels = () => setModal();
+  const onPressDefaultLabels = () => setModal();
 
   const onClear = () => {
     methods.setValue("signatureImage", "");
@@ -113,7 +108,7 @@ export default function ShipmentActionsComplete({
     [codsSelected?.length]
   );
 
-  const onSubmit: SubmitHandler<IShipmentActionsComplete> = ({
+  const onSubmit: SubmitHandler<IShipmentActionsComplete> = async ({
     cods,
     signatureImage,
   }) => {
@@ -124,83 +119,53 @@ export default function ShipmentActionsComplete({
 
     setStateModal("MODAL.COMPLETING");
 
-    if (companyID && user?.userID && shipmentID)
-      if (cods?.length !== 0) {
-        const completeCODs = cods?.map((cod) => ({
-          ...cod,
-          shipmentID: shipmentID!,
-          companyID,
-          userID: user?.userID,
-        }));
+    if (companyID && user?.userID && shipmentID) {
+      const completeCODs = cods?.map((cod) => ({
+        ...cod,
+        shipmentID: shipmentID!,
+        companyID,
+        userID: user?.userID,
+      }));
 
-        mutate(completeCODs);
-      } else setCondition(true);
-  };
-
-  const onError: SubmitErrorHandler<IShipmentActionsComplete> = (errors) =>
-    console.error("🚀 ~ ShipmentActionsComplete ~ errors:", errors);
-  // --- END: Data and handlers ------------------------------------------------
-
-  // --- Side effects ----------------------------------------------------------
-  useEffect(() => {
-    const isCompleteWithOutCODsAllow =
-      codsSelected?.length === 0 && noSelectCOD;
-
-    if (companyID)
-      if (statusSendCODs === "success" || isCompleteWithOutCODsAllow)
-        completeOrder({
+      try {
+        setSyncing(true);
+        await completeOrder({
+          userID: user.userID,
+          companyID: companyID,
+          shipmentID: shipmentID,
           barcodes,
           podName,
           comment,
-          companyID: companyID!,
-          shipmentID: shipmentID!,
           signatureImage,
-          userID: user?.userID!,
+          completeCODs,
           photoImage: photoImage?.base64?.replace("data:image/png;base64", ""),
         });
-
-    if (statusSendCODs === "error") setVisible(false);
-  }, [codsSelected?.length, noSelectCOD, statusSendCODs, companyID]);
-
-  useEffect(() => {
-    if (completeOrderStatus === "error") {
-      Toast.show(t("ACTIONS.COMPLETE_ORDER_FAIL"));
-      setVisible(false);
-    }
-
-    if (completeOrderStatus === "success") {
-      const setDefaultState = () => {
-        Toast.show(t("ACTIONS.ORDER_COMPLETED"));
-        onClear();
-        methods.reset();
+        router.replace("/");
         setVisible(false);
-        setCondition(false);
-        setSelectedTab(ShipmentDetailsTabsItem.DETAILS);
-      };
-      setSyncing(true);
-      if (shipmentID) {
-        updateShipmentStatus({
-          shipmentId: shipmentID,
-          status: ShipmentStatus.DELIVERED,
-          isSync: true,
-        })
-          .then(() => {
-            setDefaultState();
-            setSyncing(false);
-            router.replace("/");
-          })
-          .catch((error) => {
-            console.error(
-              "🚀 ~ file: ShipmentActionsComplete.tsx:179 ~ updateShipmentStatus ~ error:",
-              error
-            );
-            setDefaultState();
-          });
-      } else {
-        setDefaultState();
+        setSyncing(false);
+      } catch (error) {
+        console.error(
+          "🚀 ~ file: ShipmentActionsComplete.tsx:143 ~ error:",
+          error
+        );
+        setSyncing(false);
+        setVisible(false);
       }
     }
-  }, [completeOrderStatus]);
+  };
+
+  const onError: SubmitErrorHandler<IShipmentActionsComplete> = (errors) => {
+    console.error(
+      "🚀 ~ file: ShipmentActionsComplete.tsx:144 ~ errors:",
+      errors
+    );
+    Toast.show(t("ERRORS.UNKNOWN"));
+    return;
+  };
+
+  // --- END: Data and handlers ------------------------------------------------
+
+  // --- Side effects ----------------------------------------------------------
   // --- END: Side effects -----------------------------------------------------
 
   return (
@@ -239,7 +204,7 @@ export default function ShipmentActionsComplete({
           />
           <ButtonImage pickImage={pickImage} photoImage={photoImage} />
           <DefaultCODLabels
-            onPressHandler={onPressDeafultLabels}
+            onPressHandler={onPressDefaultLabels}
             showDefaultLabel={showDefaultLabel}
           />
           <CODComponet

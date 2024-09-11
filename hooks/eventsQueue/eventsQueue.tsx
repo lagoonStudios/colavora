@@ -20,10 +20,16 @@ import { useStore } from "@stores/zustand";
 
 import {
   EventsQueueType,
+  TCompleteOrderProps,
   TInsertEventParams,
   TOrderExceptionsProps,
 } from "./eventsQueue.types";
-import { IOptionalCommentsProps, ISendCOD } from "@constants/types/shipments";
+import {
+  ICompleteOrder,
+  IOptionalCommentsProps,
+  ISendCOD,
+} from "@constants/types/shipments";
+import { useHandleCompleteOrderEvent } from "./eventsQueue.functions";
 
 export default function useEventsQueue() {
   // --- Hooks -----------------------------------------------------------------
@@ -34,8 +40,6 @@ export default function useEventsQueue() {
   /** Represents all the ids that are being handled. For example all events that are waiting for an api response. */
   const [idsHandled, setHandledIds] = useState<number[]>([]);
 
-  const { mutate: sendCODMutation } = useSendCODs();
-  const { mutate: completeOrderMutation } = useCompleteOrder();
   const { mutate: orderExceptionMutation } = useOrderException();
   const { mutate: addCommentMutation } = useAddComment();
   // --- END: Hooks ------------------------------------------------------------
@@ -65,7 +69,61 @@ export default function useEventsQueue() {
     []
   );
 
-  const sendCODS = useCallback((cods: ISendCOD[]) => {
+  const { addCompleteOrderEvent, completeOrderToApi } =
+    useHandleCompleteOrderEvent({
+      removeFromQueue: removeEventFromQueue,
+      removeIdFromHandleList,
+      addEventToQueue,
+    });
+
+  // const sendCODS = useCallback((cods: ISendCOD[]) => {
+  //   return new Promise((resolve, reject) => {
+  //     if (user == null) {
+  //       console.error(
+  //         "🚀 ~ file: eventsQueue.tsx:69 ~ orderException ~ user not defined:",
+  //         user
+  //       );
+  //       reject("User not found");
+  //       throw new Error("User not found");
+  //     }
+
+  //     const promises: Promise<void>[] = [];
+
+  //     cods.forEach((cod) => {
+  //       const bodyCODs = JSON.stringify({
+  //         ...cod,
+  //         companyID: user.companyID,
+  //         userID: user.userID,
+  //         shipmentID: cod.shipmentID,
+  //         codAmount: cod.codAmount,
+  //         codCheck: cod.codCheck,
+  //         codTypeID: cod.codTypeID,
+  //       });
+  //       const promise = addEventToQueue({
+  //         body: bodyCODs,
+  //         shipmentID: cod.shipmentID,
+  //         eventType: EventsQueueType.SEND_CODS,
+  //       });
+  //       promises.push(promise);
+  //     });
+  //     Promise.all(promises)
+  //       .then((res) => {
+  //         resolve({
+  //           message: "CODS stored locally",
+  //           code: 200,
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         console.error(
+  //           "🚀 ~ file: eventsQueue.tsx:108 ~ sendCODS ~ error:",
+  //           error
+  //         );
+  //       });
+  //   });
+  // }, []);
+
+  /** Stores an completeOrder event in the queue. */
+  const completeOrder = useCallback((order: TCompleteOrderProps) => {
     return new Promise((resolve, reject) => {
       if (user == null) {
         console.error(
@@ -76,45 +134,21 @@ export default function useEventsQueue() {
         throw new Error("User not found");
       }
 
-      const promises: Promise<void>[] = [];
-
-      cods.forEach((cod) => {
-        const bodyCODs = JSON.stringify({
-          ...cod,
-          companyID: user.companyID,
-          userID: user.userID,
-          shipmentID: cod.shipmentID,
-          codAmount: cod.codAmount,
-          codCheck: cod.codCheck,
-          codTypeID: cod.codTypeID,
-        });
-        const promise = addEventToQueue({
-          body: bodyCODs,
-          shipmentID: cod.shipmentID,
-          eventType: EventsQueueType.SEND_CODS,
-        });
-        promises.push(promise);
-      });
-      Promise.all(promises)
-        .then((res) => {
+      addCompleteOrderEvent({ order })
+        .then(() => {
           resolve({
-            message: "CODS stored locally",
+            message: "Order added to queue",
             code: 200,
           });
         })
         .catch((error) => {
           console.error(
-            "🚀 ~ file: eventsQueue.tsx:108 ~ sendCODS ~ error:",
+            "🚀 ~ file: eventsQueue.tsx:144 ~ addCompleteOrderEvent ~ error:",
             error
           );
-        });
-    });
-  }, []);
 
-  /** Stores an completeOrder event in the queue. */
-  const completeOrder = useCallback(() => {
-    return new Promise((resolve, reject) => {
-      reject("Not implemented");
+          reject(error);
+        });
     });
   }, []);
 
@@ -208,6 +242,11 @@ export default function useEventsQueue() {
 
           // Complete Order
           case EventsQueueType.ORDER_COMPLETED:
+            const orderBody: TCompleteOrderProps = JSON.parse(event.body);
+            completeOrderToApi({
+              order: orderBody,
+              options: { eventId: event.id },
+            });
             break;
 
           // Add Comment
@@ -250,14 +289,11 @@ export default function useEventsQueue() {
     if (isConnected) handleEventsQueue();
   }, [isConnected, queueLength]);
 
-  // useEffect(() => {
-  //   console.log("idsHandled", idsHandled);
-  // }, [idsHandled]);
   // -- END: Side effects -----------------------------------------------------
 
   return {
     completeOrder,
-    sendCODS,
+    // sendCODS,
     orderException,
   };
 }

@@ -1,17 +1,24 @@
-import { IOptionalExceptionProps } from "@constants/types/shipments"
-
-export type TRemoveEventOptions = {
-    eventId: number,
-    removeFromQueue: (id: number) => void,
-    removeIdFromHandleList: (id: number) => void,
-}
+import { ICompleteOrder, IOptionalExceptionProps, ISendCOD } from "@constants/types/shipments"
 
 export enum EventsQueueType {
     ORDER_EXCEPTION = 'ORDER_EXCEPTION',
     ORDER_COMPLETED = 'ORDER_COMPLETED',
     ADD_COMMENT = "ADD_COMMENT",
-    SEND_CODS = "SEND_CODS"
 }
+
+export type TRemoveEventOptions = {
+    eventId: number,
+    removeFromQueue: (id: number) => void,
+    removeIdFromHandleList: (id: number) => void,
+    addEventToQueue?: (params: TInsertEventParams) => Promise<void>
+}
+
+export type TInsertEventParams = Pick<TEventQueueData, "body" | "shipmentID" | "eventType">
+
+export type TAddEventToQueueProps = {
+    addEventToQueue: (params: TInsertEventParams) => Promise<void>
+}
+
 
 export type TEventQueueData = {
     id: number,
@@ -20,7 +27,6 @@ export type TEventQueueData = {
     eventType: EventsQueueType,
 }
 
-export type TInsertEventParams = Pick<TEventQueueData, "body" | "shipmentID" | "eventType">
 
 export type TOrderExceptionsProps =
     Required<
@@ -32,3 +38,12 @@ export type TOrderExceptionsProps =
         >>
     & Partial<Pick<IOptionalExceptionProps, "photoImage">>
     & { commentCreatedDate: string, reasonCode: string }
+
+export type TCompleteOrderProps = ICompleteOrder & { completeCODs: ISendCOD[] }
+
+
+export type TAddCompleteOrderToQueue = { order: TCompleteOrderProps }
+
+export type TCompleteOrderToApiProps = { order: TCompleteOrderProps, options: Pick<TRemoveEventOptions, "eventId"> }
+
+export type TUseHandleCompleteOrderEventProps = Required<Pick<TRemoveEventOptions, "removeIdFromHandleList" | "removeFromQueue" | "addEventToQueue">>

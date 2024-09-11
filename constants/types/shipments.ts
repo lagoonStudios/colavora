@@ -1,4 +1,5 @@
 import { IOptionalProps } from "@constants/types/manifests";
+import { TRemoveEventOptions } from "@hooks/eventsQueue/eventsQueue.types";
 
 export interface IFetchShipmentByIdData {
   companyID?: string;
@@ -46,7 +47,7 @@ export interface IFetchShipmentByIdData {
 export interface IShipmentDataFromAPI extends IFetchShipmentByIdData {
   driverAssign?: number;
   pieces?: IFetchPiecesByIdData[];
-  comments?: string[];  
+  comments?: string[];
   manifest?: string;
 }
 
@@ -96,14 +97,16 @@ export type ISendCOD = Required<Pick<TGeneralOptionsProps, "shipmentID" | "userI
     codCheck?: string,
   }
 
-export interface ICompleteOrder extends TGeneralOptionsProps {
-  barcode?: string;
-  barcodes?: string[];
-  photoImage?: string;
-  signatureImage?: string;
-  podName?: string;
-  comment?: string
-}
+export type ICompleteOrder = Required<Pick<TGeneralOptionsProps, "shipmentID" | "userID" | "companyID">>
+  & {
+    barcodes: string[],
+    podName: string,
+    signatureImage: string
+    comment?: string,
+    photoImage?: string,
+  }
+
+export type CompleteOrderMutationProps = { order: ICompleteOrder, options: Pick<TRemoveEventOptions, "removeIdFromHandleList" | "eventId"> & { removeFromQueue: ({ shipmentID, eventId }: { shipmentID: number, eventId: number }) => void } }
 
 export enum ShipmentStatus {
   CREATED = "Created",
