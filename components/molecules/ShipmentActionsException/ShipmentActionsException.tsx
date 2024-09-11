@@ -46,7 +46,8 @@ export default function ShipmentActionsException({
   const [loading, setLoading] = useState(false);
   const selectedReason = methods.watch("reasonID");
   const photoImage = methods.watch("photoImage");
-  // const addtionalCommentt = methods.watch("comment");
+
+  const { orderException } = useEventsQueue();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
@@ -60,12 +61,6 @@ export default function ShipmentActionsException({
 
     if (!result.canceled) methods.setValue("photoImage", result.assets[0]);
   };
-
-  // const selectedReasonLabel = useMemo(() => {
-  //   if (selectedReason)
-  //     return [...reasons.values()]?.find(({ reasonID }) => reasonID === selectedReason)
-  //       ?.reasonCodeDesc;
-  // }, [reasons, selectedReason]);
 
   const reasonItems = useMemo(
     () => {
@@ -108,7 +103,7 @@ export default function ShipmentActionsException({
         commentCreatedDate: new Date().toISOString(),
         photoImage: photoImage?.base64?.replace("data:image/png;base64,", ""),
       })
-        .then(() => {
+        .then((res) => {
           setSelectedTab(ShipmentDetailsTabsItem.COMMENTS);
           setStateModalVisible(false);
           setLoading(false);
@@ -128,31 +123,6 @@ export default function ShipmentActionsException({
     console.error("🚀 ~ ShipmentActionsException ~ errors:", errors);
 
   // --- END: Data and handlers ------------------------------------------------
-
-  // --- Side effects ----------------------------------------------------------
-  // useEffect(() => {
-  //   if (isSuccess)
-  //     addComment({
-  //       companyID: user?.companyID,
-  //       userID: user?.userID,
-  //       shipmentID,
-  //       comment: `Order Exception - ${selectedReasonLabel} - ${addtionalCommentt}`,
-  //     });
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [isSuccess]);
-
-  useEffect(() => {
-    if (error) {
-      console.error("🚀 ShipmentActionsException ~ error: ", error);
-      setStateModalVisible(false);
-    }
-  }, [error]);
-
-  useEffect(() => {
-    if (isSuccessAddComment && shipmentID) { }
-  }, [isSuccessAddComment]);
-  // --- END: Side effects -----------------------------------------------------
   return (
     <FormProvider {...methods}>
       <View style={styles.providerContainer}>
