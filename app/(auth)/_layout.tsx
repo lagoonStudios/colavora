@@ -15,7 +15,6 @@ export default function AuthLayout() {
   useDriverFetch();
   useCompanyFetch();
   useSyncDataByPeriod();
-  useEventsQueue();
 
   const { isLoggedIn } = useAuth();
   // --- END: Hooks ------------------------------------------------------------

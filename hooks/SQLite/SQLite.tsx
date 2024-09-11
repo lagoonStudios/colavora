@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { createAllDBTables } from "./queries/general.local.queries";
+import useEventsQueue from "@hooks/eventsQueue";
 
 export default function useSQLite() {
   useEffect(() => {
@@ -14,4 +15,3 @@ export default function useSQLite() {
 
   return;
 }
-

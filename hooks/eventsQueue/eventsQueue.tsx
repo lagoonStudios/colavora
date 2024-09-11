@@ -7,8 +7,6 @@ import {
   getEventsQueue,
   getEventsQueuedIds,
 } from "./eventsQueue.local.queries";
-import { insertMultipleComments } from "@hooks/SQLite/queries/comments.local.queries";
-import { updateShipmentByException } from "@hooks/SQLite/queries/shipments.local.queries";
 import { useAddComment, useOrderException } from "@hooks/queries";
 
 import { useStore } from "@stores/zustand";
@@ -19,8 +17,10 @@ import {
   TInsertEventParams,
   TOrderExceptionsProps,
 } from "./eventsQueue.types";
-import { IOptionalCommentsProps } from "@constants/types/shipments";
-import { useHandleCompleteOrderEvent } from "./eventsQueue.functions";
+import {
+  useHandleCompleteOrderEvent,
+  useHandleOrderExceptionEvent,
+} from "./eventsQueue.functions";
 
 export default function useEventsQueue() {
   // --- Hooks -----------------------------------------------------------------
@@ -39,9 +39,18 @@ export default function useEventsQueue() {
   const queueLength = useMemo(() => queueIds.length, [queueIds]);
 
   const addEventToQueue = useCallback(async (params: TInsertEventParams) => {
-    return insertEvent(params).then((res) => {
-      setQueueIds([...queueIds.filter((item) => item !== res.id), res.id]);
-    });
+    return insertEvent(params)
+      .then((res) => {
+        console.log("Adding event to queue: ", res.id);
+
+        setQueueIds([...queueIds.filter((item) => item !== res.id), res.id]);
+      })
+      .catch((error) => {
+        console.error(
+          "🚀 ~ file: eventsQueue.tsx:47 ~ returninsertEvent ~ error:",
+          error
+        );
+      });
   }, []);
 
   const removeEventFromQueue = useCallback((id: number) => {
@@ -67,7 +76,16 @@ export default function useEventsQueue() {
       addEventToQueue,
     });
 
-  /** Stores an completeOrder event in the queue. */
+  const { addExceptionEvent, sendExceptionToApi } =
+    useHandleOrderExceptionEvent({
+      removeFromQueue: removeEventFromQueue,
+      removeIdFromHandleList,
+      addEventToQueue,
+    });
+
+  /** Stores an completeOrder event in the queue.
+   * @see {@link TCompleteOrderProps}
+   */
   const completeOrder = useCallback((order: TCompleteOrderProps) => {
     return new Promise((resolve, reject) => {
       if (user == null) {
@@ -97,7 +115,9 @@ export default function useEventsQueue() {
     });
   }, []);
 
-  /** Stores an orderException event in the queue. */
+  /** Stores an orderException event in the queue.
+   * @see {@link TOrderExceptionsProps}
+   */
   const orderException = useCallback((data: TOrderExceptionsProps) => {
     return new Promise((resolve, reject) => {
       if (user == null) {
@@ -108,46 +128,8 @@ export default function useEventsQueue() {
         reject("User not found");
         throw new Error("User not found");
       }
-      const bodyShipment = JSON.stringify({
-        comment: data.comment,
-        companyID: user.companyID,
-        shipmentID: data.shipmentID,
-        reasonID: data.reasonID,
-        photoImage: data.photoImage,
-      });
-      const bodyComment = JSON.stringify({
-        companyID: user.companyID,
-        userID: user.userID,
-        shipmentID: data.shipmentID,
-        comment: data.comment,
-      });
-      const commentToInsert = [
-        {
-          shipmentID: data.shipmentID,
-          comment: data.comment,
-          createdDate: data.commentCreatedDate,
-        },
-      ];
 
-      // In the local db: Updates the is_sync state, inserts the comments and add the events to the queue.
-      Promise.all([
-        updateShipmentByException({
-          isSync: false,
-          shipmentID: data.shipmentID,
-          reasonCode: data.reasonCode,
-        }),
-        insertMultipleComments(commentToInsert),
-        addEventToQueue({
-          body: bodyShipment,
-          shipmentID: data.shipmentID,
-          eventType: EventsQueueType.ORDER_EXCEPTION,
-        }),
-        addEventToQueue({
-          body: bodyComment,
-          shipmentID: data.shipmentID,
-          eventType: EventsQueueType.ADD_COMMENT,
-        }),
-      ])
+      addExceptionEvent(data)
         .then((res) => {
           resolve({
             message: "Order exception stored locally",
@@ -165,6 +147,7 @@ export default function useEventsQueue() {
   }, []);
 
   const handleEventsQueue = useCallback(() => {
+    console.log("handleEventsQueue invoked");
     getEventsQueue().then((events) => {
       events.forEach((event) => {
         // If the event is already handled, skip it
@@ -177,12 +160,7 @@ export default function useEventsQueue() {
           // Order Exception
           case EventsQueueType.ORDER_EXCEPTION:
             const exceptionBody: TOrderExceptionsProps = JSON.parse(event.body);
-            orderExceptionMutation({
-              ...exceptionBody,
-              removeFromQueue: removeEventFromQueue,
-              eventId: event.id,
-              removeIdFromHandleList,
-            });
+            sendExceptionToApi(exceptionBody);
             break;
 
           // Complete Order
@@ -191,17 +169,6 @@ export default function useEventsQueue() {
             completeOrderToApi({
               order: orderBody,
               options: { eventId: event.id },
-            });
-            break;
-
-          // Add Comment
-          case EventsQueueType.ADD_COMMENT:
-            const commentBody: IOptionalCommentsProps = JSON.parse(event.body);
-            addCommentMutation({
-              ...commentBody,
-              removeFromQueue: removeEventFromQueue,
-              eventId: event.id,
-              removeIdFromHandleList,
             });
             break;
 
@@ -238,7 +205,6 @@ export default function useEventsQueue() {
 
   return {
     completeOrder,
-    // sendCODS,
     orderException,
   };
 }

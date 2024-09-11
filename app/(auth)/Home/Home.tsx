@@ -12,6 +12,7 @@ import { ActivityIndicator, Text, View } from "@components/Themed";
 import { useStore } from "@stores/zustand";
 import { useSyncData } from "@hooks/syncData";
 import { getShipmentList } from "@hooks/SQLite";
+import eventsQueue from "@hooks/eventsQueue";
 
 export default function Home() {
   // --- Hooks -----------------------------------------------------------------
@@ -21,6 +22,7 @@ export default function Home() {
   const { t } = useTranslation();
   const { data, loading } = useHomeData();
   const { addShipmentIds, resetManifestId } = useStore();
+  eventsQueue();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
@@ -29,13 +31,17 @@ export default function Home() {
       getShipmentList({}).then((shipment) => {
         resetManifestId();
         addShipmentIds(shipment?.map(({ shipmentID }) => shipmentID!));
-        push({ pathname: "(tabs)/" + item.route })
-      })
+        push({ pathname: "(tabs)/" + item.route });
+      });
     };
 
     return (
       <View>
-        <Pressable style={styles.item} onPress={setShipmentIdsHandler} disabled={item.isDisabled}>
+        <Pressable
+          style={styles.item}
+          onPress={setShipmentIdsHandler}
+          disabled={item.isDisabled}
+        >
           <Text style={styles.description}>{t(item.description)}</Text>
           {loading ? (
             <ActivityIndicator style={styles.loader} />

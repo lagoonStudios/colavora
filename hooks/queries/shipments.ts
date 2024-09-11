@@ -19,7 +19,7 @@ import {
   IOptionalCommentsProps, ISendCOD
 } from "@constants/types/shipments";
 import { IOptionalProps } from "@constants/types/manifests";
-import { TOrderExceptionsProps, TRemoveEventOptions } from "@hooks/eventsQueue/eventsQueue.types";
+import { TOrderExceptionsProps, TRemoveEventOptions, TSendCODSProps, TSendCommentsProps } from "@hooks/eventsQueue/eventsQueue.types";
 import { useStore } from "@stores/zustand";
 
 export function useShipmentsIdData({ manifest }: IOptionalProps) {
@@ -142,6 +142,9 @@ export function useCommentsIdData({ id }: { id: number }) {
   return piecesIdData;
 }
 
+/**
+ * @see {@link TSendCommentsProps}
+ */
 export function useAddComment() {
   const request = useMutation({
     mutationFn: async ({
@@ -149,7 +152,7 @@ export function useAddComment() {
       comment,
       userID,
       shipmentID,
-    }: IOptionalCommentsProps & TRemoveEventOptions) => {
+    }: TSendCommentsProps) => {
       return await addCommentData({
         companyID,
         comment,
@@ -157,19 +160,26 @@ export function useAddComment() {
         shipmentID,
       });
     },
-    onError: (e, { removeIdFromHandleList, eventId }) => {
+    onError: (e, props) => {
+      const { options } = props
+      if (options?.onError) options.onError({ ...props })
       console.error("🚀 ~ file: shipments.ts:162 ~ useAddComment ~ e:", e);
-      removeIdFromHandleList(eventId)
+      // removeIdFromHandleList(eventId)
     },
-    onSuccess: ((_, { eventId, removeFromQueue, removeIdFromHandleList }) => {
-      removeIdFromHandleList(eventId)
-      removeFromQueue(eventId)
+    onSuccess: ((_, props) => {
+      const { options } = props
+      if (options?.onSuccess) options.onSuccess({ ...props })
+    // removeIdFromHandleList(eventId)
+    // removeFromQueue(eventId)
     })
   });
 
   return request;
 }
 
+/** 
+ * @see {@link TOrderExceptionsProps } 
+ */
 export function useOrderException() {
   const { user } = useStore();
   const request = useMutation({
@@ -178,7 +188,8 @@ export function useOrderException() {
       shipmentID,
       reasonID,
       photoImage,
-    }: TOrderExceptionsProps & TRemoveEventOptions) => {
+    }: TOrderExceptionsProps) => {
+      console.log("CALLING MUTATION useOrderException");
       if (user == null || user.companyID == null || user.userID == null) {
         console.error("🚀 ~ file: shipments.ts:181 ~ useOrderException ~ user not defined:", user);
         throw new Error("User not found");
@@ -192,13 +203,14 @@ export function useOrderException() {
         companyID: user?.companyID,
       });
     },
-    onError: (e, { removeIdFromHandleList, eventId }) => {
+    onError: (e, props) => {
+      const { options } = props
+      if (options?.onError) options.onError({ ...props })
       console.error("🚀 ~ file: shipments.ts:187 ~ useOrderException ~ e:", e)
-      removeIdFromHandleList(eventId)
     },
-    onSuccess: ((_, { removeFromQueue, eventId, removeIdFromHandleList }) => {
-      removeIdFromHandleList(eventId)
-      removeFromQueue(eventId)
+    onSuccess: ((_, props) => {
+      const { options } = props
+      if (options?.onSuccess) options.onSuccess({ ...props })
     }),
 
   });
@@ -206,11 +218,53 @@ export function useOrderException() {
   return request;
 }
 
+// export function useOrderException() {
+//   const { user } = useStore();
+//   const request = useMutation({
+//     mutationFn: async ({
+//       comment,
+//       shipmentID,
+//       reasonID,
+//       photoImage,
+//     }: TOrderExceptionsProps & TRemoveEventOptions) => {
+//       if (user == null || user.companyID == null || user.userID == null) {
+//         console.error("🚀 ~ file: shipments.ts:181 ~ useOrderException ~ user not defined:", user);
+//         throw new Error("User not found");
+//       };
+//       console.log("SEND ORDER EXCEPTION");
+//       return await orderException({
+//         comment,
+//         shipmentID,
+//         reasonID,
+//         photoImage,
+//         userID: user?.userID,
+//         companyID: user?.companyID,
+//       });
+//     },
+//     onError: (e, { removeIdFromHandleList, eventId }) => {
+//       console.error("🚀 ~ file: shipments.ts:187 ~ useOrderException ~ e:", e)
+//       removeIdFromHandleList(eventId)
+//     },
+//     onSuccess: ((_, { removeFromQueue, eventId, removeIdFromHandleList }) => {
+//       console.log("success order exception");
+//       removeIdFromHandleList(eventId)
+//       removeFromQueue(eventId)
+//     }),
+
+//   });
+
+//   return request;
+// }
+
+
+/**
+ * @see {@link TSendCODSProps}
+ */
 export function useSendCODs() {
   const request = useMutation({
-    mutationFn: async ({ CODs }: { CODs: ISendCOD[] } & TRemoveEventOptions & { callback(): void }) => {
+    mutationFn: async ({ CODS }: TSendCODSProps) => {
       const results = await Promise.all(
-        CODs.map(async (cod) => {
+        CODS.map(async (cod) => {
           return await sendCOD({
             ...cod,
           });
@@ -218,20 +272,23 @@ export function useSendCODs() {
       );
       return results;
     },
-    onError: (e, { removeIdFromHandleList, eventId }) => {
+    onError: (e, props) => {
+      const { options } = props
+      if (options?.onError) options.onError({ ...props })
       console.error("🚀 ~ file: shipments.ts:187 ~ useSendCODs ~ e:", e)
-      removeIdFromHandleList(eventId)
     },
-    onSuccess: ((_, { removeFromQueue, eventId, removeIdFromHandleList, callback }) => {
-      removeIdFromHandleList(eventId)
-      removeFromQueue(eventId)
-      callback();
+    onSuccess: ((_, props) => {
+      const { options } = props
+      if (options?.onSuccess) options.onSuccess({ ...props })
     }),
   });
 
   return request;
 }
 
+/**
+ *  @see {@link CompleteOrderMutationProps}
+ */
 export function useCompleteOrder() {
   const { t } = useTranslation();
 
@@ -269,14 +326,15 @@ export function useCompleteOrder() {
         return results;
       } else Toast.show(t("TOAST.ERROR_BARCODES"));
     },
-    onError: (e, { options: { removeIdFromHandleList, eventId } }) => {
-      //TODO arreglar el estado del shipment en el local query cuándo da error y ponerlo en un estado diferente a completado.
-      console.error("🚀 ~ file: shipments.ts:187 ~ useSendCODs ~ e:", e)
-      removeIdFromHandleList(eventId)
+    onError: (error, props) => {
+      const { options } = props
+      options.onError && options.onError({ ...props })
+
+      console.error("🚀 ~ file: shipments.ts:286 ~ useCompleteOrder ~ error:", error);
     },
-    onSuccess: ((_, { order: { shipmentID }, options: { removeFromQueue, eventId, removeIdFromHandleList } }) => {
-      removeIdFromHandleList(eventId)
-      removeFromQueue({ shipmentID, eventId })
+    onSuccess: ((_, props) => {
+      const { options } = props;
+      options.onSuccess && options.onSuccess({ ...props })
     }),
   });
 

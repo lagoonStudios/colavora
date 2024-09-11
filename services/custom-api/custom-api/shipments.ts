@@ -59,7 +59,7 @@ export function addCommentData({
   data.append('userID', String(userID));
   data.append('shipmentID', String(shipmentID));
   data.append('comment', String(comment));
-
+  console.log("adding comment: ", shipmentID);
   const url = `${BASE_URL}shipment/shipment/comment/post`;
 
   return axiosClient.postForm(url, data);
@@ -79,7 +79,7 @@ export function orderException({
   data.append('shipmentID', String(shipmentID));
   data.append('comment', String(comment));
   data.append('reasonID', String(reasonID));
-
+  console.log("Sending order exception: ", shipmentID);
   if (photoImage) data.append('photoImage', String(photoImage));
   const url = `${BASE_URL}shipment/event/exception/post`;
 
@@ -100,7 +100,7 @@ export function sendCOD({
   data.append('userID', String(userID));
   data.append('codAmount', String(codAmount));
   data.append('codTypeID', String(codTypeID));
-
+  console.log("sending COD: ", codTypeID);
   if (codCheck) data.append('createdSource', String(codCheck));
 
   const url = `${BASE_URL}shipment/event/cod/post`;
@@ -125,7 +125,7 @@ export function completeOrder({
   data.append('barcode', String(barcode));
   data.append('podName', String(podName));
   data.append('signatureImage', String(signatureImage));
-
+  console.log("Completing order: ", shipmentID);
   if (comment) data.append('comment', String(comment));
   if (photoImage) data.append('photoImage', String(photoImage));
 
