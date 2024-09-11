@@ -106,7 +106,7 @@ export type ICompleteOrder = Required<Pick<TGeneralOptionsProps, "shipmentID" | 
     photoImage?: string,
   }
 
-export type CompleteOrderMutationProps = { order: ICompleteOrder, options: Pick<TRemoveEventOptions, "removeIdFromHandleList" | "eventId"> & { removeFromQueue: ({ shipmentID, eventId }: { shipmentID: number, eventId: number }) => void } }
+export type CompleteOrderMutationProps = { order: ICompleteOrder, options: Required<TRemoveEventOptions> }
 
 export enum ShipmentStatus {
   CREATED = "Created",

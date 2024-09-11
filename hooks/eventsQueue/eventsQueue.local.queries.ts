@@ -9,7 +9,7 @@ export function createEventsQueueTable() {
         db.runAsync(`
             CREATE TABLE IF NOT EXISTS eventsQueue (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                eventType CHECK (eventType IN ('${EventsQueueType.ORDER_EXCEPTION}', '${EventsQueueType.ORDER_COMPLETED}', '${EventsQueueType.ADD_COMMENT}')) NOT NULL,
+                eventType CHECK (eventType IN ('${EventsQueueType.ORDER_EXCEPTION}', '${EventsQueueType.ORDER_COMPLETED}')) NOT NULL,
                 body TEXT NOT NULL,
                 tries INTEGER NOT NULL DEFAULT 0,
                 shipmentID INTEGER NOT NULL,
@@ -104,6 +104,8 @@ export function getEventsQueue() {
             id ASC
     `).then((res) => {
             const data = res as TEventQueueData[];
+        const events = db.getAllSync(`SELECT id, eventType, shipmentID FROM eventsQueue`);
+        console.log({ events });
             resolve(data);
         }).catch(error => {
             console.error("🚀 ~ file: eventsQueue.local.queries.ts:100 ~ getEventsQueue ~ error:", error);
@@ -127,11 +129,11 @@ export function getEventsQueuedIds() {
     })
 }
 
-export function getEventsByType(type: EventsQueueType) {
-    return new Promise((resolve: (value: TEventQueueData[]) => void, reject) => {
+export function getEventsByID(id: number) {
+    return new Promise((resolve: (value: TEventQueueData) => void, reject) => {
         try {
-            const res = db.getAllSync(`SELECT id, eventType, body, shipmentID FROM eventsQueue WHERE eventType = '${type}'`);
-            const data: TEventQueueData[] = res as any[];
+            const res = db.getFirstSync(`SELECT id, eventType, body, shipmentID FROM eventsQueue WHERE id = '${id}'`);
+            const data: TEventQueueData = res as any;
             resolve(data);
         } catch (error) {
             console.error("🚀 ~ file: eventsQueue.local.queries.ts:140 ~ getEventsByType ~ error:", error);

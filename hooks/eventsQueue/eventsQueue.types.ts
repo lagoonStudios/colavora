@@ -3,14 +3,17 @@ import { ICompleteOrder, IOptionalExceptionProps, ISendCOD } from "@constants/ty
 export enum EventsQueueType {
     ORDER_EXCEPTION = 'ORDER_EXCEPTION',
     ORDER_COMPLETED = 'ORDER_COMPLETED',
-    ADD_COMMENT = "ADD_COMMENT",
 }
 
 export type TRemoveEventOptions = {
-    eventId: number,
-    removeFromQueue: (id: number) => void,
-    removeIdFromHandleList: (id: number) => void,
-    addEventToQueue?: (params: TInsertEventParams) => Promise<void>
+    /** Calls when the mutation is a success. Passes all the props from the mutation */
+    onSuccess?: (props?: any) => void,
+    /** Calls when the mutation is a error. Passes all the props from the mutation */
+    onError?: (props?: any) => void,
+    eventId?: number,
+    // removeFromQueue: (id: number) => void,
+    // removeIdFromHandleList: (id: number) => void,
+    // addEventToQueue?: (params: TInsertEventParams) => Promise<void>
 }
 
 export type TInsertEventParams = Pick<TEventQueueData, "body" | "shipmentID" | "eventType">
@@ -37,13 +40,28 @@ export type TOrderExceptionsProps =
             "reasonID"
         >>
     & Partial<Pick<IOptionalExceptionProps, "photoImage">>
-    & { commentCreatedDate: string, reasonCode: string }
+    & { options: Required<TRemoveEventOptions> }
+
+export type TSendCommentsProps = {
+    comment: string,
+    companyID: string,
+    shipmentID: number,
+    userID: number,
+    options?: Required<TRemoveEventOptions>
+}
+
+export type TSendCODSProps = { CODS: ISendCOD[], options: Required<TRemoveEventOptions> }
 
 export type TCompleteOrderProps = ICompleteOrder & { completeCODs: ISendCOD[] }
 
 
 export type TAddCompleteOrderToQueue = { order: TCompleteOrderProps }
 
-export type TCompleteOrderToApiProps = { order: TCompleteOrderProps, options: Pick<TRemoveEventOptions, "eventId"> }
+export type TCompleteOrderToApiProps = { order: TCompleteOrderProps, options: Required<Pick<TRemoveEventOptions, "eventId">> }
 
-export type TUseHandleCompleteOrderEventProps = Required<Pick<TRemoveEventOptions, "removeIdFromHandleList" | "removeFromQueue" | "addEventToQueue">>
+export type TUseEventsProps =
+    {
+        removeFromQueue: (id: number) => void,
+        removeIdFromHandleList: (id: number) => void,
+        addEventToQueue: (params: TInsertEventParams) => Promise<void>
+    }
