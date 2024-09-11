@@ -1,37 +1,26 @@
 import { AxiosResponse } from "axios";
-import { parse, isValid, format } from 'date-fns';
+import { isValid, format, parseISO } from 'date-fns';
 
 import { IFetchUserData } from "@constants/types/general";
 import { IFetchManifestByIdData } from "@constants/types/manifests";
 import { IFetchPiecesByIdData, IFetchShipmentByIdData, IRequiredCommentsProps, IShipmentDataFromAPI } from "@constants/types/shipments";
 import { fetchCommentsByIdData, fetchManifestOfflineData, fetchPiecesByIdData, fetchPiecesData, fetchShipmentByIdData, fetchShipmentData } from "@services/custom-api";
 export function parserStringToDateComment(value: string) {
-  const regex = /\(([^)]+)\)(.*)/;
-  const match = value.match(regex);
+  const divideValue = value.indexOf(")")
 
-  if (!match) {
+  if (divideValue === -1) {
     return {
       createdDate: "",
       comment: value
     };
   }
 
-  const stringDate = match[1].trim();
-  const restoCadena = match[2].trim();
+  const stringDate = value.substring(1, divideValue).trim();
+  const restComment = value.substring(divideValue + 1).trim();
 
-  const date = parse(stringDate, 'MM/dd/yy hh:mm:ss aa', new Date());
-
-  if (!isValid(date)) {
-    return {
-      createdDate: "",
-      comment: value
-    };
-  }
-
-  const ISODate = format(date, 'yyyy-MM-ddTHH:mm:ss');
   return {
-    createdDate: ISODate,
-    comment: restoCadena
+    createdDate: stringDate,
+    comment: restComment
   };
 }
 
@@ -60,10 +49,12 @@ export function parseOfflineData(rawManifests: IFetchManifestByIdData[]) {
         if (shipment?.companyID && shipment?.shipmentID) {
           if (rawShipment?.comments)
             for (const rawComment of rawShipment?.comments) {
+              const value = parserStringToDateComment(rawComment);
+
               comments.push({
                 shipmentID: shipment.shipmentID,
-                comment: rawComment,
-                createdDate: new Date().toISOString()
+                comment: value.comment,
+                createdDate: value.createdDate
               })
             }
 

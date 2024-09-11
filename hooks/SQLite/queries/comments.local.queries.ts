@@ -14,7 +14,7 @@ export function createCommentsTable() {
             `
           CREATE TABLE IF NOT EXISTS comments (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            createdDate TEXT DEFAULT (datetime('now')),
+            createdDate TEXT,
             comment TEXT,
             is_sync BOOLEAN DEFAULT false,
             last_sync TEXT DEFAULT (datetime('now')),
@@ -71,7 +71,7 @@ export function insertMultipleComments(comments: { shipmentID: number, comment: 
                             shipmentId,
                             comment,
                             createdDate
-                        ) VALUES (?,?,datetime(?))`, 
+                        ) VALUES (?,?,?)`, 
                         [item.shipmentID, parser.comment, parser.createdDate]
                     )
 
@@ -115,8 +115,6 @@ export function getCommentsByShipmentID({ shipmentID }: { shipmentID: number }) 
                 comments
             WHERE
                 shipmentID = ${shipmentID}
-            ORDER BY 
-                createdDate DESC
             `, [shipmentID])
             .then((res) => {
                 const data = res as IOptionalCommentsProps[];
