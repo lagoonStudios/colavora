@@ -19,7 +19,7 @@ export default function ShipmentDetails() {
   // --- Hooks -----------------------------------------------------------------
   const { shipment } = useShipmentData();
   const { t } = useTranslation();
-  const { location, city } = useCoordinatesFromAddress({
+  const { location } = useCoordinatesFromAddress({
     address: shipment?.addressLine1?.concat(shipment?.addressLine2 ?? "") ?? "",
     zipCode: shipment?.zip ?? "",
   });
@@ -36,7 +36,7 @@ export default function ShipmentDetails() {
             <Text style={styles.textHeader}>
               {shipment?.consigneeName ?? ""}
             </Text>
-            <Text style={styles.textSubtitle}>{city ?? ""}</Text>
+            <Text style={styles.textSubtitle}>{shipment.city ?? ""}</Text>
             <Text style={styles.textBody}>
               {shipment?.senderName ?? ""} - {shipment?.serviceTypeName ?? ""}
             </Text>

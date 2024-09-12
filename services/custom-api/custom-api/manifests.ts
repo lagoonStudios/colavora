@@ -26,7 +26,8 @@ export function fetchManifestOfflineData({
   createdDate,
   companyID
 }: IOptionalProps): Promise<AxiosResponse<IFetchManifestOfflineData[]>> {
-  const date = createdDate?.split(".")[0]
+  const date = createdDate?.split(".")[0];
+
   return axiosClient.get(`shipment/shipment/select`, {
     params: { ManifestDate: date, driverId, companyID },
   });
