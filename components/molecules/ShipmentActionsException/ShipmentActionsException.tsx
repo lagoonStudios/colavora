@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import {
   FormProvider,
@@ -113,9 +113,7 @@ export default function ShipmentActionsException({
     console.error("🚀 ~ ShipmentActionsException ~ errors:", errors);
 
   // --- END: Data and handlers ------------------------------------------------
-  useEffect(() => {
-    console.log(shipmentID);
-  }, [shipmentID]);
+
   return (
     <FormProvider {...methods}>
       <View style={styles.providerContainer}>
