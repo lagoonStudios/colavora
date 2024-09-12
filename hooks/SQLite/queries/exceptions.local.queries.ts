@@ -6,11 +6,12 @@ import { db } from "../db";
  * @returns A Promise that resolves with "exceptions Table created correctly" if successful, or rejects with an error message.
  */
 export function createExceptionsTable() {
-    return new Promise((resolve: (value: string) => void, reject) => {
-        db.execAsync(
-            `
+  return new Promise((resolve: (value: string) => void, reject) => {
+    db.execAsync(
+      `
         CREATE TABLE IF NOT EXISTS exceptions (
-            reasonID INTEGER PRIMARY KEY UNIQUE,
+            id TEXT PRIMARY KEY UNIQUE,
+            reasonID INTEGER NOT NULL,
             companyID TEXT,
             customerID INTEGER,
             reasonCode TEXT,
@@ -21,29 +22,49 @@ export function createExceptionsTable() {
             is_sync BOOLEAN DEFAULT false,
             last_sync TEXT DEFAULT (datetime('now'))
         );
-        `
-        ).then(() => {
-            resolve("exceptions Table created correctly");
-        }).catch(error => {
-            console.error("🚀 ~ file: exceptions.local.queries.ts:27 ~ createExceptionsTable ~ error:", error);
-            reject("ERROR Creating exceptions table: " + error);
-        });
-    });
+        `,
+    )
+      .then(() => {
+        resolve("exceptions Table created correctly");
+      })
+      .catch((error) => {
+        console.error(
+          "🚀 ~ file: exceptions.local.queries.ts:27 ~ createExceptionsTable ~ error:",
+          error,
+        );
+        reject("ERROR Creating exceptions table: " + error);
+      });
+  });
 }
 
 export function dropExceptionsTable() {
-    return new Promise((resolve: ({ status, message }: { status: number, message: string }) => void, reject) => {
-        db.execAsync(`DROP TABLE IF EXISTS exceptions;`)
-            .then(() => {
-                resolve({
-                    status: 200,
-                    message: "Table dropped correctly"
-                });
-            }).catch(error => {
-                console.error("🚀 ~ file: exceptions.local.queries.ts:44 ~ dropExceptionsTable ~ error:", error);
-            });
-    });
-};
+  return new Promise(
+    (
+      resolve: ({
+        status,
+        message,
+      }: {
+        status: number;
+        message: string;
+      }) => void,
+      reject,
+    ) => {
+      db.execAsync(`DROP TABLE IF EXISTS exceptions;`)
+        .then(() => {
+          resolve({
+            status: 200,
+            message: "Table dropped correctly",
+          });
+        })
+        .catch((error) => {
+          console.error(
+            "🚀 ~ file: exceptions.local.queries.ts:44 ~ dropExceptionsTable ~ error:",
+            error,
+          );
+        });
+    },
+  );
+}
 
 /**
  * Inserts multiple exception entries into the provided SQLite database, handling duplicates.
@@ -56,18 +77,21 @@ export function dropExceptionsTable() {
  * Rejects with an error message on failure.
  */
 export function insertMultipleExceptions(exceptionsArr: IReasonsByIdData[]) {
-    return new Promise((resolve, reject) => {
-        const exceptionsMap = new Map<number, IReasonsByIdData>();
-        exceptionsArr.forEach(v => exceptionsMap.set(v.reasonID, v));
-        const exceptions = [...exceptionsMap.values()];
-        filterDuplicatedExceptions(exceptions).then(({ notExistingIds }) => {
+  return new Promise((resolve, reject) => {
+    const exceptionsMap = new Map<number, IReasonsByIdData>();
+    exceptionsArr.forEach((v) => exceptionsMap.set(v.reasonID, v));
+    const exceptions = [...exceptionsMap.values()];
+    filterDuplicatedExceptions(exceptions).then(({ notExistingIds }) => {
+      if (notExistingIds.length > 0) {
+        const noExistingExceptions = exceptions.filter((v) =>
+          notExistingIds.find((id) => id === v.reasonID),
+        );
 
-            if (notExistingIds.length > 0) {
-                const noExistingExceptions = exceptions.filter(v => (notExistingIds.find(id => id === v.reasonID)));
-
-                db.runAsync(`
+        db.runAsync(
+          `
                     INSERT INTO exceptions 
                     (
+                        id,
                         reasonID,
                         companyID,
                         customerID,
@@ -78,8 +102,11 @@ export function insertMultipleExceptions(exceptionsArr: IReasonsByIdData[]) {
                         lang
                     ) 
                     VALUES 
-                    ${noExistingExceptions.map(v =>
-                    `(
+                    ${noExistingExceptions
+                      .map(
+                        (v) =>
+                          `(
+                            ${`${v.reasonID}-${v.lang}`}
                             ${v.reasonID}, 
                             '${v.companyID}', 
                             ${v.customerID}, 
@@ -88,26 +115,29 @@ export function insertMultipleExceptions(exceptionsArr: IReasonsByIdData[]) {
                             '${v.reasonCodeDesc}', 
                             ${v.completeOrder},
                             '${v.lang}'
-                        )`
-                ).join(',')};
+                        )`,
+                      )
+                      .join(",")};
                     `,
-                ).then((_) => {
-                    resolve({
-                        message: `Exceptions inserted correctly}`,
-                        idsInserted: notExistingIds
-                    });
-                }).catch(error => {
-                    console.error("🚀 ~ insertMultipleExceptions ~ error:", error);
-                    reject(error);
-                });
-            } else {
-                resolve({
-                    message: "All exceptions has been inserted before.",
-                    idsInserted: []
-                })
-            }
+        )
+          .then((_) => {
+            resolve({
+              message: `Exceptions inserted correctly}`,
+              idsInserted: notExistingIds,
+            });
+          })
+          .catch((error) => {
+            console.error("🚀 ~ insertMultipleExceptions ~ error:", error);
+            reject(error);
+          });
+      } else {
+        resolve({
+          message: "All exceptions has been inserted before.",
+          idsInserted: [],
         });
-    })
+      }
+    });
+  });
 }
 
 /**
@@ -115,8 +145,9 @@ export function insertMultipleExceptions(exceptionsArr: IReasonsByIdData[]) {
  * @returns A Promise that resolves to an array of IReasonsByIdData objects, or rejects with an error.
  */
 export function getAllExceptionsByLang(lang: Language) {
-    return new Promise((resolve: (value: IReasonsByIdData[]) => void, reject) => {
-        db.getAllAsync(`
+  return new Promise((resolve: (value: IReasonsByIdData[]) => void, reject) => {
+    db.getAllAsync(
+      `
             SELECT 
                 reasonID,
                 companyID,
@@ -129,35 +160,54 @@ export function getAllExceptionsByLang(lang: Language) {
             FROM 
                 exceptions
             WHERE lang = ?
-            `, [lang])
-            .then((res) => {
-                const data = res as IReasonsByIdData[];
-                resolve(data);
-            }).catch(error => {
-                console.error("🚀 ~ getAllExceptions ~ error:", error);
-                reject(error);
-            });
-    })
-};
-
+            `,
+      [lang],
+    )
+      .then((res) => {
+        const data = res as IReasonsByIdData[];
+        resolve(data);
+      })
+      .catch((error) => {
+        console.error("🚀 ~ getAllExceptions ~ error:", error);
+        reject(error);
+      });
+  });
+}
 
 export function filterDuplicatedExceptions(exceptions: IReasonsByIdData[]) {
-    return new Promise((resolve: (value: { existingIds: number[], notExistingIds: number[] }) => void, reject) => {
-        const setIncomingIds = new Set(exceptions.map(v => v.reasonID));
-        db.getAllAsync(`
+  return new Promise(
+    (
+      resolve: (value: {
+        existingIds: number[];
+        notExistingIds: number[];
+      }) => void,
+      reject,
+    ) => {
+      const setIncomingIds = new Set(exceptions.map((v) => v.reasonID));
+      db.getAllAsync(
+        `
             SELECT reasonID FROM exceptions WHERE reasonID IN (${[...setIncomingIds]});
-            `).then((data) => {
-            const responseData = data as { reasonID: number }[];
-            const setExistingIds = new Set<number>();
-            responseData.forEach(item => setExistingIds.add(item.reasonID));
-            const notExistingIds = [...setIncomingIds].filter(id => !setExistingIds.has(id));
-            resolve({
-                existingIds: [...setExistingIds],
-                notExistingIds: [...notExistingIds]
-            })
-        }).catch(error => {
-            console.error("🚀 ~ file: exceptions.local.queries.ts:134 ~ filterDuplicatedExceptions ~ error:", error);
-            reject(error);
+            `,
+      )
+        .then((data) => {
+          const responseData = data as { reasonID: number }[];
+          const setExistingIds = new Set<number>();
+          responseData.forEach((item) => setExistingIds.add(item.reasonID));
+          const notExistingIds = [...setIncomingIds].filter(
+            (id) => !setExistingIds.has(id),
+          );
+          resolve({
+            existingIds: [...setExistingIds],
+            notExistingIds: [...notExistingIds],
+          });
+        })
+        .catch((error) => {
+          console.error(
+            "🚀 ~ file: exceptions.local.queries.ts:134 ~ filterDuplicatedExceptions ~ error:",
+            error,
+          );
+          reject(error);
         });
-    });
+    },
+  );
 }
