@@ -92,17 +92,11 @@ export async function fetchData(user: IFetchUserData, options: fetchDataOptions)
     pieces: IFetchPiecesByIdData[],
     comments: IRequiredCommentsProps[]
   }) => void, reject) => {
-    const date = new Date();
 
-    date.setTime(date.getTime() - 14 * 24 * 60 * 60 * 1000);
-    date.setHours(1);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    date.setMilliseconds(0);
-
-    // const createdDate = date.toISOString();
-    //TODO FIX DATE ISSUE. NOW USING A FIXED DATE
-    const createdDate = new Date("2024-08-20T00:01:00").toISOString();
+    const date = new Date()
+    date.setDate(new Date().getDate() - 12)
+    date.setHours(0, 0, 0, 0)
+    const createdDate = date.toISOString();
 
     try {
       fetchManifests(createdDate, user, options).then(rawManifests => {
