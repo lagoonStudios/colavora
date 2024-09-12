@@ -15,6 +15,7 @@
     "format": "prettier --check ./app",
     "format:fix": "npx prettier --write ./app",
     "build:dev": "eas build --profile development --platform android",
+    "build:production": "eas build --profile production --platform android",
     "secret:push": "eas secret:push --scope project --env-file .env"
   },
   "jest": {
