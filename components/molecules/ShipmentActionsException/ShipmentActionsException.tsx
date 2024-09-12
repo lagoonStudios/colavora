@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import {
   FormProvider,
@@ -10,14 +10,12 @@ import { Alert } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Picker } from "@react-native-picker/picker";
 
-
 import Button from "@atoms/Button";
 import { useStore } from "@stores/zustand";
 import ButtonImage from "@atoms/ButtonImage";
 import TextInput from "@molecules/TextInput";
 import { IReasonsByIdData } from "@constants/types/general";
 import useEventsQueue from "@hooks/eventsQueue/eventsQueue";
-import { useOrderException, useAddComment } from "@hooks/queries";
 import { ActivityIndicator, Text, View } from "@components/Themed";
 import { ShipmentActionsButtonItem } from "@organisms/ShipmentActions/ShipmentAction.constants";
 import { ShipmentDetailsTabsItem } from "@templates/ShipmentDetailsTabs/ShipmentDetailsTabs.constants";
@@ -62,26 +60,20 @@ export default function ShipmentActionsException({
     if (!result.canceled) methods.setValue("photoImage", result.assets[0]);
   };
 
-  const reasonItems = useMemo(
-    () => {
-      const reasonsMap = new Map<number, IReasonsByIdData>();
+  const reasonItems = useMemo(() => {
+    const reasonsMap = new Map<number, IReasonsByIdData>();
 
-      if (reasons && reasons?.length !== 0)
-        reasons.forEach((reason) => reasonsMap.set(reason.reasonID, reason))
+    if (reasons && reasons?.length !== 0)
+      reasons.forEach((reason) => reasonsMap.set(reason.reasonID, reason));
 
-      const reasonArray = [...reasonsMap.values()]?.sort((a, b) => a.reasonID - b.reasonID)
+    const reasonArray = [...reasonsMap.values()]?.sort(
+      (a, b) => a.reasonID - b.reasonID
+    );
 
-      return reasonArray
-        ?.map(({ reasonID: value, reasonCodeDesc: label }) => (
-          <Picker.Item
-            label={label}
-            value={value}
-            key={`picker-value-${value}`}
-          />
-        ))
-    },
-    [reasons]
-  );
+    return reasonArray?.map(({ reasonID: value, reasonCodeDesc: label }) => (
+      <Picker.Item label={label} value={value} key={`picker-value-${value}`} />
+    ));
+  }, [reasons]);
 
   const onSubmit: SubmitHandler<IOrderExceptionForm> = (data) => {
     if (data?.comment?.trim() === "") {
@@ -99,8 +91,6 @@ export default function ShipmentActionsException({
         shipmentID,
         comment: data.comment,
         reasonID: String(data.reasonID),
-        reasonCode: String(selectedReason),
-        commentCreatedDate: new Date().toISOString(),
         photoImage: photoImage?.base64?.replace("data:image/png;base64,", ""),
       })
         .then((res) => {
@@ -123,6 +113,9 @@ export default function ShipmentActionsException({
     console.error("🚀 ~ ShipmentActionsException ~ errors:", errors);
 
   // --- END: Data and handlers ------------------------------------------------
+  useEffect(() => {
+    console.log(shipmentID);
+  }, [shipmentID]);
   return (
     <FormProvider {...methods}>
       <View style={styles.providerContainer}>

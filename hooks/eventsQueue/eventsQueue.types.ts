@@ -40,7 +40,7 @@ export type TOrderExceptionsProps =
             "reasonID"
         >>
     & Partial<Pick<IOptionalExceptionProps, "photoImage">>
-    & { options: Required<TRemoveEventOptions> }
+    & { options: Required<Pick<TRemoveEventOptions, "eventId">> & Partial<Pick<TRemoveEventOptions, "onError" | "onSuccess">> }
 
 export type TSendCommentsProps = {
     comment: string,

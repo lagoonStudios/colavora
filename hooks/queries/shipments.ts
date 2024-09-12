@@ -169,8 +169,8 @@ export function useAddComment() {
     onSuccess: ((_, props) => {
       const { options } = props
       if (options?.onSuccess) options.onSuccess({ ...props })
-    // removeIdFromHandleList(eventId)
-    // removeFromQueue(eventId)
+      // removeIdFromHandleList(eventId)
+      // removeFromQueue(eventId)
     })
   });
 
@@ -189,7 +189,6 @@ export function useOrderException() {
       reasonID,
       photoImage,
     }: TOrderExceptionsProps) => {
-      console.log("CALLING MUTATION useOrderException");
       if (user == null || user.companyID == null || user.userID == null) {
         console.error("🚀 ~ file: shipments.ts:181 ~ useOrderException ~ user not defined:", user);
         throw new Error("User not found");
@@ -217,45 +216,6 @@ export function useOrderException() {
 
   return request;
 }
-
-// export function useOrderException() {
-//   const { user } = useStore();
-//   const request = useMutation({
-//     mutationFn: async ({
-//       comment,
-//       shipmentID,
-//       reasonID,
-//       photoImage,
-//     }: TOrderExceptionsProps & TRemoveEventOptions) => {
-//       if (user == null || user.companyID == null || user.userID == null) {
-//         console.error("🚀 ~ file: shipments.ts:181 ~ useOrderException ~ user not defined:", user);
-//         throw new Error("User not found");
-//       };
-//       console.log("SEND ORDER EXCEPTION");
-//       return await orderException({
-//         comment,
-//         shipmentID,
-//         reasonID,
-//         photoImage,
-//         userID: user?.userID,
-//         companyID: user?.companyID,
-//       });
-//     },
-//     onError: (e, { removeIdFromHandleList, eventId }) => {
-//       console.error("🚀 ~ file: shipments.ts:187 ~ useOrderException ~ e:", e)
-//       removeIdFromHandleList(eventId)
-//     },
-//     onSuccess: ((_, { removeFromQueue, eventId, removeIdFromHandleList }) => {
-//       console.log("success order exception");
-//       removeIdFromHandleList(eventId)
-//       removeFromQueue(eventId)
-//     }),
-
-//   });
-
-//   return request;
-// }
-
 
 /**
  * @see {@link TSendCODSProps}

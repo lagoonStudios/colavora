@@ -11,7 +11,7 @@ import {
   useForm,
 } from "react-hook-form";
 import { SignatureViewRef } from "react-native-signature-canvas";
-import React, { useMemo, useReducer, useRef, useState } from "react";
+import React, { useMemo, useReducer, useRef } from "react";
 
 import Colors from "@constants/Colors";
 import Signature from "@atoms/Signature";
@@ -33,10 +33,7 @@ import { ShipmentActionsButtonItem } from "@organisms/ShipmentActions/ShipmentAc
 import { useRouter } from "expo-router";
 import Toast from "react-native-root-toast";
 import useEventsQueue from "@hooks/eventsQueue";
-export default function ShipmentActionsComplete({
-  setOption,
-  setSelectedTab,
-}: IShipmentActionsException) {
+export default function ShipmentActionsComplete({ setOption }: IShipmentActionsException) {
   // --- Refs ------------------------------------------------------------------
   const ref = useRef<SignatureViewRef>(null);
   // --- END: Refs -------------------------------------------------------------
@@ -122,7 +119,7 @@ export default function ShipmentActionsComplete({
     if (companyID && user?.userID && shipmentID) {
       const completeCODs = cods?.map((cod) => ({
         ...cod,
-        shipmentID: shipmentID!,
+        shipmentID: shipmentID,
         companyID,
         userID: user?.userID,
       }));
