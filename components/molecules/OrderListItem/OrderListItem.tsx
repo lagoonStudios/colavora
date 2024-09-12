@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { View, Text } from "@components/Themed";
-import { IFetchShipmentByIdData } from "@constants/types/shipments";
 
 import { styles } from "./OrderListItem.styles";
 import { useRouter } from "expo-router";
@@ -10,8 +9,9 @@ import { Pressable } from "react-native";
 import { useStore } from "@stores/zustand";
 import { getShipmenDetailsById } from "@hooks/SQLite";
 import { useCoordinatesFromAddress } from "@organisms/ShipmentDetail/ShipmentDetail.functions";
+import { IFetchOrderListItem } from "@hooks/SQLite/SQLite.types";
 
-export default function OrderListItem(props: IFetchShipmentByIdData) {
+export default function OrderListItem(props: IFetchOrderListItem) {
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
   const { addShipment } = useStore();
@@ -31,27 +31,31 @@ export default function OrderListItem(props: IFetchShipmentByIdData) {
       })
     }
   };
+
+  const containerStyle = useMemo(() => {
+    if (props?.index)
+      if (props.index % 2 !== 0) return styles.oddContainer
+    return styles.container
+  }, [props?.index])
   // --- END: Data and handlers ------------------------------------------------
 
   return (
-    <View>
-      <Pressable style={styles.container} onPress={setShipmentHandler}>
-        <View>
-          <Text style={styles.title}>{props.consigneeName}</Text>
-          <Text style={styles.title}>{city}</Text>
-        </View>
-        <View>
-          <Text style={styles.bodyText}>
-            {props.senderName} - {props.serviceTypeName}
-          </Text>
-          <Text style={styles.bodyText}>{props.addressLine1}</Text>
-          <Text style={styles.bodyText}>{props.addressLine2}</Text>
-          <Text style={styles.bodyText}>({props.referenceNo})</Text>
-          <Text style={styles.piecesLabel}>
-            {t("COMMON.PIECES")}: {props.qty}
-          </Text>
-        </View>
-      </Pressable>
-    </View>
+    <Pressable style={containerStyle} onPress={setShipmentHandler}>
+      <View style={styles.defaultInternalContainer}>
+        <Text style={styles.title}>{props.consigneeName}</Text>
+        <Text style={styles.title}>{city}</Text>
+      </View>
+      <View style={styles.defaultInternalContainer}>
+        <Text style={styles.bodyText}>
+          {props.senderName} - {props.serviceTypeName}
+        </Text>
+        <Text style={styles.bodyText}>{props.addressLine1}</Text>
+        <Text style={styles.bodyText}>{props.addressLine2}</Text>
+        <Text style={styles.bodyText}>({props.referenceNo})</Text>
+        <Text style={styles.piecesLabel}>
+          {t("COMMON.PIECES")}: {props.qty}
+        </Text>
+      </View>
+    </Pressable>
   );
 }

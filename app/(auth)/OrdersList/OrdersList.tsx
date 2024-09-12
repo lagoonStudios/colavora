@@ -9,7 +9,7 @@ import { ActivityIndicator, View } from "@components/Themed";
 
 import { useOrdersListData } from "./OrdersList.functions";
 import { useStore } from "@stores/zustand";
-import { IFetchShipmentByIdData } from "@constants/types/shipments";
+import { IFetchOrderListItem } from "@hooks/SQLite/SQLite.types";
 
 export default function OrdersList() {
   // --- Hooks -----------------------------------------------------------------
@@ -19,7 +19,7 @@ export default function OrdersList() {
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
-  const renderItem = ({ item }: { item: IFetchShipmentByIdData }) => (
+  const renderItem = ({ item }: { item: IFetchOrderListItem }) => (
     <OrderListItem {...item} />
   );
   // --- END: Data and handlers ------------------------------------------------

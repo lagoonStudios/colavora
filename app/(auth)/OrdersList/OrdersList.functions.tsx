@@ -1,11 +1,11 @@
-import { IFetchShipmentByIdData } from "@constants/types/shipments";
 import { getShipmentList } from "@hooks/SQLite";
+import { IFetchOrderListItem } from "@hooks/SQLite/SQLite.types";
 import { useEffect, useState } from "react";
 
 export function useOrdersListData(shipmentIds: number[], manifest: string) {
   // --- Local state -----------------------------------------------------------
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<IFetchShipmentByIdData[]>([]);
+  const [data, setData] = useState<IFetchOrderListItem[]>([]);
   // --- END: Local state ------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
@@ -13,7 +13,8 @@ export function useOrdersListData(shipmentIds: number[], manifest: string) {
     /* TODO: Pedir la nueva data cuando hago click en la manifest list */
     if (shipmentIds?.length > 0) {
       getShipmentList({ manifestID: manifest }).then((values) => {
-        setData(values)
+        const indexedValues = values.map((value, index) => ({ ...value, index }))
+        setData(indexedValues)
       })
     }
   }, [shipmentIds]);
