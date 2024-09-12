@@ -103,9 +103,7 @@ export function getEventsQueue() {
         ORDER BY 
             id ASC
     `).then((res) => {
-            const data = res as TEventQueueData[];
-        const events = db.getAllSync(`SELECT id, eventType, shipmentID FROM eventsQueue`);
-        console.log({ events });
+        const data = res as TEventQueueData[];
             resolve(data);
         }).catch(error => {
             console.error("🚀 ~ file: eventsQueue.local.queries.ts:100 ~ getEventsQueue ~ error:", error);
