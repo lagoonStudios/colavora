@@ -171,7 +171,7 @@ export default function useEventsQueue() {
             includes: idsHandled.includes(event.id),
             eventID: event.id,
           });
-          if (idsHandled.includes(event.id) || isSyncing) return;
+          if (idsHandled.includes(event.id)) return;
           // Sets the eventId to the handledIds array
           setIdToHandleList(event.id);
           // Handles the event based on its type
@@ -190,6 +190,7 @@ export default function useEventsQueue() {
             }
             // Complete Order
             case EventsQueueType.ORDER_COMPLETED: {
+              console.log("ORDER COMPLETE EXECUTING: ", event.id);
               const orderBody: TCompleteOrderProps = JSON.parse(event.body);
               completeOrderToApi({
                 order: orderBody,
@@ -217,6 +218,7 @@ export default function useEventsQueue() {
         setDisableActions(false);
       });
     // No se agrega el idHandled porque dentro del callback se está seteando el idHandled y ocurre un loop infinito.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [completeOrderToApi, sendExceptionToApi]);
   // --- END: Data and handlers ------------------------------------------------
 
@@ -242,7 +244,8 @@ export default function useEventsQueue() {
     console.log({ handleEventsQueue, isConnected, queueLength });
     // Calls the function when the user is connected and the queue changes.
     if (isConnected) handleEventsQueue();
-  }, [handleEventsQueue, isConnected, queueLength]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConnected, queueLength]);
 
   // -- END: Side effects -----------------------------------------------------
 
