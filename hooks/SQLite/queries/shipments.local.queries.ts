@@ -278,6 +278,7 @@ export function getShipmenDetailsById({ shipmentID }: { shipmentID: number }) {
                 serviceTypeName,
                 qty,
                 codAmount,
+                referenceNo,
                 shipments.barcode,
                 shipments.companyID,
                 pieces.barcode as invoiceBarcode,
