@@ -51,7 +51,11 @@
     "TOAST": {
       "SYNC_SUCCESS": "Datos sincronizados con éxito",
       "ERROR_BARCODES": "Error en los Codigos de barra",
-      "SYNC_FAIL": "Error al sincronizar datos"
+      "SYNC_FAIL": "Error al sincronizar datos",
+      "ORDER_COMPLETED": "Orden completada",
+      "ORDER_COMPLETED_ERROR": "Error al completar orden",
+      "ORDER_EXCEPTION": "Excepción creada",
+      "ORDER_EXCEPTION_ERROR": "Error al crear excepción"
     },
     "LOGIN": {
       "LOGIN": "Iniciar sesión",

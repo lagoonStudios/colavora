@@ -51,7 +51,11 @@
     "TOAST": {
       "SYNC_SUCCESS": "Data synced successfully",
       "SYNC_FAIL": "Error syncing data",
-      "ERROR_BARCODES": "Error in Barcodes"
+      "ERROR_BARCODES": "Error in Barcodes",
+      "ORDER_COMPLETED": "Order completed",
+      "ORDER_COMPLETED_ERROR": "Error completing order",
+      "ORDER_EXCEPTION": "Exception created",
+      "ORDER_EXCEPTION_ERROR": "Error creating exception"
     },
     "LOGIN": {
       "LOGIN": "Login",
