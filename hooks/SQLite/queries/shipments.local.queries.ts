@@ -54,6 +54,9 @@ export function createShipmentTable() {
                 referenceNo TEXT,
                 manifestPk TEXT,
                 manifest TEXT NOT NULL,
+                latitude REAL,
+                longitude REAL,
+                city TEXT,
                 is_sync BOOLEAN DEFAULT false,
                 last_sync TEXT DEFAULT (datetime('now')),
                 FOREIGN KEY (manifest) REFERENCES manifests (manifest)
@@ -202,7 +205,8 @@ export function getShipmentList({ manifestID }: { manifestID?: string }) {
                 addressLine2,
                 referenceNo,
                 dueDate,
-                qty
+                qty,
+                city
             FROM 
                 shipments
             WHERE 
@@ -228,7 +232,8 @@ export function getShipmentList({ manifestID }: { manifestID?: string }) {
                     addressLine1,
                     addressLine2,
                     referenceNo,
-                    qty
+                    qty,
+                    city
                 FROM 
                     shipments                    
                 WHERE
@@ -275,7 +280,10 @@ export function getShipmenDetailsById({ shipmentID }: { shipmentID: number }) {
                 codAmount,
                 shipments.barcode,
                 shipments.companyID,
-                pieces.barcode as invoiceBarcode
+                pieces.barcode as invoiceBarcode,
+                city,
+                latitude,
+                longitude
             FROM
                 shipments
             LEFT JOIN pieces ON 
@@ -411,7 +419,8 @@ export function searchShipments({ q }: { q: string }) {
                 addressLine1,
                 addressLine2,
                 referenceNo,
-                qty
+                qty,
+                city
             FROM 
                 shipments
             WHERE
@@ -424,7 +433,8 @@ export function searchShipments({ q }: { q: string }) {
                 addressLine1 LIKE $q OR
                 addressLine2 LIKE $q OR
                 contactPerson LIKE $q OR
-                barcode LIKE $q
+                barcode LIKE $q OR
+                city LIKE $q
             `, { $q: `%${q}%` }).then((res) => {
             const data = res as IFetchShipmentByIdData[];
             resolve(data);
