@@ -159,18 +159,12 @@ export default function useEventsQueue() {
   );
 
   const handleEventsQueue = useCallback(() => {
-    console.log("handleEventsQueue invoked");
     if (disableActions) return;
     setDisableActions(true);
     getEventsQueue()
       .then((events) => {
         events.forEach((event) => {
           // If the event is already handled, skip it
-          console.log("id existente: ", idsHandled);
-          console.log("includes ", {
-            includes: idsHandled.includes(event.id),
-            eventID: event.id,
-          });
           if (idsHandled.includes(event.id)) return;
           // Sets the eventId to the handledIds array
           setIdToHandleList(event.id);
@@ -190,7 +184,6 @@ export default function useEventsQueue() {
             }
             // Complete Order
             case EventsQueueType.ORDER_COMPLETED: {
-              console.log("ORDER COMPLETE EXECUTING: ", event.id);
               const orderBody: TCompleteOrderProps = JSON.parse(event.body);
               completeOrderToApi({
                 order: orderBody,
@@ -241,7 +234,6 @@ export default function useEventsQueue() {
   }, [setQueueIds]);
 
   useEffect(() => {
-    console.log({ handleEventsQueue, isConnected, queueLength });
     // Calls the function when the user is connected and the queue changes.
     if (isConnected) handleEventsQueue();
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -63,7 +63,6 @@ export function useHandleCompleteOrderEvent({
       } = props;
 
       if (eventId != null && shipmentID != null) {
-        console.log("Shipment to update: ", shipmentID);
         updateShipmentStatus({
           shipmentId: shipmentID,
           status: ShipmentStatus.COMPLETED,
@@ -192,7 +191,6 @@ export function useHandleCompleteOrderEvent({
 
   const handleCODSSuccessCallback = useCallback(
     (props: TSendCODSProps) => {
-      console.log("sending CODS to api: ", props.CODS);
       const {
         options: { eventId },
       } = props;
@@ -212,7 +210,6 @@ export function useHandleCompleteOrderEvent({
 
   const completeOrderToApi = useCallback(
     ({ order, options: { eventId } }: TCompleteOrderToApiProps) => {
-      console.log("sending complete order to api: ", order.shipmentID);
       const cods = order.completeCODs;
       if (cods.length > 0) {
         sendCODMutation({
@@ -384,7 +381,6 @@ export function useHandleOrderExceptionEvent({
       const selectedReasonLabel =
         reasons?.find(({ reasonID }) => reasonID === Number(data.reasonID))
           ?.reasonCodeDesc || "";
-      console.log("sending message to api: ", data.comment);
       addCommentMutation({
         comment: `Order Exception - ${selectedReasonLabel} - ${data.comment}`,
         companyID: user.companyID,
@@ -429,7 +425,6 @@ export function useHandleOrderExceptionEvent({
    */
   const sendExceptionToApi = useCallback(
     (data: TOrderExceptionsProps) => {
-      console.log("sending exception to api: ", data.shipmentID);
       orderExceptionMutation({
         comment: data.comment,
         shipmentID: data.shipmentID,
