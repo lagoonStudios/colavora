@@ -24,11 +24,12 @@ import {
 export default function useEventsQueue() {
   // --- Hooks -----------------------------------------------------------------
   const isConnected = useIsConnected();
-  const { user } = useStore();
+  const { user, isSyncing } = useStore();
   /** Represents all the events ids that are in the queue. */
   const [queueIds, setQueueIds] = useState<number[]>([]);
   /** Represents all the ids that are being handled. For example all events that are waiting for an api response. */
   const [idsHandled, setHandledIds] = useState<number[]>([]);
+  const [disableActions, setDisableActions] = useState(false);
 
   // --- END: Hooks ------------------------------------------------------------
 
@@ -58,18 +59,19 @@ export default function useEventsQueue() {
     (id: number) => {
       removeEvent(id)
         .then(() => {
-          removeIdFromHandleList(id);
+          // removeIdFromHandleList(id);
           setQueueIds(queueIds.filter((item) => item !== id));
         })
         .catch((e) => {
           console.error("🚀 ~ file: eventsQueue.tsx:65 ~ removeEvent ~ e:", e);
         });
     },
-    [queueIds, removeIdFromHandleList, setQueueIds]
+    [queueIds, setQueueIds]
   );
 
   const setIdToHandleList = useCallback(
-    (id: number) => setHandledIds((ids) => [...ids, id]),
+    (id: number) =>
+      setHandledIds((ids) => [...ids.filter((v) => v !== id), id]),
     [setHandledIds]
   );
 
@@ -158,17 +160,25 @@ export default function useEventsQueue() {
 
   const handleEventsQueue = useCallback(() => {
     console.log("handleEventsQueue invoked");
+    if (disableActions) return;
+    setDisableActions(true);
     getEventsQueue()
       .then((events) => {
         events.forEach((event) => {
           // If the event is already handled, skip it
-          if (idsHandled.includes(event.id)) return;
+          console.log("id existente: ", idsHandled);
+          console.log("includes ", {
+            includes: idsHandled.includes(event.id),
+            eventID: event.id,
+          });
+          if (idsHandled.includes(event.id) || isSyncing) return;
           // Sets the eventId to the handledIds array
           setIdToHandleList(event.id);
           // Handles the event based on its type
           switch (event.eventType) {
             // Order Exception
             case EventsQueueType.ORDER_EXCEPTION: {
+              setIdToHandleList(event.id);
               const exceptionBody: TOrderExceptionsProps = JSON.parse(
                 event.body
               );
@@ -197,14 +207,17 @@ export default function useEventsQueue() {
             }
           }
         });
+        setDisableActions(false);
       })
       .catch((e) => {
         console.error(
           "🚀 ~ file: eventsQueue.tsx:191 ~ getEventsQueue ~ e:",
           e
         );
+        setDisableActions(false);
       });
-  }, [completeOrderToApi, idsHandled, sendExceptionToApi, setIdToHandleList]);
+    // No se agrega el idHandled porque dentro del callback se está seteando el idHandled y ocurre un loop infinito.
+  }, [completeOrderToApi, sendExceptionToApi]);
   // --- END: Data and handlers ------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
@@ -226,6 +239,7 @@ export default function useEventsQueue() {
   }, [setQueueIds]);
 
   useEffect(() => {
+    console.log({ handleEventsQueue, isConnected, queueLength });
     // Calls the function when the user is connected and the queue changes.
     if (isConnected) handleEventsQueue();
   }, [handleEventsQueue, isConnected, queueLength]);

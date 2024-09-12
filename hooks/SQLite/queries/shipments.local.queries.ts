@@ -110,13 +110,13 @@ export function insertMultipleShipments(shipments: IShipmentDataFromAPI[]) {
 
                 for (const item of shipmentsToInsert) {
                     const rawItem = item
-                    
+
                     delete rawItem.driverAssign
                     delete rawItem.comments
                     delete rawItem.pieces
 
                     const parsedItem: IFetchShipmentByIdData = {
-                        ...rawItem, 
+                        ...rawItem,
                         manifestDL: item.manifest,
                         manifestPk: item.manifest,
                         assignPK: item?.assignPK ?? 0,
@@ -338,7 +338,7 @@ export function updateShipmentStatus({ shipmentId, status, isSync }: { shipmentI
         `, { $status: status, $shipmentId: shipmentId, $isSync: isSync })
             .then((res) => {
                 if (res.changes === 0) {
-                    console.error("🚀 ~ updateShipmentStatus ~ shipmentId not found:");
+                    console.error("🚀 ~ updateShipmentStatus ~ shipmentId not found",);
                     reject("shipmentId not found");
                     return;
                 }
