@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import Chip from "@atoms/Chip";
@@ -8,6 +8,7 @@ import {
   TShipmentDetailsTabsProps,
   ShipmentDetailsTabsItem,
 } from "./ShipmentDetailsTabs.constants";
+import { useStore } from "@stores/zustand";
 
 export default function ShipmentDetailsTabs(props: TShipmentDetailsTabsProps) {
   // --- Local state -----------------------------------------------------------
@@ -16,6 +17,7 @@ export default function ShipmentDetailsTabs(props: TShipmentDetailsTabsProps) {
 
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
+  const { shipment } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
@@ -25,6 +27,10 @@ export default function ShipmentDetailsTabs(props: TShipmentDetailsTabsProps) {
     },
     [setSelectedTab],
   );
+
+  const piecesLabel = useMemo(() => {
+    return `${t("SHIPMENT_DETAILS.PIECES")} (${shipment?.qty ?? 0})`
+  }, [shipment, t])
   // --- END: Data and handlers ------------------------------------------------
   return (
     <View style={[styles.container, style]}>
@@ -36,7 +42,7 @@ export default function ShipmentDetailsTabs(props: TShipmentDetailsTabsProps) {
           key: `shipment-detail-tab-${t("SHIPMENT_DETAILS.DETAILS")}`,
         },
         {
-          label: t("SHIPMENT_DETAILS.PIECES"),
+          label: piecesLabel,
           onPress: () => setSelectedTabHandler(ShipmentDetailsTabsItem.PIECES),
           active: selectedTab === ShipmentDetailsTabsItem.PIECES,
           key: `shipment-detail-tab-${t("SHIPMENT_DETAILS.PIECES")}`,
