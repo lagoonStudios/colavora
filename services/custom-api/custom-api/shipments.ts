@@ -125,7 +125,7 @@ export function completeOrder({
   data.append('signatureImage', String(signatureImage));
   if (comment) data.append('comment', String(comment));
   if (photoImage) data.append('photoImage', String(photoImage));
-
+  console.log("Complete order sending to data from custom-api folder");
   const url = `${BASE_URL}shipment/event/dispatch/post`;
 
   return axiosClient.postForm(url, data);
