@@ -42,6 +42,7 @@ export interface IFetchShipmentByIdData {
   lastEventComment?: null | string;
   reason?: null | string;
   barcode?: string;
+  city?: string;
   referenceNo?: null | string;
 }
 export interface IShipmentDataFromAPI extends IFetchShipmentByIdData {

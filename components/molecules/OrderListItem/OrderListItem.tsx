@@ -16,34 +16,33 @@ export default function OrderListItem(props: IFetchOrderListItem) {
   const { t } = useTranslation();
   const { addShipment } = useStore();
   const { push } = useRouter();
-  const { city } = useCoordinatesFromAddress({
-    address: props?.addressLine1?.concat(props?.addressLine2 ?? "") ?? "",
-    zipCode: props?.zip ?? "",
-  })
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
   const setShipmentHandler = () => {
     if (props.shipmentID && props.shipmentID !== null) {
-      getShipmenDetailsById({ shipmentID: props.shipmentID }).then((shipment) => {
-        addShipment(shipment);
-        push({ pathname: "ShipmentDetails" })
-      })
+      getShipmenDetailsById({ shipmentID: props.shipmentID }).then(
+        (shipment) => {
+          addShipment(shipment);
+          push({ pathname: "ShipmentDetails" });
+        },
+      );
     }
   };
 
   const containerStyle = useMemo(() => {
-    if (props?.index)
-      if (props.index % 2 !== 0) return styles.oddContainer
-    return styles.container
-  }, [props?.index])
+    if (props?.index) if (props.index % 2 !== 0) return styles.oddContainer;
+    return styles.container;
+  }, [props?.index]);
   // --- END: Data and handlers ------------------------------------------------
 
   return (
     <Pressable style={containerStyle} onPress={setShipmentHandler}>
       <View style={styles.defaultInternalContainer}>
-        <Text style={styles.title}>{props.consigneeName}</Text>
-        <Text style={styles.title}>{city}</Text>
+        <Text style={styles.title}>{props.consigneeName} +1</Text>
+        <Text style={styles.title}>
+          {props.zip} {props.city}
+        </Text>
       </View>
       <View style={styles.defaultInternalContainer}>
         <Text style={styles.bodyText}>
