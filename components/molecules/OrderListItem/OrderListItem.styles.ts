@@ -13,6 +13,19 @@ export const styles = StyleSheet.create({
     marginHorizontal: 20,
     padding: 16,
   },
+  oddContainer: {
+    backgroundColor: Colors.light.gray.tint,
+    borderRadius: 13,
+    alignItems: "flex-start",
+    justifyContent: "center",
+    gap: 8,
+    marginVertical: 10,
+    marginHorizontal: 20,
+    padding: 16,
+  },
+  defaultInternalContainer: {
+    backgroundColor: "transparent",
+  },
   title: {
     fontWeight: 600,
     fontSize: 16,
