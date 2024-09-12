@@ -1,4 +1,4 @@
-import { db } from "@hooks/SQLite";
+import { db } from "@hooks/SQLite/db";
 import { EventsQueueType, TEventQueueData, TInsertEventParams } from "./eventsQueue.types";
 
 /**
@@ -137,6 +137,58 @@ export function getEventsByID(id: number) {
             console.error("🚀 ~ file: eventsQueue.local.queries.ts:140 ~ getEventsByType ~ error:", error);
             reject(error);
         }
+
+    });
+}
+
+
+export function updateShipmentByException({ isSync, shipmentID, reasonCode }: { isSync: boolean, shipmentID: number, reasonCode: string }) {
+    return new Promise((resolve, reject) => {
+        db.runAsync(`
+            UPDATE shipments
+                SET is_sync = $isSync, reason = $reasonCode
+            WHERE
+                shipmentID = $shipmentId
+            `, { $isSync: isSync, $shipmentID: shipmentID, $reasonCode: reasonCode })
+            .then(() => {
+                resolve({
+                    message: "is_sync state updated",
+                    changes: { is_sync: isSync }
+                })
+            })
+            .catch(error => {
+                console.error("🚀 ~ file: shipments.local.queries.ts:358 ~ updateShipmentIsSyncState ~ error:", error);
+                reject(error)
+            });
+    });
+}
+
+/**
+ * Updates the status of a shipment in the database.
+ * @param  options.shipmentId - The unique identifier of the shipment to update.
+ * @param  options.status - The new status for the shipment.
+ * @returns A Promise that resolves with a success message if the update is successful, or rejects with an error message if the update fails.
+ */
+export function updateShipmentStatus({ shipmentId, status, isSync }: { shipmentId: number, status: ShipmentStatus, isSync: boolean }) {
+    return new Promise((resolve: (value: string) => void, reject) => {
+        db.runAsync(`
+            UPDATE shipments
+            SET status = $status,
+            is_sync = $isSync
+            WHERE shipmentID = $shipmentId
+        `, { $status: status, $shipmentId: shipmentId, $isSync: isSync })
+            .then((res) => {
+                if (res.changes === 0) {
+                    console.error("🚀 ~ updateShipmentStatus ~ shipmentId not found",);
+                    reject("shipmentId not found");
+                    return;
+                }
+
+                resolve("Status updated correctly");
+            }).catch(error => {
+                console.error("🚀 ~ updateShipmentStatus ~ error:", error);
+                reject(error);
+            });
 
     });
 }

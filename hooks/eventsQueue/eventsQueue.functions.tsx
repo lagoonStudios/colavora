@@ -14,8 +14,11 @@ import {
   useOrderException,
   useSendCODs,
 } from "@hooks/queries";
-import { getEventsByID } from "./eventsQueue.local.queries";
-import { updateShipmentByException, updateShipmentStatus } from "@hooks/SQLite";
+import {
+  getEventsByID,
+  updateShipmentByException,
+  updateShipmentStatus,
+} from "./eventsQueue.local.queries";
 import {
   CompleteOrderMutationProps,
   ShipmentStatus,
