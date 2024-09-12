@@ -25,6 +25,7 @@ import {
   IOrderExceptionForm,
   IShipmentActionsException,
 } from "./ShipmentActionsException.types";
+import Toast from "react-native-root-toast";
 
 export default function ShipmentActionsException({
   setSelectedTab,
@@ -97,6 +98,7 @@ export default function ShipmentActionsException({
           setSelectedTab(ShipmentDetailsTabsItem.COMMENTS);
           setStateModalVisible(false);
           setLoading(false);
+          Toast.show("TOAST.ORDER_EXCEPTION");
         })
         .catch((error) => {
           setStateModalVisible(false);
@@ -105,6 +107,7 @@ export default function ShipmentActionsException({
             error,
           );
           setLoading(false);
+          Toast.show("TOAST.ORDER_EXCEPTION_ERROR");
         });
     }
   };

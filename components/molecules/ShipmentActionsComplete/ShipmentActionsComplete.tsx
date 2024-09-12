@@ -139,10 +139,12 @@ export default function ShipmentActionsComplete({
           completeCODs,
           photoImage: photoImage?.base64?.replace("data:image/png;base64", ""),
         });
+        Toast.show(t("TOAST.ORDER_COMPLETED"));
         router.replace("/");
         setVisible(false);
         setSyncing(false);
       } catch (error) {
+        Toast.show(t("TOAST.ORDER_COMPLETED_ERROR"));
         console.error(
           "🚀 ~ file: ShipmentActionsComplete.tsx:143 ~ error:",
           error,
