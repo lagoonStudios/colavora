@@ -7,7 +7,7 @@ import { HomeItem } from "./Home.types";
 
 export function useHomeData() {
   // --- Hooks -----------------------------------------------------------------  
-  const { manifestIds, shipmentIds, isSyncing } = useStore();
+  const { manifestIds, shipmentIds, isSyncing, shipment } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local state -----------------------------------------------------------
@@ -27,7 +27,7 @@ export function useHomeData() {
           setTotalOrdersForToday(data.todayShipments)
         })
       }
-  }, [isSyncing, manifestIds])
+  }, [isSyncing, manifestIds, shipment])
 
   useEffect(() => {
     if (totalManifests && totalOrdersForToday)
