@@ -37,5 +37,5 @@ export const styles = StyleSheet.create({
   },
   phoneNumber: {
     color: Colors.light.primary.tint,
-  }
+  },
 });

@@ -26,10 +26,10 @@ export default function ManifestListItem(props: ManifestListItemProps) {
   useEffect(() => {
     if (code) {
       getShipmentList({ manifestID: code }).then((values) => {
-        setData(values)
-      })
+        setData(values);
+      });
     }
-  }, [code])
+  }, [code]);
 
   // --- Data and handlers -----------------------------------------------------
   const count = useMemo(() => {
@@ -40,25 +40,31 @@ export default function ManifestListItem(props: ManifestListItemProps) {
   const setShipmentIdsHandler = useCallback(() => {
     if (data) {
       addShipmentIds(data?.map((shipment) => Number(shipment.shipmentID)));
-      addManifestId(code)
-      push("/OrdersList")
+      addManifestId(code);
+      push("/OrdersList");
     }
   }, [data]);
 
   // --- END: Data and handlers ------------------------------------------------
 
-  return <>
-    {data?.length !== 0 && <View>
-      <Pressable onPress={setShipmentIdsHandler}>
-        <Card style={styles.container}>
-          <FontAwesome name="list-ul" size={25} color="gray" />
-          <View style={styles.descriptionContainer}>
-            {code && <Text style={styles.description}>{`${code}`}</Text>}
-            {!!count && <Text style={styles.count}>{`(${count ?? ""})`}</Text>}
-            {!count && <ActivityIndicator />}
-          </View>
-        </Card>
-      </Pressable>
-    </View>}
-  </>
+  return (
+    <>
+      {data?.length !== 0 && (
+        <View>
+          <Pressable onPress={setShipmentIdsHandler}>
+            <Card style={styles.container}>
+              <FontAwesome name="list-ul" size={25} color="gray" />
+              <View style={styles.descriptionContainer}>
+                {code && <Text style={styles.description}>{`${code}`}</Text>}
+                {!!count && (
+                  <Text style={styles.count}>{`(${count ?? ""})`}</Text>
+                )}
+                {!count && <ActivityIndicator />}
+              </View>
+            </Card>
+          </Pressable>
+        </View>
+      )}
+    </>
+  );
 }

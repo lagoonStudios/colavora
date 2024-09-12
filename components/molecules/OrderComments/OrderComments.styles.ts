@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
   container: {
     marginTop: 10,
     marginHorizontal: 24,
-    height: '57%',
+    height: "57%",
   },
   secondaryContainer: {
     display: "flex",

@@ -44,8 +44,8 @@ export interface SyncDataSlice {
   /** Set sync period in minutes */
   setSyncPeriod: (syncPeriod: SyncPeriod) => void;
   lastSyncDate: string | null;
-  setLastSyncDate: (lastSyncDate: string) => void
-  resetLastSyncDate: () => void
+  setLastSyncDate: (lastSyncDate: string) => void;
+  resetLastSyncDate: () => void;
 }
 
 export const createReasonIdsSlice: StateCreator<ReasonIdsSlice, [], []> = (
@@ -108,13 +108,16 @@ export const createStateModalSlice: StateCreator<StateModalSlice, [], []> = (
     set((state) => ({ ...state, modal: { visible: true, message } })),
 });
 
-
-export const createSyncDataSlice: StateCreator<SyncDataSlice, [], []> = (set) => ({
+export const createSyncDataSlice: StateCreator<SyncDataSlice, [], []> = (
+  set,
+) => ({
   isSyncing: false,
   setSyncing: (isSyncing: boolean) => set((state) => ({ ...state, isSyncing })),
   syncPeriod: 60,
-  setSyncPeriod: (syncPeriod: SyncPeriod) => set((state) => ({ ...state, syncPeriod })),
+  setSyncPeriod: (syncPeriod: SyncPeriod) =>
+    set((state) => ({ ...state, syncPeriod })),
   lastSyncDate: null,
-  setLastSyncDate: (lastSyncDate) =>  set((state) => ({ ...state, lastSyncDate  })),
-  resetLastSyncDate: () =>  set((state) => ({ ...state, lastSyncDate: null  })),
+  setLastSyncDate: (lastSyncDate) =>
+    set((state) => ({ ...state, lastSyncDate })),
+  resetLastSyncDate: () => set((state) => ({ ...state, lastSyncDate: null })),
 });

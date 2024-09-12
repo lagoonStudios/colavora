@@ -39,15 +39,15 @@ export const useSyncDataByPeriod = () => {
             .then((values) => {
               setLastSyncDate(new Date().toISOString());
               const manifestIdsFromFetching = values.manifests.map(
-                ({ manifest }) => Number(manifest)
+                ({ manifest }) => Number(manifest),
               );
 
               if (manifestIdsFromFetching.length > 0) {
                 addManifestIds(
-                  values.manifests.map(({ manifest }) => Number(manifest))
+                  values.manifests.map(({ manifest }) => Number(manifest)),
                 );
                 const firstManifest = manifestIdsFromFetching.sort(
-                  (a, b) => a - b
+                  (a, b) => a - b,
                 )?.[0];
 
                 if (firstManifest) {
@@ -55,11 +55,11 @@ export const useSyncDataByPeriod = () => {
                   getAllShipmentIds({ manifestID: String(firstManifest) }).then(
                     (shipmentsIdsLocal) => {
                       const shipmentIds = shipmentsIdsLocal?.map(
-                        ({ shipmentID }) => shipmentID
+                        ({ shipmentID }) => shipmentID,
                       );
 
                       if (shipmentIds?.length > 0) addShipmentIds(shipmentIds);
-                    }
+                    },
                   );
                 }
               }
@@ -71,7 +71,7 @@ export const useSyncDataByPeriod = () => {
             .catch((error) => {
               console.error(
                 "🚀 ~ file: SyncLocalData.tsx:63 ~ useSyncDataByPeriod ~ error:",
-                error
+                error,
               );
               setSyncing(false);
               setVisible(false);
@@ -81,7 +81,7 @@ export const useSyncDataByPeriod = () => {
           console.info("Implement sync logic here", new Date().getSeconds());
         }
       },
-      syncPeriod * 60 * 1000
+      syncPeriod * 60 * 1000,
     );
 
     return () => clearInterval(id);

@@ -15,8 +15,8 @@ export function useCODFetch(user: IFetchUserData | null) {
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local State ------------------------------------------------------------
-  const lang = i18next.language
-  const values = new Map<number, ICODData>()
+  const lang = i18next.language;
+  const values = new Map<number, ICODData>();
   // --- END: Local State -------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
@@ -27,17 +27,16 @@ export function useCODFetch(user: IFetchUserData | null) {
   useEffect(() => {
     if (!pending && dataCODs) {
       dataCODs.map((COD) => {
-        if (COD)
-          values.set(COD.codTypeID, { ...COD, lang })
+        if (COD) values.set(COD.codTypeID, { ...COD, lang });
       });
     }
   }, [dataCODs, pending]);
 
   useEffect(() => {
     if (values.size !== 0) {
-      insertMultipleCOD([...values.values()])
-      setCODs([...values.values()])
+      insertMultipleCOD([...values.values()]);
+      setCODs([...values.values()]);
     }
-  }, [values])
+  }, [values]);
   // --- END: Side effects -----------------------------------------------------
 }

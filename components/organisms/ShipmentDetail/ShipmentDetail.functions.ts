@@ -75,12 +75,13 @@ export function useCoordinatesFromAddress({
 
 export const useShipmentData = () => {
   const { shipment: rawShipment } = useStore();
-  const shipment: Partial<IFetchShipmentByIdData & { invoiceBarcode: string }> = useMemo(() => {
-    return {
-      ...rawShipment,
-      dueDate: new Date(rawShipment?.dueDate ?? "").toLocaleString(),
-    };
-  }, [rawShipment]);
+  const shipment: Partial<IFetchShipmentByIdData & { invoiceBarcode: string }> =
+    useMemo(() => {
+      return {
+        ...rawShipment,
+        dueDate: new Date(rawShipment?.dueDate ?? "").toLocaleString(),
+      };
+    }, [rawShipment]);
 
   return { shipment };
 };

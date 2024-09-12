@@ -14,7 +14,7 @@ export default function AuthProvider({
   domain: string;
   clientId: string;
 }) {
-  // --- Hooks -----------------------------------------------------------------  
+  // --- Hooks -----------------------------------------------------------------
   const { resetLastSyncDate } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 

@@ -68,7 +68,7 @@ export default function useAuth() {
         AsyncStorage.setItem("auth0:token", credentials.accessToken).then(
           () => {
             setLoading(false);
-          }
+          },
         );
       });
     } catch (error) {

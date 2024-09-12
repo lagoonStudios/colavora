@@ -19,16 +19,18 @@ export default function OrderListItem(props: IFetchShipmentByIdData) {
   const { city } = useCoordinatesFromAddress({
     address: props?.addressLine1?.concat(props?.addressLine2 ?? "") ?? "",
     zipCode: props?.zip ?? "",
-  })
+  });
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
   const setShipmentHandler = () => {
     if (props.shipmentID && props.shipmentID !== null) {
-      getShipmenDetailsById({ shipmentID: props.shipmentID }).then((shipment) => {
-        addShipment(shipment);
-        push({ pathname: "ShipmentDetails" })
-      })
+      getShipmenDetailsById({ shipmentID: props.shipmentID }).then(
+        (shipment) => {
+          addShipment(shipment);
+          push({ pathname: "ShipmentDetails" });
+        },
+      );
     }
   };
   // --- END: Data and handlers ------------------------------------------------

@@ -1,8 +1,7 @@
 import { Platform, StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-  container: {
-  },
+  container: {},
   buttonShadow: Platform.select({
     ios: {
       shadowOffset: { width: 0, height: 4 },

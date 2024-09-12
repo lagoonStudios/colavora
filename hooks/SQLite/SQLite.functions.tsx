@@ -21,7 +21,7 @@ export function createAllDBTables() {
       .catch((error) => {
         console.error(
           "🚀 ~ file: SQLite.functions.tsx:22 ~ returnnewPromise ~ error:",
-          error
+          error,
         );
         reject(error);
       });

@@ -6,7 +6,7 @@ import { getHomeCounters } from "@hooks/SQLite/queries/general.local.queries";
 import { HomeItem } from "./Home.types";
 
 export function useHomeData() {
-  // --- Hooks -----------------------------------------------------------------  
+  // --- Hooks -----------------------------------------------------------------
   const { manifestIds, shipmentIds, isSyncing } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
@@ -17,26 +17,24 @@ export function useHomeData() {
   const [totalOrdersForToday, setTotalOrdersForToday] = useState<number>();
   // --- END: Local state ------------------------------------------------------
 
-
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
     if (isSyncing === false)
       if (manifestIds?.length !== 0) {
         getHomeCounters().then((data) => {
-          setTotalManifests(data.manifests)
-          setTotalOrdersForToday(data.todayShipments)
-        })
+          setTotalManifests(data.manifests);
+          setTotalOrdersForToday(data.todayShipments);
+        });
       }
-  }, [isSyncing, manifestIds])
+  }, [isSyncing, manifestIds]);
 
   useEffect(() => {
     if (totalManifests && totalOrdersForToday)
-      if (totalManifests !== 0 && totalOrdersForToday !== 0)
-        setLoading(false)
-  }, [totalManifests, totalOrdersForToday])
+      if (totalManifests !== 0 && totalOrdersForToday !== 0) setLoading(false);
+  }, [totalManifests, totalOrdersForToday]);
   // --- END: Side effects -----------------------------------------------------
 
-  // --- Data and handlers -----------------------------------------------------  
+  // --- Data and handlers -----------------------------------------------------
   const data: HomeItem[] = useMemo(
     () => [
       {
@@ -66,7 +64,7 @@ export function useHomeData() {
         isDisabled: true,
       }, */
     ],
-    [shipmentIds, manifestIds, totalManifests, totalOrdersForToday]
+    [shipmentIds, manifestIds, totalManifests, totalOrdersForToday],
   );
   // --- END: Data and handlers ------------------------------------------------
 

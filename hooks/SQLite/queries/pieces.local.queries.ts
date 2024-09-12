@@ -8,9 +8,9 @@ import { IFetchPiecesByIdData } from "@constants/types/shipments";
  * @returns A Promise that resolves to "Table created correctly" if successful, otherwise rejects with an error.
  */
 export function createPiecesTable() {
-    return new Promise((resolve: (value: string) => void, reject) => {
-        db.execAsync(
-            `
+  return new Promise((resolve: (value: string) => void, reject) => {
+    db.execAsync(
+      `
           CREATE TABLE IF NOT EXISTS pieces (
             pieceID INTEGER PRIMARY KEY UNIQUE,
             companyID TEXT FORE,
@@ -27,30 +27,50 @@ export function createPiecesTable() {
             );
 
             CREATE INDEX IF NOT EXISTS pieces_shipmentID_idx ON pieces (shipmentID);
-        `
-        ).then(() => {
-            resolve("Table created correctly");
-        }).catch(error => {
-            console.error("🚀 ~ file: pieces.local.queries.ts:37 ~ createPiecesTable ~ error:", error);
-            reject("ERROR Creating pieces table: " + error);
-        });
-    });
+        `,
+    )
+      .then(() => {
+        resolve("Table created correctly");
+      })
+      .catch((error) => {
+        console.error(
+          "🚀 ~ file: pieces.local.queries.ts:37 ~ createPiecesTable ~ error:",
+          error,
+        );
+        reject("ERROR Creating pieces table: " + error);
+      });
+  });
 }
 
 export function dropPiecesTable() {
-    return new Promise((resolve: ({ status, message }: { status: number, message: string }) => void, reject) => {
-        db.execAsync(`DROP TABLE IF EXISTS pieces;`)
-            .then(() => {
-                resolve({
-                    status: 200,
-                    message: "Table dropped correctly"
-                });
-            }).catch(error => {
-                error("🚀 ~ file: pieces.local.queries.ts:44 ~ dropPiecesTable ~ error:", error);
-                reject(error);
-            });
-    });
-};
+  return new Promise(
+    (
+      resolve: ({
+        status,
+        message,
+      }: {
+        status: number;
+        message: string;
+      }) => void,
+      reject,
+    ) => {
+      db.execAsync(`DROP TABLE IF EXISTS pieces;`)
+        .then(() => {
+          resolve({
+            status: 200,
+            message: "Table dropped correctly",
+          });
+        })
+        .catch((error) => {
+          error(
+            "🚀 ~ file: pieces.local.queries.ts:44 ~ dropPiecesTable ~ error:",
+            error,
+          );
+          reject(error);
+        });
+    },
+  );
+}
 
 /**
  * Inserts multiple pieces of data into the 'pieces' table in the provided SQLite database.
@@ -60,24 +80,30 @@ export function dropPiecesTable() {
  * @returns A Promise that resolves if the operation is successful, otherwise rejects with an error.
  */
 export function insertMultiplePieces(pieces: IFetchPiecesByIdData[]) {
-    return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
+    const mapPieces = new Map<number, IFetchPiecesByIdData>();
 
-        const mapPieces = new Map<number, IFetchPiecesByIdData>();
-
-        for (const piece of pieces) {
-            if (mapPieces.has(piece?.pieceID) === false) mapPieces.set(piece?.pieceID, piece)
-        }
-        const incomingIds = pieces.map(v => v.pieceID).filter(id => id != null);
-        db.getAllAsync(`SELECT pieceID FROM pieces WHERE pieceID IN (${incomingIds})`).then((returnedData) => {
-            const setExistingIds = new Set<number>();
-            (returnedData as { pieceID: number }[]).forEach(item => {
-                setExistingIds.add(item.pieceID);
-            });
-            const setIncomingIds = new Set(pieces.map(v => v.pieceID));
-            const notExistingIds = [...setIncomingIds].filter(id => !setExistingIds.has(id!));
-            const piecesToInsert = [...mapPieces.values()].filter((v) =>
-                notExistingIds.find(id => id === v.pieceID)
-            ).map(v => `
+    for (const piece of pieces) {
+      if (mapPieces.has(piece?.pieceID) === false)
+        mapPieces.set(piece?.pieceID, piece);
+    }
+    const incomingIds = pieces.map((v) => v.pieceID).filter((id) => id != null);
+    db.getAllAsync(
+      `SELECT pieceID FROM pieces WHERE pieceID IN (${incomingIds})`,
+    )
+      .then((returnedData) => {
+        const setExistingIds = new Set<number>();
+        (returnedData as { pieceID: number }[]).forEach((item) => {
+          setExistingIds.add(item.pieceID);
+        });
+        const setIncomingIds = new Set(pieces.map((v) => v.pieceID));
+        const notExistingIds = [...setIncomingIds].filter(
+          (id) => !setExistingIds.has(id),
+        );
+        const piecesToInsert = [...mapPieces.values()]
+          .filter((v) => notExistingIds.find((id) => id === v.pieceID))
+          .map(
+            (v) => `
                 (
                     ${v.pieceID},
                     '${v.companyID}', 
@@ -88,9 +114,11 @@ export function insertMultiplePieces(pieces: IFetchPiecesByIdData[]) {
                     '${v.comments}',
                     '${v.pwBack}',
                     '${v.pod}'
-                )`)
-            if (notExistingIds.length > 0 && piecesToInsert.length > 0) {
-                db.runAsync(`
+                )`,
+          );
+        if (notExistingIds.length > 0 && piecesToInsert.length > 0) {
+          db.runAsync(
+            `
                     INSERT INTO pieces 
                     (
                     pieceID,
@@ -103,24 +131,33 @@ export function insertMultiplePieces(pieces: IFetchPiecesByIdData[]) {
                     pwBack,
                     pod
                     ) 
-                    VALUES ${piecesToInsert.join(',')}
+                    VALUES ${piecesToInsert.join(",")}
                     `,
-                ).then((_) => {
-                    resolve({
-                        message: `Ids inserted correctly`,
-                        idsInserted: notExistingIds
-                    });
-                }).catch(error => {
-                    console.error("🚀 ~ file: pieces.local.queries.ts:108 ~ db.getAllAsync ~ error:", error);
-                    reject(error);
-                });
-            } else {
-                resolve("All ids has been inserted before.")
-            }
-        }).catch(error => {
-            console.error("🚀 ~ file: pieces.local.queries.ts:115 ~ insertMultiplePieces ~ error:", error);
-        });
-    });
+          )
+            .then((_) => {
+              resolve({
+                message: `Ids inserted correctly`,
+                idsInserted: notExistingIds,
+              });
+            })
+            .catch((error) => {
+              console.error(
+                "🚀 ~ file: pieces.local.queries.ts:108 ~ db.getAllAsync ~ error:",
+                error,
+              );
+              reject(error);
+            });
+        } else {
+          resolve("All ids has been inserted before.");
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "🚀 ~ file: pieces.local.queries.ts:115 ~ insertMultiplePieces ~ error:",
+          error,
+        );
+      });
+  });
 }
 
 /**
@@ -130,8 +167,10 @@ export function insertMultiplePieces(pieces: IFetchPiecesByIdData[]) {
  * @returns A Promise that resolves to an array of IFetchPiecesByIdData objects, or rejects with an error.
  */
 export function getPiecesByShipmentID({ shipmentID }: { shipmentID: number }) {
-    return new Promise((resolve: (value: IFetchPiecesByIdData[]) => void, reject) => {
-        db.getAllAsync(`
+  return new Promise(
+    (resolve: (value: IFetchPiecesByIdData[]) => void, reject) => {
+      db.getAllAsync(
+        `
             SELECT 
                 barcode,
                 packageTypeName,
@@ -141,12 +180,16 @@ export function getPiecesByShipmentID({ shipmentID }: { shipmentID: number }) {
                 pieces
             WHERE
                 shipmentID = ?
-            `, [shipmentID])
-            .then((res) => {
-                const data = res as IFetchPiecesByIdData[];
-                resolve(data);
-            }).catch(error => {
-                reject(error);
-            });
-    });
-};
+            `,
+        [shipmentID],
+      )
+        .then((res) => {
+          const data = res as IFetchPiecesByIdData[];
+          resolve(data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    },
+  );
+}

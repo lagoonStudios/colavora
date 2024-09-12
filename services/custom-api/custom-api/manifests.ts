@@ -8,9 +8,9 @@ import {
 export function fetchManifestData({
   driverId,
   createdDate,
-  companyID
+  companyID,
 }: IOptionalProps): Promise<AxiosResponse<number[]>> {
-  const date = createdDate?.split(".")[0]
+  const date = createdDate?.split(".")[0];
   return axiosClient.get(`shipment/manifest`, {
     params: { createdDate: date, driverId, companyID },
   });
@@ -24,9 +24,9 @@ export function fetchManifestByIdData({
 export function fetchManifestOfflineData({
   driverId,
   createdDate,
-  companyID
+  companyID,
 }: IOptionalProps): Promise<AxiosResponse<IFetchManifestOfflineData[]>> {
-  const date = createdDate?.split(".")[0]
+  const date = createdDate?.split(".")[0];
   return axiosClient.get(`shipment/shipment/select`, {
     params: { ManifestDate: date, driverId, companyID },
   });

@@ -30,8 +30,16 @@ export interface PiecesSlice {
 }
 
 export interface CommentsSlice {
-  comments: Pick<IOptionalCommentsProps, "shipmentID" | "comment" | "createdDate">[];
-  addComments: (comments: Pick<IOptionalCommentsProps, "shipmentID" | "comment" | "createdDate">[]) => void;
+  comments: Pick<
+    IOptionalCommentsProps,
+    "shipmentID" | "comment" | "createdDate"
+  >[];
+  addComments: (
+    comments: Pick<
+      IOptionalCommentsProps,
+      "shipmentID" | "comment" | "createdDate"
+    >[],
+  ) => void;
   resetCommnets: () => void;
 }
 

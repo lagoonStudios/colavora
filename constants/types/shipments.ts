@@ -54,25 +54,25 @@ export interface IShipmentDataFromAPI extends IFetchShipmentByIdData {
 export interface IFetchPiecesByIdData {
   companyID: string;
   shipmentID: number;
-  pieceID: number
-  barcode: string
-  packageType: number
-  packageTypeName: string
+  pieceID: number;
+  barcode: string;
+  packageType: number;
+  packageTypeName: string;
   comments?: null | string | [string];
   pwBack?: string;
   pod?: string;
 }
 
 export type TGeneralOptionsProps = {
-  userID: number,
-  companyID: string,
-  shipmentID: number
-}
+  userID: number;
+  companyID: string;
+  shipmentID: number;
+};
 
 export interface IOptionalShipmentProps extends IOptionalProps {
   readyDate?: string;
 }
-export interface IOptionalPiecesProps extends IOptionalShipmentProps { }
+export interface IOptionalPiecesProps extends IOptionalShipmentProps {}
 export interface IOptionalCommentsProps extends IOptionalShipmentProps {
   userID: number;
   shipmentID: number;
@@ -86,27 +86,32 @@ export interface IRequiredCommentsProps {
   createdDate: string;
 }
 
-export type IOptionalExceptionProps = Required<Pick<TGeneralOptionsProps, "companyID" | "userID" | "shipmentID">>
-  & { reasonID: string, photoImage?: string, comment?: string }
+export type IOptionalExceptionProps = Required<
+  Pick<TGeneralOptionsProps, "companyID" | "userID" | "shipmentID">
+> & { reasonID: string; photoImage?: string; comment?: string };
 
+export type ISendCOD = Required<
+  Pick<TGeneralOptionsProps, "shipmentID" | "userID" | "companyID">
+> & {
+  codAmount: number;
+  codTypeID: number;
+  codCheck?: string;
+};
 
-export type ISendCOD = Required<Pick<TGeneralOptionsProps, "shipmentID" | "userID" | "companyID">>
-  & {
-    codAmount: number,
-    codTypeID: number,
-    codCheck?: string,
-  }
+export type ICompleteOrder = Required<
+  Pick<TGeneralOptionsProps, "shipmentID" | "userID" | "companyID">
+> & {
+  barcodes: string[];
+  podName: string;
+  signatureImage: string;
+  comment?: string;
+  photoImage?: string;
+};
 
-export type ICompleteOrder = Required<Pick<TGeneralOptionsProps, "shipmentID" | "userID" | "companyID">>
-  & {
-    barcodes: string[],
-    podName: string,
-    signatureImage: string
-    comment?: string,
-    photoImage?: string,
-  }
-
-export type CompleteOrderMutationProps = { order: ICompleteOrder, options: Required<TRemoveEventOptions> }
+export type CompleteOrderMutationProps = {
+  order: ICompleteOrder;
+  options: Required<TRemoveEventOptions>;
+};
 
 export enum ShipmentStatus {
   CREATED = "Created",
@@ -123,15 +128,13 @@ export enum ShipmentStatus {
   CANCELLED = "Canceled",
   /** Considered as Competed */
   COMPLETED = "Completed",
-  UNASSIGN = "Unassign"
+  UNASSIGN = "Unassign",
 }
 
-export type ShipmentStatusCompleted =
-  Extract<ShipmentStatus,
-    typeof ShipmentStatus.COMPLETED |
-    typeof ShipmentStatus.CANCELLED |
-    typeof ShipmentStatus.PARTIAL_DELIVERY |
-    typeof ShipmentStatus.DELIVERED
-  >
-
-
+export type ShipmentStatusCompleted = Extract<
+  ShipmentStatus,
+  | typeof ShipmentStatus.COMPLETED
+  | typeof ShipmentStatus.CANCELLED
+  | typeof ShipmentStatus.PARTIAL_DELIVERY
+  | typeof ShipmentStatus.DELIVERED
+>;

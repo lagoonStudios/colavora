@@ -8,7 +8,7 @@ import {
   fetchCODByIdData,
   fetchReasonsByIdData,
   fetchReasonsData,
-  fetchAuth0UserInfo
+  fetchAuth0UserInfo,
 } from "@/services/custom-api";
 import { queryKeys } from "@constants/Constants";
 import { IOptionalProps } from "@constants/types/manifests";
@@ -142,7 +142,7 @@ export function useReasonsByIdData(ids: number[], language: string) {
       queryFn: async () => {
         const { data: rawData } = await fetchReasonsByIdData({
           id: String(id),
-          language
+          language,
         });
         return rawData ?? [];
       },
@@ -171,7 +171,7 @@ export function useCODIdData(companyID: string | undefined) {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     retryOnMount: false,
-    enabled: !!companyID
+    enabled: !!companyID,
   });
 
   return reasonsIdData;
@@ -184,7 +184,7 @@ export function useCODByIdData(ids: number[], language: string) {
       queryFn: async () => {
         const { data: rawData } = await fetchCODByIdData({
           id: String(id),
-          language
+          language,
         });
         return rawData ?? [];
       },

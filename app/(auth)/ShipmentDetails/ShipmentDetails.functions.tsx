@@ -17,9 +17,11 @@ export const useShipmentDetailsData = () => {
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
     if (shipment.shipmentID) {
-      getPiecesByShipmentID({ shipmentID: shipment.shipmentID }).then((values) => {
-        addPieces(values)
-      })
+      getPiecesByShipmentID({ shipmentID: shipment.shipmentID }).then(
+        (values) => {
+          addPieces(values);
+        },
+      );
     }
   }, [shipment.shipmentID]);
 

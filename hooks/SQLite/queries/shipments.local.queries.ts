@@ -2,15 +2,19 @@ import { db } from "../db";
 import { SQLiteRunResult } from "expo-sqlite";
 
 import { IFetchOrderListItem } from "../SQLite.types";
-import { IFetchShipmentByIdData, IShipmentDataFromAPI, ShipmentStatus } from "@constants/types/shipments";
+import {
+  IFetchShipmentByIdData,
+  IShipmentDataFromAPI,
+  ShipmentStatus,
+} from "@constants/types/shipments";
 
 /**
  * Creates the `shipments` table in the SQLite database if it doesn't exist.
  */
 export function createShipmentTable() {
-    return new Promise((resolve: (value: string) => void, reject) => {
-        db.execAsync(
-            `
+  return new Promise((resolve: (value: string) => void, reject) => {
+    db.execAsync(
+      `
                 CREATE TABLE IF NOT EXISTS shipments (
                 companyID TEXT NOT NULL,
                 shipmentID INTEGER PRIMARY KEY UNIQUE,
@@ -66,90 +70,120 @@ export function createShipmentTable() {
                 CREATE INDEX IF NOT EXISTS shipments_manifests_idx ON shipments (manifest);
                 CREATE INDEX IF NOT EXISTS shipments_statuses_idx ON shipments (status);
                 CREATE INDEX IF NOT EXISTS shipments_dueDate_idx ON shipments (dueDate);
-            `
-        ).then(() => {
-            resolve("Table created correctly");
-        }).catch(error => {
-            console.error("🚀 ~ file: shipments.local.queries.ts:68 ~ createShipmentTable ~ error:", error);
-            reject("ERROR Creating shipments table: " + error);
-        });
-    });
-
+            `,
+    )
+      .then(() => {
+        resolve("Table created correctly");
+      })
+      .catch((error) => {
+        console.error(
+          "🚀 ~ file: shipments.local.queries.ts:68 ~ createShipmentTable ~ error:",
+          error,
+        );
+        reject("ERROR Creating shipments table: " + error);
+      });
+  });
 }
 
 export function dropShipmentTable() {
-    return new Promise((resolve: ({ status, message }: { status: number, message: string }) => void, reject) => {
-        db.execAsync(`DROP TABLE IF EXISTS shipments;`)
-            .then(() => {
-                resolve({
-                    status: 200,
-                    message: "Table dropped correctly"
-                });
-            }).catch(error => {
-                console.error("🚀 ~ file: shipments.local.queries.ts:44 ~ dropShipmentTable ~ error:", error);
-                reject(error)
-            });
-    });
-};
+  return new Promise(
+    (
+      resolve: ({
+        status,
+        message,
+      }: {
+        status: number;
+        message: string;
+      }) => void,
+      reject,
+    ) => {
+      db.execAsync(`DROP TABLE IF EXISTS shipments;`)
+        .then(() => {
+          resolve({
+            status: 200,
+            message: "Table dropped correctly",
+          });
+        })
+        .catch((error) => {
+          console.error(
+            "🚀 ~ file: shipments.local.queries.ts:44 ~ dropShipmentTable ~ error:",
+            error,
+          );
+          reject(error);
+        });
+    },
+  );
+}
 
 /**
  * Inserts multiple shipments into a SQLite database.
  *
- * @param shipments An array of shipment objects to insert 
+ * @param shipments An array of shipment objects to insert
  * @see {@link IFetchShipmentByIdData}.
  * @returns  A promise that resolves with an object containing a success message and the IDs of the inserted shipments. Rejects with an error message if any errors occur.
  *
  * @throws {Error}  - Rejects with an error if there is a problem with the database operation.
  */
 export function insertMultipleShipments(shipments: IShipmentDataFromAPI[]) {
-    return new Promise((resolve, reject) => {
-        const incomingIds = shipments.map(v => v.shipmentID).filter(id => id != null);
-        filterShipmentIds(incomingIds).then((returnedData) => {
-            if (returnedData.length > 0) {
-                const shipmentsToInsert = shipments.filter((v) =>
-                    returnedData.find(id => id === v.shipmentID)
-                )
-                const promises: Promise<SQLiteRunResult>[] = [];
+  return new Promise((resolve, reject) => {
+    const incomingIds = shipments
+      .map((v) => v.shipmentID)
+      .filter((id) => id != null);
+    filterShipmentIds(incomingIds).then((returnedData) => {
+      if (returnedData.length > 0) {
+        const shipmentsToInsert = shipments.filter((v) =>
+          returnedData.find((id) => id === v.shipmentID),
+        );
+        const promises: Promise<SQLiteRunResult>[] = [];
 
-                for (const item of shipmentsToInsert) {
-                    const rawItem = item
+        for (const item of shipmentsToInsert) {
+          const rawItem = item;
 
-                    delete rawItem.driverAssign
-                    delete rawItem.comments
-                    delete rawItem.pieces
+          delete rawItem.driverAssign;
+          delete rawItem.comments;
+          delete rawItem.pieces;
 
-                    const parsedItem: IFetchShipmentByIdData = {
-                        ...rawItem,
-                        manifestDL: item.manifest,
-                        manifestPk: item.manifest,
-                        assignPK: item?.assignPK ?? 0,
-                        assignDL: item?.assignDL ?? 0,
-                        division: item?.division ?? "",
-                        barcode: item?.barcode ?? "",
-                    }
-                    const keys = Object.keys(parsedItem).join(',');
-                    const placeholders = Object.keys(parsedItem).map(() => "?").join(',');
-                    const values: any = Object.values(parsedItem);
-                    const promise = db.runAsync(`INSERT INTO shipments (${keys}) VALUES (${placeholders})`, values)
-                    promises.push(promise);
-                }
+          const parsedItem: IFetchShipmentByIdData = {
+            ...rawItem,
+            manifestDL: item.manifest,
+            manifestPk: item.manifest,
+            assignPK: item?.assignPK ?? 0,
+            assignDL: item?.assignDL ?? 0,
+            division: item?.division ?? "",
+            barcode: item?.barcode ?? "",
+          };
+          const keys = Object.keys(parsedItem).join(",");
+          const placeholders = Object.keys(parsedItem)
+            .map(() => "?")
+            .join(",");
+          const values: any = Object.values(parsedItem);
+          const promise = db.runAsync(
+            `INSERT INTO shipments (${keys}) VALUES (${placeholders})`,
+            values,
+          );
+          promises.push(promise);
+        }
 
-                Promise.all(promises).then(() => {
-                    resolve({
-                        message: `Ids inserted correctly`,
-                        idsInserted: returnedData
-                    });
-                }).catch(error => {
-                    console.error("🚀 ~ file: shipments.local.queries.ts:125 ~ insertMultipleShipments ~ error:", error);
-                    reject(error);
-                });
-            } else {
-                reject("All ids has been inserted before.")
-            }
-        })
+        Promise.all(promises)
+          .then(() => {
+            resolve({
+              message: `Ids inserted correctly`,
+              idsInserted: returnedData,
+            });
+          })
+          .catch((error) => {
+            console.error(
+              "🚀 ~ file: shipments.local.queries.ts:125 ~ insertMultipleShipments ~ error:",
+              error,
+            );
+            reject(error);
+          });
+      } else {
+        reject("All ids has been inserted before.");
+      }
     });
-};
-
+  });
+}
 
 /**
  * Gets the count and completed count of shipments for the current day.
@@ -157,10 +191,11 @@ export function insertMultipleShipments(shipments: IShipmentDataFromAPI[]) {
  * @returns A Promise that resolves to an object containing the total count of shipments and the count of completed shipments for the current day, or rejects with an error.
  */
 export function getTodaysShipments() {
-    return new Promise((resolve: (value: { count: number }) => void, reject) => {
-        const endToday = new Date();
-        endToday.setHours(23, 59, 59, 999);
-        db.getFirstAsync(`
+  return new Promise((resolve: (value: { count: number }) => void, reject) => {
+    const endToday = new Date();
+    endToday.setHours(23, 59, 59, 999);
+    db.getFirstAsync(
+      `
             SELECT 
                 count(DISTINCT shipments.shipmentID) AS count
             FROM 
@@ -172,18 +207,21 @@ export function getTodaysShipments() {
             AND 
                 shipments.dueDate <= datetime('${endToday.toISOString()}')
             
-            `)
-            .then((res) => {
-                const data = res as { count: number };
-                resolve(data);
-            })
-            .catch(error => {
-                console.error("🚀 ~ file: shipments.local.queries.ts:237 ~ getTodaysShipments ~ error:", error);
-                reject(error);
-            });
-
-    });
-};
+            `,
+    )
+      .then((res) => {
+        const data = res as { count: number };
+        resolve(data);
+      })
+      .catch((error) => {
+        console.error(
+          "🚀 ~ file: shipments.local.queries.ts:237 ~ getTodaysShipments ~ error:",
+          error,
+        );
+        reject(error);
+      });
+  });
+}
 
 /**
  * Retrieves an array of shipment list items associated with a specific manifest ID from the SQLite database.
@@ -192,9 +230,11 @@ export function getTodaysShipments() {
  * @returns A Promise that resolves to an array of IFetchOrderListItem objects, or rejects with an error.
  */
 export function getShipmentList({ manifestID }: { manifestID?: string }) {
-    return new Promise((resolve: (value: IFetchOrderListItem[]) => void, reject) => {
-        if (manifestID) {
-            db.getAllAsync(`
+  return new Promise(
+    (resolve: (value: IFetchOrderListItem[]) => void, reject) => {
+      if (manifestID) {
+        db.getAllAsync(
+          `
             SELECT 
                 shipmentID,
                 consigneeName,
@@ -213,16 +253,23 @@ export function getShipmentList({ manifestID }: { manifestID?: string }) {
                 (manifestDL = $manifestId OR manifestPK = $manifestId);
                 AND status IS NOT NULL
                 AND shipments.status NOT IN ('${ShipmentStatus.COMPLETED}', '${ShipmentStatus.CANCELLED}', '${ShipmentStatus.PARTIAL_DELIVERY}', '${ShipmentStatus.DELIVERED}')
-            `, { $manifestId: manifestID })
-                .then((res) => {
-                    const data = res as IFetchOrderListItem[];
-                    resolve(data);
-                }).catch(error => {
-                    console.error("🚀 ~ getShipmentListItemByManifestID ~ error:", error);
-                    reject(error);
-                });
-        } else {
-            db.getAllAsync(`
+            `,
+          { $manifestId: manifestID },
+        )
+          .then((res) => {
+            const data = res as IFetchOrderListItem[];
+            resolve(data);
+          })
+          .catch((error) => {
+            console.error(
+              "🚀 ~ getShipmentListItemByManifestID ~ error:",
+              error,
+            );
+            reject(error);
+          });
+      } else {
+        db.getAllAsync(
+          `
                 SELECT 
                     shipmentID,
                     consigneeName,
@@ -240,18 +287,23 @@ export function getShipmentList({ manifestID }: { manifestID?: string }) {
                     status IS NOT NULL
                 AND 
                     shipments.status NOT IN ('${ShipmentStatus.COMPLETED}', '${ShipmentStatus.CANCELLED}', '${ShipmentStatus.PARTIAL_DELIVERY}', '${ShipmentStatus.DELIVERED}')
-                `,)
-                .then((res) => {
-                    const data = res as IFetchOrderListItem[];
+                `,
+        )
+          .then((res) => {
+            const data = res as IFetchOrderListItem[];
 
-                    resolve(data);
-                }).catch(error => {
-                    console.error("🚀 ~ getShipmentListItemByManifestID ~ error:", error);
-                    reject(error);
-                });
-        }
-    });
-
+            resolve(data);
+          })
+          .catch((error) => {
+            console.error(
+              "🚀 ~ getShipmentListItemByManifestID ~ error:",
+              error,
+            );
+            reject(error);
+          });
+      }
+    },
+  );
 }
 
 /**
@@ -260,8 +312,15 @@ export function getShipmentList({ manifestID }: { manifestID?: string }) {
  * @returns A Promise that resolves to a partial object of IFetchShipmentByIdData, or rejects with an error.
  */
 export function getShipmenDetailsById({ shipmentID }: { shipmentID: number }) {
-    return new Promise((resolve: (value: Partial<IFetchShipmentByIdData & { invoiceBarcode: string }>) => void, reject) => {
-        db.getFirstAsync(`
+  return new Promise(
+    (
+      resolve: (
+        value: Partial<IFetchShipmentByIdData & { invoiceBarcode: string }>,
+      ) => void,
+      reject,
+    ) => {
+      db.getFirstAsync(
+        `
             SELECT
                 shipments.shipmentID as shipmentID,
                 consigneeName,
@@ -290,15 +349,21 @@ export function getShipmenDetailsById({ shipmentID }: { shipmentID: number }) {
                 pieces.ShipmentID = shipments.shipmentID
             WHERE
                 shipments.shipmentID = ?
-            `, [shipmentID])
-            .then((res) => {
-                const data = res as Partial<IFetchShipmentByIdData & { invoiceBarcode: string }>
-                resolve(data);
-            }).catch(error => {
-                console.error("🚀 ~ getShipmenDetailsById ~ error:", error);
-                reject(error);
-            });
-    });
+            `,
+        [shipmentID],
+      )
+        .then((res) => {
+          const data = res as Partial<
+            IFetchShipmentByIdData & { invoiceBarcode: string }
+          >;
+          resolve(data);
+        })
+        .catch((error) => {
+          console.error("🚀 ~ getShipmenDetailsById ~ error:", error);
+          reject(error);
+        });
+    },
+  );
 }
 
 /**
@@ -307,27 +372,32 @@ export function getShipmenDetailsById({ shipmentID }: { shipmentID: number }) {
  * @returns a promise that resolves with an array of shipment IDs that don't exist in the database.
  */
 export function filterShipmentIds(ids: number[]) {
-    return new Promise((resolve: (value: number[]) => void, reject) => {
-        db.getAllAsync(`SELECT shipmentID FROM shipments WHERE shipmentID IN (${ids.map(v => '?').join(',')})
-        `, [...ids]).then((data) => {
-
-            try {
-                const responseData = data as { shipmentID: number }[];
-                const setIncomingIds = new Set(ids);
-                const setExistingIds = new Set<number>();
-                responseData.forEach(item => setExistingIds.add(item.shipmentID));
-                const notExistingIds = [...setIncomingIds].filter(id => !setExistingIds.has(id));
-                resolve(notExistingIds)
-            } catch (error) {
-                console.error("🚀 ~ filterShipmentIds ~ error:", error);
-                reject(error);
-            }
-
-        }).catch(error => {
-            console.error("🚀 ~ filterShipmentIds ~ error:", error);
-            reject(error);
-        });
-    });
+  return new Promise((resolve: (value: number[]) => void, reject) => {
+    db.getAllAsync(
+      `SELECT shipmentID FROM shipments WHERE shipmentID IN (${ids.map((v) => "?").join(",")})
+        `,
+      [...ids],
+    )
+      .then((data) => {
+        try {
+          const responseData = data as { shipmentID: number }[];
+          const setIncomingIds = new Set(ids);
+          const setExistingIds = new Set<number>();
+          responseData.forEach((item) => setExistingIds.add(item.shipmentID));
+          const notExistingIds = [...setIncomingIds].filter(
+            (id) => !setExistingIds.has(id),
+          );
+          resolve(notExistingIds);
+        } catch (error) {
+          console.error("🚀 ~ filterShipmentIds ~ error:", error);
+          reject(error);
+        }
+      })
+      .catch((error) => {
+        console.error("🚀 ~ filterShipmentIds ~ error:", error);
+        reject(error);
+      });
+  });
 }
 
 /**
@@ -336,60 +406,81 @@ export function filterShipmentIds(ids: number[]) {
  * @param  options.status - The new status for the shipment.
  * @returns A Promise that resolves with a success message if the update is successful, or rejects with an error message if the update fails.
  */
-export function updateShipmentStatus({ shipmentId, status, isSync }: { shipmentId: number, status: ShipmentStatus, isSync: boolean }) {
-    return new Promise((resolve: (value: string) => void, reject) => {
-        db.runAsync(`
+export function updateShipmentStatus({
+  shipmentId,
+  status,
+  isSync,
+}: {
+  shipmentId: number;
+  status: ShipmentStatus;
+  isSync: boolean;
+}) {
+  return new Promise((resolve: (value: string) => void, reject) => {
+    db.runAsync(
+      `
             UPDATE shipments
             SET status = $status,
             is_sync = $isSync
             WHERE shipmentID = $shipmentId
-        `, { $status: status, $shipmentId: shipmentId, $isSync: isSync })
-            .then((res) => {
-                if (res.changes === 0) {
-                    console.error("🚀 ~ updateShipmentStatus ~ shipmentId not found",);
-                    reject("shipmentId not found");
-                    return;
-                }
+        `,
+      { $status: status, $shipmentId: shipmentId, $isSync: isSync },
+    )
+      .then((res) => {
+        if (res.changes === 0) {
+          console.error("🚀 ~ updateShipmentStatus ~ shipmentId not found");
+          reject("shipmentId not found");
+          return;
+        }
 
-                resolve("Status updated correctly");
-            }).catch(error => {
-                console.error("🚀 ~ updateShipmentStatus ~ error:", error);
-                reject(error);
-            });
-
-    });
+        resolve("Status updated correctly");
+      })
+      .catch((error) => {
+        console.error("🚀 ~ updateShipmentStatus ~ error:", error);
+        reject(error);
+      });
+  });
 }
-
 
 /**
  * Retrieves all the shipment IDs from the 'shipments' table where manifest match with the given one.
  * @returns A promise that resolves to an array of shipments IDs.
  */
 export function getAllShipmentIds({ manifestID }: { manifestID: string }) {
-    return new Promise((resolve: (value: { shipmentID: number }[]) => void, reject) => {
-        db.getAllAsync(`
+  return new Promise(
+    (resolve: (value: { shipmentID: number }[]) => void, reject) => {
+      db.getAllAsync(
+        `
             SELECT
                 shipmentID
             FROM
                 shipments
             WHERE
                 manifest = ?
-            `, [manifestID]).then((res) => {
-            const shipmentIds: { shipmentID: number }[] = res as { shipmentID: number }[];
-            resolve(shipmentIds)
-        }).catch(error => {
-            reject(error);
+            `,
+        [manifestID],
+      )
+        .then((res) => {
+          const shipmentIds: { shipmentID: number }[] = res as {
+            shipmentID: number;
+          }[];
+          resolve(shipmentIds);
+        })
+        .catch((error) => {
+          reject(error);
         });
-    });
+    },
+  );
 }
 
 export function searchShipments({ q }: { q: string }) {
-    return new Promise((resolve: (value: IFetchShipmentByIdData[]) => void, reject) => {
-        if (q == null || q.trim() === "") {
-            resolve([]);
-            return;
-        }
-        db.getAllAsync(`
+  return new Promise(
+    (resolve: (value: IFetchShipmentByIdData[]) => void, reject) => {
+      if (q == null || q.trim() === "") {
+        resolve([]);
+        return;
+      }
+      db.getAllAsync(
+        `
             SELECT 
                 shipmentID,
                 consigneeName,
@@ -415,13 +506,20 @@ export function searchShipments({ q }: { q: string }) {
                 contactPerson LIKE $q OR
                 barcode LIKE $q OR
                 city LIKE $q
-            `, { $q: `%${q}%` }).then((res) => {
-            const data = res as IFetchShipmentByIdData[];
-            resolve(data);
-        }).catch(error => {
-            console.error("🚀 ~ file: shipments.local.queries.ts:384 ~ searchShipments ~ error:", error);
-            reject(error);
+            `,
+        { $q: `%${q}%` },
+      )
+        .then((res) => {
+          const data = res as IFetchShipmentByIdData[];
+          resolve(data);
+        })
+        .catch((error) => {
+          console.error(
+            "🚀 ~ file: shipments.local.queries.ts:384 ~ searchShipments ~ error:",
+            error,
+          );
+          reject(error);
         });
-    });
-
+    },
+  );
 }

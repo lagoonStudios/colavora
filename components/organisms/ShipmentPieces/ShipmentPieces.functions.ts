@@ -4,14 +4,14 @@ import { useState, useEffect } from "react";
 
 export const usePiecesData = () => {
   // --- Local State ------------------------------------------------------------
-  const [loading, setLoading] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(true);
   // --- END: Local State ------------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
   const {
     pieces,
     shipment: { shipmentID },
-    addPieces
+    addPieces,
   } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
@@ -19,16 +19,14 @@ export const usePiecesData = () => {
   useEffect(() => {
     if (shipmentID) {
       getPiecesByShipmentID({ shipmentID }).then((values) => {
-        addPieces(values)
-      })
+        addPieces(values);
+      });
     }
   }, [shipmentID]);
 
   useEffect(() => {
-    if (pieces)
-      if (pieces?.length !== 0)
-        setLoading(false);
-  }, [pieces])
+    if (pieces) if (pieces?.length !== 0) setLoading(false);
+  }, [pieces]);
   // --- END: Side effects -----------------------------------------------------
 
   return { data: pieces, loading };

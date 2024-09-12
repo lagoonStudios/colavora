@@ -10,14 +10,16 @@ export function useReasonsFetch(user: IFetchUserData | null) {
   const { addReasonIds, reasonIds, setReasons } = useStore();
 
   const { data: reasonsIds } = useReasonsIdData(user?.companyID);
-  const { data: reasonsResponse, pending } = useReasonsByIdData(reasonIds, i18next.language);
+  const { data: reasonsResponse, pending } = useReasonsByIdData(
+    reasonIds,
+    i18next.language,
+  );
   // --- END: Hooks ------------------------------------------------------------
 
-  // --- Local State ------------------------------------------------------------    
-  const lang = i18next.language
-  const values = new Map<number, IReasonsByIdData>()
+  // --- Local State ------------------------------------------------------------
+  const lang = i18next.language;
+  const values = new Map<number, IReasonsByIdData>();
   // --- END: Local State -------------------------------------------------------
-
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
@@ -27,16 +29,15 @@ export function useReasonsFetch(user: IFetchUserData | null) {
   useEffect(() => {
     if (!pending && reasonsResponse)
       reasonsResponse.map((reason) => {
-        if (reason)
-          values.set(reason.reasonID, { ...reason, lang })
+        if (reason) values.set(reason.reasonID, { ...reason, lang });
       });
   }, [pending, reasonsResponse]);
 
   useEffect(() => {
     if (values.size !== 0) {
-      insertMultipleExceptions([...values.values()])
-      setReasons([...values.values()])
+      insertMultipleExceptions([...values.values()]);
+      setReasons([...values.values()]);
     }
-  }, [values])
+  }, [values]);
   // --- END: Side effects -----------------------------------------------------
 }

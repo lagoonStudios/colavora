@@ -45,15 +45,15 @@ export default function useEventsQueue() {
         .catch((error) => {
           console.error(
             "🚀 ~ file: eventsQueue.tsx:47 ~ returninsertEvent ~ error:",
-            error
+            error,
           );
         });
     },
-    [queueIds]
+    [queueIds],
   );
   const removeIdFromHandleList = useCallback(
     (id: number) => setHandledIds((ids) => ids.filter((item) => item !== id)),
-    [setHandledIds]
+    [setHandledIds],
   );
   const removeEventFromQueue = useCallback(
     (id: number) => {
@@ -66,13 +66,13 @@ export default function useEventsQueue() {
           console.error("🚀 ~ file: eventsQueue.tsx:65 ~ removeEvent ~ e:", e);
         });
     },
-    [queueIds, setQueueIds]
+    [queueIds, setQueueIds],
   );
 
   const setIdToHandleList = useCallback(
     (id: number) =>
       setHandledIds((ids) => [...ids.filter((v) => v !== id), id]),
-    [setHandledIds]
+    [setHandledIds],
   );
 
   const { addCompleteOrderEvent, completeOrderToApi } =
@@ -98,7 +98,7 @@ export default function useEventsQueue() {
         if (user == null) {
           console.error(
             "🚀 ~ file: eventsQueue.tsx:69 ~ orderException ~ user not defined:",
-            user
+            user,
           );
           reject("User not found");
           throw new Error("User not found");
@@ -114,14 +114,14 @@ export default function useEventsQueue() {
           .catch((error) => {
             console.error(
               "🚀 ~ file: eventsQueue.tsx:144 ~ addCompleteOrderEvent ~ error:",
-              error
+              error,
             );
 
             reject(error);
           });
       });
     },
-    [addCompleteOrderEvent, user]
+    [addCompleteOrderEvent, user],
   );
 
   /** Stores an orderException event in the queue.
@@ -133,7 +133,7 @@ export default function useEventsQueue() {
         if (user == null) {
           console.error(
             "🚀 ~ file: eventsQueue.tsx:69 ~ orderException ~ user not defined:",
-            user
+            user,
           );
           reject("User not found");
           throw new Error("User not found");
@@ -149,13 +149,13 @@ export default function useEventsQueue() {
           .catch((error) => {
             console.error(
               "🚀 ~ file: eventsQueue.tsx:92 ~ orderException ~ error:",
-              error
+              error,
             );
             reject(error);
           });
       });
     },
-    [addExceptionEvent, user]
+    [addExceptionEvent, user],
   );
 
   const handleEventsQueue = useCallback(() => {
@@ -174,7 +174,7 @@ export default function useEventsQueue() {
             case EventsQueueType.ORDER_EXCEPTION: {
               setIdToHandleList(event.id);
               const exceptionBody: TOrderExceptionsProps = JSON.parse(
-                event.body
+                event.body,
               );
               sendExceptionToApi({
                 ...exceptionBody,
@@ -195,7 +195,7 @@ export default function useEventsQueue() {
             default: {
               console.error(
                 "🚀 ~ file: eventsQueue.tsx ~ handleEventsQueue ~ error:",
-                "Event type not found or not handled"
+                "Event type not found or not handled",
               );
               break;
             }
@@ -206,7 +206,7 @@ export default function useEventsQueue() {
       .catch((e) => {
         console.error(
           "🚀 ~ file: eventsQueue.tsx:191 ~ getEventsQueue ~ e:",
-          e
+          e,
         );
         setDisableActions(false);
       });
@@ -226,7 +226,7 @@ export default function useEventsQueue() {
         .catch((error) => {
           console.error(
             "🚀 ~ file: eventsQueue.tsx:217 ~ getEventsQueuedIds ~ error:",
-            error
+            error,
           );
         });
     };

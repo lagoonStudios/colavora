@@ -15,12 +15,12 @@ export const styles = StyleSheet.create({
     marginTop: 10,
     gap: 16,
     marginBottom: 20,
-    flex: 1
+    flex: 1,
   },
   formContainer: {
     display: "flex",
     gap: 15,
-    flex: 1
+    flex: 1,
   },
   textInput: {
     width: "90%",
@@ -44,7 +44,7 @@ export const styles = StyleSheet.create({
     color: Colors.light.text.contrast,
   },
   backButtonLabel: {
-    fontSize: 14
+    fontSize: 14,
   },
   commnetInput: {
     textAlign: "left",

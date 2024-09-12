@@ -54,7 +54,7 @@ export default function SyncButton() {
                   Toast.show(t("SYNC_BUTTON.ERROR"));
                   console.error(
                     "🚀 ~ file: SyncButton.tsx:26 ~ resetDatabase ~ error:",
-                    error
+                    error,
                   );
                   setSyncing(false);
                 });
@@ -65,7 +65,7 @@ export default function SyncButton() {
       {
         cancelable: true,
         userInterfaceStyle: colorScheme ? colorScheme : "light",
-      }
+      },
     );
   };
   // --- END: Data and handlers ------------------------------------------------

@@ -10,7 +10,7 @@ export default function SearchInput(props: SearchInputProps) {
   // --- Hooks -----------------------------------------------------------------
 
   const { open, setOpen, data, setData, loading, handleSearch } = useSearchData(
-    { text: "" }
+    { text: "" },
   );
   // --- END: Hooks ------------------------------------------------------------
 

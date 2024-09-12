@@ -40,7 +40,7 @@ export default function ControlledInput(props: TextInputProps) {
 
   const { default: backgroundColor } = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "backgroundSecondary"
+    "backgroundSecondary",
   );
   const { tint: textColor } = useThemeColor(
     { light: lightColor, dark: darkColor },
@@ -48,7 +48,7 @@ export default function ControlledInput(props: TextInputProps) {
   );
   const { default: errorColor } = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "danger"
+    "danger",
   );
   const theme = useColorScheme() ?? "light";
   // --- END: Hooks ------------------------------------------------------------
@@ -66,14 +66,14 @@ export default function ControlledInput(props: TextInputProps) {
       backgroundColorContainer
         ? { backgroundColor: backgroundColorContainer, borderWidth: 0 }
         : undefined,
-    [backgroundColorContainer]
+    [backgroundColorContainer],
   );
   const optionalInputStyles = useMemo(
     () =>
       backgroundColorInput
         ? { backgroundColor: backgroundColorInput }
         : undefined,
-    [backgroundColorInput]
+    [backgroundColorInput],
   );
   // --- END: Data and handlers ------------------------------------------------
   return (

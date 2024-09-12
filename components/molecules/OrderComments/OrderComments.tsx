@@ -11,11 +11,20 @@ export default function OrderComments({ comments, loading }: IOrderNotes) {
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
-  const renderItem = ({ item }: { item: Pick<IOptionalCommentsProps, "shipmentID" | "comment" | "createdDate"> }) => {
+  const renderItem = ({
+    item,
+  }: {
+    item: Pick<
+      IOptionalCommentsProps,
+      "shipmentID" | "comment" | "createdDate"
+    >;
+  }) => {
     return (
       <View style={styles.notesContainer}>
         <Text style={styles.bodyText}>{item.comment}</Text>
-        {item.createdDate && <Text style={styles.dateText}>{item.createdDate}</Text>}
+        {item.createdDate && (
+          <Text style={styles.dateText}>{item.createdDate}</Text>
+        )}
       </View>
     );
   };

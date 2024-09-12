@@ -29,7 +29,7 @@ export const createManifestsSlice: StateCreator<ManifestsSlice, [], []> = (
   set,
 ) => ({
   manifests: [],
-  manifest:  "",
+  manifest: "",
   addManifest: (manifest: IFetchManifestByIdData) =>
     set(({ manifests }) => {
       const newManifests = manifests;

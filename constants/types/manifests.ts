@@ -1,9 +1,9 @@
 import { IShipmentDataFromAPI } from "./shipments";
 export interface IFetchManifestOfflineData {
-  manifestId: string
-  manifestType: string
-  manifestDate: string
-  shipments?: IShipmentDataFromAPI[]
+  manifestId: string;
+  manifestType: string;
+  manifestDate: string;
+  shipments?: IShipmentDataFromAPI[];
 }
 
 export interface IFetchManifestByIdData extends IFetchManifestOfflineData {
@@ -12,7 +12,6 @@ export interface IFetchManifestByIdData extends IFetchManifestOfflineData {
   manifest?: string;
   driverID?: number;
 }
-
 
 export interface IOptionalProps {
   driverId?: string;

@@ -11,7 +11,11 @@ export {
   fetchCODData,
 } from "./general";
 
-export { fetchManifestByIdData, fetchManifestData, fetchManifestOfflineData } from "./manifests";
+export {
+  fetchManifestByIdData,
+  fetchManifestData,
+  fetchManifestOfflineData,
+} from "./manifests";
 
 export {
   addCommentData,

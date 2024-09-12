@@ -52,28 +52,24 @@ export default function CODComponet({
     setVisible();
   };
 
-  const CODItems = useMemo(
-    () => {
+  const CODItems = useMemo(() => {
+    const CODMap = new Map<number, ICODData>();
 
-      const CODMap = new Map<number, ICODData>();
+    if (CODs && CODs?.length !== 0)
+      CODs.forEach((COD) => CODMap.set(COD.codTypeID, COD));
 
-      if (CODs && CODs?.length !== 0)
-        CODs.forEach((COD) => CODMap.set(COD.codTypeID, COD))
+    const CODArray = [...CODMap.values()]?.sort(
+      (a, b) => a.codTypeID - b.codTypeID,
+    );
 
-      const CODArray = [...CODMap.values()]?.sort((a, b) => a.codTypeID - b.codTypeID)
-
-      return CODArray?.map(
-        ({ codTypeID: value, codType: label }) => (
-          <Picker.Item
-            label={`${value} - ${label}`}
-            value={value}
-            key={`picker-value-${value}`}
-          />
-        )
-      )
-    },
-    [CODs]
-  );
+    return CODArray?.map(({ codTypeID: value, codType: label }) => (
+      <Picker.Item
+        label={`${value} - ${label}`}
+        value={value}
+        key={`picker-value-${value}`}
+      />
+    ));
+  }, [CODs]);
   // --- END: Data and handlers ------------------------------------------------
   return (
     <Modal

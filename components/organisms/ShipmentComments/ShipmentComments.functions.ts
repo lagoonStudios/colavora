@@ -11,23 +11,25 @@ export function useCommentsData() {
   const {
     comments,
     shipment: { shipmentID },
-    addComments
+    addComments,
   } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
   useEffect(() => {
-    if(shipmentID){
+    if (shipmentID) {
       getCommentsByShipmentID({ shipmentID }).then((values) => {
-        addComments(values)
-      })
+        addComments(values);
+      });
     }
-  }, [shipmentID])
+  }, [shipmentID]);
 
   const data = useMemo(() => {
     if (comments) {
       const filterValue = " Order Notes:";
-      const notes = comments.find(({ comment }) => comment && comment.includes(filterValue));
+      const notes = comments.find(
+        ({ comment }) => comment && comment.includes(filterValue),
+      );
       const filterComments = comments.filter(
         ({ comment }) => comment && !comment.includes(filterValue),
       );
@@ -41,12 +43,11 @@ export function useCommentsData() {
   // --- Side Effects ------------------------------------------------
   useEffect(() => {
     if (data) setLoading(false);
-  }, [data])
+  }, [data]);
 
   useEffect(() => {
-    if (shipmentID)
-      getCommentsByShipmentID({ shipmentID })
-  }, [comments, shipmentID])
+    if (shipmentID) getCommentsByShipmentID({ shipmentID });
+  }, [comments, shipmentID]);
   // --- END: Side Effects -------------------------------------------
 
   return { data, loading };

@@ -10,7 +10,7 @@ export function useCompanyFetch() {
 
   // --- Hooks -----------------------------------------------------------------
   const { user, addCompany, company } = useStore();
-  const { data: companyData, isSuccess } = useCompanyData(user?.companyID);  
+  const { data: companyData, isSuccess } = useCompanyData(user?.companyID);
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
@@ -18,19 +18,19 @@ export function useCompanyFetch() {
     if (companyData && user) {
       const company = {
         ...companyData,
-        logo: user?.logo ?? companyData.logo
-      }
-      addCompany(company)
+        logo: user?.logo ?? companyData.logo,
+      };
+      addCompany(company);
     }
   }, [companyData, user]);
-  
+
   useEffect(() => {
     if (isSuccess && company) setLoading(false);
   }, [isSuccess]);
 
   useEffect(() => {
-    if(loading === false) setSuccess(true)
-  }, [loading])
+    if (loading === false) setSuccess(true);
+  }, [loading]);
   // --- END: Side effects -----------------------------------------------------
 
   return { success, loading };

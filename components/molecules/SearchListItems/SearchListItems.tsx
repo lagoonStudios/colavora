@@ -25,10 +25,10 @@ export default function SearchListItems(props: SearchListItemProps) {
   // --- Data Handlers ------------------------------------------------------------
   const onPressItem = useCallback((shipmentID: string) => {
     getShipmenDetailsById({ shipmentID: Number(shipmentID) }).then((value) => {
-      addShipment(value)
-      push("ShipmentDetails")
-    })
-  }, [])
+      addShipment(value);
+      push("ShipmentDetails");
+    });
+  }, []);
   // --- END: Data Handlers -------------------------------------------------------
 
   return (
@@ -41,18 +41,15 @@ export default function SearchListItems(props: SearchListItemProps) {
         <FlatList
           data={data}
           renderItem={({ item }) => {
-            const handler = () => onPressItem(item["value"])
+            const handler = () => onPressItem(item["value"]);
 
             return (
-              <View
-                style={[styles.listItemContainer]}
-              >
+              <View style={[styles.listItemContainer]}>
                 <Pressable onPress={handler}>
                   <Text style={styles.contentText}>{item["label"]}</Text>
                 </Pressable>
               </View>
-
-            )
+            );
           }}
           ItemSeparatorComponent={() => (
             <View style={styles.listItemSeparator} />

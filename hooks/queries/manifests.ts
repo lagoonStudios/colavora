@@ -13,7 +13,7 @@ export function useManifestsIdData({
   createdDate,
   driverId,
   optionalKey,
-  companyID
+  companyID,
 }: IOptionalProps) {
   const manifestsIdData = useQuery({
     queryKey: [optionalKey ?? queryKeys.manifestsIdData],
@@ -21,7 +21,7 @@ export function useManifestsIdData({
       const { data: rawData } = await fetchManifestData({
         createdDate,
         driverId,
-        companyID
+        companyID,
       });
       return rawData ?? [];
     },

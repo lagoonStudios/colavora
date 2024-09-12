@@ -12,10 +12,9 @@ export function useShipmentFetch() {
 
   // --- Hooks -----------------------------------------------------------------
   const { manifestIds, addShipmentIds } = useStore();
-  const { data: shipmentIds } =
-    useShipmentsIdData({
-      manifest: todayManifest ? String(todayManifest) : undefined,
-    });
+  const { data: shipmentIds } = useShipmentsIdData({
+    manifest: todayManifest ? String(todayManifest) : undefined,
+  });
 
   const dataShipments = useShipmentsByIdData(shipmentIds ?? []);
   // --- END: Hooks ------------------------------------------------------------
@@ -37,7 +36,7 @@ export function useShipmentFetch() {
           setLoading(false);
           setSuccess(true);
         });
-  }, [dataShipments])
+  }, [dataShipments]);
   // --- END: Side effects -----------------------------------------------------
 
   return { success, loading };

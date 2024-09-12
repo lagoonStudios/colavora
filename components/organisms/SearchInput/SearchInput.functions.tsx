@@ -47,14 +47,14 @@ export const useSearchData = ({ text }: UseSearchDataProps) => {
         setLoading(false);
       }
     },
-    [text]
+    [text],
   );
 
   const handleSearch = useCallback(
     debounce((text: string) => {
       handleSearchRequest(text);
     }, 300),
-    [handleSearchRequest]
+    [handleSearchRequest],
   );
 
   return { data, setData, loading, error, handleSearch, open, setOpen };

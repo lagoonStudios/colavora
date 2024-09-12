@@ -45,14 +45,14 @@ export function useHandleCompleteOrderEvent({
       else {
         console.error(
           "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleCODSErrorCallback ~ eventId:",
-          eventId
+          eventId,
         );
         throw new Error(
-          "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleCODSErrorCallback ~ eventId not found"
+          "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleCODSErrorCallback ~ eventId not found",
         );
       }
     },
-    [removeIdFromHandleList]
+    [removeIdFromHandleList],
   );
 
   const handleCompleteOrderSuccessCallback = useCallback(
@@ -76,20 +76,20 @@ export function useHandleCompleteOrderEvent({
             removeIdFromHandleList(eventId);
             console.error(
               "🚀 ~ file: eventsQueue.functions.tsx:84 ~ error:",
-              error
+              error,
             );
           });
       } else {
         console.error(
           "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleCompleteOrderSuccessCallback ~ eventId or shipmentID not found",
-          { eventId, shipmentID }
+          { eventId, shipmentID },
         );
         throw new Error(
-          "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleCompleteOrderSuccessCallback ~ eventId or shipmentID not found"
+          "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleCompleteOrderSuccessCallback ~ eventId or shipmentID not found",
         );
       }
     },
-    [removeFromQueue, removeIdFromHandleList]
+    [removeFromQueue, removeIdFromHandleList],
   );
   const handleCompleteOrderErrorCallback = useCallback(
     (props: CompleteOrderMutationProps) => {
@@ -101,14 +101,14 @@ export function useHandleCompleteOrderEvent({
       } else {
         console.error(
           "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleCompleteOrderErrorCallback ~ eventId:",
-          eventId
+          eventId,
         );
         throw new Error(
-          "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleCompleteOrderErrorCallback ~ eventId not found"
+          "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleCompleteOrderErrorCallback ~ eventId not found",
         );
       }
     },
-    [removeIdFromHandleList]
+    [removeIdFromHandleList],
   );
   const addCompleteOrderEvent = useCallback(
     ({ order }: TAddCompleteOrderToQueue) => {
@@ -133,7 +133,7 @@ export function useHandleCompleteOrderEvent({
             } catch (error) {
               console.error(
                 "🚀 ~ file: eventsQueue.functions.tsx:145 ~ .then ~ error:",
-                error
+                error,
               );
               reject(error);
             }
@@ -141,13 +141,13 @@ export function useHandleCompleteOrderEvent({
           .catch((error) => {
             console.error(
               "🚀 ~ file: eventsQueue.tsx:144 ~ returnnewPromise ~ error:",
-              error
+              error,
             );
             reject(error);
           });
       });
     },
-    [addEventToQueue]
+    [addEventToQueue],
   );
 
   const handleUploadCompleteOrder = useCallback(
@@ -155,7 +155,7 @@ export function useHandleCompleteOrderEvent({
       getEventsByID(eventId)
         .then((res) => {
           const order: Omit<TCompleteOrderProps, "options"> = JSON.parse(
-            res.body
+            res.body,
           );
           completeOrderMutation({
             order: {
@@ -178,7 +178,7 @@ export function useHandleCompleteOrderEvent({
         .catch((error) => {
           console.error(
             "🚀 ~ file: eventsQueue.functions.ts:118 ~ handleUploadCompleteOrder ~ getEventsByID ~ error:",
-            error
+            error,
           );
         });
     },
@@ -186,7 +186,7 @@ export function useHandleCompleteOrderEvent({
       completeOrderMutation,
       handleCompleteOrderErrorCallback,
       handleCompleteOrderSuccessCallback,
-    ]
+    ],
   );
 
   const handleCODSSuccessCallback = useCallback(
@@ -198,14 +198,14 @@ export function useHandleCompleteOrderEvent({
       else {
         console.error(
           "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleCODSSuccessCallback ~ eventId:",
-          eventId
+          eventId,
         );
         throw new Error(
-          "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleCODSSuccessCallback ~ eventId not found"
+          "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleCODSSuccessCallback ~ eventId not found",
         );
       }
     },
-    [handleUploadCompleteOrder]
+    [handleUploadCompleteOrder],
   );
 
   const completeOrderToApi = useCallback(
@@ -229,7 +229,7 @@ export function useHandleCompleteOrderEvent({
       handleCODSSuccessCallback,
       handleUploadCompleteOrder,
       sendCODMutation,
-    ]
+    ],
   );
   // --- END: Data and handlers ------------------------------------------------
 
@@ -258,14 +258,14 @@ export function useHandleOrderExceptionEvent({
       else {
         console.error(
           "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleOrderExceptionErrorCallback ~ eventId:",
-          props.options.eventId
+          props.options.eventId,
         );
         throw new Error(
-          "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleOrderExceptionErrorCallback ~ eventId not found"
+          "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleOrderExceptionErrorCallback ~ eventId not found",
         );
       }
     },
-    [removeIdFromHandleList]
+    [removeIdFromHandleList],
   );
 
   const onSendCommentErrorCallback = useCallback(
@@ -275,14 +275,14 @@ export function useHandleOrderExceptionEvent({
       else {
         console.error(
           "🚀 ~ file: eventsQueue.functions.ts:47 ~ onSendCommentErrorCallback ~ eventId:",
-          props.options.eventId
+          props.options.eventId,
         );
         throw new Error(
-          "🚀 ~ file: eventsQueue.functions.ts:47 ~ onSendCommentErrorCallback ~ eventId not found"
+          "🚀 ~ file: eventsQueue.functions.ts:47 ~ onSendCommentErrorCallback ~ eventId not found",
         );
       }
     },
-    [removeIdFromHandleList]
+    [removeIdFromHandleList],
   );
 
   const onSendCommentSuccessCallback = useCallback(
@@ -293,14 +293,14 @@ export function useHandleOrderExceptionEvent({
       } else {
         console.error(
           "🚀 ~ file: eventsQueue.functions.ts:47 ~ onSendCommentSuccessCallback ~ eventId:",
-          props.options.eventId
+          props.options.eventId,
         );
         throw new Error(
-          "🚀 ~ file: eventsQueue.functions.ts:47 ~ onSendCommentSuccessCallback ~ eventId not found"
+          "🚀 ~ file: eventsQueue.functions.ts:47 ~ onSendCommentSuccessCallback ~ eventId not found",
         );
       }
     },
-    [removeIdFromHandleList, removeFromQueue]
+    [removeIdFromHandleList, removeFromQueue],
   );
 
   /**
@@ -313,10 +313,10 @@ export function useHandleOrderExceptionEvent({
         if (user == null) {
           console.error(
             "🚀 ~ file: eventsQueue.functions.ts:47 ~ addExceptionEvent ~ user not defined:",
-            user
+            user,
           );
           throw new Error(
-            "🚀 ~ file: eventsQueue.functions.ts:47 ~ addExceptionEvent ~ user not defined:"
+            "🚀 ~ file: eventsQueue.functions.ts:47 ~ addExceptionEvent ~ user not defined:",
           );
         }
         const body = JSON.stringify({
@@ -357,13 +357,13 @@ export function useHandleOrderExceptionEvent({
           .catch((error) => {
             console.error(
               "🚀 ~ file: eventsQueue.tsx:92 ~ orderException ~ error:",
-              error
+              error,
             );
             reject(error);
           });
       });
     },
-    [addEventToQueue, user]
+    [addEventToQueue, user],
   );
 
   const sendCommentToApi = useCallback(
@@ -371,10 +371,10 @@ export function useHandleOrderExceptionEvent({
       if (user == null) {
         console.error(
           "🚀 ~ file: eventsQueue.functions.ts:47 ~ sendCommentToApi ~ user not defined:",
-          user
+          user,
         );
         throw new Error(
-          "🚀 ~ file: eventsQueue.functions.ts:47 ~ sendCommentToApi ~ user not defined:"
+          "🚀 ~ file: eventsQueue.functions.ts:47 ~ sendCommentToApi ~ user not defined:",
         );
       }
 
@@ -399,7 +399,7 @@ export function useHandleOrderExceptionEvent({
       onSendCommentSuccessCallback,
       reasons,
       user,
-    ]
+    ],
   );
 
   const onOrderExceptionSuccessCallback = useCallback(
@@ -408,14 +408,14 @@ export function useHandleOrderExceptionEvent({
       else {
         console.error(
           "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleOrderExceptionSuccessCallback ~ eventId:",
-          props.options.eventId
+          props.options.eventId,
         );
         throw new Error(
-          "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleOrderExceptionSuccessCallback ~ eventId not found"
+          "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleOrderExceptionSuccessCallback ~ eventId not found",
         );
       }
     },
-    [sendCommentToApi]
+    [sendCommentToApi],
   );
 
   /**
@@ -441,7 +441,7 @@ export function useHandleOrderExceptionEvent({
       onOrderExceptionErrorCallback,
       onOrderExceptionSuccessCallback,
       orderExceptionMutation,
-    ]
+    ],
   );
   // --- END: Data and handlers ------------------------------------------------
 

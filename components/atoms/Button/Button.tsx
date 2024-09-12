@@ -28,7 +28,7 @@ export default function Button(props: ButtonProps) {
   } = props;
   const primaryColor = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "primary"
+    "primary",
   );
   return (
     <View style={[styles.container, containerStyle]}>

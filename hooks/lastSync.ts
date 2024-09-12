@@ -9,18 +9,16 @@ export function useLastSync() {
     const getLastSync = async () => {
       try {
         const localLastSync = await AsyncStorage.getItem("lastSync");
-        if (localLastSync !== null) setLastSyncDate(localLastSync)
+        if (localLastSync !== null) setLastSyncDate(localLastSync);
       } catch (e) {
         // error reading value
       }
     };
 
-    getLastSync()
-  }, [])
+    getLastSync();
+  }, []);
 
   useEffect(() => {
-    if (lastSyncDate !== null)
-      AsyncStorage.setItem("lastSync", lastSyncDate)
-
-  }, [lastSyncDate])
+    if (lastSyncDate !== null) AsyncStorage.setItem("lastSync", lastSyncDate);
+  }, [lastSyncDate]);
 }

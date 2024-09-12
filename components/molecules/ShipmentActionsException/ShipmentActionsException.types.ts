@@ -10,5 +10,5 @@ export interface IOrderExceptionForm {
 
 export interface IShipmentActionsException {
   setSelectedTab: React.Dispatch<React.SetStateAction<ShipmentDetailsTabsItem>>;
-  setOption: (option: ShipmentActionsButtonItem) => void
+  setOption: (option: ShipmentActionsButtonItem) => void;
 }

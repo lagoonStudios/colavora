@@ -20,7 +20,7 @@ export default function LoggedHeader() {
 
   const companyName = useMemo(
     () => companyData?.companyName ?? "...",
-    [companyData]
+    [companyData],
   );
   const contact = useMemo(() => {
     return driverData?.driverName ?? "...";
