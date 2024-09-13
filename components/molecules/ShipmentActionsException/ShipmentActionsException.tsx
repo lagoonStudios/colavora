@@ -67,10 +67,10 @@ export default function ShipmentActionsException({
       reasons.forEach((reason) => reasonsMap.set(reason.reasonID, reason));
 
     const reasonArray = [...reasonsMap.values()]?.sort(
-      (a, b) => a.reasonID - b.reasonID
+      (a, b) => a.reasonID - b.reasonID,
     );
 
-    return reasonArray?.map(({ reasonID: value, reasonCodeDesc: label }) => (
+    return reasonArray?.map(({ reasonID: value, reasonDesc: label }) => (
       <Picker.Item label={label} value={value} key={`picker-value-${value}`} />
     ));
   }, [reasons]);
@@ -102,7 +102,7 @@ export default function ShipmentActionsException({
           setStateModalVisible(false);
           console.error(
             "🚀 ~ file: ShipmentActionsException.tsx:120 ~ error:",
-            error
+            error,
           );
           setLoading(false);
         });
