@@ -289,6 +289,7 @@ export function getShipmenDetailsById({ shipmentID }: { shipmentID: number }) {
                 shipments
             LEFT JOIN pieces ON 
                 pieces.ShipmentID = shipments.shipmentID
+                AND pieces.packageTypeName = "Invoice"
             WHERE
                 shipments.shipmentID = ?
             `, [shipmentID])
@@ -426,3 +427,19 @@ export function searchShipments({ q }: { q: string }) {
     });
 
 }
+
+
+export function deleteShipment({ shipmentID }: { shipmentID: number }) {
+    return new Promise((resolve: (value: string) => void, reject) => {
+        db.runAsync(`
+            DELETE FROM shipments
+            WHERE shipmentID = $shipmentId
+        `, { $shipmentId: shipmentID })
+            .then(() => {
+                resolve("Shipment deleted successfully");
+            }).catch(error => {
+                console.error("🚀 ~ deleteShipment ~ error:", error);
+                reject(error);
+            });
+    })
+};

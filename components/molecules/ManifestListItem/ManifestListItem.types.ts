@@ -1,3 +1,5 @@
 export interface ManifestListItemProps {
-  code: string;
+  manifest: string;
+  createdDate: string;
+  active_shipments: number;
 }

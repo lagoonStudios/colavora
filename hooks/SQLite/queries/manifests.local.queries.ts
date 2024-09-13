@@ -173,7 +173,7 @@ export function getAllManifestsCount() {
  * @param paginatedData - Pagination parameters (page, page_size).
  * @returns A Promise that resolves to an array of objects containing manifest details, creation date, and active shipments count, or rejects with an error.
  */
-export function getManifestsList({ page, page_size }: PaginatedData) {
+export function getManifestsList() {
   return new Promise(
     (
       resolve: (
@@ -204,7 +204,6 @@ export function getManifestsList({ page, page_size }: PaginatedData) {
             GROUP BY manifests.manifest
             ORDER BY 
                 manifests.createdDate DESC
-            LIMIT ${page_size} OFFSET ${page * page_size}
             `,
       )
         .then((res) => {
