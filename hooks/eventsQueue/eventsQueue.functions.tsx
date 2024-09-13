@@ -25,6 +25,7 @@ import {
 } from "@constants/types/shipments";
 import { useStore } from "@stores/zustand";
 import { insertMultipleComments } from "@hooks/SQLite/queries/comments.local.queries";
+import { deleteShipment } from "@hooks/SQLite";
 
 export function useHandleCompleteOrderEvent({
   removeFromQueue,
@@ -34,6 +35,7 @@ export function useHandleCompleteOrderEvent({
   // --- Hooks -----------------------------------------------------------------
   const { mutate: completeOrderMutation } = useCompleteOrder();
   const { mutate: sendCODMutation } = useSendCODs();
+  const { setSyncing } = useStore();
   // --- END: Hooks ------------------------------------------------------------
   // --- Data and handlers -----------------------------------------------------
   const handleCODSErrorCallback = useCallback(
@@ -63,22 +65,9 @@ export function useHandleCompleteOrderEvent({
       } = props;
 
       if (eventId != null && shipmentID != null) {
-        updateShipmentStatus({
-          shipmentId: shipmentID,
-          status: ShipmentStatus.COMPLETED,
-          isSync: true,
-        })
-          .then(() => {
-            removeIdFromHandleList(eventId);
-            removeFromQueue(eventId);
-          })
-          .catch((error) => {
-            removeIdFromHandleList(eventId);
-            console.error(
-              "🚀 ~ file: eventsQueue.functions.tsx:84 ~ error:",
-              error
-            );
-          });
+        removeIdFromHandleList(eventId);
+        removeFromQueue(eventId);
+        setSyncing(false);
       } else {
         console.error(
           "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleCompleteOrderSuccessCallback ~ eventId or shipmentID not found",
@@ -114,40 +103,43 @@ export function useHandleCompleteOrderEvent({
     ({ order }: TAddCompleteOrderToQueue) => {
       return new Promise((resolve, reject) => {
         const body = JSON.stringify(order);
+
         addEventToQueue({
           body,
           eventType: EventsQueueType.ORDER_COMPLETED,
           shipmentID: order.shipmentID,
         })
-          .then(async () => {
-            try {
-              await updateShipmentStatus({
-                shipmentId: order.shipmentID,
-                status: ShipmentStatus.COMPLETED,
-                isSync: false,
+          .then(() => {
+            setSyncing(true);
+            deleteShipment({
+              shipmentID: order.shipmentID,
+            })
+              .then(() => {
+                setSyncing(false);
+                resolve({
+                  message: "Order added to queue",
+                  code: 200,
+                });
+              })
+              .catch((error) => {
+                setSyncing(false);
+                console.error(
+                  "🚀 ~ file: eventsQueue.functions.tsx:145 ~ deleteShipment ~ error:",
+                  error
+                );
+                reject(error);
               });
-              resolve({
-                message: "Order added to queue",
-                code: 200,
-              });
-            } catch (error) {
-              console.error(
-                "🚀 ~ file: eventsQueue.functions.tsx:145 ~ .then ~ error:",
-                error
-              );
-              reject(error);
-            }
           })
           .catch((error) => {
             console.error(
-              "🚀 ~ file: eventsQueue.tsx:144 ~ returnnewPromise ~ error:",
+              "🚀 ~ file: eventsQueue.tsx:144 ~ deleteShipment ~ error:",
               error
             );
             reject(error);
           });
       });
     },
-    [addEventToQueue]
+    [addEventToQueue, setSyncing]
   );
 
   const handleUploadCompleteOrder = useCallback(

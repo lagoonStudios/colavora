@@ -94,7 +94,7 @@ export async function fetchData(user: IFetchUserData, options: fetchDataOptions)
   }) => void, reject) => {
 
     const date = new Date()
-    date.setDate(new Date().getDate() - 12)
+    date.setDate(new Date().getDate())
     date.setHours(0, 0, 0, 0)
     const createdDate = date.toISOString();
 

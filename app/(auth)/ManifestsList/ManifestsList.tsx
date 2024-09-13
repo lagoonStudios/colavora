@@ -15,12 +15,12 @@ export default function ManifestsList() {
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
   const { manifestIds } = useStore();
-  const { data, loading } = useManifestsListData(manifestIds);
+  const { data, loading } = useManifestsListData();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
-  const renderItem = ({ item: { code } }: { item: ManifestListItemProps }) => (
-    <ManifestListItem code={code} />
+  const renderItem = ({ item }: { item: ManifestListItemProps }) => (
+    <ManifestListItem {...item} />
   );
   // --- END: Data and handlers ------------------------------------------------
 
