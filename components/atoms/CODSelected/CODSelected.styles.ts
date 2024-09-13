@@ -8,6 +8,8 @@ export const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 10,
     width: 120,
+    justifyContent: "center",
+    alignItems: "center",
   },
   addCODText: {
     color: Colors.light.text.contrast,
@@ -29,5 +31,18 @@ export const styles = StyleSheet.create({
   textItem: {
     fontSize: 15,
     fontWeight: 600,
+  },
+  totalContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  textTotalLabel: {
+    textAlign: "right",
+    fontWeight: 700,
+    fontSize: 16,
+  },
+  textTotal: {
+    textAlign: "right",
   },
 });
