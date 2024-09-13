@@ -15,17 +15,13 @@ import {
   useSendCODs,
 } from "@hooks/queries";
 import {
+  deleteShipment,
   getEventsByID,
   updateShipmentByException,
-  updateShipmentStatus,
 } from "./eventsQueue.local.queries";
-import {
-  CompleteOrderMutationProps,
-  ShipmentStatus,
-} from "@constants/types/shipments";
+import { CompleteOrderMutationProps } from "@constants/types/shipments";
 import { useStore } from "@stores/zustand";
 import { insertMultipleComments } from "@hooks/SQLite/queries/comments.local.queries";
-import { deleteShipment } from "@hooks/SQLite";
 
 export function useHandleCompleteOrderEvent({
   removeFromQueue,
