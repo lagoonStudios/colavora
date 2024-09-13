@@ -68,10 +68,12 @@
       "ORDERS": "Orders"
     },
     "MANIFESTS": {
-      "MANIFESTS": "Manifests"
+      "MANIFESTS": "Manifests",
+      "NO_MANIFESTS": "No Manifests"
     },
     "SHIPMENT_DETAILS": {
       "SHIPMENT_DETAILS": "Shipment Details",
+      "NO_SHIPMENTS": "No Shipments",
       "DETAILS": "Details",
       "PIECES": "Pieces",
       "COMMENTS": "Comments",

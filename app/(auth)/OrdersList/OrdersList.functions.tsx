@@ -4,25 +4,24 @@ import { useEffect, useState } from "react";
 
 export function useOrdersListData(shipmentIds: number[], manifest: string) {
   // --- Local state -----------------------------------------------------------
-  const [loading, setLoading] = useState(true);
+  const [loading] = useState(false);
   const [data, setData] = useState<IFetchOrderListItem[]>([]);
   // --- END: Local state ------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
     /* TODO: Pedir la nueva data cuando hago click en la manifest list */
-    if (shipmentIds?.length > 0) {
-      getShipmentList({ manifestID: manifest }).then((values) => {
-        const indexedValues = values.map((value, index) => ({ ...value, index }))
-        setData(indexedValues)
-      })
+    if (shipmentIds) {
+      void getShipmentList({ manifestID: manifest }).then((values) => {
+        const indexedValues = values.map((value, index) => ({
+          ...value,
+          index,
+        }));
+        setData(indexedValues);
+      });
     }
-  }, [shipmentIds]);
-
-  useEffect(() => {
-    if (data.length !== 0) setLoading(false);
-  }, [data]);
+  }, [manifest, shipmentIds]);
   // --- END: Side effects -----------------------------------------------------
 
-  return { data, setData, loading, setLoading };
+  return { data, setData, loading };
 }

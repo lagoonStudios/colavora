@@ -68,10 +68,12 @@
       "ORDERS": "Ordenes"
     },
     "MANIFESTS": {
-      "MANIFESTS": "Manifestos"
+      "MANIFESTS": "Manifestos",
+      "NO_MANIFESTS": "No hay Manifiestos"
     },
     "SHIPMENT_DETAILS": {
       "SHIPMENT_DETAILS": "Detalles del envío",
+      "NO_SHIPMENTS": "No hay Ordenes",
       "DETAILS": "Detalles",
       "PIECES": "Piezas",
       "COMMENTS": "Comentarios",
