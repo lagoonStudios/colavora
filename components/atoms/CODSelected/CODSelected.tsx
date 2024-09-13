@@ -27,15 +27,25 @@ export default function CODSelected({
       </View>
     ));
   }, [CODs, codsSelected]);
+
+  const total = useMemo(() => {
+    return codsSelected?.reduce((prev, { codAmount }) => prev + codAmount, 0);
+  }, [codsSelected]);
   // --- END: Hooks ------------------------------------------------------------
 
   if (codsSelected?.length === 0) return null;
 
   return (
     <View style={styles.container}>
-      <Pressable style={styles.addCOD} onPress={setVisible}>
-        <Text style={styles.addCODText}>Add COD</Text>
-      </Pressable>
+      <View style={styles.totalContainer}>
+        <Pressable style={styles.addCOD} onPress={setVisible}>
+          <Text style={styles.addCODText}>Add COD</Text>
+        </Pressable>
+        <View>
+          <Text style={styles.textTotalLabel}>Total</Text>
+          <Text style={styles.textTotal}>$ {total}</Text>
+        </View>
+      </View>
       <View style={styles.viewItemsContainer}>{items}</View>
     </View>
   );

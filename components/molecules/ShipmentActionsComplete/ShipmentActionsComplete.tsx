@@ -33,7 +33,9 @@ import { ShipmentActionsButtonItem } from "@organisms/ShipmentActions/ShipmentAc
 import { useRouter } from "expo-router";
 import Toast from "react-native-root-toast";
 import useEventsQueue from "@hooks/eventsQueue";
-export default function ShipmentActionsComplete({ setOption }: IShipmentActionsException) {
+export default function ShipmentActionsComplete({
+  setOption,
+}: IShipmentActionsException) {
   // --- Refs ------------------------------------------------------------------
   const ref = useRef<SignatureViewRef>(null);
   // --- END: Refs -------------------------------------------------------------
@@ -89,7 +91,7 @@ export default function ShipmentActionsComplete({ setOption }: IShipmentActionsE
   const handleOK = (signature: string) => {
     methods.setValue(
       "signatureImage",
-      signature.replace("data:image/png;base64,", "")
+      signature.replace("data:image/png;base64,", ""),
     );
   };
 
@@ -102,7 +104,7 @@ export default function ShipmentActionsComplete({ setOption }: IShipmentActionsE
 
   const showDefaultLabel = useMemo(
     () => codsSelected?.length === 0,
-    [codsSelected?.length]
+    [codsSelected?.length],
   );
 
   const onSubmit: SubmitHandler<IShipmentActionsComplete> = async ({
@@ -143,7 +145,7 @@ export default function ShipmentActionsComplete({ setOption }: IShipmentActionsE
       } catch (error) {
         console.error(
           "🚀 ~ file: ShipmentActionsComplete.tsx:143 ~ error:",
-          error
+          error,
         );
         setSyncing(false);
         setVisible(false);
@@ -154,7 +156,7 @@ export default function ShipmentActionsComplete({ setOption }: IShipmentActionsE
   const onError: SubmitErrorHandler<IShipmentActionsComplete> = (errors) => {
     console.error(
       "🚀 ~ file: ShipmentActionsComplete.tsx:144 ~ errors:",
-      errors
+      errors,
     );
     Toast.show(t("ERRORS.UNKNOWN"));
     return;
