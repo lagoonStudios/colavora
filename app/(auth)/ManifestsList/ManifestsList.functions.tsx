@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ManifestListItemProps } from "@molecules/ManifestListItem/ManifestListItem.types";
 
 export function useManifestsListData(manifestIds: number[]) {
   // --- Local state -----------------------------------------------------------
-  const [loading, setLoading] = useState(true);
+  const [loading] = useState(false);
   // --- END: Local state ------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
@@ -16,12 +16,6 @@ export function useManifestsListData(manifestIds: number[]) {
     return [];
   }, [manifestIds]);
   // --- END: Data and handlers ------------------------------------------------
-
-  // --- Side effects ----------------------------------------------------------
-  useEffect(() => {
-    if (data.length !== 0) setLoading(false);
-  }, [data]);
-  // --- END: Side effects -----------------------------------------------------
 
   return { data, loading };
 }

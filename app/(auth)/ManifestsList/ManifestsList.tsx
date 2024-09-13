@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { FlatList } from "react-native";
 
 import PageHeader from "@molecules/PageHeader/PageHeader";
-import { ActivityIndicator, View } from "@components/Themed";
+import { ActivityIndicator, View, Text } from "@components/Themed";
 import { useStore } from "@stores/zustand";
 
 import { styles } from "./ManifestsList.styles";
@@ -32,6 +32,13 @@ export default function ManifestsList() {
       <View style={styles.content}>
         {loading && <ActivityIndicator />}
         {!loading && <FlatList data={data} renderItem={renderItem} />}
+        {data.length === 0 && (
+          <View style={{ flex: 1 }}>
+            <Text style={{ textAlign: "center" }}>
+              {t("MANIFESTS.NO_MANIFESTS")}
+            </Text>
+          </View>
+        )}
       </View>
     </View>
   );

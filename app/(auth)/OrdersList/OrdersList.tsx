@@ -5,7 +5,7 @@ import { FlatList } from "react-native";
 import { styles } from "./OrdersList.styles";
 import OrderListItem from "@molecules/OrderListItem";
 import PageHeader from "@molecules/PageHeader/PageHeader";
-import { ActivityIndicator, View } from "@components/Themed";
+import { ActivityIndicator, View, Text } from "@components/Themed";
 
 import { useOrdersListData } from "./OrdersList.functions";
 import { useStore } from "@stores/zustand";
@@ -26,9 +26,7 @@ export default function OrdersList() {
 
   return (
     <View style={styles.container}>
-      <PageHeader
-        title={`${t("ORDERS.ORDERS")} (${data?.length ?? ""})`}
-      />
+      <PageHeader title={`${t("ORDERS.ORDERS")} (${data?.length ?? ""})`} />
       <View style={styles.content}>
         {loading ? (
           <ActivityIndicator />
@@ -38,6 +36,13 @@ export default function OrdersList() {
             renderItem={renderItem}
             keyExtractor={(item) => String(item.shipmentID)}
           />
+        )}
+        {data.length === 0 && (
+          <View style={{ flex: 1 }}>
+            <Text style={{ textAlign: "center" }}>
+              {t("SHIPMENT_DETAILS.NO_SHIPMENTS")}
+            </Text>
+          </View>
         )}
       </View>
     </View>
