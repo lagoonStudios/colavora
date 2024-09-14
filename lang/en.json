@@ -46,7 +46,8 @@
       "SAVING_SHIPMENTS": "Saving shipments...",
       "SAVING_PIECES": "Saving pieces...",
       "SAVING_COMMENTS": "Saving comments...",
-      "FETCHING_USER": "Fetching user info..."
+      "FETCHING_USER": "Fetching user info...",
+      "FETCHING_USER_ERROR": "Error fetching user info"
     },
     "TOAST": {
       "SYNC_SUCCESS": "Data synced successfully",
