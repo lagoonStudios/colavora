@@ -1,5 +1,4 @@
 import { AxiosResponse } from "axios";
-import { isValid, format, parseISO } from "date-fns";
 
 import { IFetchUserData } from "@constants/types/general";
 import { IFetchManifestByIdData } from "@constants/types/manifests";
@@ -17,6 +16,7 @@ import {
   fetchShipmentByIdData,
   fetchShipmentData,
 } from "@services/custom-api";
+import { TEST_TIME } from "@constants/url";
 export function parserStringToDateComment(value: string) {
   const divideValue = value.indexOf(")");
 
@@ -105,7 +105,7 @@ export async function fetchData(
 ) {
   return new Promise(
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    async (
+    (
       resolve: (value: {
         manifests: IFetchManifestByIdData[];
         shipments: IFetchShipmentByIdData[];
@@ -115,7 +115,7 @@ export async function fetchData(
       reject,
     ) => {
       const date = new Date();
-      date.setDate(new Date().getDate());
+      date.setDate(new Date().getDate() - TEST_TIME);
       date.setHours(0, 0, 0, 0);
       const createdDate = date.toISOString();
 
@@ -143,7 +143,8 @@ export async function fetchData(
           });
       } catch (error) {
         console.error("🚀 ~ file: functions.ts:12 ~ fetchData ~ error:", error);
-        reject("🚀 ~ file: functions.ts:12 ~ fetchData ~ error: " + error);
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        reject(`🚀 ~ file: functions.ts:12 ~ fetchData ~ error: ${error}`);
       }
     },
   );
@@ -206,7 +207,7 @@ export function fetchShipmentsIDs(
   options?: fetchDataOptions,
 ) {
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  return new Promise(async (resolve: (value: number[]) => void, reject) => {
+  return new Promise((resolve: (value: number[]) => void, reject) => {
     if (options?.setModalMessage)
       options?.setModalMessage(
         options?.t?.("MODAL.FETCHING_SHIPMENTS") || "Fetching shipments",
@@ -248,7 +249,7 @@ export function fetchShipmentsData(
 ) {
   return new Promise(
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    async (resolve: (value: IFetchShipmentByIdData[]) => void, reject) => {
+    (resolve: (value: IFetchShipmentByIdData[]) => void, reject) => {
       if (options?.setModalMessage)
         options?.setModalMessage(
           options?.t?.("MODAL.FETCHING_SHIPMENTS") || "Fetching shipments",
@@ -288,7 +289,7 @@ export function fetchPiecesDataFn(
 ) {
   return new Promise(
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    async (resolve: (value: IFetchPiecesByIdData[]) => void, reject) => {
+    (resolve: (value: IFetchPiecesByIdData[]) => void, reject) => {
       if (options?.setModalMessage)
         options?.setModalMessage(
           options?.t?.("MODAL.FETCHING_PIECES") || "Fetching shipments pieces",
