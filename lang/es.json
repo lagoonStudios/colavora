@@ -46,7 +46,8 @@
       "SAVING_SHIPMENTS": "Guardando ordenes...",
       "SAVING_PIECES": "Guardando piezas...",
       "SAVING_COMMENTS": "Guardando comentarios...",
-      "FETCHING_USER": "Buscando informacion del usuario"
+      "FETCHING_USER": "Buscando informacion del usuario",
+      "FETCHING_USER_ERROR": "Error al buscar informacion del usuario"
     },
     "TOAST": {
       "SYNC_SUCCESS": "Datos sincronizados con éxito",
