@@ -8,7 +8,7 @@ import {
   ICODData,
 } from "@constants/types/general";
 import { IOptionalPiecesProps } from "@constants/types/shipments";
-import { IReasonsByIdData, } from "@constants/types/general";
+import { IReasonsByIdData } from "@constants/types/general";
 import { IOptionalProps } from "@constants/types/manifests";
 import { AUTH0_DOMAIN } from "@constants/url";
 
@@ -16,18 +16,20 @@ export async function fetchAuth0UserInfo() {
   const token = await AsyncStorage.getItem("auth0:token");
 
   if (token) {
-    const axiosClient = axios.create({
+    const axiosClientAuth0 = axios.create({
       baseURL: AUTH0_DOMAIN,
       headers: {
-        'Authorization': `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
     });
 
-    return axiosClient.get('/userinfo');
+    return axiosClientAuth0.get("/userinfo");
   }
 }
 
-export function fetchDriverDataByAuth0({ id: auth0 }: IOptionalProps): Promise<AxiosResponse<number[]>> {
+export function fetchDriverDataByAuth0({
+  id: auth0,
+}: IOptionalProps): Promise<AxiosResponse<number[]>> {
   return axiosClient.get(`common/driver`, { params: { auth0 } });
 }
 export function fetchUserData(
@@ -35,7 +37,9 @@ export function fetchUserData(
 ): Promise<AxiosResponse<IFetchUserData>> {
   return axiosClient.get(`company/user/${id}`);
 }
-export function fetchStatusData({ companyID }: IOptionalProps): Promise<AxiosResponse<number[]>> {
+export function fetchStatusData({
+  companyID,
+}: IOptionalProps): Promise<AxiosResponse<number[]>> {
   return axiosClient.get(`common/status`, { params: { companyID } });
 }
 
@@ -51,21 +55,25 @@ export function fetchStatusByIdData(
   return axiosClient.get(`common/status/${id}`);
 }
 
-export function fetchReasonsData({ companyID }: IOptionalProps): Promise<AxiosResponse<number[]>> {
+export function fetchReasonsData({
+  companyID,
+}: IOptionalProps): Promise<AxiosResponse<number[]>> {
   return axiosClient.get(`common/reason`, { params: { companyID } });
 }
 export function fetchReasonsByIdData({
   id,
-  language
+  language,
 }: IOptionalPiecesProps): Promise<AxiosResponse<IReasonsByIdData>> {
   return axiosClient.get(`common/reason/${id}`, { params: { language } });
 }
-export function fetchCODData({ companyID }: IOptionalProps): Promise<AxiosResponse<number[]>> {
+export function fetchCODData({
+  companyID,
+}: IOptionalProps): Promise<AxiosResponse<number[]>> {
   return axiosClient.get(`common/cod`, { params: { companyID } });
 }
 export function fetchCODByIdData({
   id,
-  language
+  language,
 }: IOptionalPiecesProps): Promise<AxiosResponse<ICODData>> {
   return axiosClient.get(`common/cod/${id}`, { params: { language } });
 }

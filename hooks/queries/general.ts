@@ -8,18 +8,22 @@ import {
   fetchCODByIdData,
   fetchReasonsByIdData,
   fetchReasonsData,
-  fetchAuth0UserInfo
+  fetchAuth0UserInfo,
 } from "@/services/custom-api";
 import { queryKeys } from "@constants/Constants";
 import { IOptionalProps } from "@constants/types/manifests";
 import { fetchCODData } from "@services/custom-api/custom-api";
+import { IFetchAuth0UserInfo } from "@constants/types/general";
 
 export function useAuth0UserInfoData(user: string | undefined) {
   const driverData = useQuery({
     queryKey: [`${queryKeys.userInfoData}-${user}`],
     queryFn: async () => {
       const response = await fetchAuth0UserInfo();
-      return response?.data ?? {};
+      if (response?.data) {
+        const data = response.data as IFetchAuth0UserInfo;
+        return data;
+      }
     },
     retry: 0,
     refetchOnMount: false,
@@ -142,7 +146,7 @@ export function useReasonsByIdData(ids: number[], language: string) {
       queryFn: async () => {
         const { data: rawData } = await fetchReasonsByIdData({
           id: String(id),
-          language
+          language,
         });
         return rawData ?? [];
       },
@@ -151,6 +155,7 @@ export function useReasonsByIdData(ids: number[], language: string) {
     combine: (results) => {
       return {
         data: results.map((result) => result?.data),
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         refetch: () => results.forEach((results) => results?.refetch()),
         pending: results.some((result) => result.isPending),
       };
@@ -171,7 +176,7 @@ export function useCODIdData(companyID: string | undefined) {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     retryOnMount: false,
-    enabled: !!companyID
+    enabled: !!companyID,
   });
 
   return reasonsIdData;
@@ -184,7 +189,7 @@ export function useCODByIdData(ids: number[], language: string) {
       queryFn: async () => {
         const { data: rawData } = await fetchCODByIdData({
           id: String(id),
-          language
+          language,
         });
         return rawData ?? [];
       },
@@ -193,6 +198,7 @@ export function useCODByIdData(ids: number[], language: string) {
     combine: (results) => {
       return {
         data: results.map((result) => result?.data),
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         refetch: () => results.forEach((results) => results?.refetch()),
         pending: results.some((result) => result.isPending),
       };

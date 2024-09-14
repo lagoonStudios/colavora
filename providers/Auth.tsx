@@ -14,7 +14,7 @@ export default function AuthProvider({
   domain: string;
   clientId: string;
 }) {
-  // --- Hooks -----------------------------------------------------------------  
+  // --- Hooks -----------------------------------------------------------------
   const { resetLastSyncDate } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
@@ -26,16 +26,16 @@ export default function AuthProvider({
   // --- Data and handlers -----------------------------------------------------
   const saveToken = (token: string, userName: string) => {
     setToken(token);
-    AsyncStorage.setItem("auth0:email", userName);
+    void AsyncStorage.setItem("auth0:email", userName);
   };
 
   const logout = () => {
     setToken("");
-    dropTables();
-    AsyncStorage.removeItem("auth0:token");
-    AsyncStorage.removeItem("auth0:user");
-    AsyncStorage.removeItem("auth0:email");
-    AsyncStorage.removeItem("lastSync");
+    void dropTables();
+    void AsyncStorage.removeItem("auth0:token");
+    void AsyncStorage.removeItem("auth0:user");
+    void AsyncStorage.removeItem("auth0:email");
+    void AsyncStorage.removeItem("lastSync");
     resetLastSyncDate();
     setIsLoggedIn(false);
   };
@@ -50,7 +50,7 @@ export default function AuthProvider({
       setIsLoggedIn(Boolean(remainToken));
     };
 
-    checkCredentials();
+    void checkCredentials();
   }, [token]);
 
   // --- END: Side effects ------------------------------------------------

@@ -56,7 +56,8 @@
       "ORDER_COMPLETED": "Order completed",
       "ORDER_COMPLETED_ERROR": "Error completing order",
       "ORDER_EXCEPTION": "Exception created",
-      "ORDER_EXCEPTION_ERROR": "Error creating exception"
+      "ORDER_EXCEPTION_ERROR": "Error creating exception",
+      "USER_FAIL": "Error getting user data, try again"
     },
     "LOGIN": {
       "LOGIN": "Login",

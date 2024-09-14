@@ -63,12 +63,12 @@ export default function useAuth() {
         audience: AUDIENCE,
         scope: "openid profile email",
       });
-      createAllDBTables().then(() => {
+      void createAllDBTables().then(() => {
         saveToken(credentials.accessToken, userName);
-        AsyncStorage.setItem("auth0:token", credentials.accessToken).then(
+        void AsyncStorage.setItem("auth0:token", credentials.accessToken).then(
           () => {
             setLoading(false);
-          }
+          },
         );
       });
     } catch (error) {
