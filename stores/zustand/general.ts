@@ -34,6 +34,13 @@ export interface StateModalSlice {
   setVisible: (visible?: boolean) => void;
   setMessage: (message: string) => void;
   setModal: (message: string) => void;
+  hideModal: ({
+    message,
+    visible,
+  }: {
+    message?: string;
+    visible?: boolean;
+  }) => void;
 }
 
 export interface SyncDataSlice {
@@ -44,8 +51,8 @@ export interface SyncDataSlice {
   /** Set sync period in minutes */
   setSyncPeriod: (syncPeriod: SyncPeriod) => void;
   lastSyncDate: string | null;
-  setLastSyncDate: (lastSyncDate: string) => void
-  resetLastSyncDate: () => void
+  setLastSyncDate: (lastSyncDate: string) => void;
+  resetLastSyncDate: () => void;
 }
 
 export const createReasonIdsSlice: StateCreator<ReasonIdsSlice, [], []> = (
@@ -106,15 +113,23 @@ export const createStateModalSlice: StateCreator<StateModalSlice, [], []> = (
     set((state) => ({ ...state, modal: { ...state.modal, message } })),
   setModal: (message: string) =>
     set((state) => ({ ...state, modal: { visible: true, message } })),
+  hideModal: ({ message, visible }) =>
+    set((state) => ({
+      ...state,
+      modal: { visible: visible ?? false, message: message ?? "" },
+    })),
 });
 
-
-export const createSyncDataSlice: StateCreator<SyncDataSlice, [], []> = (set) => ({
+export const createSyncDataSlice: StateCreator<SyncDataSlice, [], []> = (
+  set,
+) => ({
   isSyncing: false,
   setSyncing: (isSyncing: boolean) => set((state) => ({ ...state, isSyncing })),
   syncPeriod: 60,
-  setSyncPeriod: (syncPeriod: SyncPeriod) => set((state) => ({ ...state, syncPeriod })),
+  setSyncPeriod: (syncPeriod: SyncPeriod) =>
+    set((state) => ({ ...state, syncPeriod })),
   lastSyncDate: null,
-  setLastSyncDate: (lastSyncDate) =>  set((state) => ({ ...state, lastSyncDate  })),
-  resetLastSyncDate: () =>  set((state) => ({ ...state, lastSyncDate: null  })),
+  setLastSyncDate: (lastSyncDate) =>
+    set((state) => ({ ...state, lastSyncDate })),
+  resetLastSyncDate: () => set((state) => ({ ...state, lastSyncDate: null })),
 });
