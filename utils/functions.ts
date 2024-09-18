@@ -49,10 +49,10 @@ export type fetchDataOptions = {
 };
 
 export function parseOfflineData(rawManifests: IFetchManifestByIdData[]) {
-  const manifests: IFetchManifestByIdData[] = [];
-  const shipments: IShipmentDataFromAPI[] = [];
-  const comments: TCommentForDB[] = [];
-  const pieces: IFetchPiecesByIdData[] = [];
+  const manifests = new Map<string, IFetchManifestByIdData>();
+  const shipments = new Map<number, IShipmentDataFromAPI>();
+  const pieces = new Map<number, IFetchPiecesByIdData>();
+  const comments = new Map<string, TCommentForDB>();
 
   for (const rawManifest of rawManifests) {
     const manifest = rawManifest;
@@ -66,36 +66,38 @@ export function parseOfflineData(rawManifests: IFetchManifestByIdData[]) {
             for (const rawComment of rawShipment.comments) {
               const value = parserStringToDateComment(rawComment);
 
-              comments.push({
-                shipmentID: shipment.shipmentID,
-                comment: value.comment,
-                createdDate: value.createdDate,
-              });
+              if (value.comment)
+                comments.set(value.comment, {
+                  shipmentID: shipment.shipmentID,
+                  comment: value.comment,
+                  createdDate: value.createdDate,
+                });
             }
 
           if (rawShipment?.pieces)
             for (const rawPiece of rawShipment.pieces) {
-              pieces.push({
-                ...rawPiece,
-                shipmentID: shipment.shipmentID,
-                companyID: shipment.companyID,
-                pod: rawPiece?.pod ?? "",
-                pwBack: rawPiece?.pwBack ?? "",
-              });
+              if (rawPiece.pieceID)
+                pieces.set(rawPiece.pieceID, {
+                  ...rawPiece,
+                  shipmentID: shipment.shipmentID,
+                  companyID: shipment.companyID,
+                  pod: rawPiece?.pod ?? "",
+                  pwBack: rawPiece?.pwBack ?? "",
+                });
             }
         }
 
-        shipments.push(shipment);
+        if (shipment.shipmentID) shipments.set(shipment.shipmentID, shipment);
       }
 
-    manifests.push(manifest);
+    if (manifest.manifestId) manifests.set(manifest.manifestId, manifest);
   }
 
   return {
-    manifests,
-    shipments,
-    pieces,
-    comments,
+    manifests: [...manifests.values()],
+    shipments: [...shipments.values()],
+    pieces: [...pieces.values()],
+    comments: [...comments.values()],
   };
 }
 
