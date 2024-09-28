@@ -5,7 +5,7 @@ import SignatureScreen from "react-native-signature-canvas";
 
 import { Text, View } from "@components/Themed";
 
-import { styles } from "./Signature.styles";
+import { styles, webStyle } from "./Signature.styles";
 import { ISignature } from "./Signature.types";
 export default function Signature({ refSignature, handleOK }: ISignature) {
   // --- Hooks -----------------------------------------------------------------
@@ -28,6 +28,7 @@ export default function Signature({ refSignature, handleOK }: ISignature) {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={false}
         style={styles.signatureBox}
+        webStyle={webStyle}
       />
     </View>
   );

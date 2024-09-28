@@ -74,7 +74,6 @@ export default function ShipmentActionsComplete({
   const barcodes = pieces
     .filter(({ packageType }) => packageType !== invoiceBarcodeType)
     .map(({ barcode }) => barcode);
-  console.log({ shipmentID });
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
@@ -133,7 +132,6 @@ export default function ShipmentActionsComplete({
 
       try {
         setSyncing(true);
-        console.log({ signatureImage });
         await completeOrder({
           userID: user.userID,
           companyID: companyID,
