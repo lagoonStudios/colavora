@@ -7,3 +7,4 @@ export const defaultFieldValues = {
 };
 
 export const data64Label = "data:image/png;base64,";
+export const invoiceBarcodeType = 4;
