@@ -26,7 +26,10 @@ import { useStore } from "@stores/zustand";
 
 import { styles } from "./ShipmentActionsComplete.styles";
 import { IShipmentActionsComplete } from "./ShipmentActionsComplete.types";
-import { defaultFieldValues as defaultValues } from "./ShipmentActionsComplete.constants";
+import {
+  data64Label,
+  defaultFieldValues as defaultValues,
+} from "./ShipmentActionsComplete.constants";
 import { IShipmentActionsException } from "@molecules/ShipmentActionsException/ShipmentActionsException.types";
 import Button from "@atoms/Button";
 import { ShipmentActionsButtonItem } from "@organisms/ShipmentActions/ShipmentAction.constants";
@@ -82,6 +85,7 @@ export default function ShipmentActionsComplete({
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
+      base64: true,
       quality: 0.1,
     });
 
@@ -89,10 +93,7 @@ export default function ShipmentActionsComplete({
   };
 
   const handleOK = (signature: string) => {
-    methods.setValue(
-      "signatureImage",
-      signature.replace("data:image/png;base64,", ""),
-    );
+    methods.setValue("signatureImage", signature.replace(data64Label, ""));
   };
 
   const addCOD = (codTypeID: number, codAmount = 0, codCheck = "") => {
@@ -137,7 +138,7 @@ export default function ShipmentActionsComplete({
           comment,
           signatureImage,
           completeCODs,
-          photoImage: photoImage?.base64?.replace("data:image/png;base64", ""),
+          photoImage: photoImage?.base64?.replace(data64Label, ""),
         });
         Toast.show(t("TOAST.ORDER_COMPLETED"));
         router.replace("/");

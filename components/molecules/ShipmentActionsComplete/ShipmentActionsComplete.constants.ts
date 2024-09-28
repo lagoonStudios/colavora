@@ -5,3 +5,5 @@ export const defaultFieldValues = {
   signatureImage: undefined,
   comment: undefined,
 };
+
+export const data64Label = "data:image/png;base64,";
