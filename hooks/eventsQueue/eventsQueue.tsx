@@ -174,8 +174,8 @@ export default function useEventsQueue() {
             case EventsQueueType.ORDER_EXCEPTION: {
               setIdToHandleList(event.id);
               const exceptionBody: TOrderExceptionsProps = JSON.parse(
-                event.body
-              );
+                event.body,
+              ) as TOrderExceptionsProps;
               sendExceptionToApi({
                 ...exceptionBody,
                 options: { eventId: event.id },
@@ -184,7 +184,9 @@ export default function useEventsQueue() {
             }
             // Complete Order
             case EventsQueueType.ORDER_COMPLETED: {
-              const orderBody: TCompleteOrderProps = JSON.parse(event.body);
+              const orderBody: TCompleteOrderProps = JSON.parse(
+                event.body,
+              ) as TCompleteOrderProps;
               completeOrderToApi({
                 order: orderBody,
                 options: { eventId: event.id },

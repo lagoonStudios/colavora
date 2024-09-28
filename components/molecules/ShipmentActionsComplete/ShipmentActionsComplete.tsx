@@ -29,6 +29,7 @@ import { IShipmentActionsComplete } from "./ShipmentActionsComplete.types";
 import {
   data64Label,
   defaultFieldValues as defaultValues,
+  invoiceBarcodeType,
 } from "./ShipmentActionsComplete.constants";
 import { IShipmentActionsException } from "@molecules/ShipmentActionsException/ShipmentActionsException.types";
 import Button from "@atoms/Button";
@@ -70,7 +71,10 @@ export default function ShipmentActionsComplete({
   const codsSelected = methods.watch("cods");
   const photoImage = methods.watch("photoImage");
   const signatureImage = methods.watch("signatureImage");
-  const barcodes = pieces.map(({ barcode }) => barcode);
+  const barcodes = pieces
+    .filter(({ packageType }) => packageType !== invoiceBarcodeType)
+    .map(({ barcode }) => barcode);
+  console.log({ shipmentID });
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
@@ -129,6 +133,7 @@ export default function ShipmentActionsComplete({
 
       try {
         setSyncing(true);
+        console.log({ signatureImage });
         await completeOrder({
           userID: user.userID,
           companyID: companyID,
