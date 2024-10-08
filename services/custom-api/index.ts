@@ -19,5 +19,6 @@ export {
   fetchReasonsByIdData,
   sendCOD,
   completeOrder,
+  completeOrderAllBarcodes,
   orderException,
 } from "./custom-api";

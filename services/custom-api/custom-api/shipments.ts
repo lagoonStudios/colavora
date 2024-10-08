@@ -9,6 +9,7 @@ import {
   IOptionalExceptionProps,
   ISendCOD,
   ICompleteOrder,
+  ICompleteOrderAllBarcodes,
 } from "@constants/types/shipments";
 import { BASE_URL } from "@constants/url";
 
@@ -125,6 +126,33 @@ export function completeOrder({
   if (comment) data.append('comment', String(comment));
   if (photoImage) data.append('photoImage', String(photoImage));
   const url = `${BASE_URL}shipment/event/dispatch/post`;
+
+  return axiosClient.postForm(url, data);
+}
+export function completeOrderAllBarcodes({
+  companyID,
+  shipmentID,
+  userID,
+  barcodes,
+  photoImage,
+  signatureImage,
+  podName,
+  comment,
+}: ICompleteOrderAllBarcodes): Promise<AxiosResponse<unknown>> {
+  const data = new FormData();
+  data.append("companyID", String(companyID));
+  data.append("userID", String(userID));
+  data.append("shipmentID", String(shipmentID));
+  data.append("podName", String(podName));
+  data.append("signatureImage", String(signatureImage));
+  if (comment) data.append("comment", String(comment));
+  if (photoImage) data.append("photoImage", String(photoImage));
+
+  for (const barcode of barcodes) {
+    data.append("barcodes", barcode);
+  }
+
+  const url = `${BASE_URL}shipment/event/dispatch_batch/post`;
 
   return axiosClient.postForm(url, data);
 }

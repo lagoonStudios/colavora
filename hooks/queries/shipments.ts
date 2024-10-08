@@ -10,16 +10,19 @@ import {
   addCommentData,
   orderException,
   sendCOD,
-  completeOrder,
+  completeOrderAllBarcodes,
 } from "@/services/custom-api";
 import { queryKeys } from "@constants/Constants";
 import {
   CompleteOrderMutationProps, IFetchPiecesByIdData,
   IFetchShipmentByIdData,
-  IOptionalCommentsProps, ISendCOD
 } from "@constants/types/shipments";
 import { IOptionalProps } from "@constants/types/manifests";
-import { TOrderExceptionsProps, TRemoveEventOptions, TSendCODSProps, TSendCommentsProps } from "@hooks/eventsQueue/eventsQueue.types";
+import {
+  TOrderExceptionsProps,
+  TSendCODSProps,
+  TSendCommentsProps,
+} from "@hooks/eventsQueue/eventsQueue.types";
 import { useStore } from "@stores/zustand";
 
 export function useShipmentsIdData({ manifest }: IOptionalProps) {
@@ -49,6 +52,7 @@ export function useShipmentsByIdData(ids: number[]) {
     console.error("🚀 ~ file: shipments.ts:52 ~ useShipmentsByIdData ~ ids:", ids);
     return;
   }
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const shipmentsByIdData = useQueries({
     queries: ids?.map((id) => ({
       queryKey: [`${queryKeys.shipmentsByIdData}-${id}`],
@@ -110,7 +114,7 @@ export function usePiecesByIdData(ids: number[]) {
     combine: (results) => {
       return {
         data: results.map((result) => {
-          const data: IFetchPiecesByIdData | {} = result?.data ?? {};
+          const data: IFetchPiecesByIdData | object = result?.data ?? {};
           return data;
         }),
         pending: results.some((result) => result.isPending),
@@ -254,34 +258,33 @@ export function useCompleteOrder() {
 
   const request = useMutation({
     mutationFn: async ({
-      order: { companyID,
+      order: {
+        companyID,
         userID,
         shipmentID,
         barcodes,
         podName,
         photoImage,
         signatureImage,
-        comment, }
+        comment,
+      },
     }: CompleteOrderMutationProps) => {
       if (barcodes && barcodes?.length !== 0) {
         const results = [];
-        for (const barcode of barcodes) {
-          try {
-            const result = await completeOrder({
-              companyID,
-              userID,
-              shipmentID,
-              barcodes,
-              barcode,
-              podName,
-              photoImage,
-              signatureImage,
-              comment,
-            });
-            results.push(result);
-          } catch (error) {
-            console.error("🚀 ~ file: shipments.ts:266 ~ useCompleteOrder ~ error:", error);
-          }
+        try {
+          const result = await completeOrderAllBarcodes({
+            companyID,
+            userID,
+            shipmentID,
+            barcodes,
+            podName,
+            photoImage,
+            signatureImage,
+            comment,
+          });
+          results.push(result);
+        } catch (error) {
+          console.error("🚀 ~ file: shipments.ts:266 ~ useCompleteOrder ~ error:", error);
         }
         return results;
       } else Toast.show(t("TOAST.ERROR_BARCODES"));

@@ -107,6 +107,16 @@ export type ICompleteOrder = Required<Pick<TGeneralOptionsProps, "shipmentID" | 
     photoImage?: string,
   }
 
+export type ICompleteOrderAllBarcodes = Required<
+  Pick<TGeneralOptionsProps, "shipmentID" | "userID" | "companyID">
+> & {
+  barcodes: string[];
+  podName: string;
+  signatureImage: string;
+  comment?: string;
+  photoImage?: string;
+};
+
 export type CompleteOrderMutationProps = { order: ICompleteOrder, options: Required<TRemoveEventOptions> }
 
 export enum ShipmentStatus {
