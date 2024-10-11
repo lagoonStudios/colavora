@@ -75,7 +75,7 @@ export function useDriverFetch() {
         setAuth0Id(userInfo.sub);
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [t, isConnected, userInfo]);
+  }, [isConnected, userInfo]);
 
   useEffect(() => {
     if (isConnected) if (users && users?.length !== 0) setUserId(users[0]);

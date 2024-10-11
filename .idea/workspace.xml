@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="08119286-e23d-447f-b9a4-38d00335d43d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/molecules/OrderListItem/OrderListItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/OrderListItem/OrderListItem.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/molecules/ShipmentActionsException/ShipmentActionsException.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/ShipmentActionsException/ShipmentActionsException.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eas.json" beforeDir="false" afterPath="$PROJECT_DIR$/eas.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
