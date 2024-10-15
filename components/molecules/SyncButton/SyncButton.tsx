@@ -24,7 +24,6 @@ export default function SyncButton() {
 
   // --- Local State ------------------------------------------------------------
   const createdDate = parserGeneralDate(generalDate)?.split(".")[0];
-  console.log({ user });
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------

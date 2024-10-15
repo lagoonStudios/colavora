@@ -15,7 +15,8 @@ export default function AuthProvider({
   clientId: string;
 }) {
   // --- Hooks -----------------------------------------------------------------
-  const { resetLastSyncDate } = useStore();
+  const { resetLastSyncDate, resetUser, resetCompany, resetCompanyId } =
+    useStore();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local State -----------------------------------------------------------------
@@ -36,6 +37,9 @@ export default function AuthProvider({
     void AsyncStorage.removeItem("auth0:user");
     void AsyncStorage.removeItem("auth0:email");
     void AsyncStorage.removeItem("lastSync");
+    resetUser();
+    resetCompany();
+    resetCompanyId();
     resetLastSyncDate();
     setIsLoggedIn(false);
   };
