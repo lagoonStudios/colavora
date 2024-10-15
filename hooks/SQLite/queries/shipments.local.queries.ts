@@ -159,7 +159,7 @@ export function insertMultipleShipments(shipments: IShipmentDataFromAPI[]) {
             reject(error);
           });
       } else {
-        reject("All ids has been inserted before.");
+          resolve("All ids has been inserted before.");
       }
     });
   });
