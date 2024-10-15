@@ -6,10 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="08119286-e23d-447f-b9a4-38d00335d43d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/constants/url.ts" beforeDir="false" afterPath="$PROJECT_DIR$/constants/url.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eas.json" beforeDir="false" afterPath="$PROJECT_DIR$/eas.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/SQLite/queries/shipments.local.queries.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/SQLite/queries/shipments.local.queries.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/functions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/utils/functions.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/molecules/LogoutButton/LogoutButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/LogoutButton/LogoutButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/molecules/SyncButton/SyncButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/SyncButton/SyncButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/syncData/company.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/syncData/company.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/syncData/user.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/syncData/user.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/providers/Auth.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/providers/Auth.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stores/zustand/company.ts" beforeDir="false" afterPath="$PROJECT_DIR$/stores/zustand/company.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stores/zustand/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/stores/zustand/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

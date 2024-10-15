@@ -31,12 +31,7 @@ import {
   SyncDataSlice,
   createSyncDataSlice,
 } from "./general";
-import {
-  CompanySlice,
-  createCompanySlice,
-  CompanyIdsSlice,
-  createCompanyIdsSlice,
-} from "./company";
+import { CompanySlice, createCompanySlice } from "./company";
 import { UserSlice, createUserSlice } from "./user";
 
 const useBoundStore = create<
@@ -52,7 +47,6 @@ const useBoundStore = create<
     CODIdsSlice &
     CODSlice &
     CompanySlice &
-    CompanyIdsSlice &
     UserSlice &
     StateModalSlice &
     SyncDataSlice
@@ -69,7 +63,6 @@ const useBoundStore = create<
   ...createCODIdsSlice(...a),
   ...createCODSlice(...a),
   ...createCompanySlice(...a),
-  ...createCompanyIdsSlice(...a),
   ...createUserSlice(...a),
   ...createStateModalSlice(...a),
   ...createSyncDataSlice(...a),

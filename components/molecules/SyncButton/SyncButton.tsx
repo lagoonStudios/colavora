@@ -5,12 +5,10 @@ import { useStore } from "@stores/zustand";
 import Toast from "react-native-root-toast";
 import { resetDatabase } from "@hooks/SQLite";
 import { useTranslation } from "react-i18next";
-import { Text, useThemeColor } from "@components/Themed";
+import { useThemeColor } from "@components/Themed";
 import { useColorScheme } from "@components/useColorScheme";
 import { useIsConnected } from "react-native-offline";
 import { useState } from "react";
-import { generalDate } from "@constants/Constants";
-import { parserGeneralDate } from "@utils/functions";
 
 export default function SyncButton() {
   // --- Hooks -----------------------------------------------------------------
@@ -23,7 +21,6 @@ export default function SyncButton() {
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local State ------------------------------------------------------------
-  const createdDate = parserGeneralDate(generalDate)?.split(".")[0];
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
@@ -77,11 +74,9 @@ export default function SyncButton() {
     );
   };
   // --- END: Data and handlers ------------------------------------------------
+
   return (
     <View>
-      <Text style={{ fontSize: 9, textAlign: "right" }}>{createdDate}</Text>
-      <Text style={{ fontSize: 9, textAlign: "right" }}>{user?.companyID}</Text>
-      <Text style={{ fontSize: 9, textAlign: "right" }}>{user?.driverID}</Text>
       <Button
         disabled={disableActions}
         onPress={handleClearCache}
