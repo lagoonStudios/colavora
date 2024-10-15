@@ -16,11 +16,10 @@ import {
   fetchShipmentByIdData,
   fetchShipmentData,
 } from "@services/custom-api";
-import { TEST_TIME } from "@constants/url";
 import { generalDate } from "@constants/Constants";
 
 export const parserGeneralDate = (date: Date) => {
-  date.setDate(new Date().getDate() - TEST_TIME);
+  date.setDate(new Date().getDate());
   date.setHours(0, 0, 0, 0);
   const createdDate = date.toISOString();
 
