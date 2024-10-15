@@ -11,9 +11,6 @@ export interface UserSlice {
 export const createUserSlice: StateCreator<UserSlice, [], []> = (set) => ({
   user: null,
   addUser: (newUser: IFetchUserData) =>
-    set(({ user }) => {
-      user = newUser;
-      return { user };
-    }),
+    set((state) => ({ ...state, user: newUser })),
   resetUser: () => set((state) => ({ ...state, user: null })),
 });

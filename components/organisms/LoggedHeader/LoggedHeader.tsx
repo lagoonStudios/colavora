@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import React, { useMemo } from "react";
 import { View, Text } from "@components/Themed";
 import { Image, ImageSourcePropType } from "react-native";
@@ -14,13 +16,12 @@ export default function LoggedHeader() {
   // --- Data and handlers -----------------------------------------------------
   const source: ImageSourcePropType = useMemo(() => {
     if (companyData?.logo) return { uri: companyData.logo };
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return require("@assets/images/avatar.png");
   }, [companyData]);
 
   const companyName = useMemo(
     () => companyData?.companyName ?? "...",
-    [companyData]
+    [companyData],
   );
   const contact = useMemo(() => {
     return driverData?.driverName ?? "...";
