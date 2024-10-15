@@ -10,27 +10,28 @@ export function useCompanyFetch() {
 
   // --- Hooks -----------------------------------------------------------------
   const { user, addCompany, company } = useStore();
-  const { data: companyData, isSuccess } = useCompanyData(user?.companyID);  
+  const { data: companyData, isSuccess } = useCompanyData(user?.companyID);
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    if (companyData && user) {
+    if (companyData && user?.logo) {
       const company = {
         ...companyData,
-        logo: user?.logo ?? companyData.logo
-      }
-      addCompany(company)
+        logo: user.logo,
+      };
+      addCompany(company);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [companyData, user]);
-  
-  useEffect(() => {
-    if (isSuccess && company) setLoading(false);
-  }, [isSuccess]);
 
   useEffect(() => {
-    if(loading === false) setSuccess(true)
-  }, [loading])
+    if (isSuccess && company) setLoading(false);
+  }, [company, isSuccess]);
+
+  useEffect(() => {
+    if (loading === false) setSuccess(true);
+  }, [loading]);
   // --- END: Side effects -----------------------------------------------------
 
   return { success, loading };

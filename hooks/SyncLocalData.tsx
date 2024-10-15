@@ -78,13 +78,13 @@ export const useSyncDataByPeriod = () => {
               Toast.show(t("TOAST.SYNC_FAIL"));
             });
           setSyncing(false);
-          console.info("Implement sync logic here", new Date().getSeconds());
         }
       },
       syncPeriod * 60 * 1000
     );
 
     return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncPeriod]);
   // --- END: Side effects -----------------------------------------------------
 };

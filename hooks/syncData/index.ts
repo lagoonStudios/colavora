@@ -6,7 +6,7 @@ import { useStore } from "@stores/zustand";
 export function useSyncData() {
   // --- Hooks -----------------------------------------------------------------
   const { user } = useStore();
-  
+
   useCODFetch(user);
   useReasonsFetch(user);
   useDataFetch(user);

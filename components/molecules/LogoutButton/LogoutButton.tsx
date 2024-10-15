@@ -11,13 +11,12 @@ export default function LogoutButton() {
   // --- Hooks -----------------------------------------------------------------
   const { clearSession } = useAuth();
   const colorScheme = useColorScheme();
-  const { resetCompanyId, resetCompany, resetUser, resetShipment } = useStore();
+  const { resetCompany, resetUser, resetShipment } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
   const onPress = () => {
     try {
       clearSession();
-      resetCompanyId();
       resetCompany();
       resetUser();
       resetShipment();

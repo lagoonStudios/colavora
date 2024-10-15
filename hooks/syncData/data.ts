@@ -21,7 +21,7 @@ export function useDataFetch(user: IFetchUserData | null) {
     addShipmentIds,
     addManifestId,
     lastSyncDate,
-    isSyncing
+    isSyncing,
   } = useStore();
   const { t } = useTranslation();
   // --- END: Hooks ------------------------------------------------------------
@@ -40,8 +40,8 @@ export function useDataFetch(user: IFetchUserData | null) {
         })
           .then((values) => {
             setLastSyncDate(new Date().toISOString());
-            const manifestIdsFromFetching = values.manifests.map(({ manifest }) =>
-              Number(manifest),
+            const manifestIdsFromFetching = values.manifests.map(
+              ({ manifest }) => Number(manifest),
             );
 
             if (manifestIdsFromFetching.length > 0) {
@@ -93,38 +93,43 @@ export function useDataFetch(user: IFetchUserData | null) {
       const difference = differenceInCalendarDays(actualDate, lastDate);
       /* TO DO: si la diferencia de fecha es 0 requerir la local data para meterla en zustand */
       if (difference > 0) fetchDataLocally(user);
-      else if (difference === 0 && loading === false)
-        setLoading(true);
-        void getAllManifestIds().then((manifestIds) => {
-          console.log('calling');
+      else if (difference === 0 && loading === false) setLoading(true);
+      void getAllManifestIds()
+        .then((manifestIds) => {
           if (manifestIds.length > 0) addManifestIds(manifestIds);
 
           const firstManifest = manifestIds.sort((a, b) => a - b)?.[0];
 
           if (firstManifest) {
             addManifestId(String(firstManifest));
-            void getAllShipmentIds({ manifestID: String(firstManifest) }).then(
-              (shipmentsIdsLocal) => {
+            void getAllShipmentIds({ manifestID: String(firstManifest) })
+              .then((shipmentsIdsLocal) => {
                 const shipmentIds = shipmentsIdsLocal?.map(
                   ({ shipmentID }) => shipmentID,
                 );
 
                 if (shipmentIds?.length > 0) addShipmentIds(shipmentIds);
                 setLoading(false);
-              },
-            ).catch(e => {
-              console.error("🚀 ~ file: data.ts:112 ~ voidgetAllManifestIds ~ e:", e);
-              setLoading(false)
-            });
+              })
+              .catch((e) => {
+                console.error(
+                  "🚀 ~ file: data.ts:112 ~ voidgetAllManifestIds ~ e:",
+                  e,
+                );
+                setLoading(false);
+              });
           } else {
             setLoading(false);
           }
 
           setSyncing(false);
           setVisible(false);
-
-        }).catch(e => {
-          console.error("🚀 ~ file: data.ts:117 ~ voidgetAllManifestIds ~ e:", e);
+        })
+        .catch((e) => {
+          console.error(
+            "🚀 ~ file: data.ts:117 ~ voidgetAllManifestIds ~ e:",
+            e,
+          );
           setLoading(false);
         });
     }
