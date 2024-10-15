@@ -78,6 +78,7 @@ export default function useAuth() {
   };
 
   const clearSession = () => {
+    void auth?.credentialsManager?.clearCredentials?.();
     logout();
   };
 

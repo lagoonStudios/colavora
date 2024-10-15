@@ -41,21 +41,21 @@ import { UserSlice, createUserSlice } from "./user";
 
 const useBoundStore = create<
   ManifestIdsSlice &
-  ManifestsSlice &
-  ShipmentIdsSlice &
-  ShipmentSlice &
-  PiecesIdsSlice &
-  PiecesSlice &
-  CommentsSlice &
-  ReasonIdsSlice &
-  ReasonsSlice &
-  CODIdsSlice &
-  CODSlice &
-  CompanySlice &
-  CompanyIdsSlice &
-  UserSlice &
-  StateModalSlice &
-  SyncDataSlice
+    ManifestsSlice &
+    ShipmentIdsSlice &
+    ShipmentSlice &
+    PiecesIdsSlice &
+    PiecesSlice &
+    CommentsSlice &
+    ReasonIdsSlice &
+    ReasonsSlice &
+    CODIdsSlice &
+    CODSlice &
+    CompanySlice &
+    CompanyIdsSlice &
+    UserSlice &
+    StateModalSlice &
+    SyncDataSlice
 >()((...a) => ({
   ...createManifestIdsSlice(...a),
   ...createManifestsSlice(...a),
