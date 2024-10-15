@@ -30,8 +30,16 @@ export interface PiecesSlice {
 }
 
 export interface CommentsSlice {
-  comments: Pick<IOptionalCommentsProps, "shipmentID" | "comment" | "createdDate">[];
-  addComments: (comments: Pick<IOptionalCommentsProps, "shipmentID" | "comment" | "createdDate">[]) => void;
+  comments: Pick<
+    IOptionalCommentsProps,
+    "shipmentID" | "comment" | "createdDate"
+  >[];
+  addComments: (
+    comments: Pick<
+      IOptionalCommentsProps,
+      "shipmentID" | "comment" | "createdDate"
+    >[],
+  ) => void;
   resetCommnets: () => void;
 }
 
@@ -40,7 +48,7 @@ export const createShipmentIdsSlice: StateCreator<ShipmentIdsSlice, [], []> = (
 ) => ({
   shipmentIds: [],
   addShipmentIds: (shipmentIds) =>
-    set((state) => ({ ...state, shipmentIds: shipmentIds ?? [] })),
+    set((state) => ({ ...state, shipmentIds: shipmentIds })),
   resetShipmentIds: () => set((state) => ({ ...state, shipmentIds: [] })),
 });
 

@@ -18,10 +18,7 @@ export const createCompanySlice: StateCreator<CompanySlice, [], []> = (
 ) => ({
   company: null,
   addCompany: (newCompany: IFetchCompanyData) =>
-    set(({ company }) => {
-      company = newCompany;
-      return { company };
-    }),
+    set((state) => ({ ...state, company: newCompany })),
   resetCompany: () => set((state) => ({ ...state, company: null })),
 });
 
@@ -30,9 +27,6 @@ export const createCompanyIdsSlice: StateCreator<CompanyIdsSlice, [], []> = (
 ) => ({
   companyId: null,
   addCompanyId: (newCompanyId: string) =>
-    set(({ companyId }) => {
-      companyId = newCompanyId;
-      return { companyId };
-    }),
+    set((state) => ({ ...state, companyId: newCompanyId })),
   resetCompanyId: () => set((state) => ({ ...state, companyId: null })),
 });
