@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { FlatList, Pressable } from "react-native";
 
@@ -28,7 +28,7 @@ export default function Home() {
   // --- Data and handlers -----------------------------------------------------
   const renderItem = ({ item }: { item: HomeItem }) => {
     const setShipmentIdsHandler = () => {
-      getShipmentList({}).then((shipment) => {
+      void getShipmentList({}).then((shipment) => {
         resetManifestId();
         addShipmentIds(shipment?.map(({ shipmentID }) => shipmentID!));
         push({ pathname: "(tabs)/" + item.route });

@@ -187,6 +187,7 @@ export function getHomeCounters() {
           resolve({ todayShipments, manifests });
         })
         .catch((error) => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           error(
             "🚀 ~ file: general.local.queries.ts:16 ~ getHomeCounters ~ error:",
             error,
