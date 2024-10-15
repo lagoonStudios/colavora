@@ -1,5 +1,6 @@
+/* eslint-disable react/react-in-jsx-scope */
 import Button from "@atoms/Button";
-import { Alert } from "react-native";
+import { Alert, View } from "react-native";
 import { useStore } from "@stores/zustand";
 import Toast from "react-native-root-toast";
 import { resetDatabase } from "@hooks/SQLite";
@@ -18,6 +19,10 @@ export default function SyncButton() {
   const isConnected = useIsConnected();
   const [disableActions, setDisableActions] = useState(false);
   // --- END: Hooks ------------------------------------------------------------
+
+  // --- Local State ------------------------------------------------------------
+  // --- END: Hooks ------------------------------------------------------------
+
   // --- Data and handlers -----------------------------------------------------
   const handleClearCache = () => {
     if (!isConnected) {
@@ -42,7 +47,7 @@ export default function SyncButton() {
             if (user) {
               setDisableActions(true);
               resetDatabase(user, { t, setModalMessage: setModal })
-                .then((res) => {
+                .then(() => {
                   setDisableActions(false);
                   setVisible(false);
                   Toast.show(t("SYNC_BUTTON.SUCCESS"));
@@ -54,7 +59,7 @@ export default function SyncButton() {
                   Toast.show(t("SYNC_BUTTON.ERROR"));
                   console.error(
                     "🚀 ~ file: SyncButton.tsx:26 ~ resetDatabase ~ error:",
-                    error
+                    error,
                   );
                   setSyncing(false);
                 });
@@ -65,17 +70,20 @@ export default function SyncButton() {
       {
         cancelable: true,
         userInterfaceStyle: colorScheme ? colorScheme : "light",
-      }
+      },
     );
   };
   // --- END: Data and handlers ------------------------------------------------
+
   return (
-    <Button
-      disabled={disableActions}
-      onPress={handleClearCache}
-      label={t("SYNC_BUTTON.TITLE")}
-      style={{ backgroundColor: theme.default }}
-      labelStyle={{ color: theme.contrast }}
-    />
+    <View>
+      <Button
+        disabled={disableActions}
+        onPress={handleClearCache}
+        label={t("SYNC_BUTTON.TITLE")}
+        style={{ backgroundColor: theme.default }}
+        labelStyle={{ color: theme.contrast }}
+      />
+    </View>
   );
 }

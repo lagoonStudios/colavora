@@ -16,7 +16,16 @@ import {
   fetchShipmentByIdData,
   fetchShipmentData,
 } from "@services/custom-api";
-import { TEST_TIME } from "@constants/url";
+import { generalDate } from "@constants/Constants";
+
+export const parserGeneralDate = (date: Date) => {
+  date.setDate(new Date().getDate());
+  date.setHours(0, 0, 0, 0);
+  const createdDate = date.toISOString();
+
+  return createdDate;
+};
+
 export function parserStringToDateComment(value: string) {
   const divideValue = value.indexOf(")");
 
@@ -116,10 +125,7 @@ export async function fetchData(
       }) => void,
       reject,
     ) => {
-      const date = new Date();
-      date.setDate(new Date().getDate() - TEST_TIME);
-      date.setHours(0, 0, 0, 0);
-      const createdDate = date.toISOString();
+      const createdDate = parserGeneralDate(generalDate);
 
       try {
         fetchManifests(createdDate, user, options)
@@ -158,7 +164,7 @@ function fetchManifests(
   options?: fetchDataOptions,
 ) {
   return new Promise(
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
     async (resolve: (value: IFetchManifestByIdData[]) => void, reject) => {
       const manifests = new Map<string, IFetchManifestByIdData>();
 
@@ -216,6 +222,7 @@ export function fetchShipmentsIDs(
       );
 
     const shipmentIds = new Set<number>();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const shipmentsIdsPromises: Promise<AxiosResponse<number[], any>>[] = [];
 
     for (const manifestId of manifestIds) {
@@ -256,6 +263,7 @@ export function fetchShipmentsData(
         options?.setModalMessage(
           options?.t?.("MODAL.FETCHING_SHIPMENTS") || "Fetching shipments",
         );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const promises: Promise<AxiosResponse<IFetchShipmentByIdData, any>>[] =
         [];
       const shipments = new Map<number, IFetchShipmentByIdData>();
@@ -297,6 +305,7 @@ export function fetchPiecesDataFn(
           options?.t?.("MODAL.FETCHING_PIECES") || "Fetching shipments pieces",
         );
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const promisesPiecesIDs: Promise<AxiosResponse<number[], any>>[] = [];
       const pieces = new Map<number, IFetchPiecesByIdData>();
 
@@ -311,6 +320,7 @@ export function fetchPiecesDataFn(
       Promise.all(promisesPiecesIDs)
         .then((piecesResponse) => {
           const piecesPromises: Promise<
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             AxiosResponse<IFetchPiecesByIdData, any>
           >[] = [];
 
@@ -347,7 +357,7 @@ export function fetchCommentsData(
   options?: fetchDataOptions,
 ) {
   return new Promise(
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
     async (resolve: (value: IRequiredCommentsProps[]) => void, reject) => {
       const comments = new Map<string, IRequiredCommentsProps>();
       if (options?.setModalMessage)

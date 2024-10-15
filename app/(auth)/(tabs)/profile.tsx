@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 
-import { Text, View } from "@components/Themed";
+import { View } from "@components/Themed";
 import { SafeAreaView } from "@atoms/SafeAreaView";
 import EditScreenInfo from "@templates/EditScreenInfo";
 import { useTranslation } from "react-i18next";

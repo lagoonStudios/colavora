@@ -15,7 +15,7 @@ export default function AuthProvider({
   clientId: string;
 }) {
   // --- Hooks -----------------------------------------------------------------
-  const { resetLastSyncDate } = useStore();
+  const { resetLastSyncDate, resetUser, resetCompany } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local State -----------------------------------------------------------------
@@ -36,6 +36,8 @@ export default function AuthProvider({
     void AsyncStorage.removeItem("auth0:user");
     void AsyncStorage.removeItem("auth0:email");
     void AsyncStorage.removeItem("lastSync");
+    resetUser();
+    resetCompany();
     resetLastSyncDate();
     setIsLoggedIn(false);
   };
@@ -45,9 +47,16 @@ export default function AuthProvider({
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
     const checkCredentials = async () => {
-      const localToken = await AsyncStorage.getItem("auth0:token");
-      const remainToken = token || localToken;
-      setIsLoggedIn(Boolean(remainToken));
+      try {
+        const localToken = await AsyncStorage.getItem("auth0:token");
+        const remainToken = token || localToken;
+        setIsLoggedIn(Boolean(remainToken));
+      } catch (error) {
+        console.error(
+          "🚀 ~ file: Auth.tsx:57 ~ checkCredentials ~ error:",
+          error,
+        );
+      }
     };
 
     void checkCredentials();
