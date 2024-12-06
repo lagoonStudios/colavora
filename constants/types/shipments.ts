@@ -44,6 +44,9 @@ export interface IFetchShipmentByIdData {
   barcode?: string;
   city?: string;
   referenceNo?: null | string;
+  photoOnEvent?: boolean;
+  photoOnDelivery?: boolean;
+  signatureOnDelivery?: boolean;
 }
 export interface IShipmentDataFromAPI extends IFetchShipmentByIdData {
   driverAssign?: number;
@@ -102,7 +105,7 @@ export type ICompleteOrder = Required<Pick<TGeneralOptionsProps, "shipmentID" | 
   & {
     barcodes: string[],
     podName: string,
-    signatureImage: string
+  signatureImage?: string
     comment?: string,
     photoImage?: string,
   }

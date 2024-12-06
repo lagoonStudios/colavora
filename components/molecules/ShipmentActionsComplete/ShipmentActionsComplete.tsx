@@ -51,7 +51,7 @@ export default function ShipmentActionsComplete({
   // --- Hooks -----------------------------------------------------------------
   const router = useRouter();
   const {
-    shipment: { shipmentID, companyID },
+    shipment: { shipmentID, companyID, photoOnDelivery, signatureOnDelivery },
     pieces,
     setModal: setStateModal,
     setVisible,
@@ -115,8 +115,12 @@ export default function ShipmentActionsComplete({
     cods,
     signatureImage,
   }) => {
-    if (!signatureImage) {
-      Alert.alert("Error", "The signature is required");
+    if (!signatureImage && signatureOnDelivery) {
+      Alert.alert("Error", t('VALIDATIONS.SIGNATURE_REQUIRED'));
+      return;
+    }
+    if(photoImage?.base64 == null && photoOnDelivery) {
+      Alert.alert("Error", t('VALIDATIONS.FILE_REQUIRED'));
       return;
     }
 
