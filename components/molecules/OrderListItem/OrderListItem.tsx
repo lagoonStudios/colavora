@@ -8,7 +8,6 @@ import { useRouter } from "expo-router";
 import { Pressable } from "react-native";
 import { useStore } from "@stores/zustand";
 import { getShipmenDetailsById } from "@hooks/SQLite";
-import { useCoordinatesFromAddress } from "@organisms/ShipmentDetail/ShipmentDetail.functions";
 import { IFetchOrderListItem } from "@hooks/SQLite/SQLite.types";
 
 export default function OrderListItem(props: IFetchOrderListItem) {

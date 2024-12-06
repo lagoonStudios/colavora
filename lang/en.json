@@ -28,7 +28,9 @@
     "VALIDATIONS": {
       "REQUIRED": "Required",
       "EMPTY": "Required text",
-      "EMAIL": "Invalid email"
+      "EMAIL": "Invalid email",
+      "FILE_REQUIRED": "File required",
+      "SIGNATURE_REQUIRED": "Signature required"
     },
     "NETWORK_ERROR": {
       "TITLE": "Network Error",

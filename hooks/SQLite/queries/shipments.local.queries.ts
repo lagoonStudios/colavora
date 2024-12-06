@@ -57,6 +57,9 @@ export function createShipmentTable() {
                 latitude REAL,
                 longitude REAL,
                 city TEXT,
+                photoOnEvent BOOLEAN DEFAULT false,
+                photoOnDelivery BOOLEAN DEFAULT false,
+                signatureOnDelivery BOOLEAN DEFAULT false,
                 is_sync BOOLEAN DEFAULT false,
                 last_sync TEXT DEFAULT (datetime('now')),
                 FOREIGN KEY (manifest) REFERENCES manifests (manifest)
@@ -119,8 +122,7 @@ export function insertMultipleShipments(shipments: IShipmentDataFromAPI[]) {
 
           delete rawItem.driverAssign;
           delete rawItem.comments;
-          delete rawItem.pieces;
-
+            delete rawItem.pieces;
           const parsedItem: IFetchShipmentByIdData = {
             ...rawItem,
             manifestDL: item.manifest,
@@ -129,6 +131,9 @@ export function insertMultipleShipments(shipments: IShipmentDataFromAPI[]) {
             assignDL: item?.assignDL ?? 0,
             division: item?.division ?? "",
             barcode: item?.barcode ?? "",
+              photoOnEvent: item.photoOnEvent,
+              photoOnDelivery: item.photoOnDelivery,
+              signatureOnDelivery: item.signatureOnDelivery,
           };
           const keys = Object.keys(parsedItem).join(",");
           const placeholders = Object.keys(parsedItem)
@@ -302,7 +307,10 @@ export function getShipmenDetailsById({ shipmentID }: { shipmentID: number }) {
                 pieces.barcode as invoiceBarcode,
                 city,
                 latitude,
-                longitude
+                longitude,
+                photoOnEvent,
+                photoOnDelivery,
+                signatureOnDelivery
             FROM
                 shipments
             LEFT JOIN pieces ON 
@@ -313,6 +321,9 @@ export function getShipmenDetailsById({ shipmentID }: { shipmentID: number }) {
             `, [shipmentID])
             .then((res) => {
                 const data = res as Partial<IFetchShipmentByIdData & { invoiceBarcode: string }>
+                data.photoOnEvent = Boolean(data.photoOnEvent)
+                data.photoOnDelivery = Boolean(data.photoOnDelivery)
+                data.signatureOnDelivery = Boolean(data.signatureOnDelivery)
                 resolve(data);
             }).catch(error => {
                 console.error("🚀 ~ getShipmenDetailsById ~ error:", error);

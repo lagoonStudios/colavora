@@ -23,12 +23,14 @@
       "NO_TOKEN": "No token",
       "INVALID_TOKEN": "Token inválido",
       "TOO_MANY_ATTEMPTS": "Demasiados intentos",
-      "UNKNOWN": "Algo salió mal"
+      "UNKNOWN": "Algo salió mal",
     },
     "VALIDATIONS": {
       "REQUIRED": "Requerido",
       "EMAIL": "Email inválido",
-      "EMPTY": "Texto Requerido"
+      "EMPTY": "Texto Requerido",
+      "FILE_REQUIRED": "Imagen requerida",
+      "SIGNATURE_REQUIRED": "Firma requerida"
     },
     "NETWORK_ERROR": {
       "TITLE": "Error de conexión",

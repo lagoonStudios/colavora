@@ -33,7 +33,7 @@ export default function ShipmentActionsException({
 }: IShipmentActionsException) {
   // --- Hooks -----------------------------------------------------------------
   const {
-    shipment: { shipmentID },
+    shipment: { shipmentID, photoOnEvent },
     reasons,
     setModal: setStateModal,
     setVisible: setStateModalVisible,
@@ -85,9 +85,16 @@ export default function ShipmentActionsException({
       Alert.alert("Error", "Please select a reason");
       return;
     }
+
+    if (photoImage?.base64 == null && photoOnEvent) {
+      Alert.alert("Error", t('VALIDATIONS.FILE_REQUIRED'));
+      return;
+    }
+
     if (shipmentID) {
       setLoading(true);
       setStateModal(t("MODAL.CREATING_EXCEPTION"));
+
       orderException({
         shipmentID,
         comment: data.comment,
