@@ -24,7 +24,7 @@ import {
 export default function useEventsQueue() {
   // --- Hooks -----------------------------------------------------------------
   const isConnected = useIsConnected();
-  const { user, isSyncing } = useStore();
+  const { user, setModalErrorModal } = useStore();
   /** Represents all the events ids that are in the queue. */
   const [queueIds, setQueueIds] = useState<number[]>([]);
   /** Represents all the ids that are being handled. For example all events that are waiting for an api response. */
@@ -43,13 +43,15 @@ export default function useEventsQueue() {
           setQueueIds([...queueIds.filter((item) => item !== res.id), res.id]);
         })
         .catch((error) => {
+          setModalErrorModal(`${error}`);
           console.error(
             "🚀 ~ file: eventsQueue.tsx:47 ~ returninsertEvent ~ error:",
-            error
+            error,
           );
         });
     },
-    [queueIds]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [queueIds],
   );
   const removeIdFromHandleList = useCallback(
     (id: number) => setHandledIds((ids) => ids.filter((item) => item !== id)),
@@ -63,10 +65,12 @@ export default function useEventsQueue() {
           setQueueIds(queueIds.filter((item) => item !== id));
         })
         .catch((e) => {
+          setModalErrorModal(`${e}`);
           console.error("🚀 ~ file: eventsQueue.tsx:65 ~ removeEvent ~ e:", e);
         });
     },
-    [queueIds, setQueueIds]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [queueIds, setQueueIds],
   );
 
   const setIdToHandleList = useCallback(
@@ -112,16 +116,18 @@ export default function useEventsQueue() {
             });
           })
           .catch((error) => {
+            setModalErrorModal(`${error}`);
             console.error(
               "🚀 ~ file: eventsQueue.tsx:144 ~ addCompleteOrderEvent ~ error:",
-              error
+              error,
             );
 
             reject(error);
           });
       });
     },
-    [addCompleteOrderEvent, user]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [addCompleteOrderEvent, user],
   );
 
   /** Stores an orderException event in the queue.
@@ -147,6 +153,7 @@ export default function useEventsQueue() {
             });
           })
           .catch((error) => {
+            setModalErrorModal(`${error}`);
             console.error(
               "🚀 ~ file: eventsQueue.tsx:92 ~ orderException ~ error:",
               error
@@ -155,6 +162,7 @@ export default function useEventsQueue() {
           });
       });
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [addExceptionEvent, user]
   );
 
@@ -195,9 +203,10 @@ export default function useEventsQueue() {
             }
             // Shows an error message if the event type is not handled
             default: {
+              setModalErrorModal(`Event type not found or not handled`);
               console.error(
                 "🚀 ~ file: eventsQueue.tsx ~ handleEventsQueue ~ error:",
-                "Event type not found or not handled"
+                "Event type not found or not handled",
               );
               break;
             }
@@ -206,9 +215,10 @@ export default function useEventsQueue() {
         setDisableActions(false);
       })
       .catch((e) => {
+        setModalErrorModal(`${e}`);
         console.error(
           "🚀 ~ file: eventsQueue.tsx:191 ~ getEventsQueue ~ e:",
-          e
+          e,
         );
         setDisableActions(false);
       });
@@ -226,13 +236,15 @@ export default function useEventsQueue() {
           setQueueIds(res);
         })
         .catch((error) => {
+          setModalErrorModal(`${error}`);
           console.error(
             "🚀 ~ file: eventsQueue.tsx:217 ~ getEventsQueuedIds ~ error:",
-            error
+            error,
           );
         });
     };
     getIds();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setQueueIds]);
 
   useEffect(() => {

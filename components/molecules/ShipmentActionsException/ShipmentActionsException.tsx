@@ -37,6 +37,7 @@ export default function ShipmentActionsException({
     reasons,
     setModal: setStateModal,
     setVisible: setStateModalVisible,
+    setModalErrorModal,
   } = useStore();
   const { t } = useTranslation();
   const { ...methods } = useForm<IOrderExceptionForm>({
@@ -109,6 +110,7 @@ export default function ShipmentActionsException({
         })
         .catch((error) => {
           setStateModalVisible(false);
+          setModalErrorModal(`Error order exception: ${String(error)}`);
           console.error(
             "🚀 ~ file: ShipmentActionsException.tsx:120 ~ error:",
             error,

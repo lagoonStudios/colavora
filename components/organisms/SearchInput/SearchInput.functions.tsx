@@ -36,7 +36,8 @@ export const useSearchData = ({ text }: UseSearchDataProps) => {
           })
           .catch((error) => {
             console.error("🚀 ~ useSearchData ~ error:", error);
-            setError(error.message);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            setError(String(error?.message));
             Toast.show(t("ERRORS.UNKNOWN"));
             setLoading(false);
           });

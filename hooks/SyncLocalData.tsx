@@ -19,6 +19,7 @@ export const useSyncDataByPeriod = () => {
     addManifestId,
     addShipmentIds,
     setVisible,
+    setModalErrorModal,
   } = useStore();
   const { t } = useTranslation();
   const isConnected = useIsConnected();
@@ -39,28 +40,28 @@ export const useSyncDataByPeriod = () => {
             .then((values) => {
               setLastSyncDate(new Date().toISOString());
               const manifestIdsFromFetching = values.manifests.map(
-                ({ manifest }) => Number(manifest)
+                ({ manifest }) => Number(manifest),
               );
 
               if (manifestIdsFromFetching.length > 0) {
                 addManifestIds(
-                  values.manifests.map(({ manifest }) => Number(manifest))
+                  values.manifests.map(({ manifest }) => Number(manifest)),
                 );
                 const firstManifest = manifestIdsFromFetching.sort(
-                  (a, b) => a - b
+                  (a, b) => a - b,
                 )?.[0];
 
                 if (firstManifest) {
                   addManifestId(String(firstManifest));
-                  getAllShipmentIds({ manifestID: String(firstManifest) }).then(
-                    (shipmentsIdsLocal) => {
-                      const shipmentIds = shipmentsIdsLocal?.map(
-                        ({ shipmentID }) => shipmentID
-                      );
+                  void getAllShipmentIds({
+                    manifestID: String(firstManifest),
+                  }).then((shipmentsIdsLocal) => {
+                    const shipmentIds = shipmentsIdsLocal?.map(
+                      ({ shipmentID }) => shipmentID,
+                    );
 
-                      if (shipmentIds?.length > 0) addShipmentIds(shipmentIds);
-                    }
-                  );
+                    if (shipmentIds?.length > 0) addShipmentIds(shipmentIds);
+                  });
                 }
               }
 
@@ -69,9 +70,10 @@ export const useSyncDataByPeriod = () => {
               Toast.show(t("TOAST.SYNC_SUCCESS"));
             })
             .catch((error) => {
+              setModalErrorModal(`Error Getting Data: ${error}`);
               console.error(
                 "🚀 ~ file: SyncLocalData.tsx:63 ~ useSyncDataByPeriod ~ error:",
-                error
+                error,
               );
               setSyncing(false);
               setVisible(false);
@@ -80,7 +82,7 @@ export const useSyncDataByPeriod = () => {
           setSyncing(false);
         }
       },
-      syncPeriod * 60 * 1000
+      syncPeriod * 60 * 1000,
     );
 
     return () => clearInterval(id);

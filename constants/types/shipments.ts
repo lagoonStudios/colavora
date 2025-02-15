@@ -115,7 +115,7 @@ export type ICompleteOrderAllBarcodes = Required<
 > & {
   barcodes: string[];
   podName: string;
-  signatureImage: string;
+  signatureImage?: string;
   comment?: string;
   photoImage?: string;
 };

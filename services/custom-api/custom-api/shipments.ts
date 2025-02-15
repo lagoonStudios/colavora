@@ -144,7 +144,7 @@ export function completeOrderAllBarcodes({
   data.append("userID", String(userID));
   data.append("shipmentID", String(shipmentID));
   data.append("podName", String(podName));
-  data.append("signatureImage", String(signatureImage));
+  if (signatureImage) data.append("signatureImage", String(signatureImage));
   if (comment) data.append("comment", String(comment));
   if (photoImage) data.append("photoImage", String(photoImage));
 

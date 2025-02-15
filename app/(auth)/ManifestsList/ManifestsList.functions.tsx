@@ -6,7 +6,7 @@ import { getManifestsList } from "@hooks/SQLite";
 export function useManifestsListData() {
   // --- Local state -----------------------------------------------------------
   const [loading] = useState(false);
-  const { isSyncing } = useStore();
+  const { isSyncing, setModalErrorModal } = useStore();
   const [data, setData] = useState<ManifestListItemProps[]>([]);
   // --- END: Local state ------------------------------------------------------
 
@@ -19,13 +19,15 @@ export function useManifestsListData() {
           setData(values);
         })
         .catch((error) => {
+          setModalErrorModal(`Error getting Manifest List: ${error}`);
           console.error(
             "🚀 ~ file: ManifestsList.functions.tsx:30 ~ getData ~ error:",
-            error
+            error,
           );
         });
     };
     if (isSyncing === false) getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSyncing]);
 
   // --- END: Data and handlers ------------------------------------------------

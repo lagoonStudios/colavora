@@ -26,6 +26,7 @@ export default function AddComment({ refetch }: IAddComment) {
   });
   const {
     shipment: { shipmentID, companyID },
+    setModalErrorModal,
     user,
   } = useStore();
   // --- END: Hooks ------------------------------------------------
@@ -37,23 +38,26 @@ export default function AddComment({ refetch }: IAddComment) {
       return;
     }
 
-    mutate({
-      companyID: companyID,
-      userID: user?.userID,
-      shipmentID,
-      comment: data.comment,
-    });
+    if (companyID && user?.userID && shipmentID)
+      mutate({
+        companyID: companyID,
+        userID: user?.userID,
+        shipmentID,
+        comment: data.comment,
+      });
   };
 
-  const onError: SubmitErrorHandler<CommentForm> = (errors) =>
+  const onError: SubmitErrorHandler<CommentForm> = (errors) => {
+    setModalErrorModal(`Error Add comment: ${errors?.comment?.message}`);
     console.error("🚀 ~ AddComment ~ errors:", errors);
+  };
 
   // --- END: Data and handlers ------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
     if (isSuccess) {
-      refetch?.();
+      void refetch?.();
       methods.reset();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
