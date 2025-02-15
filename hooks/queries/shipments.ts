@@ -14,7 +14,8 @@ import {
 } from "@/services/custom-api";
 import { queryKeys } from "@constants/Constants";
 import {
-  CompleteOrderMutationProps, IFetchPiecesByIdData,
+  CompleteOrderMutationProps,
+  IFetchPiecesByIdData,
   IFetchShipmentByIdData,
 } from "@constants/types/shipments";
 import { IOptionalProps } from "@constants/types/manifests";
@@ -49,7 +50,10 @@ export function useShipmentsIdData({ manifest }: IOptionalProps) {
 
 export function useShipmentsByIdData(ids: number[]) {
   if (ids == null) {
-    console.error("🚀 ~ file: shipments.ts:52 ~ useShipmentsByIdData ~ ids:", ids);
+    console.error(
+      "🚀 ~ file: shipments.ts:52 ~ useShipmentsByIdData ~ ids:",
+      ids,
+    );
     return;
   }
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -150,6 +154,8 @@ export function useCommentsIdData({ id }: { id: number }) {
  * @see {@link TSendCommentsProps}
  */
 export function useAddComment() {
+  const { setMessageErrorModal } = useStore();
+
   const request = useMutation({
     mutationFn: async ({
       companyID,
@@ -165,27 +171,28 @@ export function useAddComment() {
       });
     },
     onError: (e, props) => {
-      const { options } = props
-      if (options?.onError) options.onError({ ...props })
+      const { options } = props;
+      if (options?.onError) options.onError({ ...props });
+      setMessageErrorModal(`Error useAddComment: ${e.message}`);
       console.error("🚀 ~ file: shipments.ts:162 ~ useAddComment ~ e:", e);
       // removeIdFromHandleList(eventId)
     },
-    onSuccess: ((_, props) => {
-      const { options } = props
-      if (options?.onSuccess) options.onSuccess({ ...props })
+    onSuccess: (_, props) => {
+      const { options } = props;
+      if (options?.onSuccess) options.onSuccess({ ...props });
       // removeIdFromHandleList(eventId)
       // removeFromQueue(eventId)
-    })
+    },
   });
 
   return request;
 }
 
-/** 
- * @see {@link TOrderExceptionsProps } 
+/**
+ * @see {@link TOrderExceptionsProps }
  */
 export function useOrderException() {
-  const { user } = useStore();
+  const { user, setMessageErrorModal } = useStore();
   const request = useMutation({
     mutationFn: async ({
       comment,
@@ -194,9 +201,12 @@ export function useOrderException() {
       photoImage,
     }: TOrderExceptionsProps) => {
       if (user == null || user.companyID == null || user.userID == null) {
-        console.error("🚀 ~ file: shipments.ts:181 ~ useOrderException ~ user not defined:", user);
+        console.error(
+          "🚀 ~ file: shipments.ts:181 ~ useOrderException ~ user not defined:",
+          user,
+        );
         throw new Error("User not found");
-      };
+      }
       return await orderException({
         comment,
         shipmentID,
@@ -207,15 +217,15 @@ export function useOrderException() {
       });
     },
     onError: (e, props) => {
-      const { options } = props
-      if (options?.onError) options.onError({ ...props })
-      console.error("🚀 ~ file: shipments.ts:187 ~ useOrderException ~ e:", e)
+      const { options } = props;
+      if (options?.onError) options.onError({ ...props });
+      setMessageErrorModal(`Error useOrderException: ${e.message}`);
+      console.error("🚀 ~ file: shipments.ts:187 ~ useOrderException ~ e:", e);
     },
-    onSuccess: ((_, props) => {
-      const { options } = props
-      if (options?.onSuccess) options.onSuccess({ ...props })
-    }),
-
+    onSuccess: (_, props) => {
+      const { options } = props;
+      if (options?.onSuccess) options.onSuccess({ ...props });
+    },
   });
 
   return request;
@@ -225,6 +235,7 @@ export function useOrderException() {
  * @see {@link TSendCODSProps}
  */
 export function useSendCODs() {
+  const { setMessageErrorModal } = useStore();
   const request = useMutation({
     mutationFn: async ({ CODS }: TSendCODSProps) => {
       const results = await Promise.all(
@@ -237,14 +248,15 @@ export function useSendCODs() {
       return results;
     },
     onError: (e, props) => {
-      const { options } = props
-      if (options?.onError) options.onError({ ...props })
-      console.error("🚀 ~ file: shipments.ts:187 ~ useSendCODs ~ e:", e)
+      const { options } = props;
+      if (options?.onError) options.onError({ ...props });
+      setMessageErrorModal(`Error useSendCODs: ${e.message}`);
+      console.error("🚀 ~ file: shipments.ts:187 ~ useSendCODs ~ e:", e);
     },
-    onSuccess: ((_, props) => {
-      const { options } = props
-      if (options?.onSuccess) options.onSuccess({ ...props })
-    }),
+    onSuccess: (_, props) => {
+      const { options } = props;
+      if (options?.onSuccess) options.onSuccess({ ...props });
+    },
   });
 
   return request;
@@ -255,6 +267,7 @@ export function useSendCODs() {
  */
 export function useCompleteOrder() {
   const { t } = useTranslation();
+  const { setMessageErrorModal } = useStore();
 
   const request = useMutation({
     mutationFn: async ({
@@ -284,21 +297,28 @@ export function useCompleteOrder() {
           });
           results.push(result);
         } catch (error) {
-          console.error("🚀 ~ file: shipments.ts:266 ~ useCompleteOrder ~ error:", error);
+          setMessageErrorModal(`Error sending barcodes: ${String(error)}`);
+          console.error(
+            "🚀 ~ file: shipments.ts:266 ~ useCompleteOrder ~ error:",
+            error,
+          );
         }
         return results;
       } else Toast.show(t("TOAST.ERROR_BARCODES"));
     },
     onError: (error, props) => {
-      const { options } = props
-      options.onError && options.onError({ ...props })
-
-      console.error("🚀 ~ file: shipments.ts:286 ~ useCompleteOrder ~ error:", error);
-    },
-    onSuccess: ((_, props) => {
       const { options } = props;
-      options.onSuccess && options.onSuccess({ ...props })
-    }),
+      options.onError && options.onError({ ...props });
+      setMessageErrorModal(`Error sending useCompleteOrder: ${String(error)}`);
+      console.error(
+        "🚀 ~ file: shipments.ts:286 ~ useuseCompleteOrder ~ error:",
+        error,
+      );
+    },
+    onSuccess: (_, props) => {
+      const { options } = props;
+      options.onSuccess && options.onSuccess({ ...props });
+    },
   });
 
   return request;

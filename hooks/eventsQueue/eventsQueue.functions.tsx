@@ -31,7 +31,7 @@ export function useHandleCompleteOrderEvent({
   // --- Hooks -----------------------------------------------------------------
   const { mutate: completeOrderMutation } = useCompleteOrder();
   const { mutate: sendCODMutation } = useSendCODs();
-  const { setSyncing } = useStore();
+  const { setSyncing, setModalErrorModal } = useStore();
   // --- END: Hooks ------------------------------------------------------------
   // --- Data and handlers -----------------------------------------------------
   const handleCODSErrorCallback = useCallback(
@@ -119,9 +119,10 @@ export function useHandleCompleteOrderEvent({
               })
               .catch((error) => {
                 setSyncing(false);
+                setModalErrorModal(`${error}`);
                 console.error(
                   "🚀 ~ file: eventsQueue.functions.tsx:145 ~ deleteShipment ~ error:",
-                  error
+                  error,
                 );
                 reject(error);
               });
@@ -164,17 +165,19 @@ export function useHandleCompleteOrderEvent({
           });
         })
         .catch((error) => {
+          setModalErrorModal(`${error}`);
           console.error(
             "🚀 ~ file: eventsQueue.functions.ts:118 ~ handleUploadCompleteOrder ~ getEventsByID ~ error:",
             error
           );
         });
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       completeOrderMutation,
       handleCompleteOrderErrorCallback,
       handleCompleteOrderSuccessCallback,
-    ]
+    ],
   );
 
   const handleCODSSuccessCallback = useCallback(
@@ -235,7 +238,7 @@ export function useHandleOrderExceptionEvent({
   // --- Hooks -----------------------------------------------------------------
   const { mutate: addCommentMutation } = useAddComment();
   const { mutate: orderExceptionMutation } = useOrderException();
-  const { user, reasons } = useStore();
+  const { user, reasons, setModalErrorModal } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
@@ -246,7 +249,7 @@ export function useHandleOrderExceptionEvent({
       else {
         console.error(
           "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleOrderExceptionErrorCallback ~ eventId:",
-          props.options.eventId
+          props.options.eventId,
         );
         throw new Error(
           "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleOrderExceptionErrorCallback ~ eventId not found"
@@ -343,6 +346,7 @@ export function useHandleOrderExceptionEvent({
             });
           })
           .catch((error) => {
+            setModalErrorModal(`${error}`);
             console.error(
               "🚀 ~ file: eventsQueue.tsx:92 ~ orderException ~ error:",
               error
@@ -351,7 +355,8 @@ export function useHandleOrderExceptionEvent({
           });
       });
     },
-    [addEventToQueue, user]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [addEventToQueue, user],
   );
 
   const sendCommentToApi = useCallback(

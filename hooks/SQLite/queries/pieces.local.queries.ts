@@ -8,9 +8,9 @@ import { IFetchPiecesByIdData } from "@constants/types/shipments";
  * @returns A Promise that resolves to "Table created correctly" if successful, otherwise rejects with an error.
  */
 export function createPiecesTable() {
-    return new Promise((resolve: (value: string) => void, reject) => {
-        db.execAsync(
-            `
+  return new Promise((resolve: (value: string) => void, reject) => {
+    db.execAsync(
+      `
           CREATE TABLE IF NOT EXISTS pieces (
             pieceID INTEGER PRIMARY KEY UNIQUE,
             companyID TEXT FORE,
@@ -85,7 +85,7 @@ export function insertMultiplePieces(pieces: IFetchPiecesByIdData[]) {
                     '${v.barcode}', 
                     ${v.packageType},
                     '${v.packageTypeName}',
-                    '${v.comments}',
+                    '',
                     '${v.pwBack}',
                     '${v.pod}'
                 )`)
@@ -103,7 +103,7 @@ export function insertMultiplePieces(pieces: IFetchPiecesByIdData[]) {
                     pwBack,
                     pod
                     ) 
-                    VALUES ${piecesToInsert.join(',')}
+                    VALUES ${piecesToInsert.join(",")}
                     `,
                 ).then((_) => {
                     resolve({
