@@ -37,6 +37,7 @@ export default function ShipmentActionsException({
     reasons,
     setModal: setStateModal,
     setVisible: setStateModalVisible,
+    setModalErrorModal,
   } = useStore();
   const { t } = useTranslation();
   const { ...methods } = useForm<IOrderExceptionForm>({
@@ -87,7 +88,7 @@ export default function ShipmentActionsException({
     }
 
     if (photoImage?.base64 == null && photoOnEvent) {
-      Alert.alert("Error", t('VALIDATIONS.FILE_REQUIRED'));
+      Alert.alert("Error", t("VALIDATIONS.FILE_REQUIRED"));
       return;
     }
 
@@ -105,16 +106,17 @@ export default function ShipmentActionsException({
           setSelectedTab(ShipmentDetailsTabsItem.COMMENTS);
           setStateModalVisible(false);
           setLoading(false);
-          Toast.show("TOAST.ORDER_EXCEPTION");
+          Toast.show(t("TOAST.ORDER_EXCEPTION"));
         })
         .catch((error) => {
           setStateModalVisible(false);
+          setModalErrorModal(`Error order exception: ${String(error)}`);
           console.error(
             "🚀 ~ file: ShipmentActionsException.tsx:120 ~ error:",
             error,
           );
           setLoading(false);
-          Toast.show("TOAST.ORDER_EXCEPTION_ERROR");
+          Toast.show(t("TOAST.ORDER_EXCEPTION_ERROR"));
         });
     }
   };

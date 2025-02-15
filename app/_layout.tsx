@@ -12,7 +12,7 @@ import {
 import "react-native-reanimated";
 import "@/lang/i18n";
 
-import { StateModal } from "@atoms/Modal";
+import { StateModal, ErrorModal } from "@atoms/Modal";
 import { queryClient } from "@/providers";
 import AuthProvider from "@/providers/Auth";
 import { useAuth0Config } from "@hooks/Auth";
@@ -81,6 +81,7 @@ function RootLayoutNav(props: { authDomain: string; authClientId: string }) {
             >
               <AuthProvider domain={authDomain} clientId={authClientId}>
                 <StateModal />
+                <ErrorModal />
                 <Stack screenOptions={{ headerShown: false }}>
                   <Stack.Screen name="(no-auth)" />
                   <Stack.Screen name="(auth)" />

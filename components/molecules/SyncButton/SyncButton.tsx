@@ -13,7 +13,7 @@ import { useState } from "react";
 export default function SyncButton() {
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
-  const { setVisible, setModal, user, setSyncing, isSyncing } = useStore();
+  const { setVisible, setModal, user, setSyncing, isSyncing, setModalErrorModal } = useStore();
   const theme = useThemeColor({}, "primary");
   const colorScheme = useColorScheme();
   const isConnected = useIsConnected();
@@ -57,6 +57,7 @@ export default function SyncButton() {
                   setDisableActions(false);
                   setVisible(false);
                   Toast.show(t("SYNC_BUTTON.ERROR"));
+                  setModalErrorModal(`Error reset database: ${String(error)}`);
                   console.error(
                     "🚀 ~ file: SyncButton.tsx:26 ~ resetDatabase ~ error:",
                     error,

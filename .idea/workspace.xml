@@ -5,9 +5,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="08119286-e23d-447f-b9a4-38d00335d43d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/app.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/images/alert.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/atoms/Modal/ErrorModal/ErrorModal.styles.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/atoms/Modal/ErrorModal/ErrorModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/atoms/Modal/ErrorModal/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(auth)/ManifestsList/ManifestsList.functions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(auth)/ManifestsList/ManifestsList.functions.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/_layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/atoms/Modal/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/atoms/Modal/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/molecules/AddComment/AddComment.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/AddComment/AddComment.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/molecules/LogoutButton/LogoutButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/LogoutButton/LogoutButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/molecules/ManifestListItem/ManifestListItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/ManifestListItem/ManifestListItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/molecules/ShipmentActionsComplete/ShipmentActionsComplete.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/ShipmentActionsComplete/ShipmentActionsComplete.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/molecules/ShipmentActionsException/ShipmentActionsException.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/ShipmentActionsException/ShipmentActionsException.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/molecules/SyncButton/SyncButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/SyncButton/SyncButton.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/organisms/SearchInput/SearchInput.functions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/organisms/SearchInput/SearchInput.functions.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/constants/types/general.ts" beforeDir="false" afterPath="$PROJECT_DIR$/constants/types/general.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/constants/types/shipments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/constants/types/shipments.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eas.json" beforeDir="false" afterPath="$PROJECT_DIR$/eas.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/SQLite/queries/pieces.local.queries.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/SQLite/queries/pieces.local.queries.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/SyncLocalData.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/SyncLocalData.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/eventsQueue/eventsQueue.functions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/eventsQueue/eventsQueue.functions.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/eventsQueue/eventsQueue.local.queries.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/eventsQueue/eventsQueue.local.queries.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/eventsQueue/eventsQueue.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/eventsQueue/eventsQueue.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/queries/shipments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/queries/shipments.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/syncData/data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/syncData/data.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/custom-api/custom-api/shipments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/services/custom-api/custom-api/shipments.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stores/zustand/general.ts" beforeDir="false" afterPath="$PROJECT_DIR$/stores/zustand/general.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/stores/zustand/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/stores/zustand/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

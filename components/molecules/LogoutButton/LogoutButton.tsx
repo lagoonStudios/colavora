@@ -11,7 +11,7 @@ export default function LogoutButton() {
   // --- Hooks -----------------------------------------------------------------
   const { clearSession } = useAuth();
   const colorScheme = useColorScheme();
-  const { resetCompany, resetUser, resetShipment } = useStore();
+  const { resetCompany, resetUser, resetShipment, setModalErrorModal } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
   const onPress = () => {
@@ -21,6 +21,7 @@ export default function LogoutButton() {
       resetUser();
       resetShipment();
     } catch (e) {
+      setModalErrorModal(`Error logout: ${String(e)}`);
       console.error("🚀 ~ LogoutButton ~ onPress ~ e:", e);
     }
   };

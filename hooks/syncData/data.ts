@@ -22,6 +22,7 @@ export function useDataFetch(user: IFetchUserData | null) {
     addManifestId,
     lastSyncDate,
     isSyncing,
+    setMessageErrorModal,
   } = useStore();
   const { t } = useTranslation();
   // --- END: Hooks ------------------------------------------------------------
@@ -70,6 +71,7 @@ export function useDataFetch(user: IFetchUserData | null) {
             setVisible(false);
           })
           .catch((error) => {
+            setMessageErrorModal(`Error using Local Data: ${error}`);
             console.error(
               "🚀 ~ file: data.ts:28 ~ fetchDataLocally ~ error:",
               error,
@@ -112,6 +114,7 @@ export function useDataFetch(user: IFetchUserData | null) {
                 setLoading(false);
               })
               .catch((e) => {
+                setMessageErrorModal(`${e}`);
                 console.error(
                   "🚀 ~ file: data.ts:112 ~ voidgetAllManifestIds ~ e:",
                   e,
@@ -126,6 +129,7 @@ export function useDataFetch(user: IFetchUserData | null) {
           setVisible(false);
         })
         .catch((e) => {
+          setMessageErrorModal(`${e}`);
           console.error(
             "🚀 ~ file: data.ts:117 ~ voidgetAllManifestIds ~ e:",
             e,

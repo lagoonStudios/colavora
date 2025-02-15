@@ -30,6 +30,8 @@ import {
   createStateModalSlice,
   SyncDataSlice,
   createSyncDataSlice,
+  ErrorModalSlice,
+  createErrorModalSlice,
 } from "./general";
 import { CompanySlice, createCompanySlice } from "./company";
 import { UserSlice, createUserSlice } from "./user";
@@ -49,7 +51,8 @@ const useBoundStore = create<
     CompanySlice &
     UserSlice &
     StateModalSlice &
-    SyncDataSlice
+    SyncDataSlice &
+    ErrorModalSlice
 >()((...a) => ({
   ...createManifestIdsSlice(...a),
   ...createManifestsSlice(...a),
@@ -66,6 +69,7 @@ const useBoundStore = create<
   ...createUserSlice(...a),
   ...createStateModalSlice(...a),
   ...createSyncDataSlice(...a),
+  ...createErrorModalSlice(...a),
 }));
 
 export { useBoundStore as useStore };

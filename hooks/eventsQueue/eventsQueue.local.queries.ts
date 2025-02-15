@@ -27,21 +27,6 @@ export function createEventsQueueTable() {
     });
 }
 
-// export function dropEventsQueueTable() {
-//     return new Promise((resolve: ({ status, message }: { status: number, message: string }) => void, reject) => {
-//         db.execAsync(`DROP TABLE IF EXISTS eventsQueue;`)
-//             .then(() => {
-//                 resolve({
-//                     status: 200,
-//                     message: "Table dropped correctly"
-//                 });
-//             }).catch(error => {
-//                 console.error("🚀 ~ file: eventsQueue.local.queries.ts:44 ~ dropEventsQueueTable ~ error:", error);
-//                 reject(error)
-//             });
-//     });
-// };
-
 /**
  * Inserts the event into the eventsQueue table.
  * @param params event to insert.

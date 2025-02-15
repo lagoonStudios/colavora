@@ -2,6 +2,7 @@ import {
   ICODData,
   IReasonsByIdData,
   IStateModal,
+  IErrorStateModal,
   SyncPeriod,
 } from "@constants/types/general";
 import { StateCreator } from "zustand";
@@ -35,6 +36,19 @@ export interface StateModalSlice {
   setMessage: (message: string) => void;
   setModal: (message: string) => void;
   hideModal: ({
+    message,
+    visible,
+  }: {
+    message?: string;
+    visible?: boolean;
+  }) => void;
+}
+export interface ErrorModalSlice {
+  errorModal: IErrorStateModal;
+  setVisibleErrorModal: (visible?: boolean) => void;
+  setMessageErrorModal: (message: string) => void;
+  setModalErrorModal: (message: string) => void;
+  hideModalErrorModal: ({
     message,
     visible,
   }: {
@@ -118,6 +132,47 @@ export const createStateModalSlice: StateCreator<StateModalSlice, [], []> = (
       ...state,
       modal: { visible: visible ?? false, message: message ?? "" },
     })),
+});
+
+export const createErrorModalSlice: StateCreator<ErrorModalSlice, [], []> = (
+  set,
+) => ({
+  errorModal: {
+    messages: [],
+    visible: false,
+  },
+  setVisibleErrorModal: (visible?: boolean) =>
+    set((state) => ({
+      ...state,
+      errorModal: {
+        ...state.errorModal,
+        visible: visible ?? !state.errorModal.visible,
+      },
+    })),
+  setMessageErrorModal: (message: string) =>
+    set((state) => ({
+      ...state,
+      errorModal: {
+        ...state.errorModal,
+        messages: [...state.errorModal.messages, message],
+      },
+    })),
+  setModalErrorModal: (message: string) =>
+    set((state) => ({
+      ...state,
+      errorModal: {
+        visible: true,
+        messages: [...state.errorModal.messages, message],
+      },
+    })),
+  hideModalErrorModal: ({ message, visible }) =>
+    set((state) => {
+      const messages = message ? [...state.errorModal.messages, message] : [];
+      return {
+        ...state,
+        errorModal: { visible: visible ?? false, messages },
+      };
+    }),
 });
 
 export const createSyncDataSlice: StateCreator<SyncDataSlice, [], []> = (

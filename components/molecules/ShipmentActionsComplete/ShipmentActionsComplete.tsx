@@ -57,6 +57,7 @@ export default function ShipmentActionsComplete({
     setVisible,
     user,
     setSyncing,
+    setModalErrorModal,
   } = useStore();
   const { ...methods } = useForm<IShipmentActionsComplete>({
     defaultValues,
@@ -116,11 +117,11 @@ export default function ShipmentActionsComplete({
     signatureImage,
   }) => {
     if (!signatureImage && signatureOnDelivery) {
-      Alert.alert("Error", t('VALIDATIONS.SIGNATURE_REQUIRED'));
+      Alert.alert("Error", t("VALIDATIONS.SIGNATURE_REQUIRED"));
       return;
     }
-    if(photoImage?.base64 == null && photoOnDelivery) {
-      Alert.alert("Error", t('VALIDATIONS.FILE_REQUIRED'));
+    if (photoImage?.base64 == null && photoOnDelivery) {
+      Alert.alert("Error", t("VALIDATIONS.FILE_REQUIRED"));
       return;
     }
 
@@ -153,6 +154,7 @@ export default function ShipmentActionsComplete({
         setSyncing(false);
       } catch (error) {
         Toast.show(t("TOAST.ORDER_COMPLETED_ERROR"));
+        setModalErrorModal(`Error complete order: ${String(error)}`);
         console.error(
           "🚀 ~ file: ShipmentActionsComplete.tsx:143 ~ error:",
           error,

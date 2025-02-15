@@ -10,17 +10,14 @@ import { useStore } from "@stores/zustand";
 import { getShipmentList } from "@hooks/SQLite";
 import { styles } from "./ManifestListItem.styles";
 import { ManifestListItemProps } from "./ManifestListItem.types";
-import { IFetchOrderListItem } from "@hooks/SQLite/SQLite.types";
 
 export default function ManifestListItem(props: ManifestListItemProps) {
   // --- Local state -----------------------------------------------------------
-  const { manifest, createdDate, active_shipments } = props;
-  // const [data, setData] = useState<IFetchOrderListItem[]>();
-  // const { isSyncing } = useStore();
+  const { manifest, active_shipments } = props;
   // --- END: Local state ------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
-  const { addShipmentIds, addManifestId } = useStore();
+  const { addShipmentIds, addManifestId, setModalErrorModal } = useStore();
   const { push } = useRouter();
   // --- END: Hooks ------------------------------------------------------------
 
@@ -53,11 +50,13 @@ export default function ManifestListItem(props: ManifestListItemProps) {
         push("/OrdersList");
       })
       .catch((error) => {
+        setModalErrorModal(`Error Shipment List: ${error}`);
         console.error(
           "🚀 ~ file: ManifestListItem.tsx:32 ~ getShipmentList ~ error:",
-          error
+          error,
         );
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addManifestId, addShipmentIds, manifest, push]);
 
   // --- END: Data and handlers ------------------------------------------------

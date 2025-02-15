@@ -101,6 +101,11 @@ export interface IStateModal {
   message: string;
 }
 
+export interface IErrorStateModal {
+  visible: boolean;
+  messages: string[];
+}
+
 export type Language = "en" | "es";
 
 export type SyncPeriod = 5 | 10 | 20 | 30 | 60;
