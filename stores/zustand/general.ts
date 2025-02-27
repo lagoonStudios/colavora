@@ -155,6 +155,7 @@ export const createErrorModalSlice: StateCreator<ErrorModalSlice, [], []> = (
       errorModal: {
         ...state.errorModal,
         messages: [...state.errorModal.messages, message],
+        visible: true,
       },
     })),
   setModalErrorModal: (message: string) =>

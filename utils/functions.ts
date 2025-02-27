@@ -182,12 +182,32 @@ function fetchManifests(
         if (manifestIdsFn?.data != null) {
           for (const manifest of manifestIdsFn.data) {
             if (manifest != null)
-              if (user?.driverID && user?.companyID)
-                manifests.set(manifest.manifestId, {
-                  ...manifest,
-                  manifest: manifest.manifestId,
-                  driverID: user.driverID,
-                });
+              if (user?.driverID && user?.companyID && manifest?.manifestId) {
+                if (manifests.has(manifest.manifestId)) {
+                  const oldManifest = manifests.get(manifest.manifestId);
+                  if (oldManifest)
+                    manifests.set(
+                      `${manifest.manifestId}-${manifest.manifestType}`,
+                      {
+                        ...oldManifest,
+                        manifest: manifest.manifestId,
+                        driverID: user.driverID,
+                        shipments: [
+                          ...oldManifest.shipments,
+                          ...manifest.shipments,
+                        ],
+                      },
+                    );
+                } else
+                  manifests.set(
+                    `${manifest.manifestId}-${manifest.manifestType}`,
+                    {
+                      ...manifest,
+                      manifest: manifest.manifestId,
+                      driverID: user.driverID,
+                    },
+                  );
+              }
           }
           resolve([...manifests.values()]);
         } else {
