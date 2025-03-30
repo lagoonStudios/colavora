@@ -5,9 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="08119286-e23d-447f-b9a4-38d00335d43d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/eas.json" beforeDir="false" afterPath="$PROJECT_DIR$/eas.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/molecules/ShipmentActionsComplete/ShipmentActionsComplete.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/molecules/ShipmentActionsComplete/ShipmentActionsComplete.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/organisms/ShipmentComments/ShipmentComments.functions.ts" beforeDir="false" afterPath="$PROJECT_DIR$/components/organisms/ShipmentComments/ShipmentComments.functions.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/SQLite/SQLite.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/SQLite/SQLite.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/SQLite/queries/comments.local.queries.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/SQLite/queries/comments.local.queries.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/SQLite/queries/general.local.queries.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/SQLite/queries/general.local.queries.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/eventsQueue/eventsQueue.functions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/eventsQueue/eventsQueue.functions.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/eventsQueue/eventsQueue.local.queries.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/eventsQueue/eventsQueue.local.queries.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/eventsQueue/eventsQueue.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/eventsQueue/eventsQueue.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/eventsQueue/eventsQueue.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/eventsQueue/eventsQueue.types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/queries/shipments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/queries/shipments.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/custom-api/custom-api/shipments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/services/custom-api/custom-api/shipments.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

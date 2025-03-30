@@ -27,8 +27,11 @@ import {
 import { useStore } from "@stores/zustand";
 
 export function useShipmentsIdData({ manifest }: IOptionalProps) {
+  // --- Local state -----------------------------------------------------------
   const queryKey = [`${queryKeys.shipmentsIdData}-${manifest}`];
+  // --- END: Local state ------------------------------------------------------
 
+  // --- Hooks -----------------------------------------------------------------
   const shipmentsIdData = useQuery({
     queryKey,
     queryFn: async () => {
@@ -44,6 +47,7 @@ export function useShipmentsIdData({ manifest }: IOptionalProps) {
     retryOnMount: false,
     enabled: !!manifest,
   });
+  // --- END: Hooks ------------------------------------------------------------
 
   return shipmentsIdData;
 }
@@ -56,6 +60,7 @@ export function useShipmentsByIdData(ids: number[]) {
     );
     return;
   }
+  // --- Hooks -----------------------------------------------------------------
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const shipmentsByIdData = useQueries({
     queries: ids?.map((id) => ({
@@ -78,13 +83,17 @@ export function useShipmentsByIdData(ids: number[]) {
       };
     },
   });
+  // --- END: Hooks ------------------------------------------------------------
 
   return { ...shipmentsByIdData, data: shipmentsByIdData?.data ?? [] };
 }
 
 export function usePiecesIdData({ id }: IOptionalProps) {
+  // --- Local state -----------------------------------------------------------
   const queryKey = [`${queryKeys.piecesIdData}-${id}`];
+  // --- END: Local state ------------------------------------------------------
 
+  // --- Hooks -----------------------------------------------------------------
   const piecesIdData = useQuery({
     queryKey,
     queryFn: async () => {
@@ -99,11 +108,13 @@ export function usePiecesIdData({ id }: IOptionalProps) {
     refetchOnWindowFocus: false,
     retryOnMount: false,
   });
+  // --- END: Hooks ------------------------------------------------------------
 
   return piecesIdData;
 }
 
 export function usePiecesByIdData(ids: number[]) {
+  // --- Hooks -----------------------------------------------------------------
   const piecesByIdData = useQueries({
     queries: ids?.map((id) => ({
       queryKey: [`${queryKeys.piecesByIdData}-${id}`],
@@ -125,16 +136,22 @@ export function usePiecesByIdData(ids: number[]) {
       };
     },
   });
+  // --- END: Hooks -----------------------------------------------------------------
 
   return { ...piecesByIdData, data: piecesByIdData?.data ?? [] };
 }
 
-export function useCommentsIdData({ id }: { id: number }) {
+export function useCommentsIdData({ id }: { id: number | undefined }) {
+  // --- Local state -----------------------------------------------------------
   const queryKey = [`${queryKeys.commnetsByIdData}-${id}`];
+  // --- END: Local state ------------------------------------------------------
 
+  // --- Hooks -----------------------------------------------------------------
   const piecesIdData = useQuery({
     queryKey,
     queryFn: async () => {
+      if (!id) return [];
+
       const { data: rawData } = await fetchCommentsByIdData({
         id,
       });
@@ -145,7 +162,9 @@ export function useCommentsIdData({ id }: { id: number }) {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     retryOnMount: false,
+    enabled: !id,
   });
+  // --- END: Hooks ------------------------------------------------------------
 
   return piecesIdData;
 }
@@ -154,6 +173,7 @@ export function useCommentsIdData({ id }: { id: number }) {
  * @see {@link TSendCommentsProps}
  */
 export function useAddComment() {
+  // --- Hooks -----------------------------------------------------------------
   const { setMessageErrorModal } = useStore();
 
   const request = useMutation({
@@ -184,6 +204,7 @@ export function useAddComment() {
       // removeFromQueue(eventId)
     },
   });
+  // --- END: Hooks ------------------------------------------------------------
 
   return request;
 }
@@ -192,6 +213,7 @@ export function useAddComment() {
  * @see {@link TOrderExceptionsProps }
  */
 export function useOrderException() {
+  // --- Hooks -----------------------------------------------------------------
   const { user, setMessageErrorModal } = useStore();
   const request = useMutation({
     mutationFn: async ({
@@ -227,6 +249,7 @@ export function useOrderException() {
       if (options?.onSuccess) options.onSuccess({ ...props });
     },
   });
+  // --- END: Hooks ------------------------------------------------------------
 
   return request;
 }
@@ -235,7 +258,9 @@ export function useOrderException() {
  * @see {@link TSendCODSProps}
  */
 export function useSendCODs() {
+  // --- Hooks -----------------------------------------------------------------
   const { setMessageErrorModal } = useStore();
+
   const request = useMutation({
     mutationFn: async ({ CODS }: TSendCODSProps) => {
       const results = await Promise.all(
@@ -258,6 +283,7 @@ export function useSendCODs() {
       if (options?.onSuccess) options.onSuccess({ ...props });
     },
   });
+  // --- END: Hooks ------------------------------------------------------------
 
   return request;
 }
@@ -266,6 +292,7 @@ export function useSendCODs() {
  *  @see {@link CompleteOrderMutationProps}
  */
 export function useCompleteOrder() {
+  // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
   const { setMessageErrorModal } = useStore();
 
@@ -283,27 +310,16 @@ export function useCompleteOrder() {
       },
     }: CompleteOrderMutationProps) => {
       if (barcodes && barcodes?.length !== 0) {
-        const results = [];
-        try {
-          const result = await completeOrderAllBarcodes({
-            companyID,
-            userID,
-            shipmentID,
-            barcodes,
-            podName,
-            photoImage,
-            signatureImage,
-            comment,
-          });
-          results.push(result);
-        } catch (error) {
-          setMessageErrorModal(`Error sending barcodes: ${String(error)}`);
-          console.error(
-            "🚀 ~ file: shipments.ts:266 ~ useCompleteOrder ~ error:",
-            error,
-          );
-        }
-        return results;
+        await completeOrderAllBarcodes({
+          companyID,
+          userID,
+          shipmentID,
+          barcodes,
+          podName,
+          photoImage,
+          signatureImage,
+          comment,
+        });
       } else Toast.show(t("TOAST.ERROR_BARCODES"));
     },
     onError: (error, props) => {
@@ -311,7 +327,7 @@ export function useCompleteOrder() {
       options.onError && options.onError({ ...props });
       setMessageErrorModal(`Error sending useCompleteOrder: ${String(error)}`);
       console.error(
-        "🚀 ~ file: shipments.ts:286 ~ useuseCompleteOrder ~ error:",
+        "🚀 ~ file: shipments.ts:286 ~ useCompleteOrder ~ error:",
         error,
       );
     },
@@ -320,6 +336,7 @@ export function useCompleteOrder() {
       options.onSuccess && options.onSuccess({ ...props });
     },
   });
+  // --- END: Hooks ------------------------------------------------------------
 
   return request;
 }

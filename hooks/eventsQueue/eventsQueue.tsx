@@ -1,5 +1,5 @@
 import { useIsConnected } from "react-native-offline";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import {
   insertEvent,
@@ -24,8 +24,13 @@ import {
 export default function useEventsQueue() {
   // --- Hooks -----------------------------------------------------------------
   const isConnected = useIsConnected();
-  const { user, setModalErrorModal } = useStore();
+  const {
+    user,
+    setModalErrorModal,
+    errorModal: { visible },
+  } = useStore();
   /** Represents all the events ids that are in the queue. */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [queueIds, setQueueIds] = useState<number[]>([]);
   /** Represents all the ids that are being handled. For example all events that are waiting for an api response. */
   const [idsHandled, setHandledIds] = useState<number[]>([]);
@@ -34,62 +39,68 @@ export default function useEventsQueue() {
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
-  const queueLength = useMemo(() => queueIds.length, [queueIds]);
+  const handleError = useCallback(
+    (message: string, error?: unknown) => {
+      console.error(message, error);
+      setModalErrorModal(message);
+    },
+    [setModalErrorModal],
+  );
+
+  const updateQueueIds = (id: number, action: "add" | "remove") => {
+    setQueueIds((prev) =>
+      action === "add"
+        ? [...prev.filter((item) => item !== id), id]
+        : prev.filter((item) => item !== id),
+    );
+  };
+
+  const updateHandledIds = (id: number, action: "add" | "remove") => {
+    setHandledIds((prev) =>
+      action === "add"
+        ? [...prev.filter((item) => item !== id), id]
+        : prev.filter((item) => item !== id),
+    );
+  };
 
   const addEventToQueue = useCallback(
     async (params: TInsertEventParams) => {
-      return insertEvent(params)
-        .then((res) => {
-          setQueueIds([...queueIds.filter((item) => item !== res.id), res.id]);
-        })
-        .catch((error) => {
-          setModalErrorModal(`${error}`);
-          console.error(
-            "🚀 ~ file: eventsQueue.tsx:47 ~ returninsertEvent ~ error:",
-            error,
-          );
-        });
+      try {
+        const res = await insertEvent(params);
+        updateQueueIds(res.id, "add");
+      } catch (error) {
+        handleError(
+          "~ file: eventsQueue.tsx:60 ~ Error adding event to queue",
+          error,
+        );
+      }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [queueIds],
-  );
-  const removeIdFromHandleList = useCallback(
-    (id: number) => setHandledIds((ids) => ids.filter((item) => item !== id)),
-    [setHandledIds]
-  );
-  const removeEventFromQueue = useCallback(
-    (id: number) => {
-      removeEvent(id)
-        .then(() => {
-          // removeIdFromHandleList(id);
-          setQueueIds(queueIds.filter((item) => item !== id));
-        })
-        .catch((e) => {
-          setModalErrorModal(`${e}`);
-          console.error("🚀 ~ file: eventsQueue.tsx:65 ~ removeEvent ~ e:", e);
-        });
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [queueIds, setQueueIds],
+    [handleError],
   );
 
-  const setIdToHandleList = useCallback(
-    (id: number) =>
-      setHandledIds((ids) => [...ids.filter((v) => v !== id), id]),
-    [setHandledIds]
+  const removeEventFromQueue = useCallback(
+    async (id: number) => {
+      try {
+        await removeEvent(id);
+        updateQueueIds(id, "remove");
+      } catch (error) {
+        handleError("Error removing event from queue", error);
+      }
+    },
+    [handleError],
   );
 
   const { addCompleteOrderEvent, completeOrderToApi } =
     useHandleCompleteOrderEvent({
       removeFromQueue: removeEventFromQueue,
-      removeIdFromHandleList,
+      removeIdFromHandleList: (id) => updateHandledIds(id, "remove"),
       addEventToQueue,
     });
 
   const { addExceptionEvent, sendExceptionToApi } =
     useHandleOrderExceptionEvent({
       removeFromQueue: removeEventFromQueue,
-      removeIdFromHandleList,
+      removeIdFromHandleList: (id) => updateHandledIds(id, "remove"),
       addEventToQueue,
     });
 
@@ -99,35 +110,26 @@ export default function useEventsQueue() {
   const completeOrder = useCallback(
     (order: TCompleteOrderProps) => {
       return new Promise((resolve, reject) => {
-        if (user == null) {
-          console.error(
-            "🚀 ~ file: eventsQueue.tsx:69 ~ orderException ~ user not defined:",
-            user
-          );
-          reject("User not found");
-          throw new Error("User not found");
+        if (!user) {
+          const errorMessage =
+            "~ file: eventsQueue.tsx:118 ~ completeOrder not found";
+          handleError(errorMessage);
+          reject(errorMessage);
+          return;
         }
 
         addCompleteOrderEvent({ order })
-          .then(() => {
-            resolve({
-              message: "Order added to queue",
-              code: 200,
-            });
-          })
+          .then(() => resolve({ message: "Order added to queue", code: 200 }))
           .catch((error) => {
-            setModalErrorModal(`${error}`);
-            console.error(
-              "🚀 ~ file: eventsQueue.tsx:144 ~ addCompleteOrderEvent ~ error:",
+            handleError(
+              "~ file: eventsQueue.tsx:129 ~ addCompleteOrderEvent: Error adding complete order event",
               error,
             );
-
             reject(error);
           });
       });
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [addCompleteOrderEvent, user],
+    [addCompleteOrderEvent, handleError, user],
   );
 
   /** Stores an orderException event in the queue.
@@ -136,37 +138,31 @@ export default function useEventsQueue() {
   const orderException = useCallback(
     (data: Omit<TOrderExceptionsProps, "options">) => {
       return new Promise((resolve, reject) => {
-        if (user == null) {
-          console.error(
-            "🚀 ~ file: eventsQueue.tsx:69 ~ orderException ~ user not defined:",
-            user
-          );
-          reject("User not found");
-          throw new Error("User not found");
+        if (!user) {
+          const errorMessage =
+            "~ file: eventsQueue.tsx:146 ~ orderException: User not found";
+          handleError(errorMessage);
+          reject(errorMessage);
+          return;
         }
 
         addExceptionEvent(data)
-          .then(() => {
-            resolve({
-              message: "Order exception stored locally",
-              code: 200,
-            });
-          })
+          .then(() =>
+            resolve({ message: "Order exception stored locally", code: 200 }),
+          )
           .catch((error) => {
-            setModalErrorModal(`${error}`);
-            console.error(
-              "🚀 ~ file: eventsQueue.tsx:92 ~ orderException ~ error:",
-              error
+            handleError(
+              "~ file: eventsQueue.tsx:92 ~ addExceptionEvent: Error storing order exception locally",
+              error,
             );
             reject(error);
           });
       });
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [addExceptionEvent, user]
+    [addExceptionEvent, handleError, user],
   );
 
-  const handleEventsQueue = useCallback(() => {
+  const handleEventsQueue = () => {
     if (disableActions) return;
     setDisableActions(true);
     getEventsQueue()
@@ -175,12 +171,10 @@ export default function useEventsQueue() {
           // If the event is already handled, skip it
           if (idsHandled.includes(event.id)) return;
           // Sets the eventId to the handledIds array
-          setIdToHandleList(event.id);
           // Handles the event based on its type
           switch (event.eventType) {
             // Order Exception
             case EventsQueueType.ORDER_EXCEPTION: {
-              setIdToHandleList(event.id);
               const exceptionBody: TOrderExceptionsProps = JSON.parse(
                 event.body,
               ) as TOrderExceptionsProps;
@@ -203,10 +197,8 @@ export default function useEventsQueue() {
             }
             // Shows an error message if the event type is not handled
             default: {
-              setModalErrorModal(`Event type not found or not handled`);
-              console.error(
-                "🚀 ~ file: eventsQueue.tsx ~ handleEventsQueue ~ error:",
-                "Event type not found or not handled",
+              handleError(
+                "~ file: eventsQueue.tsx ~ handleEventsQueue: Event type not found or not handled",
               );
               break;
             }
@@ -214,44 +206,39 @@ export default function useEventsQueue() {
         });
         setDisableActions(false);
       })
-      .catch((e) => {
-        setModalErrorModal(`${e}`);
-        console.error(
-          "🚀 ~ file: eventsQueue.tsx:191 ~ getEventsQueue ~ e:",
-          e,
-        );
-        setDisableActions(false);
-      });
-    // No se agrega el idHandled porque dentro del callback se está seteando el idHandled y ocurre un loop infinito.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [completeOrderToApi, sendExceptionToApi]);
+      .catch((error) => handleError("Error processing events queue", error))
+      .finally(() => setDisableActions(false));
+  };
   // --- END: Data and handlers ------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
     // To fill the queueIds state when hook is called for the first time.
-    const getIds = () => {
-      getEventsQueuedIds()
-        .then((res) => {
-          setQueueIds(res);
-        })
-        .catch((error) => {
-          setModalErrorModal(`${error}`);
-          console.error(
-            "🚀 ~ file: eventsQueue.tsx:217 ~ getEventsQueuedIds ~ error:",
-            error,
-          );
-        });
+    const fetchQueueIds = async () => {
+      try {
+        const ids = await getEventsQueuedIds();
+        setQueueIds(ids);
+      } catch (error) {
+        handleError("Error fetching queued event IDs", error);
+      }
     };
-    getIds();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setQueueIds]);
+
+    void fetchQueueIds();
+  }, [handleError, setQueueIds]);
 
   useEffect(() => {
     // Calls the function when the user is connected and the queue changes.
-    if (isConnected) handleEventsQueue();
+    if (isConnected && !visible) handleEventsQueue();
+
+    if (visible) {
+      setHandledIds([]);
+      setDisableActions(false);
+      setQueueIds([]);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isConnected, queueLength]);
+  }, [idsHandled, queueIds, isConnected, visible]);
+
+  /* useEffect(() => console.log(queueIds, idsHandled), [queueIds, idsHandled]); */
 
   // -- END: Side effects -----------------------------------------------------
 

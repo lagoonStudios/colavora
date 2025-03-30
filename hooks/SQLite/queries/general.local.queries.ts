@@ -116,6 +116,7 @@ export function resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
                               options?.t?.("MODAL.SAVING_PIECES") ||
                                 "Saving pieces",
                             );
+
                           Promise.all([
                             insertMultiplePieces(pieces),
                             insertMultipleComments(comments),

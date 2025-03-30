@@ -116,6 +116,11 @@ export default function ShipmentActionsComplete({
     cods,
     signatureImage,
   }) => {
+    const onFinishFunction = () => {
+      setSyncing(false);
+      setVisible(false);
+    };
+
     if (!signatureImage && signatureOnDelivery) {
       Alert.alert("Error", t("VALIDATIONS.SIGNATURE_REQUIRED"));
       return;
@@ -150,8 +155,7 @@ export default function ShipmentActionsComplete({
         });
         Toast.show(t("TOAST.ORDER_COMPLETED"));
         router.replace("/");
-        setVisible(false);
-        setSyncing(false);
+        onFinishFunction();
       } catch (error) {
         Toast.show(t("TOAST.ORDER_COMPLETED_ERROR"));
         setModalErrorModal(`Error complete order: ${String(error)}`);
@@ -159,8 +163,7 @@ export default function ShipmentActionsComplete({
           "🚀 ~ file: ShipmentActionsComplete.tsx:143 ~ error:",
           error,
         );
-        setSyncing(false);
-        setVisible(false);
+        onFinishFunction();
       }
     }
   };
@@ -175,10 +178,6 @@ export default function ShipmentActionsComplete({
   };
 
   // --- END: Data and handlers ------------------------------------------------
-
-  // --- Side effects ----------------------------------------------------------
-  // --- END: Side effects -----------------------------------------------------
-
   return (
     <FormProvider {...methods}>
       <View style={styles.providerContainer}>
