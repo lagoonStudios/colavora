@@ -1,5 +1,5 @@
 import { useIsConnected } from "react-native-offline";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   insertEvent,
@@ -24,7 +24,11 @@ import {
 export default function useEventsQueue() {
   // --- Hooks -----------------------------------------------------------------
   const isConnected = useIsConnected();
-  const { user, setModalErrorModal } = useStore();
+  const {
+    user,
+    setModalErrorModal,
+    errorModal: { visible },
+  } = useStore();
   /** Represents all the events ids that are in the queue. */
   const [queueIds, setQueueIds] = useState<number[]>([]);
   /** Represents all the ids that are being handled. For example all events that are waiting for an api response. */
@@ -36,48 +40,36 @@ export default function useEventsQueue() {
   // --- Data and handlers -----------------------------------------------------
   const queueLength = useMemo(() => queueIds.length, [queueIds]);
 
-  const addEventToQueue = useCallback(
-    async (params: TInsertEventParams) => {
-      return insertEvent(params)
-        .then((res) => {
-          setQueueIds([...queueIds.filter((item) => item !== res.id), res.id]);
-        })
-        .catch((error) => {
-          setModalErrorModal(`${error}`);
-          console.error(
-            "🚀 ~ file: eventsQueue.tsx:47 ~ returninsertEvent ~ error:",
-            error,
-          );
-        });
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [queueIds],
-  );
-  const removeIdFromHandleList = useCallback(
-    (id: number) => setHandledIds((ids) => ids.filter((item) => item !== id)),
-    [setHandledIds]
-  );
-  const removeEventFromQueue = useCallback(
-    (id: number) => {
-      removeEvent(id)
-        .then(() => {
-          // removeIdFromHandleList(id);
-          setQueueIds(queueIds.filter((item) => item !== id));
-        })
-        .catch((e) => {
-          setModalErrorModal(`${e}`);
-          console.error("🚀 ~ file: eventsQueue.tsx:65 ~ removeEvent ~ e:", e);
-        });
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [queueIds, setQueueIds],
-  );
+  const addEventToQueue = async (params: TInsertEventParams) => {
+    return insertEvent(params)
+      .then((res) => {
+        setQueueIds([...queueIds.filter((item) => item !== res.id), res.id]);
+      })
+      .catch((error) => {
+        setModalErrorModal(`${error}`);
+        console.error(
+          "🚀 ~ file: eventsQueue.tsx:47 ~ returninsertEvent ~ error:",
+          error,
+        );
+      });
+  };
+  const removeIdFromHandleList = (id: number) =>
+    setHandledIds((ids) => ids.filter((item) => item !== id));
 
-  const setIdToHandleList = useCallback(
-    (id: number) =>
-      setHandledIds((ids) => [...ids.filter((v) => v !== id), id]),
-    [setHandledIds]
-  );
+  const removeEventFromQueue = (id: number) => {
+    removeEvent(id)
+      .then(() => {
+        // removeIdFromHandleList(id);
+        setQueueIds(queueIds.filter((item) => item !== id));
+      })
+      .catch((e) => {
+        setModalErrorModal(`${e}`);
+        console.error("🚀 ~ file: eventsQueue.tsx:65 ~ removeEvent ~ e:", e);
+      });
+  };
+
+  const setIdToHandleList = (id: number) =>
+    setHandledIds((ids) => [...ids.filter((v) => v !== id), id]);
 
   const { addCompleteOrderEvent, completeOrderToApi } =
     useHandleCompleteOrderEvent({
@@ -96,77 +88,69 @@ export default function useEventsQueue() {
   /** Stores an completeOrder event in the queue.
    * @see {@link TCompleteOrderProps}
    */
-  const completeOrder = useCallback(
-    (order: TCompleteOrderProps) => {
-      return new Promise((resolve, reject) => {
-        if (user == null) {
-          console.error(
-            "🚀 ~ file: eventsQueue.tsx:69 ~ orderException ~ user not defined:",
-            user
-          );
-          reject("User not found");
-          throw new Error("User not found");
-        }
+  const completeOrder = (order: TCompleteOrderProps) => {
+    return new Promise((resolve, reject) => {
+      if (user == null) {
+        console.error(
+          "🚀 ~ file: eventsQueue.tsx:69 ~ orderException ~ user not defined:",
+          user,
+        );
+        reject("User not found");
+        throw new Error("User not found");
+      }
 
-        addCompleteOrderEvent({ order })
-          .then(() => {
-            resolve({
-              message: "Order added to queue",
-              code: 200,
-            });
-          })
-          .catch((error) => {
-            setModalErrorModal(`${error}`);
-            console.error(
-              "🚀 ~ file: eventsQueue.tsx:144 ~ addCompleteOrderEvent ~ error:",
-              error,
-            );
-
-            reject(error);
+      addCompleteOrderEvent({ order })
+        .then(() => {
+          resolve({
+            message: "Order added to queue",
+            code: 200,
           });
-      });
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [addCompleteOrderEvent, user],
-  );
+        })
+        .catch((error) => {
+          setModalErrorModal(`${error}`);
+          console.error(
+            "🚀 ~ file: eventsQueue.tsx:144 ~ addCompleteOrderEvent ~ error:",
+            error,
+          );
+
+          reject(error);
+        });
+    });
+  };
 
   /** Stores an orderException event in the queue.
    * @see {@link TOrderExceptionsProps}
    */
-  const orderException = useCallback(
-    (data: Omit<TOrderExceptionsProps, "options">) => {
-      return new Promise((resolve, reject) => {
-        if (user == null) {
-          console.error(
-            "🚀 ~ file: eventsQueue.tsx:69 ~ orderException ~ user not defined:",
-            user
-          );
-          reject("User not found");
-          throw new Error("User not found");
-        }
+  const orderException = (data: Omit<TOrderExceptionsProps, "options">) => {
+    return new Promise((resolve, reject) => {
+      if (user == null) {
+        console.error(
+          "🚀 ~ file: eventsQueue.tsx:69 ~ orderException ~ user not defined:",
+          user,
+        );
+        reject("User not found");
+        throw new Error("User not found");
+      }
 
-        addExceptionEvent(data)
-          .then(() => {
-            resolve({
-              message: "Order exception stored locally",
-              code: 200,
-            });
-          })
-          .catch((error) => {
-            setModalErrorModal(`${error}`);
-            console.error(
-              "🚀 ~ file: eventsQueue.tsx:92 ~ orderException ~ error:",
-              error
-            );
-            reject(error);
+      addExceptionEvent(data)
+        .then(() => {
+          resolve({
+            message: "Order exception stored locally",
+            code: 200,
           });
-      });
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [addExceptionEvent, user]
-  );
+        })
+        .catch((error) => {
+          setModalErrorModal(`${error}`);
+          console.error(
+            "🚀 ~ file: eventsQueue.tsx:92 ~ orderException ~ error:",
+            error,
+          );
+          reject(error);
+        });
+    });
+  };
 
-  const handleEventsQueue = useCallback(() => {
+  const handleEventsQueue = () => {
     if (disableActions) return;
     setDisableActions(true);
     getEventsQueue()
@@ -180,7 +164,6 @@ export default function useEventsQueue() {
           switch (event.eventType) {
             // Order Exception
             case EventsQueueType.ORDER_EXCEPTION: {
-              setIdToHandleList(event.id);
               const exceptionBody: TOrderExceptionsProps = JSON.parse(
                 event.body,
               ) as TOrderExceptionsProps;
@@ -220,11 +203,9 @@ export default function useEventsQueue() {
           "🚀 ~ file: eventsQueue.tsx:191 ~ getEventsQueue ~ e:",
           e,
         );
-        setDisableActions(false);
-      });
-    // No se agrega el idHandled porque dentro del callback se está seteando el idHandled y ocurre un loop infinito.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [completeOrderToApi, sendExceptionToApi]);
+      })
+      .finally(() => setDisableActions(false));
+  };
   // --- END: Data and handlers ------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
@@ -249,9 +230,9 @@ export default function useEventsQueue() {
 
   useEffect(() => {
     // Calls the function when the user is connected and the queue changes.
-    if (isConnected) handleEventsQueue();
+    if (isConnected && !visible) handleEventsQueue();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isConnected, queueLength]);
+  }, [idsHandled, isConnected, visible]);
 
   // -- END: Side effects -----------------------------------------------------
 
