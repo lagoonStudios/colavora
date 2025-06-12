@@ -62,7 +62,7 @@ export default function ShipmentDetails() {
               {t("SHIPMENT_DETAILS.WAYBILL")}: {shipment?.waybill ?? ""}
             </Text>
             <Text style={styles.textBody}>
-              {t("SHIPMENT_DETAILS.INVOICE")}: {shipment?.invoiceBarcode ?? ""}
+              {t("SHIPMENT_DETAILS.INVOICE")}: {shipment?.referenceNo ?? ""}
             </Text>
             <Text style={styles.textBody}>
               {t("SHIPMENT_DETAILS.SERVICE_TYPE")}:{" "}
@@ -77,7 +77,7 @@ export default function ShipmentDetails() {
               {t("SHIPMENT_DETAILS.COD")}:{" "}
               {shipment?.codAmount && shipment?.codAmount > 0
                 ? shipment?.codAmount
-                : ""}
+                : "N/A"}
             </Text>
           </View>
         </View>
