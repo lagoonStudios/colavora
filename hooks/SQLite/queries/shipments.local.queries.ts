@@ -450,7 +450,10 @@ export function searchShipments({ q }: { q: string }) {
                 addressLine2 LIKE $q OR
                 contactPerson LIKE $q OR
                 barcode LIKE $q OR
-                city LIKE $q
+                city LIKE $q OR
+                phoneNumber LIKE $q OR
+                referenceNo LIKE $q OR
+                zip LIKE $q
             `, { $q: `%${q}%` }).then((res) => {
             const data = res as IFetchShipmentByIdData[];
             resolve(data);
