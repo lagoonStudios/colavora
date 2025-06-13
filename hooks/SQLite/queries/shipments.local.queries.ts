@@ -419,48 +419,87 @@ export function getAllShipmentIds({ manifestID }: { manifestID: string }) {
     });
 }
 
-export function searchShipments({ q }: { q: string }) {
-    return new Promise((resolve: (value: IFetchShipmentByIdData[]) => void, reject) => {
-        if (q == null || q.trim() === "") {
+/**
+ * Unified search for shipments by general query or piece barcode.
+ * @param params.q - General search query (optional).
+ * @param params.pieceBarcode - Piece barcode to search for (optional).
+ * @returns A Promise that resolves to an array of IFetchShipmentByIdData objects.
+ */
+export function searchShipmentsUnified({ text }: { text: string }) {
+  return new Promise(
+    (resolve: (value: IFetchShipmentByIdData[]) => void, reject) => {
+      Promise.all([
+        db.getAllAsync(
+          `
+                SELECT 
+                    shipmentID,
+                    consigneeName,
+                    zip,
+                    senderName,
+                    serviceTypeName,
+                    addressLine1,
+                    addressLine2,
+                    referenceNo,
+                    qty,
+                    city
+                FROM 
+                    shipments
+                WHERE
+                    waybill LIKE $q OR
+                    ServiceTypeName LIKE $q OR
+                    codType LIKE $q OR
+                    sender LIKE $q OR
+                    senderName LIKE $q OR
+                    consigneeName LIKE $q OR
+                    addressLine1 LIKE $q OR
+                    addressLine2 LIKE $q OR
+                    contactPerson LIKE $q OR
+                    barcode LIKE $q OR
+                    city LIKE $q OR
+                    phoneNumber LIKE $q OR
+                    referenceNo LIKE $q 
+                `,
+          { $q: `%${text}%` },
+        ),
+        db.getAllAsync(
+          `
+                SELECT 
+                    s.*,
+                    p.barcode as pieceBarcode
+                FROM 
+                    shipments s
+                INNER JOIN 
+                    pieces p ON p.ShipmentID = s.shipmentID
+                WHERE 
+                    p.barcode LIKE $barcode
+                `,
+          { $barcode: `%${text}%` },
+        ),
+      ])
+        .then(([res1, res2]) => {
+          // Merge and deduplicate by shipmentID
+          const map = new Map<string, IFetchShipmentByIdData>();
+          const resMap1 = res1 as IFetchShipmentByIdData[];
+          const resMap2 = res2 as IFetchShipmentByIdData[];
+          if (!resMap1 || !resMap2) {
             resolve([]);
             return;
-        }
-        db.getAllAsync(`
-            SELECT 
-                shipmentID,
-                consigneeName,
-                zip,
-                senderName,
-                serviceTypeName,
-                addressLine1,
-                addressLine2,
-                referenceNo,
-                qty,
-                city
-            FROM 
-                shipments
-            WHERE
-                waybill LIKE $q OR
-                ServiceTypeName LIKE $q OR
-                codType LIKE $q OR
-                sender LIKE $q OR
-                senderName LIKE $q OR
-                consigneeName LIKE $q OR
-                addressLine1 LIKE $q OR
-                addressLine2 LIKE $q OR
-                contactPerson LIKE $q OR
-                barcode LIKE $q OR
-                city LIKE $q OR
-                phoneNumber LIKE $q OR
-                referenceNo LIKE $q OR
-                zip LIKE $q
-            `, { $q: `%${q}%` }).then((res) => {
-            const data = res as IFetchShipmentByIdData[];
-            resolve(data);
-        }).catch(error => {
-            console.error("🚀 ~ file: shipments.local.queries.ts:384 ~ searchShipments ~ error:", error);
-            reject(error);
-        });
-    });
+          }
 
+          resMap1.forEach((item) => {
+            if (item?.shipmentID) map.set(`${item.shipmentID}`, item);
+          });
+
+          resMap2.forEach((item) => {
+            if (item?.shipmentID) map.set(`${item.shipmentID}`, item)
+          });
+
+          resolve(Array.from(map.values()));
+        })
+        .catch((error) => {
+          console.error("🚀 ~ searchShipmentsUnified (both) ~ error:", error);
+          reject(error);
+        });
+    },
+  );
 }
