@@ -21,11 +21,12 @@ import { NetworkProvider } from "react-native-offline";
 import { useColorScheme } from "@components/useColorScheme";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { SQLiteProvider } from "expo-sqlite";
+import { openDatabaseSync, SQLiteProvider } from "expo-sqlite";
+import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "@/drizzle/migrations";
+import { drizzle } from "drizzle-orm/expo-sqlite";
 import { ActivityIndicator } from "react-native";
 import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
-import { DATABASE_NAME, db, expoDb, useMigrations } from "@/db";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -33,17 +34,16 @@ export const unstable_settings = {
   initialRouteName: "(tabs)",
 };
 
+export const DATABASE_NAME = "tasks";
+
 void SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   // --- Hooks -----------------------------------------------------------------
   // Local db initialization
-
-  const { success: migrationSuccess, error: migrationError } = useMigrations(
-    db,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    migrations
-  );
-  useDrizzleStudio(expoDb);
+  const expoDb = openDatabaseSync(DATABASE_NAME);
+  const db = drizzle(expoDb);
+  const { success, error } = useMigrations(db, migrations);
+  useDrizzleStudio(db);
 
   const [fontsLoaded, fontsError] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
