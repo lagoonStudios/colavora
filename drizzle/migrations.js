@@ -6,7 +6,8 @@ import m0000 from './0000_calm_triton.sql';
   export default {
     journal,
     migrations: {
-      m0000
+      m0000,
+m0001
     }
   }
   
