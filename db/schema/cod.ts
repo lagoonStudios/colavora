@@ -10,3 +10,7 @@ export const codTable = sqliteTable("cod", {
 });
 
 export type TCODData = typeof codTable.$inferSelect;
+export type TCODInsertData = Omit<
+  TCODData,
+  "isSync" | "lastSync" | "codTypeID"
+>;
