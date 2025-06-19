@@ -19,7 +19,7 @@ class CODRepository {
    */
   async insertMultiple(cods: TCODData[]): Promise<void> {
     try {
-      const { notExistingIds } = await this.filterDuplicatedCODS(cods);
+      const { notExistingIds } = await this.filterDuplicated(cods);
 
       if (notExistingIds.length > 0) {
         await db
@@ -42,7 +42,7 @@ class CODRepository {
    *   - `notExistingIds`: An array of COD type IDs that do not exist in the database.
    * @throws Rejects the promise with an error if there's a problem accessing the database.
    */
-  async filterDuplicatedCODS(codArr: TCODData[]): Promise<{
+  async filterDuplicated(codArr: TCODData[]): Promise<{
     existingIds: number[];
     notExistingIds: number[];
   }> {
@@ -77,7 +77,7 @@ class CODRepository {
   }
 
   /** Deletes all rows in the cod table */
-  async deleteAllCods() {
+  async deleteAll() {
     try {
       await db.delete(codTable);
     } catch (error) {
@@ -87,6 +87,6 @@ class CODRepository {
   }
 }
 
-export type ICODRepository = CODRepository;
+export type TCODRepository = CODRepository;
 // Export the singleton instance
-export const CodRepository = CODRepository.getInstance();
+export const CODLocalService = CODRepository.getInstance();

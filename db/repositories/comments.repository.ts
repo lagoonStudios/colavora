@@ -1,24 +1,20 @@
 import { db } from "@/db";
-import {
-  commentsTable,
-  TCommentInsertData,
-  TCommentsData,
-} from "../schema/comments";
-import { inArray, eq } from "drizzle-orm";
+import { commentsTable, TCommentInsertData } from "../schema/comments";
+import { eq } from "drizzle-orm";
 
-class CommentsRepositoryInstance {
-  private static instance: CommentsRepositoryInstance;
+class CommentsRepository {
+  private static instance: CommentsRepository;
   private constructor() {}
 
-  static getInstance(): CommentsRepositoryInstance {
-    if (!CommentsRepositoryInstance.instance) {
-      CommentsRepositoryInstance.instance = new CommentsRepositoryInstance();
+  static getInstance(): CommentsRepository {
+    if (!CommentsRepository.instance) {
+      CommentsRepository.instance = new CommentsRepository();
     }
-    return CommentsRepositoryInstance.instance;
+    return CommentsRepository.instance;
   }
 
   /** Inserts multiple comments into the database */
-  async insertMultipleComments(commentsArr: TCommentInsertData[]) {
+  async insertMultiple(commentsArr: TCommentInsertData[]) {
     try {
       console.log("Inserting comments: ", commentsArr);
       await db.insert(commentsTable).values(commentsArr);
@@ -28,7 +24,7 @@ class CommentsRepositoryInstance {
     }
   }
 
-  async getAllShipmentsComments(params: { shipmentId: number }) {
+  async getAll(params: { shipmentId: number }) {
     try {
       const { shipmentId } = params;
       return await db
@@ -42,10 +38,15 @@ class CommentsRepositoryInstance {
   }
 
   /** Deletes all comments from the database */
-  deleteAllComments() {
-    return db.delete(commentsTable);
+  deleteAll() {
+    try {
+      return db.delete(commentsTable);
+    } catch (error) {
+      console.error("🚀 ~ deleteAllComments ~ error:", error);
+      throw error;
+    }
   }
 }
 
-export type CommentsRepository = CommentsRepositoryInstance;
-export const CommentsRepository = CommentsRepositoryInstance.getInstance();
+export type TCommentsRepository = CommentsRepository;
+export const CommentsLocalService = CommentsRepository.getInstance();
