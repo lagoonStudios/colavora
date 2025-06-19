@@ -3,7 +3,6 @@ import { syncColumns } from "./base";
 
 export const manifestsTable = sqliteTable("manifests", {
   manifest: text().primaryKey(),
-  companyID: text(),
   driverID: integer(),
   manifestDate: text(),
   manifestId: text(),

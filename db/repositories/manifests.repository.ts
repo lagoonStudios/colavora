@@ -1,6 +1,20 @@
 import { db } from "@/db";
 import { manifestsTable, TManifestInsertData } from "../schema/manifests";
-import { inArray } from "drizzle-orm";
+import {
+  and,
+  count,
+  countDistinct,
+  eq,
+  gt,
+  inArray,
+  isNotNull,
+  not,
+  or,
+  sql,
+  desc,
+} from "drizzle-orm";
+import { ShipmentStatus } from "@constants/types/shipments";
+import { shipmentsTable } from "../schema/shipments";
 class ManifestsRepository {
   private static instance: ManifestsRepository;
 
@@ -19,7 +33,15 @@ class ManifestsRepository {
       const { noExisting } = await this.filterDuplicated(manifestsArr);
       if (noExisting.length === 0) return;
 
-      await db.insert(manifestsTable).values(noExisting);
+      await db.insert(manifestsTable).values(
+        noExisting.map((v) => ({
+          manifest: v.manifest,
+          driverID: v.driverID,
+          manifestDate: v.manifestDate,
+          manifestId: v.manifestId,
+          manifestType: v.manifestType,
+        }))
+      );
     } catch (error) {
       console.error("🚀 ~ insertMultiple ~ error:", error);
       throw error;
@@ -60,6 +82,90 @@ class ManifestsRepository {
       return await db.delete(manifestsTable);
     } catch (error) {
       console.error("🚀 ~ deleteAll ~ error:", error);
+      throw error;
+    }
+  }
+
+  async getManifestsList(): Promise<{
+    value: {
+      manifest: string;
+      createdDate: string | null;
+      active_shipments: number;
+    }[];
+  }> {
+    try {
+      const manifestsWithActiveShipments = await db
+        .select({
+          manifest: manifestsTable.manifest,
+          createdDate: manifestsTable.manifestDate,
+          active_shipments: count(
+            and(
+              isNotNull(shipmentsTable.status),
+              not(
+                inArray(shipmentsTable.status, [
+                  ShipmentStatus.COMPLETED,
+                  ShipmentStatus.CANCELLED,
+                  ShipmentStatus.PARTIAL_DELIVERY,
+                  ShipmentStatus.DELIVERED,
+                ])
+              )
+            )
+          ).as("active_shipments"),
+        })
+        .from(manifestsTable)
+        .innerJoin(
+          shipmentsTable,
+          eq(manifestsTable.manifest, shipmentsTable.manifest)
+        )
+        .groupBy(manifestsTable.manifest, manifestsTable.manifestDate)
+        .orderBy(desc(manifestsTable.manifestDate));
+
+      // TODO Check this result when there are manifests with  shipments
+      console.log("get manifestList result: ", manifestsWithActiveShipments);
+      return { value: manifestsWithActiveShipments };
+    } catch (error) {
+      console.error("🚀 ~ getAll ~ error:", error);
+      throw error;
+    }
+  }
+
+  /** Returns the count of all rows in the manifests table that has not completed or canceled manifests. */
+  async getCount() {
+    try {
+      const result = await db
+        .select({
+          count: countDistinct(manifestsTable.manifest),
+          shipment_count: countDistinct(shipmentsTable.shipmentID),
+        })
+        .from(manifestsTable)
+        .innerJoin(
+          shipmentsTable,
+          or(
+            eq(manifestsTable.manifest, shipmentsTable.manifestPk),
+            eq(manifestsTable.manifest, shipmentsTable.manifestDL)
+          )
+        )
+        .where(
+          and(
+            isNotNull(shipmentsTable.status),
+            not(
+              inArray(shipmentsTable.status, [
+                ShipmentStatus.COMPLETED,
+                ShipmentStatus.CANCELLED,
+                ShipmentStatus.PARTIAL_DELIVERY,
+                ShipmentStatus.DELIVERED,
+              ])
+            )
+          )
+        )
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        .having(({ shipment_count }) => gt(shipment_count, 0));
+
+      // TODO Check the result when inserting shipments
+      console.log({ result });
+      return result;
+    } catch (error) {
+      console.error("🚀 ~ getCount ~ error:", error);
       throw error;
     }
   }

@@ -56,7 +56,7 @@ class ExceptionRepository {
         .where(inArray(exceptionsTable.reasonID, [...setIncomingIds]));
 
       const notExisting = exceptionsArr.filter(
-        (v) => !existing.some((e) => e.reasonID === v.reasonID)
+        (v) => !existingFromDB.some((e) => e.reasonID === v.reasonID)
       );
       const existing = exceptionsArr.filter((v) =>
         existingFromDB.some((e) => e.reasonID === v.reasonID)

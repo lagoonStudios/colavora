@@ -183,7 +183,11 @@ export function getHomeCounters() {
       resolve: (value: { todayShipments: number; manifests: number }) => void,
       reject
     ) => {
-      Promise.all([getTodaysShipments(), getAllManifestsCount()])
+      Promise.all([
+        getTodaysShipments(),
+        getAllManifestsCount(),
+        ManifestsLocalService.getCount(),
+      ])
         .then((res) => {
           const todayShipments = res[0]?.count ?? 0;
           const manifests = res[1]?.count ?? 0;
