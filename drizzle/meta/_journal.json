@@ -8,6 +8,13 @@
       "when": 1750187157472,
       "tag": "0000_short_cerebro",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1750288620454,
+      "tag": "0001_goofy_the_fallen",
+      "breakpoints": true
     }
   ]
 }
