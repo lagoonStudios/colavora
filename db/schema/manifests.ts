@@ -3,10 +3,13 @@ import { syncColumns } from "./base";
 
 export const manifestsTable = sqliteTable("manifests", {
   manifest: text().primaryKey(),
-  companyID: text().notNull(),
+  companyID: text(),
   driverID: integer(),
-  createdDate: text(),
+  manifestDate: text(),
+  manifestId: text(),
+  manifestType: text(),
   ...syncColumns,
 });
 
 export type TManifestsData = typeof manifestsTable.$inferSelect;
+export type TManifestInsertData = Omit<TManifestsData, "isSync" | "lastSync">;

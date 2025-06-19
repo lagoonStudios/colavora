@@ -31,6 +31,7 @@ import {
   IShipmentDataFromAPI,
 } from "@constants/types/shipments";
 import { createEventsQueueTable } from "@hooks/eventsQueue";
+import { ManifestsLocalService } from "@/db/repositories/manifests.repository";
 
 export function createAllDBTables() {
   return new Promise((resolve, reject) => {
@@ -49,7 +50,7 @@ export function createAllDBTables() {
       .catch((error) => {
         console.error(
           "🚀 ~ file: general.local.queries.ts:24 ~ createAllDBTables ~ error:",
-          error,
+          error
         );
         reject(error);
       });
@@ -70,7 +71,7 @@ export function dropTables() {
       .catch((error) => {
         console.error(
           "🚀 ~ file: general.local.queries.ts:44 ~ dropTables ~ error:",
-          error,
+          error
         );
         reject(error);
       });
@@ -87,7 +88,7 @@ export function resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
         pieces: IFetchPiecesByIdData[];
         comments: IRequiredCommentsProps[];
       }) => void,
-      reject,
+      reject
       // eslint-disable-next-line @typescript-eslint/require-await
     ) => {
       fetchData(user, options)
@@ -97,24 +98,26 @@ export function resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
               createAllDBTables()
                 .then(() => {
                   const { manifests, shipments, pieces, comments } = data;
+                  // @ts-expect-error
+                  ManifestsLocalService.insertMultiple(manifests);
                   if (options?.setModalMessage)
                     options?.setModalMessage(
                       options?.t?.("MODAL.SAVING_MANIFESTS") ||
-                        "Saving manifests",
+                        "Saving manifests"
                     );
                   insertMultipleManifests(manifests)
                     .then(() => {
                       if (options?.setModalMessage)
                         options?.setModalMessage(
                           options?.t?.("MODAL.SAVING_SHIPMENTS") ||
-                            "Saving shipments",
+                            "Saving shipments"
                         );
                       insertMultipleShipments(shipments)
                         .then(() => {
                           if (options?.setModalMessage)
                             options?.setModalMessage(
                               options?.t?.("MODAL.SAVING_PIECES") ||
-                                "Saving pieces",
+                                "Saving pieces"
                             );
                           Promise.all([
                             insertMultiplePieces(pieces),
@@ -126,7 +129,7 @@ export function resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
                             .catch((error) => {
                               console.error(
                                 "🚀 ~ file: general.local.queries.ts:54 ~ requiring pieces and comments ~ error:",
-                                error,
+                                error
                               );
                               reject(error);
                             });
@@ -134,7 +137,7 @@ export function resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
                         .catch((error) => {
                           console.error(
                             "🚀 ~ file: general.local.queries.ts:55 ~ insertMultipleShipments ~ error:",
-                            error,
+                            error
                           );
                           reject(error);
                         });
@@ -142,7 +145,7 @@ export function resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
                     .catch((error) => {
                       console.error(
                         "🚀 ~ file: general.local.queries.ts:49 ~ insertMultipleManifests ~ error:",
-                        error,
+                        error
                       );
                       reject(error);
                     });
@@ -150,7 +153,7 @@ export function resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
                 .catch((error) => {
                   console.error(
                     "🚀 ~ file: general.local.queries.ts:44 ~ resetDatabase ~ createAllDBTables ~ error:",
-                    error,
+                    error
                   );
                   reject(error);
                 });
@@ -158,7 +161,7 @@ export function resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
             .catch((error) => {
               console.error(
                 "🚀 ~ file: general.local.queries.ts:16 ~ resetDatabase ~ error:",
-                error,
+                error
               );
               reject(error);
             });
@@ -166,11 +169,11 @@ export function resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
         .catch((error) => {
           console.error(
             "🚀 ~ file: general.local.queries.ts:37 ~ fetchData ~ error:",
-            error,
+            error
           );
           reject(error);
         });
-    },
+    }
   );
 }
 
@@ -178,7 +181,7 @@ export function getHomeCounters() {
   return new Promise(
     (
       resolve: (value: { todayShipments: number; manifests: number }) => void,
-      reject,
+      reject
     ) => {
       Promise.all([getTodaysShipments(), getAllManifestsCount()])
         .then((res) => {
@@ -190,10 +193,10 @@ export function getHomeCounters() {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           error(
             "🚀 ~ file: general.local.queries.ts:16 ~ getHomeCounters ~ error:",
-            error,
+            error
           );
           reject(error);
         });
-    },
+    }
   );
 }

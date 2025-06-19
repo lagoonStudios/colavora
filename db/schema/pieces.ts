@@ -1,6 +1,5 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { syncColumns } from "./base";
-import { relations } from "drizzle-orm";
 
 export const piecesTable = sqliteTable("pieces", {
   pieceID: integer().primaryKey({ autoIncrement: true }),
