@@ -14,3 +14,7 @@ export const exceptionsTable = sqliteTable("exceptions", {
 });
 
 export type TExceptionsData = typeof exceptionsTable.$inferSelect;
+export type TExceptionsInsertData = Omit<
+  TExceptionsData,
+  "isSync" | "lastSync"
+>;
