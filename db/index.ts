@@ -18,3 +18,7 @@ export { SQLiteProvider } from "expo-sqlite";
 // Export database migration utilities
 export { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 export { useDrizzleStudio } from "expo-drizzle-studio-plugin";
+
+// Export services
+export { CodService } from "./services/cod.service";
+export { CommentsService } from "./services/comments.service";
