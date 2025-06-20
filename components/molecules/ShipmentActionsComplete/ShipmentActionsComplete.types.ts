@@ -11,6 +11,9 @@ export interface IShipmentActionsComplete {
   podName: string;
   photoImage: ImagePickerAsset;
   signatureImage: string;
+  latitude: string;
+  longitude: string;
+  updateLocation?: boolean;
   comment?: string;
   cods: ICodOptions[];
 }

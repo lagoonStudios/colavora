@@ -11,7 +11,9 @@ import {
   useForm,
 } from "react-hook-form";
 import { SignatureViewRef } from "react-native-signature-canvas";
-import React, { useMemo, useReducer, useRef } from "react";
+import React, { useMemo, useReducer, useRef, useEffect } from "react";
+import * as Location from "expo-location";
+import Checkbox from "expo-checkbox";
 
 import Colors from "@constants/Colors";
 import Signature from "@atoms/Signature";
@@ -37,6 +39,7 @@ import { ShipmentActionsButtonItem } from "@organisms/ShipmentActions/ShipmentAc
 import { useRouter } from "expo-router";
 import Toast from "react-native-root-toast";
 import useEventsQueue from "@hooks/eventsQueue";
+import UpdateLocation from "@atoms/UpdateLocation";
 export default function ShipmentActionsComplete({
   setOption,
 }: IShipmentActionsException) {
@@ -70,7 +73,10 @@ export default function ShipmentActionsComplete({
   const podName = methods.watch("podName");
   const comment = methods.watch("comment");
   const codsSelected = methods.watch("cods");
+  const latitude = methods.watch("latitude");
+  const longitude = methods.watch("longitude");
   const photoImage = methods.watch("photoImage");
+  const updateLocation = methods.watch("updateLocation");
   const signatureImage = methods.watch("signatureImage");
   const barcodes = pieces
     .filter(({ packageType }) => packageType !== invoiceBarcodeType)
@@ -147,6 +153,9 @@ export default function ShipmentActionsComplete({
           signatureImage,
           completeCODs,
           photoImage: photoImage?.base64?.replace(data64Label, ""),
+          latitude,
+          longitude,
+          updateLocation,
         });
         Toast.show(t("TOAST.ORDER_COMPLETED"));
         router.replace("/");
@@ -174,9 +183,30 @@ export default function ShipmentActionsComplete({
     return;
   };
 
+  const onUpdateLocation = () => {
+    methods.setValue("updateLocation", !updateLocation);
+  };
+
   // --- END: Data and handlers ------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
+  useEffect(() => {
+    async function getCurrentLocation() {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== Location.PermissionStatus.GRANTED) {
+        return;
+      }
+
+      const location = await Location.getCurrentPositionAsync({});
+      if (location?.coords?.latitude && location?.coords?.longitude) {
+        methods.setValue("latitude", String(location?.coords?.latitude));
+        methods.setValue("longitude", String(location?.coords?.longitude));
+      }
+    }
+
+    if (!latitude && !longitude) void getCurrentLocation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [latitude, longitude]);
   // --- END: Side effects -----------------------------------------------------
 
   return (
@@ -225,6 +255,10 @@ export default function ShipmentActionsComplete({
           />
           <CODSelected codsSelected={codsSelected} setVisible={setModal} />
           <Signature handleOK={handleOK} refSignature={ref} />
+          <UpdateLocation
+            isChecked={Boolean(updateLocation)}
+            onChange={onUpdateLocation}
+          />
         </View>
         <View style={styles.saveButtonContainer}>
           <Button

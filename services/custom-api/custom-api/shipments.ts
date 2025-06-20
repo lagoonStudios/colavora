@@ -117,6 +117,9 @@ export function completeOrder({
   signatureImage,
   podName,
   comment,
+  latitude,
+  longitude,
+  updateLocation,
 }: ICompleteOrder & { barcode: string }): Promise<AxiosResponse<unknown>> {
   const data = new FormData();
   data.append("companyID", String(companyID));
@@ -125,6 +128,9 @@ export function completeOrder({
   data.append("barcode", String(barcode));
   data.append("podName", String(podName));
   data.append("signatureImage", String(signatureImage));
+  data.append("latitude", String(latitude));
+  data.append("longitude", String(longitude));
+  if (updateLocation) data.append("updateLocation", String(updateLocation));
   if (comment) data.append("comment", String(comment));
   if (photoImage) data.append("photoImage", String(photoImage));
   const url = `${BASE_URL}shipment/event/dispatch/post`;
@@ -140,13 +146,19 @@ export function completeOrderAllBarcodes({
   signatureImage,
   podName,
   comment,
+  latitude,
+  longitude,
+  updateLocation = false,
 }: ICompleteOrderAllBarcodes): Promise<AxiosResponse<unknown>> {
   const data = new FormData();
   data.append("companyID", String(companyID));
   data.append("userID", String(userID));
   data.append("shipmentID", String(shipmentID));
   data.append("podName", String(podName));
+  data.append("latitude", String(latitude));
+  data.append("longitude", String(longitude));
   if (signatureImage) data.append("signatureImage", String(signatureImage));
+  if (updateLocation) data.append("updateLocation", String(updateLocation));
   if (comment) data.append("comment", String(comment));
   if (photoImage) data.append("photoImage", String(photoImage));
 

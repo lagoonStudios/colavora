@@ -108,6 +108,9 @@ export type ICompleteOrder = Required<Pick<TGeneralOptionsProps, "shipmentID" | 
   signatureImage?: string
     comment?: string,
     photoImage?: string,
+    latitude?: string,
+    longitude?: string,
+    updateLocation?: boolean,
   }
 
 export type ICompleteOrderAllBarcodes = Required<
@@ -118,6 +121,9 @@ export type ICompleteOrderAllBarcodes = Required<
   signatureImage?: string;
   comment?: string;
   photoImage?: string;
+  latitude?: string;
+  longitude?: string;
+  updateLocation?: boolean;
 };
 
 export type CompleteOrderMutationProps = { order: ICompleteOrder, options: Required<TRemoveEventOptions> }

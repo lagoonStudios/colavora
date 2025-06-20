@@ -118,7 +118,8 @@
       "CLEAR": "Clear",
       "DOCUMENT_NUMBER": "Document Number",
       "POD_NAME": "POD Name",
-      "SIGNATURE": "Signature"
+      "SIGNATURE": "Signature",
+      "UPDATING_LOCATION": "Add Location"
     },
     "SYNC_BUTTON": {
       "TITLE": "Sync",
