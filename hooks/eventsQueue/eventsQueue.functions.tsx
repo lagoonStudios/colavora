@@ -156,6 +156,9 @@ export function useHandleCompleteOrderEvent({
               userID: order.userID,
               photoImage: order.photoImage,
               barcodes: order.barcodes,
+              latitude: order.latitude,
+              longitude: order.longitude,
+              updateLocation: order.updateLocation,
             },
             options: {
               eventId: res.id,

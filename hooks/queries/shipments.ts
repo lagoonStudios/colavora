@@ -281,6 +281,9 @@ export function useCompleteOrder() {
         photoImage,
         signatureImage,
         comment,
+        latitude,
+        longitude,
+        updateLocation,
       },
     }: CompleteOrderMutationProps) => {
       if (barcodes && barcodes?.length !== 0) {
@@ -295,6 +298,9 @@ export function useCompleteOrder() {
             photoImage,
             signatureImage,
             comment,
+            latitude,
+            longitude,
+            updateLocation,
           });
           results.push(result);
         } catch (error) {

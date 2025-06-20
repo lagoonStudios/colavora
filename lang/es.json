@@ -118,7 +118,8 @@
       "CLEAR": "Limpiar",
       "DOCUMENT_NUMBER": "Numero de Documento",
       "POD_NAME": "Nombre POD",
-      "SIGNATURE": "Firma"
+      "SIGNATURE": "Firma",
+      "UPDATING_LOCATION": "Agregar Ubicación"
     },
     "SYNC_BUTTON": {
       "TITLE": "Sincronizar",
