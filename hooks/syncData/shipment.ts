@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useShipmentsIdData, useShipmentsByIdData } from "@hooks/queries";
 import { useStore } from "@stores/zustand";
+import { ShipmentLocalService } from "@/db/repositories/shipments.repository";
 
 export function useShipmentFetch() {
   // --- Local state -----------------------------------------------------------
