@@ -1,6 +1,22 @@
-import { inArray } from "drizzle-orm";
-import { shipmentsTable, TShipmentInsertData } from "../schema/shipments";
+import {
+  and,
+  countDistinct,
+  eq,
+  inArray,
+  isNotNull,
+  lte,
+  not,
+  notInArray,
+  or,
+} from "drizzle-orm";
+import {
+  shipmentsTable,
+  TShipmentInsertData,
+  TShipmentListData,
+} from "../schema/shipments";
 import { db } from "@/db";
+import { ShipmentStatus } from "@constants/types/shipments";
+import { piecesTable } from "../schema/pieces";
 
 class ShipmentRepository {
   private static instance: ShipmentRepository;
@@ -17,9 +33,9 @@ class ShipmentRepository {
    * Inserts multiple shipments into the database
    * @param shipmentsArr - Array of shipments to insert
    */
-  async insertMultiple(shipmentsArr: TShipmentInsertData[]) {
+  async insertMultiple(shipmentsArr: TShipmentInsertData[]): Promise<void> {
     try {
-      console.log("Inserting multiple shipments: ", shipmentsArr);
+      console.log("shipment: ", shipmentsArr[0]);
       const { noExisting } = await this.filterDuplicated(shipmentsArr);
       if (noExisting.length === 0) return;
 
@@ -57,7 +73,7 @@ class ShipmentRepository {
           qty: v.qty,
           items: v.items,
           templateID: v.templateID,
-          manifestDL: v.manifestDL,
+          manifestDL: v.manifest,
           assignPK: v.assignPK,
           assignDL: v.assignDL,
           division: v.division,
@@ -65,7 +81,7 @@ class ShipmentRepository {
           reason: v.reason,
           barcode: v.barcode,
           referenceNo: v.referenceNo,
-          manifestPk: v.manifestPk,
+          manifestPk: v.manifest,
           manifest: v.manifest,
           latitude: v.latitude,
           longitude: v.longitude,
@@ -90,7 +106,10 @@ class ShipmentRepository {
    *   - `noExisting`: An array of shipments that do not exist in the database.
    *   - `existing`: An array of shipments that already exist in the database.
    */
-  async filterDuplicated(shipmentsArr: TShipmentInsertData[]) {
+  async filterDuplicated(shipmentsArr: TShipmentInsertData[]): Promise<{
+    noExisting: TShipmentInsertData[];
+    existing: TShipmentInsertData[];
+  }> {
     try {
       const setIncomingIds = new Set(shipmentsArr.map((v) => v.shipmentID));
       const existingInDB = await db
@@ -111,7 +130,128 @@ class ShipmentRepository {
       throw error;
     }
   }
-}
 
+  /** Gets the count and completed count of shipments for the current day. */
+  async getTodayShipments(): Promise<{ count: number }> {
+    try {
+      const endToday = new Date();
+      endToday.setHours(23, 59, 59, 999);
+      const shipments = await db
+        .select({
+          count: countDistinct(shipmentsTable.shipmentID),
+        })
+        .from(shipmentsTable)
+        .where(
+          and(
+            isNotNull(shipmentsTable.status),
+            not(
+              inArray(shipmentsTable.status, [
+                ShipmentStatus.COMPLETED,
+                ShipmentStatus.CANCELLED,
+                ShipmentStatus.PARTIAL_DELIVERY,
+                ShipmentStatus.DELIVERED,
+              ])
+            ),
+            lte(shipmentsTable.dueDate, endToday.toISOString())
+          )
+        );
+      return { count: shipments[0]?.count ?? 0 };
+    } catch (error) {
+      console.error("🚀 ~ getTodayShipments ~ error:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Retrieves an array of shipment list items associated with a specific manifest ID from the database.
+   * @param params - An object containing the manifest ID.
+   * @returns A Promise that resolves to an array of TShipmentListData objects.
+   * @see {@link TShipmentListData}
+   */
+  async getShipmentList({
+    manifestID,
+  }: {
+    manifestID?: string;
+  }): Promise<TShipmentListData[]> {
+    try {
+      const baseQuery = db
+        .select({
+          shipmentID: shipmentsTable.shipmentID,
+          consigneeName: shipmentsTable.consigneeName,
+          zip: shipmentsTable.zip,
+          senderName: shipmentsTable.senderName,
+          serviceTypeName: shipmentsTable.serviceTypeName,
+          addressLine1: shipmentsTable.addressLine1,
+          addressLine2: shipmentsTable.addressLine2,
+          referenceNo: shipmentsTable.referenceNo,
+          dueDate: shipmentsTable.dueDate,
+          qty: shipmentsTable.qty,
+          city: shipmentsTable.city,
+        })
+        .from(shipmentsTable)
+        .where(
+          and(
+            isNotNull(shipmentsTable.status),
+            notInArray(shipmentsTable.status, [
+              ShipmentStatus.COMPLETED,
+              ShipmentStatus.CANCELLED,
+              ShipmentStatus.PARTIAL_DELIVERY,
+              ShipmentStatus.DELIVERED,
+            ])
+          )
+        )
+        .$dynamic();
+
+      if (manifestID) {
+        console.log(manifestID);
+        const result = await baseQuery.where(
+          or(
+            eq(shipmentsTable.manifest, manifestID),
+            eq(shipmentsTable.manifestDL, manifestID),
+            eq(shipmentsTable.manifestPk, manifestID)
+          )
+        );
+
+        console.log("Result with manifestID: ", result.length);
+
+        return result;
+      } else {
+        const result = await baseQuery;
+        console.log("Result without manifestID: ", result.length);
+        return result;
+      }
+    } catch (error) {
+      console.error("🚀 ~ getShipmentList ~ error:", error);
+      throw error; // Re-throw the error to maintain the same behavior as the original
+    }
+  }
+
+  /**
+   * Retrieves shipment details by shipment ID from the SQLite database.
+   * @param params - An object containing the shipment ID.
+   * @returns A Promise that resolves to a partial object of IFetchShipmentByIdData, or rejects with an error.
+   */
+  async getShipmenDetailsById({ shipmentID }: { shipmentID: number }) {
+    try {
+      const result = await db
+        .select()
+        .from(shipmentsTable)
+        .leftJoin(
+          piecesTable,
+          and(
+            eq(shipmentsTable.shipmentID, piecesTable.shipmentID),
+            eq(piecesTable.packageTypeName, "Invoice")
+          )
+        )
+        .where(eq(shipmentsTable.shipmentID, shipmentID));
+
+      console.log("shipment by id: ", { result });
+      return result;
+    } catch (error) {
+      console.error("🚀 ~ getShipmenDetailsById ~ error:", error);
+      throw error;
+    }
+  }
+}
 export type TShipmentRepository = ShipmentRepository;
 export const ShipmentLocalService = ShipmentRepository.getInstance();
