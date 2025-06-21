@@ -15,7 +15,7 @@ export class PiecesRepository {
   }
 
   /** Inserts multiple pieces into the database */
-  async insertMultiplePieces(piecesArr: TPiecesInsertData[]) {
+  async insertMultiple(piecesArr: TPiecesInsertData[]) {
     try {
       const { noExisting } = await this.filterDuplicated(piecesArr);
       if (noExisting.length === 0) return;

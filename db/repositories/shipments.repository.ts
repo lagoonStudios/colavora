@@ -356,6 +356,15 @@ class ShipmentRepository {
       throw error;
     }
   }
+
+  async deleteAll() {
+    try {
+      await db.delete(shipmentsTable);
+    } catch (error) {
+      console.error("🚀 ~ deleteAll ~ error:", error);
+      throw error;
+    }
+  }
 }
 export type TShipmentRepository = ShipmentRepository;
 export const ShipmentLocalService = ShipmentRepository.getInstance();
