@@ -2,6 +2,7 @@ import {
   and,
   countDistinct,
   eq,
+  ilike,
   inArray,
   isNotNull,
   lte,
@@ -13,6 +14,8 @@ import {
   shipmentsTable,
   TShipmentInsertData,
   TShipmentListData,
+  TShipmentsData,
+  TShipmentSearchData,
 } from "../schema/shipments";
 import { db } from "@/db";
 import { ShipmentStatus } from "@constants/types/shipments";
@@ -229,9 +232,14 @@ class ShipmentRepository {
   /**
    * Retrieves shipment details by shipment ID from the SQLite database.
    * @param params - An object containing the shipment ID.
-   * @returns A Promise that resolves to a partial object of IFetchShipmentByIdData, or rejects with an error.
+   * @returns A Promise that resolves to a partial object of TShipmentsData, or rejects with an error.
+   * @see {@link TShipmentsData}
    */
-  async getShipmenDetailsById({ shipmentID }: { shipmentID: number }) {
+  async getShipmenDetailsById({
+    shipmentID,
+  }: {
+    shipmentID: number;
+  }): Promise<TShipmentsData & { invoiceBarcode: string }> {
     try {
       const result = await db
         .select()
@@ -246,9 +254,105 @@ class ShipmentRepository {
         .where(eq(shipmentsTable.shipmentID, shipmentID));
 
       console.log("shipment by id: ", { result });
-      return result;
+
+      if (!result.length) {
+        throw new Error("Shipment not found");
+      }
+
+      const shipment = result[0].shipments;
+      const invoiceBarcode = result[0]?.pieces?.barcode || "";
+
+      return { ...shipment, invoiceBarcode };
     } catch (error) {
       console.error("🚀 ~ getShipmenDetailsById ~ error:", error);
+      throw error;
+    }
+  }
+
+  /** Updates the status of a shipment in the database.
+   * @param params - An object containing the shipment ID, status, and isSync.
+   * @returns A Promise that resolves with a success message if the update is successful, or rejects with an error message if the update fails.
+   */
+  async updateShipmentStatus({
+    shipmentId,
+    status,
+    isSync,
+  }: {
+    shipmentId: number;
+    status: ShipmentStatus;
+    isSync?: boolean;
+  }): Promise<string> {
+    try {
+      await db
+        .update(shipmentsTable)
+        .set({ status, isSync: isSync || false })
+        .where(eq(shipmentsTable.shipmentID, shipmentId));
+      return "Shipment status updated successfully";
+    } catch (error) {
+      console.error("🚀 ~ updateShipmentStatus ~ error:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Retrieves all the shipment IDs from the 'shipments' table where manifest match with the given one.
+   * @returns A promise that resolves to an array of shipments IDs.
+   */
+  async getAllShipmentIds({
+    manifestID,
+  }: {
+    manifestID: string;
+  }): Promise<{ shipmentIds: number[] }> {
+    try {
+      const result = await db
+        .select()
+        .from(shipmentsTable)
+        .where(eq(shipmentsTable.manifest, manifestID));
+      const shipmentIds = result.map((v) => v.shipmentID);
+      return { shipmentIds };
+    } catch (error) {
+      console.error("🚀 ~ getAllShipmentIds ~ error:", error);
+      throw error;
+    }
+  }
+
+  async searchShipments({ q }: { q: string }): Promise<TShipmentSearchData[]> {
+    try {
+      const result = await db
+        .select({
+          shipmentID: shipmentsTable.shipmentID,
+          consigneeName: shipmentsTable.consigneeName,
+          zip: shipmentsTable.zip,
+          senderName: shipmentsTable.senderName,
+          serviceTypeName: shipmentsTable.serviceTypeName,
+          addressLine1: shipmentsTable.addressLine1,
+          addressLine2: shipmentsTable.addressLine2,
+          referenceNo: shipmentsTable.referenceNo,
+          qty: shipmentsTable.qty,
+          city: shipmentsTable.city,
+          dueDate: shipmentsTable.dueDate,
+        })
+        .from(shipmentsTable)
+        .where(
+          or(
+            ilike(shipmentsTable.consigneeName, `%${q}%`),
+            ilike(shipmentsTable.referenceNo, `%${q}%`),
+            ilike(shipmentsTable.waybill, `%${q}%`),
+            ilike(shipmentsTable.serviceTypeName, `%${q}%`),
+            ilike(shipmentsTable.codType, `%${q}%`),
+            ilike(shipmentsTable.sender, `%${q}%`),
+            ilike(shipmentsTable.senderName, `%${q}%`),
+            ilike(shipmentsTable.addressLine1, `%${q}%`),
+            ilike(shipmentsTable.addressLine2, `%${q}%`),
+            ilike(shipmentsTable.contactPerson, `%${q}%`),
+            ilike(shipmentsTable.barcode, `%${q}%`),
+            ilike(shipmentsTable.city, `%${q}%`),
+            ilike(shipmentsTable.zip, `%${q}%`)
+          )
+        );
+      return result;
+    } catch (error) {
+      console.error("🚀 ~ searchShipments ~ error:", error);
       throw error;
     }
   }

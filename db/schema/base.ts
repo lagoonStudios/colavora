@@ -2,7 +2,7 @@ import { sql } from "drizzle-orm";
 import { text, integer } from "drizzle-orm/sqlite-core";
 
 export const syncColumns = {
-  isSync: integer({ mode: "boolean" }).notNull().default(false),
+  isSync: integer({ mode: "boolean" }).notNull().default(true),
   lastSync: text()
     .notNull()
     .default(sql`(current_timestamp)`),
