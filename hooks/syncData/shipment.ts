@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useShipmentsIdData, useShipmentsByIdData } from "@hooks/queries";
-import { insertMultipleShipments } from "@hooks/SQLite/queries/shipments.local.queries";
 import { useStore } from "@stores/zustand";
+import { ShipmentLocalService } from "@/db/repositories/shipments.repository";
 
 export function useShipmentFetch() {
   // --- Local state -----------------------------------------------------------
@@ -32,7 +32,9 @@ export function useShipmentFetch() {
   useEffect(() => {
     if (dataShipments?.pending === false)
       if (dataShipments?.data?.length && dataShipments?.data?.length !== 0)
-        insertMultipleShipments(dataShipments?.data).then(() => {
+        ShipmentLocalService.insertMultiple(
+          dataShipments?.data.filter((v) => v !== null)
+        ).then(() => {
           setLoading(false);
           setSuccess(true);
         });

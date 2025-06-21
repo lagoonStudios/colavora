@@ -1,82 +1,38 @@
+import { TShipmentInsertData } from "@/db/schema/shipments";
 import { IOptionalProps } from "@constants/types/manifests";
 import { TRemoveEventOptions } from "@hooks/eventsQueue/eventsQueue.types";
 
-export interface IFetchShipmentByIdData {
-  companyID?: string;
-  shipmentID?: number;
-  waybill?: string;
-  serviceType?: number;
-  serviceTypeName?: string;
-  packageType?: number;
-  readyDate?: string;
-  dueDate?: string;
-  codType?: string;
-  codAmount?: number;
-  sender?: string;
-  senderName?: string;
-  senderAddressLine1?: string;
-  senderAddressLine2?: string;
-  senderZip?: string;
-  senderPhoneNumber?: string;
-  senderContactPerson?: string;
-  orderNotes?: string;
-  consigneeNum?: string;
-  consigneeName?: string;
-  addressLine1?: string;
-  addressLine2?: string;
-  zip?: string;
-  phoneNumber?: string;
-  contactPerson?: string;
-  createdUserID?: number;
-  createdDate?: string;
-  lastTransferDate?: string;
-  status?: ShipmentStatus;
-  qty?: number;
-  items?: null | object;
-  templateID?: number;
-  manifestDL?: string;
-  manifestPk?: string;
-  assignPK?: number;
-  assignDL?: number;
-  division?: string;
-  lastEventComment?: null | string;
-  reason?: null | string;
-  barcode?: string;
-  city?: string;
-  referenceNo?: null | string;
-  photoOnEvent?: boolean;
-  photoOnDelivery?: boolean;
-  signatureOnDelivery?: boolean;
+export interface IFetchShipmentByIdData extends TShipmentInsertData {
+  driverAssign: number | null;
 }
 export interface IShipmentDataFromAPI extends IFetchShipmentByIdData {
-  driverAssign?: number;
   pieces?: IFetchPiecesByIdData[];
   comments?: string[];
-  manifest?: string;
+  manifest: number;
 }
 
 export interface IFetchPiecesByIdData {
   companyID: string;
   shipmentID: number;
-  pieceID: number
-  barcode: string
-  packageType: number
-  packageTypeName: string
+  pieceID: number;
+  barcode: string;
+  packageType: number;
+  packageTypeName: string;
   comments?: null | string | [string];
   pwBack?: string;
   pod?: string;
 }
 
 export type TGeneralOptionsProps = {
-  userID: number,
-  companyID: string,
-  shipmentID: number
-}
+  userID: number;
+  companyID: string;
+  shipmentID: number;
+};
 
 export interface IOptionalShipmentProps extends IOptionalProps {
   readyDate?: string;
 }
-export interface IOptionalPiecesProps extends IOptionalShipmentProps { }
+export interface IOptionalPiecesProps extends IOptionalShipmentProps {}
 export interface IOptionalCommentsProps extends IOptionalShipmentProps {
   userID: number;
   shipmentID: number;
@@ -90,25 +46,27 @@ export interface IRequiredCommentsProps {
   createdDate: string;
 }
 
-export type IOptionalExceptionProps = Required<Pick<TGeneralOptionsProps, "companyID" | "userID" | "shipmentID">>
-  & { reasonID: string, photoImage?: string, comment?: string }
+export type IOptionalExceptionProps = Required<
+  Pick<TGeneralOptionsProps, "companyID" | "userID" | "shipmentID">
+> & { reasonID: string; photoImage?: string; comment?: string };
 
+export type ISendCOD = Required<
+  Pick<TGeneralOptionsProps, "shipmentID" | "userID" | "companyID">
+> & {
+  codAmount: number;
+  codTypeID: number;
+  codCheck?: string;
+};
 
-export type ISendCOD = Required<Pick<TGeneralOptionsProps, "shipmentID" | "userID" | "companyID">>
-  & {
-    codAmount: number,
-    codTypeID: number,
-    codCheck?: string,
-  }
-
-export type ICompleteOrder = Required<Pick<TGeneralOptionsProps, "shipmentID" | "userID" | "companyID">>
-  & {
-    barcodes: string[],
-    podName: string,
-  signatureImage?: string
-    comment?: string,
-    photoImage?: string,
-  }
+export type ICompleteOrder = Required<
+  Pick<TGeneralOptionsProps, "shipmentID" | "userID" | "companyID">
+> & {
+  barcodes: string[];
+  podName: string;
+  signatureImage?: string;
+  comment?: string;
+  photoImage?: string;
+};
 
 export type ICompleteOrderAllBarcodes = Required<
   Pick<TGeneralOptionsProps, "shipmentID" | "userID" | "companyID">
@@ -120,7 +78,10 @@ export type ICompleteOrderAllBarcodes = Required<
   photoImage?: string;
 };
 
-export type CompleteOrderMutationProps = { order: ICompleteOrder, options: Required<TRemoveEventOptions> }
+export type CompleteOrderMutationProps = {
+  order: ICompleteOrder;
+  options: Required<TRemoveEventOptions>;
+};
 
 export enum ShipmentStatus {
   CREATED = "Created",
@@ -137,15 +98,13 @@ export enum ShipmentStatus {
   CANCELLED = "Canceled",
   /** Considered as Competed */
   COMPLETED = "Completed",
-  UNASSIGN = "Unassign"
+  UNASSIGN = "Unassign",
 }
 
-export type ShipmentStatusCompleted =
-  Extract<ShipmentStatus,
-    typeof ShipmentStatus.COMPLETED |
-    typeof ShipmentStatus.CANCELLED |
-    typeof ShipmentStatus.PARTIAL_DELIVERY |
-    typeof ShipmentStatus.DELIVERED
-  >
-
-
+export type ShipmentStatusCompleted = Extract<
+  ShipmentStatus,
+  | typeof ShipmentStatus.COMPLETED
+  | typeof ShipmentStatus.CANCELLED
+  | typeof ShipmentStatus.PARTIAL_DELIVERY
+  | typeof ShipmentStatus.DELIVERED
+>;

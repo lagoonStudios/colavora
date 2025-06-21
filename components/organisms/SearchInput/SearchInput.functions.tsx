@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { SearchItem, UseSearchDataProps } from "./SearchInput.types";
 import { debounce } from "@utils/index";
-import { searchShipments } from "@hooks/SQLite";
+import { ShipmentLocalService } from "@/db/repositories/shipments.repository";
 
 export const useSearchData = ({ text }: UseSearchDataProps) => {
   const [open, setOpen] = useState(false);
@@ -25,7 +25,7 @@ export const useSearchData = ({ text }: UseSearchDataProps) => {
         }
         setLoading(true);
         setOpen(true);
-        searchShipments({ q: text })
+        ShipmentLocalService.searchShipments({ q: text })
           .then((res) => {
             const data = res.map((shipment) => ({
               label: shipment.consigneeName || "",

@@ -38,7 +38,6 @@ class ShipmentRepository {
    */
   async insertMultiple(shipmentsArr: TShipmentInsertData[]): Promise<void> {
     try {
-      console.log("shipment: ", shipmentsArr[0]);
       const { noExisting } = await this.filterDuplicated(shipmentsArr);
       if (noExisting.length === 0) return;
 
@@ -174,7 +173,7 @@ class ShipmentRepository {
   async getShipmentList({
     manifestID,
   }: {
-    manifestID?: string;
+    manifestID?: number;
   }): Promise<TShipmentListData[]> {
     try {
       const baseQuery = db
@@ -206,7 +205,6 @@ class ShipmentRepository {
         .$dynamic();
 
       if (manifestID) {
-        console.log(manifestID);
         const result = await baseQuery.where(
           or(
             eq(shipmentsTable.manifest, manifestID),
@@ -215,12 +213,9 @@ class ShipmentRepository {
           )
         );
 
-        console.log("Result with manifestID: ", result.length);
-
         return result;
       } else {
         const result = await baseQuery;
-        console.log("Result without manifestID: ", result.length);
         return result;
       }
     } catch (error) {
@@ -252,8 +247,6 @@ class ShipmentRepository {
           )
         )
         .where(eq(shipmentsTable.shipmentID, shipmentID));
-
-      console.log("shipment by id: ", { result });
 
       if (!result.length) {
         throw new Error("Shipment not found");
@@ -301,13 +294,15 @@ class ShipmentRepository {
   async getAllShipmentIds({
     manifestID,
   }: {
-    manifestID: string;
+    manifestID?: number;
   }): Promise<{ shipmentIds: number[] }> {
     try {
       const result = await db
         .select()
         .from(shipmentsTable)
-        .where(eq(shipmentsTable.manifest, manifestID));
+        .where(
+          manifestID ? eq(shipmentsTable.manifest, manifestID) : undefined
+        );
       const shipmentIds = result.map((v) => v.shipmentID);
       return { shipmentIds };
     } catch (error) {

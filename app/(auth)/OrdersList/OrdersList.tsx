@@ -9,7 +9,7 @@ import { ActivityIndicator, View, Text } from "@components/Themed";
 
 import { useOrdersListData } from "./OrdersList.functions";
 import { useStore } from "@stores/zustand";
-import { IFetchOrderListItem } from "@hooks/SQLite/SQLite.types";
+import { TShipmentListData } from "@/db/schema/shipments";
 
 export default function OrdersList() {
   // --- Hooks -----------------------------------------------------------------
@@ -19,7 +19,7 @@ export default function OrdersList() {
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
-  const renderItem = ({ item }: { item: IFetchOrderListItem }) => (
+  const renderItem = ({ item }: { item: TShipmentListData }) => (
     <OrderListItem {...item} />
   );
   // --- END: Data and handlers ------------------------------------------------

@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { useStore } from "@stores/zustand";
-import { getHomeCounters } from "@hooks/SQLite/queries/general.local.queries";
 
 import { HomeItem } from "./Home.types";
+import { GeneralLocalService } from "../../../db/repositories/general.repository";
 
 export function useHomeData() {
   // --- Hooks -----------------------------------------------------------------
@@ -20,9 +20,9 @@ export function useHomeData() {
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
     if (isSyncing === false) {
-      void getHomeCounters().then((data) => {
-        setTotalManifests(data.manifests);
-        setTotalOrdersForToday(data.todayShipments);
+      void GeneralLocalService.getHomeCounters().then((data) => {
+        setTotalManifests(data.manifestsCount);
+        setTotalOrdersForToday(data.todayShipmentsCount);
         setLoading(false);
       });
     }
@@ -59,7 +59,7 @@ export function useHomeData() {
         isDisabled: true,
       }, */
     ],
-    [shipmentIds, totalManifests, totalOrdersForToday],
+    [shipmentIds, totalManifests, totalOrdersForToday]
   );
   // --- END: Data and handlers ------------------------------------------------
 

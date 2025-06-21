@@ -1,5 +1,6 @@
-import { IFetchShipmentByIdData } from "@constants/types/shipments";
-import { getPiecesByShipmentID } from "@hooks/SQLite/queries/pieces.local.queries";
+import { PiecesLocalService } from "@/db/repositories/pieces.repository";
+import { TPiecesInsertData } from "@/db/schema/pieces";
+import { TShipmentsData } from "@/db/schema/shipments";
 import { useStore } from "@stores/zustand";
 import { useEffect, useState } from "react";
 
@@ -11,20 +12,22 @@ export const useShipmentDetailsData = () => {
   // --- Local state -----------------------------------------------------------------
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const [data, setData] = useState<IFetchShipmentByIdData>();
+  const [data, setData] = useState<TShipmentsData | null>(null);
   // --- END: Local state ------------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    if (shipment.shipmentID) {
-      getPiecesByShipmentID({ shipmentID: shipment.shipmentID }).then((values) => {
-        addPieces(values)
-      })
+    if (shipment?.shipmentID) {
+      PiecesLocalService.getAllByShipmentID(shipment.shipmentID).then(
+        (values) => {
+          addPieces(values);
+        }
+      );
     }
-  }, [shipment.shipmentID]);
+  }, [shipment?.shipmentID]);
 
   useEffect(() => {
-    if (shipment == undefined) {
+    if (shipment === null) {
       setError(new Error("No shipment ID provided"));
       return;
     }

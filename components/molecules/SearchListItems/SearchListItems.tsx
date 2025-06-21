@@ -10,8 +10,8 @@ import { FlatList, Pressable } from "react-native";
 import { SearchListItemProps } from "./SearchListItems.types";
 import { styles } from "./SearchListItems.styles";
 import { useTranslation } from "react-i18next";
-import { getShipmenDetailsById } from "@hooks/SQLite";
 import { useStore } from "@stores/zustand";
+import { ShipmentLocalService } from "@/db/repositories/shipments.repository";
 
 export default function SearchListItems(props: SearchListItemProps) {
   const { loading, data } = props;
@@ -24,11 +24,13 @@ export default function SearchListItems(props: SearchListItemProps) {
 
   // --- Data Handlers ------------------------------------------------------------
   const onPressItem = useCallback((shipmentID: string) => {
-    getShipmenDetailsById({ shipmentID: Number(shipmentID) }).then((value) => {
-      addShipment(value)
-      push("ShipmentDetails")
-    })
-  }, [])
+    ShipmentLocalService.getShipmenDetailsById({
+      shipmentID: Number(shipmentID),
+    }).then((value) => {
+      addShipment(value);
+      push("ShipmentDetails");
+    });
+  }, []);
   // --- END: Data Handlers -------------------------------------------------------
 
   return (
@@ -41,18 +43,15 @@ export default function SearchListItems(props: SearchListItemProps) {
         <FlatList
           data={data}
           renderItem={({ item }) => {
-            const handler = () => onPressItem(item["value"])
+            const handler = () => onPressItem(item["value"]);
 
             return (
-              <View
-                style={[styles.listItemContainer]}
-              >
+              <View style={[styles.listItemContainer]}>
                 <Pressable onPress={handler}>
                   <Text style={styles.contentText}>{item["label"]}</Text>
                 </Pressable>
               </View>
-
-            )
+            );
           }}
           ItemSeparatorComponent={() => (
             <View style={styles.listItemSeparator} />

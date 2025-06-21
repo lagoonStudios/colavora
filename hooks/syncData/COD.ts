@@ -2,9 +2,10 @@ import i18next from "i18next";
 import { useEffect } from "react";
 
 import { useStore } from "@stores/zustand";
-import { insertMultipleCOD } from "@hooks/SQLite";
-import { ICODData, IFetchUserData } from "@constants/types/general";
+import { IFetchUserData } from "@constants/types/general";
 import { useCODIdData, useCODByIdData } from "@hooks/queries";
+import { CODLocalService } from "../../db/repositories/cod.repository";
+import { TCODData } from "@/db/schema/cod";
 
 export function useCODFetch(user: IFetchUserData | null) {
   // --- Hooks -----------------------------------------------------------------
@@ -15,8 +16,8 @@ export function useCODFetch(user: IFetchUserData | null) {
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Local State ------------------------------------------------------------
-  const lang = i18next.language
-  const values = new Map<number, ICODData>()
+  const lang = i18next.language;
+  const values = new Map<number, TCODData>();
   // --- END: Local State -------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
@@ -28,16 +29,21 @@ export function useCODFetch(user: IFetchUserData | null) {
     if (!pending && dataCODs) {
       dataCODs.map((COD) => {
         if (COD)
-          values.set(COD.codTypeID, { ...COD, lang })
+          values.set(COD.codTypeID, {
+            ...COD,
+            lang,
+            isSync: false,
+            lastSync: "",
+          });
       });
     }
   }, [dataCODs, pending]);
 
   useEffect(() => {
     if (values.size !== 0) {
-      insertMultipleCOD([...values.values()])
-      setCODs([...values.values()])
+      CODLocalService.insertMultiple([...values.values()]);
+      setCODs([...values.values()]);
     }
-  }, [values])
+  }, [values]);
   // --- END: Side effects -----------------------------------------------------
 }

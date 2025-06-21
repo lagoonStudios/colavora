@@ -3,17 +3,24 @@ import Button from "@atoms/Button";
 import { Alert, View } from "react-native";
 import { useStore } from "@stores/zustand";
 import Toast from "react-native-root-toast";
-import { resetDatabase } from "@hooks/SQLite";
 import { useTranslation } from "react-i18next";
 import { useThemeColor } from "@components/Themed";
 import { useColorScheme } from "@components/useColorScheme";
 import { useIsConnected } from "react-native-offline";
 import { useState } from "react";
+import { GeneralLocalService } from "../../../db/repositories/general.repository";
 
 export default function SyncButton() {
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
-  const { setVisible, setModal, user, setSyncing, isSyncing, setModalErrorModal } = useStore();
+  const {
+    setVisible,
+    setModal,
+    user,
+    setSyncing,
+    isSyncing,
+    setModalErrorModal,
+  } = useStore();
   const theme = useThemeColor({}, "primary");
   const colorScheme = useColorScheme();
   const isConnected = useIsConnected();
@@ -46,7 +53,10 @@ export default function SyncButton() {
             setSyncing(true);
             if (user) {
               setDisableActions(true);
-              resetDatabase(user, { t, setModalMessage: setModal })
+              GeneralLocalService.resetDatabase(user, {
+                t,
+                setModalMessage: setModal,
+              })
                 .then(() => {
                   setDisableActions(false);
                   setVisible(false);
@@ -60,7 +70,7 @@ export default function SyncButton() {
                   setModalErrorModal(`Error reset database: ${String(error)}`);
                   console.error(
                     "🚀 ~ file: SyncButton.tsx:26 ~ resetDatabase ~ error:",
-                    error,
+                    error
                   );
                   setSyncing(false);
                 });
@@ -71,7 +81,7 @@ export default function SyncButton() {
       {
         cancelable: true,
         userInterfaceStyle: colorScheme ? colorScheme : "light",
-      },
+      }
     );
   };
   // --- END: Data and handlers ------------------------------------------------

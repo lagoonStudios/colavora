@@ -12,6 +12,7 @@ import {
   ICompleteOrderAllBarcodes,
 } from "@constants/types/shipments";
 import { BASE_URL } from "@constants/url";
+import { TShipmentsData } from "@/db/schema/shipments";
 
 export function fetchShipmentData({
   manifest,
@@ -33,7 +34,7 @@ export function fetchPiecesData({
 
 export function fetchShipmentByIdData({
   id,
-}: IOptionalShipmentProps): Promise<AxiosResponse<IFetchShipmentByIdData>> {
+}: IOptionalShipmentProps): Promise<AxiosResponse<TShipmentsData>> {
   return axiosClient.get(`shipment/${id}`);
 }
 export function fetchPiecesByIdData({

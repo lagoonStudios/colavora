@@ -2,7 +2,7 @@ import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { syncColumns } from "./base";
 
 export const manifestsTable = sqliteTable("manifests", {
-  manifest: text().primaryKey(),
+  manifest: integer().primaryKey({ autoIncrement: true }),
   driverID: integer(),
   manifestDate: text(),
   manifestId: text(),

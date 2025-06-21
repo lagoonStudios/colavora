@@ -29,7 +29,7 @@ class CommentsRepository {
     }
   }
 
-  async getAll(params: { shipmentId: number }) {
+  async getAll(params: { shipmentId: number }): Promise<TCommentInsertData[]> {
     try {
       const { shipmentId } = params;
       return await db

@@ -1,14 +1,12 @@
 import React from "react";
 import { Redirect, Stack } from "expo-router";
 import useAuth from "@hooks/Auth";
-import { useSQLite } from "@hooks/SQLite";
 import { useLastSync } from "@hooks/lastSync";
 import { useSyncDataByPeriod } from "@hooks/SyncLocalData";
 import { useDriverFetch } from "@hooks/index";
 
 export default function AuthLayout() {
   // --- Hooks -----------------------------------------------------------------
-  useSQLite();
   useLastSync();
   useDriverFetch();
   useSyncDataByPeriod();

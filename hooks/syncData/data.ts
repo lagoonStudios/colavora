@@ -4,11 +4,9 @@ import { useEffect, useCallback, useState } from "react";
 import { useStore } from "@stores/zustand";
 import { IFetchUserData } from "@constants/types/general";
 import { useTranslation } from "react-i18next";
-import {
-  getAllManifestIds,
-  getAllShipmentIds,
-  resetDatabase,
-} from "@hooks/SQLite";
+import { GeneralLocalService } from "@/db/repositories/general.repository";
+import { ShipmentLocalService } from "@/db/repositories/shipments.repository";
+import { ManifestsLocalService } from "@/db/repositories/manifests.repository";
 
 export function useDataFetch(user: IFetchUserData | null) {
   // --- Hooks -----------------------------------------------------------------
@@ -32,57 +30,54 @@ export function useDataFetch(user: IFetchUserData | null) {
   // --- END: Local state ------------------------------------------------------
   // --- Data and handlers -----------------------------------------------------------
   const fetchDataLocally = useCallback(
-    (user: IFetchUserData) => {
+    async (user: IFetchUserData) => {
       if (isSyncing == false) {
-        setSyncing(true);
-        resetDatabase(user, {
-          t,
-          setModalMessage,
-        })
-          .then((values) => {
-            setLastSyncDate(new Date().toISOString());
-            const manifestIdsFromFetching = values.manifests.map(
-              ({ manifest }) => Number(manifest),
-            );
-
-            if (manifestIdsFromFetching.length > 0) {
-              addManifestIds(
-                values.manifests.map(({ manifest }) => Number(manifest)),
-              );
-              const firstManifest = manifestIdsFromFetching.sort(
-                (a, b) => a - b,
-              )?.[0];
-
-              if (firstManifest) {
-                addManifestId(String(firstManifest));
-                void getAllShipmentIds({
-                  manifestID: String(firstManifest),
-                }).then((shipmentsIdsLocal) => {
-                  const shipmentIds = shipmentsIdsLocal?.map(
-                    ({ shipmentID }) => shipmentID,
-                  );
-
-                  if (shipmentIds?.length > 0) addShipmentIds(shipmentIds);
-                });
-              }
-            }
-
-            setSyncing(false);
-            setVisible(false);
-          })
-          .catch((error) => {
-            setMessageErrorModal(`Error using Local Data: ${error}`);
-            console.error(
-              "🚀 ~ file: data.ts:28 ~ fetchDataLocally ~ error:",
-              error,
-            );
-            setSyncing(false);
-            setVisible(false);
+        try {
+          setSyncing(true);
+          const values = await GeneralLocalService.resetDatabase(user, {
+            setModalMessage,
           });
+
+          setLastSyncDate(new Date().toISOString());
+
+          const manifestIdsFromFetching = values.manifests.map(({ manifest }) =>
+            Number(manifest)
+          );
+
+          if (manifestIdsFromFetching.length > 0) {
+            addManifestIds(
+              values.manifests.map(({ manifest }) => Number(manifest))
+            );
+            const firstManifest = manifestIdsFromFetching.sort(
+              (a, b) => a - b
+            )?.[0];
+
+            if (firstManifest) {
+              addManifestId(String(firstManifest));
+              const { shipmentIds } =
+                await ShipmentLocalService.getAllShipmentIds({
+                  manifestID: String(firstManifest),
+                });
+
+              if (shipmentIds?.length > 0) addShipmentIds(shipmentIds);
+            }
+          }
+
+          setSyncing(false);
+          setVisible(false);
+        } catch (error) {
+          setMessageErrorModal(`Error using Local Data: ${String(error)}`);
+          console.error(
+            "🚀 ~ file: data.ts:28 ~ fetchDataLocally ~ error:",
+            error
+          );
+          setSyncing(false);
+          setVisible(false);
+        }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [t, setModalMessage, user],
+    [t, setModalMessage, user]
   );
   // --- END: Data and handlers ------------------------------------------------------
 
@@ -96,20 +91,22 @@ export function useDataFetch(user: IFetchUserData | null) {
       /* TO DO: si la diferencia de fecha es 0 requerir la local data para meterla en zustand */
       if (difference > 0) fetchDataLocally(user);
       else if (difference === 0 && loading === false) setLoading(true);
-      void getAllManifestIds()
-        .then((manifestIds) => {
+
+      ManifestsLocalService.getAllManifestIds()
+        .then(({ manifestIds }) => {
           if (manifestIds.length > 0) addManifestIds(manifestIds);
 
           const firstManifest = manifestIds.sort((a, b) => a - b)?.[0];
 
+          return firstManifest;
+        })
+        .then((firstManifest) => {
           if (firstManifest) {
             addManifestId(String(firstManifest));
-            void getAllShipmentIds({ manifestID: String(firstManifest) })
-              .then((shipmentsIdsLocal) => {
-                const shipmentIds = shipmentsIdsLocal?.map(
-                  ({ shipmentID }) => shipmentID,
-                );
-
+            ShipmentLocalService.getAllShipmentIds({
+              manifestID: String(firstManifest),
+            })
+              .then(({ shipmentIds }) => {
                 if (shipmentIds?.length > 0) addShipmentIds(shipmentIds);
                 setLoading(false);
               })
@@ -117,7 +114,7 @@ export function useDataFetch(user: IFetchUserData | null) {
                 setMessageErrorModal(`${e}`);
                 console.error(
                   "🚀 ~ file: data.ts:112 ~ voidgetAllManifestIds ~ e:",
-                  e,
+                  e
                 );
                 setLoading(false);
               });
@@ -132,7 +129,7 @@ export function useDataFetch(user: IFetchUserData | null) {
           setMessageErrorModal(`${e}`);
           console.error(
             "🚀 ~ file: data.ts:117 ~ voidgetAllManifestIds ~ e:",
-            e,
+            e
           );
           setLoading(false);
         });
