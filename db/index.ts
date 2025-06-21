@@ -1,10 +1,5 @@
 import { openDatabaseSync } from "expo-sqlite";
 import { drizzle } from "drizzle-orm/expo-sqlite";
-import { relations } from "drizzle-orm";
-import { manifestsTable } from "./schema/manifests";
-import { shipmentsTable } from "./schema/shipments";
-import { piecesTable } from "./schema/pieces";
-import { commentsTable } from "./schema/comments";
 
 export const DATABASE_NAME = "colavora";
 
