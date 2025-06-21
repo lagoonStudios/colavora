@@ -9,14 +9,14 @@ export interface ManifestIdsSlice {
 
 export interface ManifestsSlice {
   manifests: IFetchManifestByIdData[];
-  manifest: string;
+  manifest: number;
   addManifest: (manifestIds: IFetchManifestByIdData) => void;
-  addManifestId: (manifest: string) => void;
+  addManifestId: (manifest: number) => void;
   resetManifests: () => void;
   resetManifestId: () => void;
 }
 export const createManifestIdsSlice: StateCreator<ManifestIdsSlice, [], []> = (
-  set,
+  set
 ) => ({
   manifestIds: [],
   manifest: "",
@@ -25,11 +25,9 @@ export const createManifestIdsSlice: StateCreator<ManifestIdsSlice, [], []> = (
   resetManifestIds: () => set((state) => ({ ...state, manifestIds: [] })),
 });
 
-export const createManifestsSlice: StateCreator<ManifestsSlice, [], []> = (
-  set,
-) => ({
+export const createManifestsSlice: StateCreator<ManifestsSlice, [], []> = (set) => ({
   manifests: [],
-  manifest: "",
+  manifest: 0,
   addManifest: (manifest: IFetchManifestByIdData) =>
     set((state) => {
       const newManifests = state.manifests;
@@ -37,7 +35,7 @@ export const createManifestsSlice: StateCreator<ManifestsSlice, [], []> = (
 
       return { ...state, manifests: newManifests };
     }),
-  addManifestId: (manifest: string) => set((state) => ({ ...state, manifest })),
+  addManifestId: (manifest: number) => set((state) => ({ ...state, manifest })),
   resetManifests: () => set((state) => ({ ...state, manifests: [] })),
-  resetManifestId: () => set((state) => ({ ...state, manifest: "" })),
+  resetManifestId: () => set((state) => ({ ...state, manifest: 0 })),
 });

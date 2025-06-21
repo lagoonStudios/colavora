@@ -87,7 +87,7 @@ class ManifestsRepository {
 
   async getManifestsList(): Promise<{
     value: {
-      manifest: string;
+      manifest: number;
       createdDate: string | null;
       active_shipments: number;
     }[];
@@ -119,8 +119,6 @@ class ManifestsRepository {
         .groupBy(manifestsTable.manifest, manifestsTable.manifestDate)
         .orderBy(desc(manifestsTable.manifestDate));
 
-      // TODO Check this result when there are manifests with  shipments
-      console.log("get manifestList result: ", manifestsWithActiveShipments);
       return { value: manifestsWithActiveShipments };
     } catch (error) {
       console.error("🚀 ~ getAll ~ error:", error);
@@ -160,11 +158,21 @@ class ManifestsRepository {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         .having(({ shipment_count }) => gt(shipment_count, 0));
 
-      // TODO Check the result when inserting shipments
-      console.log({ result });
       return { count: result[0]?.count ?? 0 };
     } catch (error) {
       console.error("🚀 ~ getCount ~ error:", error);
+      throw error;
+    }
+  }
+
+  async getAllManifestIds(): Promise<{ manifestIds: number[] }> {
+    try {
+      const result = await db
+        .select({ manifest: manifestsTable.manifest })
+        .from(manifestsTable);
+      return { manifestIds: result.map(({ manifest }) => manifest) };
+    } catch (error) {
+      console.error("🚀 ~ getAllManifestIds ~ error:", error);
       throw error;
     }
   }

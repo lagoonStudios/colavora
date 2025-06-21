@@ -7,10 +7,12 @@ import { styles } from "./OrderListItem.styles";
 import { useRouter } from "expo-router";
 import { Pressable } from "react-native";
 import { useStore } from "@stores/zustand";
-import { getShipmenDetailsById } from "@hooks/SQLite";
-import { IFetchOrderListItem } from "@hooks/SQLite/SQLite.types";
+import { TShipmentListData } from "@/db/schema/shipments";
+import { ShipmentLocalService } from "@/db/repositories/shipments.repository";
 
-export default function OrderListItem(props: IFetchOrderListItem) {
+export default function OrderListItem(
+  props: TShipmentListData & { index?: number }
+) {
   // --- Hooks -----------------------------------------------------------------
   const { t } = useTranslation();
   const { addShipment } = useStore();
@@ -20,15 +22,12 @@ export default function OrderListItem(props: IFetchOrderListItem) {
   // --- Data and handlers -----------------------------------------------------
   const setShipmentHandler = () => {
     if (props.shipmentID && props.shipmentID !== null) {
-      // ShipmentLocalService.getShipmenDetailsById({
-      //   shipmentID: props.shipmentID,
-      // }).then();
-      getShipmenDetailsById({ shipmentID: props.shipmentID }).then(
-        (shipment) => {
-          addShipment(shipment);
-          push({ pathname: "ShipmentDetails" });
-        }
-      );
+      ShipmentLocalService.getShipmenDetailsById({
+        shipmentID: props.shipmentID,
+      }).then((shipment) => {
+        addShipment(shipment);
+        push({ pathname: "ShipmentDetails" });
+      });
     }
   };
 

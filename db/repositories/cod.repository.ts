@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { codTable, TCODData } from "../schema/cod";
+import { codTable, TCODData, TCODInsertData } from "../schema/cod";
 import { inArray } from "drizzle-orm";
 
 class CODRepository {
@@ -17,7 +17,7 @@ class CODRepository {
    * Asynchronously inserts multiple CODs into the database.
    * @param cods array of cods to insert
    */
-  async insertMultiple(cods: TCODData[]): Promise<void> {
+  async insertMultiple(cods: TCODInsertData[]): Promise<void> {
     try {
       const { notExisting } = await this.filterDuplicated(cods);
 
@@ -47,13 +47,13 @@ class CODRepository {
    *   - `notExisting`: An array of COD that do not exist in the database.
    * @throws Rejects the promise with an error if there's a problem accessing the database.
    */
-  async filterDuplicated(codArr: TCODData[]): Promise<{
-    existing: TCODData[];
-    notExisting: TCODData[];
+  async filterDuplicated(codArr: TCODInsertData[]): Promise<{
+    existing: TCODInsertData[];
+    notExisting: TCODInsertData[];
   }> {
     try {
       // First, create a map of all incoming CODs to remove duplicates
-      const codMap = new Map<number, TCODData>();
+      const codMap = new Map<number, TCODInsertData>();
       codArr.forEach((v) => codMap.set(v.codTypeID, v));
 
       // Get all unique IDs from the input

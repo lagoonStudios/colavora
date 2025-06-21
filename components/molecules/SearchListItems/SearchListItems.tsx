@@ -10,8 +10,8 @@ import { FlatList, Pressable } from "react-native";
 import { SearchListItemProps } from "./SearchListItems.types";
 import { styles } from "./SearchListItems.styles";
 import { useTranslation } from "react-i18next";
-import { getShipmenDetailsById } from "@hooks/SQLite";
 import { useStore } from "@stores/zustand";
+import { ShipmentLocalService } from "@/db/repositories/shipments.repository";
 
 export default function SearchListItems(props: SearchListItemProps) {
   const { loading, data } = props;
@@ -24,13 +24,12 @@ export default function SearchListItems(props: SearchListItemProps) {
 
   // --- Data Handlers ------------------------------------------------------------
   const onPressItem = useCallback((shipmentID: string) => {
-    void getShipmenDetailsById({ shipmentID: Number(shipmentID) }).then(
-      (value) => {
-        addShipment(value);
-        push("/(auth)/ShipmentDetails");
-      },
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    ShipmentLocalService.getShipmenDetailsById({
+      shipmentID: Number(shipmentID),
+    }).then((value) => {
+      addShipment(value);
+      push("/(auth)/ShipmentDetails");
+    });
   }, []);
   // --- END: Data Handlers -------------------------------------------------------
 

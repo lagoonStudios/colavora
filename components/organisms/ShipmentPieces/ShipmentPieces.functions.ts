@@ -1,34 +1,30 @@
-import { getPiecesByShipmentID } from "@hooks/SQLite/queries/pieces.local.queries";
 import { useStore } from "@stores/zustand";
 import { useState, useEffect } from "react";
+import { PiecesLocalService } from "../../../db/repositories/pieces.repository";
 
 export const usePiecesData = () => {
   // --- Local State ------------------------------------------------------------
-  const [loading, setLoading] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(true);
   // --- END: Local State ------------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
-  const {
-    pieces,
-    shipment: { shipmentID },
-    addPieces
-  } = useStore();
+  const { pieces, shipment, addPieces } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Side effects ----------------------------------------------------------
   useEffect(() => {
-    if (shipmentID) {
-      getPiecesByShipmentID({ shipmentID }).then((values) => {
-        addPieces(values)
-      })
+    if (shipment?.shipmentID) {
+      PiecesLocalService.getAllByShipmentID(shipment.shipmentID).then(
+        (values) => {
+          addPieces(values);
+        }
+      );
     }
-  }, [shipmentID]);
+  }, [shipment?.shipmentID]);
 
   useEffect(() => {
-    if (pieces)
-      if (pieces?.length !== 0)
-        setLoading(false);
-  }, [pieces])
+    if (pieces) if (pieces?.length !== 0) setLoading(false);
+  }, [pieces]);
   // --- END: Side effects -----------------------------------------------------
 
   return { data: pieces, loading };

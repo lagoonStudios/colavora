@@ -21,7 +21,7 @@ import {
 } from "./eventsQueue.local.queries";
 import { CompleteOrderMutationProps } from "@constants/types/shipments";
 import { useStore } from "@stores/zustand";
-import { insertMultipleComments } from "@hooks/SQLite/queries/comments.local.queries";
+import { CommentsLocalService } from "@/db/repositories/comments.repository";
 
 export function useHandleCompleteOrderEvent({
   removeFromQueue,
@@ -122,7 +122,7 @@ export function useHandleCompleteOrderEvent({
                 setModalErrorModal(`${error}`);
                 console.error(
                   "🚀 ~ file: eventsQueue.functions.tsx:145 ~ deleteShipment ~ error:",
-                  error,
+                  error
                 );
                 reject(error);
               });
@@ -180,7 +180,7 @@ export function useHandleCompleteOrderEvent({
       completeOrderMutation,
       handleCompleteOrderErrorCallback,
       handleCompleteOrderSuccessCallback,
-    ],
+    ]
   );
 
   const handleCODSSuccessCallback = useCallback(
@@ -252,7 +252,7 @@ export function useHandleOrderExceptionEvent({
       else {
         console.error(
           "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleOrderExceptionErrorCallback ~ eventId:",
-          props.options.eventId,
+          props.options.eventId
         );
         throw new Error(
           "🚀 ~ file: eventsQueue.functions.ts:47 ~ handleOrderExceptionErrorCallback ~ eventId not found"
@@ -335,7 +335,7 @@ export function useHandleOrderExceptionEvent({
             shipmentID: data.shipmentID,
             reasonCode: data.reasonID,
           }),
-          insertMultipleComments(commentToInsert),
+          CommentsLocalService.insertMultiple(commentToInsert),
           addEventToQueue({
             body,
             shipmentID: data.shipmentID,
@@ -359,7 +359,7 @@ export function useHandleOrderExceptionEvent({
       });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [addEventToQueue, user],
+    [addEventToQueue, user]
   );
 
   const sendCommentToApi = useCallback(

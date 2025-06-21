@@ -1,15 +1,15 @@
 import { useRouter } from "expo-router";
 import { Pressable } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback } from "react";
 
 import { Text, View, ActivityIndicator } from "@components/Themed";
 
 import Card from "@atoms/Card";
 import { useStore } from "@stores/zustand";
-import { getShipmentList } from "@hooks/SQLite";
 import { styles } from "./ManifestListItem.styles";
 import { ManifestListItemProps } from "./ManifestListItem.types";
+import { ShipmentLocalService } from "@/db/repositories/shipments.repository";
 
 export default function ManifestListItem(props: ManifestListItemProps) {
   // --- Local state -----------------------------------------------------------
@@ -20,30 +20,10 @@ export default function ManifestListItem(props: ManifestListItemProps) {
   const { addShipmentIds, addManifestId, setModalErrorModal } = useStore();
   const { push } = useRouter();
   // --- END: Hooks ------------------------------------------------------------
-
-  // useEffect(() => {
-  //   if (code && isSyncing === false) {
-  //     getShipmentList({ manifestID: code })
-  //       .then((values) => {
-  //         setData(values);
-  //       })
-  //       .catch((error) => {
-  //         console.error(
-  //           "🚀 ~ file: ManifestListItem.tsx:32 ~ getShipmentList ~ error:",
-  //           error
-  //         );
-  //       });
-  //   }
-  // }, [code, isSyncing]);
-
   // --- Data and handlers -----------------------------------------------------
-  // const count = useMemo(() => {
-  //   if (data && data?.length > 0) return data?.length;
-  //   return undefined;
-  // }, [data]);
 
   const setShipmentIdsHandler = useCallback(() => {
-    getShipmentList({ manifestID: manifest })
+    ShipmentLocalService.getShipmentList({ manifestID: manifest })
       .then((values) => {
         addShipmentIds(values.map((shipment) => Number(shipment.shipmentID)));
         addManifestId(manifest);

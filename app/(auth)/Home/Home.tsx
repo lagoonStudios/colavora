@@ -11,8 +11,8 @@ import { SafeAreaView } from "@atoms/SafeAreaView";
 import { ActivityIndicator, Text, View } from "@components/Themed";
 import { useStore } from "@stores/zustand";
 import { useSyncData } from "@hooks/syncData";
-import { getShipmentList } from "@hooks/SQLite";
 import eventsQueue from "@hooks/eventsQueue";
+import { ShipmentLocalService } from "@/db/repositories/shipments.repository";
 
 export default function Home() {
   // --- Hooks -----------------------------------------------------------------
@@ -28,11 +28,13 @@ export default function Home() {
   // --- Data and handlers -----------------------------------------------------
   const renderItem = ({ item }: { item: HomeItem }) => {
     const setShipmentIdsHandler = () => {
-      void getShipmentList({}).then((shipment) => {
-        resetManifestId();
-        addShipmentIds(shipment?.map(({ shipmentID }) => shipmentID!));
-        push({ pathname: "(tabs)/" + item.route });
-      });
+      void ShipmentLocalService.getAllShipmentIds({}).then(
+        ({ shipmentIds }) => {
+          resetManifestId();
+          addShipmentIds(shipmentIds);
+          push({ pathname: "(tabs)/" + item.route });
+        }
+      );
     };
 
     return (

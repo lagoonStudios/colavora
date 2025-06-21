@@ -89,7 +89,8 @@ export class PiecesRepository {
     }
   }
 
-  async getAllByShipmentID(shipmentID: number) {
+  /** Gets all rows in the pieces table */
+  async getAllByShipmentID(shipmentID: number): Promise<TPiecesInsertData[]> {
     try {
       return await db
         .select()

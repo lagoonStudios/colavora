@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Auth0Provider } from "react-native-auth0";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "@stores/AuthContext";
-import { dropTables } from "@hooks/SQLite";
+
+import { GeneralLocalService } from "@/db/repositories/general.repository";
 import { useStore } from "@stores/zustand";
 
 export default function AuthProvider({
@@ -31,7 +32,7 @@ export default function AuthProvider({
 
   const logout = () => {
     setToken("");
-    void dropTables();
+    void GeneralLocalService.dropTables();
     void AsyncStorage.removeItem("auth0:token");
     void AsyncStorage.removeItem("auth0:user");
     void AsyncStorage.removeItem("auth0:email");
@@ -54,7 +55,7 @@ export default function AuthProvider({
       } catch (error) {
         console.error(
           "🚀 ~ file: Auth.tsx:57 ~ checkCredentials ~ error:",
-          error,
+          error
         );
       }
     };

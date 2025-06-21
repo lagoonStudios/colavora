@@ -1,5 +1,5 @@
+import { TCODData } from "@/db/schema/cod";
 import {
-  ICODData,
   IReasonsByIdData,
   IStateModal,
   IErrorStateModal,
@@ -24,9 +24,9 @@ export interface CODIdsSlice {
   resetCODIds: () => void;
 }
 export interface CODSlice {
-  CODs: ICODData[];
-  addCOD: (COD: ICODData) => void;
-  setCODs: (COD: ICODData[]) => void;
+  CODs: TCODData[];
+  addCOD: (COD: TCODData) => void;
+  setCODs: (COD: TCODData[]) => void;
   resetCODs: () => void;
 }
 
@@ -70,7 +70,7 @@ export interface SyncDataSlice {
 }
 
 export const createReasonIdsSlice: StateCreator<ReasonIdsSlice, [], []> = (
-  set,
+  set
 ) => ({
   reasonIds: [],
   addReasonIds: (reasonIds) => set((state) => ({ ...state, reasonIds })),
@@ -78,7 +78,7 @@ export const createReasonIdsSlice: StateCreator<ReasonIdsSlice, [], []> = (
 });
 
 export const createReasonsSlice: StateCreator<ReasonsSlice, [], []> = (
-  set,
+  set
 ) => ({
   reasons: [],
   addReason: (reason) =>
@@ -112,7 +112,7 @@ export const createCODSlice: StateCreator<CODSlice, [], []> = (set) => ({
 });
 
 export const createStateModalSlice: StateCreator<StateModalSlice, [], []> = (
-  set,
+  set
 ) => ({
   modal: {
     message: "MODAL.TEST",
@@ -135,7 +135,7 @@ export const createStateModalSlice: StateCreator<StateModalSlice, [], []> = (
 });
 
 export const createErrorModalSlice: StateCreator<ErrorModalSlice, [], []> = (
-  set,
+  set
 ) => ({
   errorModal: {
     messages: [],
@@ -177,7 +177,7 @@ export const createErrorModalSlice: StateCreator<ErrorModalSlice, [], []> = (
 });
 
 export const createSyncDataSlice: StateCreator<SyncDataSlice, [], []> = (
-  set,
+  set
 ) => ({
   isSyncing: false,
   setSyncing: (isSyncing: boolean) => set((state) => ({ ...state, isSyncing })),

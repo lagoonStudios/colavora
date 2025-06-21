@@ -52,7 +52,7 @@ export function useShipmentsByIdData(ids: number[]) {
   if (ids == null) {
     console.error(
       "🚀 ~ file: shipments.ts:52 ~ useShipmentsByIdData ~ ids:",
-      ids,
+      ids
     );
     return;
   }
@@ -71,7 +71,7 @@ export function useShipmentsByIdData(ids: number[]) {
     combine: (results) => {
       return {
         data: results.map((result) => {
-          const data: IFetchShipmentByIdData = result?.data ?? {};
+          const data: IFetchShipmentByIdData | null = result?.data ?? null;
           return data;
         }),
         pending: results.some((result) => result.isPending),
@@ -203,7 +203,7 @@ export function useOrderException() {
       if (user == null || user.companyID == null || user.userID == null) {
         console.error(
           "🚀 ~ file: shipments.ts:181 ~ useOrderException ~ user not defined:",
-          user,
+          user
         );
         throw new Error("User not found");
       }
@@ -244,7 +244,7 @@ export function useSendCODs() {
           return await sendCOD({
             ...cod,
           });
-        }),
+        })
       );
       return results;
     },
@@ -307,7 +307,7 @@ export function useCompleteOrder() {
           setMessageErrorModal(`Error sending barcodes: ${String(error)}`);
           console.error(
             "🚀 ~ file: shipments.ts:266 ~ useCompleteOrder ~ error:",
-            error,
+            error
           );
         }
         return results;
@@ -319,7 +319,7 @@ export function useCompleteOrder() {
       setMessageErrorModal(`Error sending useCompleteOrder: ${String(error)}`);
       console.error(
         "🚀 ~ file: shipments.ts:286 ~ useuseCompleteOrder ~ error:",
-        error,
+        error
       );
     },
     onSuccess: (_, props) => {

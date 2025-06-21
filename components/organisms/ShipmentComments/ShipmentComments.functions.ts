@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useStore } from "@stores/zustand";
-import { getCommentsByShipmentID } from "@hooks/SQLite/queries/comments.local.queries";
+import { CommentsLocalService } from "@/db/repositories/comments.repository";
 
 export function useCommentsData() {
   // --- Local State -----------------------------------------------------------------
@@ -8,30 +8,28 @@ export function useCommentsData() {
   // --- END: Local State ------------------------------------------------------------
 
   // --- Hooks -----------------------------------------------------------------
-  const {
-    comments,
-    shipment: { shipmentID },
-    addComments,
-  } = useStore();
+  const { comments, shipment, addComments } = useStore();
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
   useEffect(() => {
-    if (shipmentID) {
-      void getCommentsByShipmentID({ shipmentID }).then((values) => {
-        addComments(values);
-      });
+    if (shipment?.shipmentID) {
+      CommentsLocalService.getAll({ shipmentId: shipment.shipmentID }).then(
+        (values) => {
+          addComments(values);
+        }
+      );
     }
-  }, [addComments, shipmentID]);
+  }, [addComments, shipment?.shipmentID]);
 
   const data = useMemo(() => {
     if (comments) {
       const filterValue = " Order Notes:";
       const notes = comments.find(
-        ({ comment }) => comment && comment.includes(filterValue),
+        ({ comment }) => comment && comment.includes(filterValue)
       );
       const filterComments = comments.filter(
-        ({ comment }) => comment && !comment.includes(filterValue),
+        ({ comment }) => comment && !comment.includes(filterValue)
       );
 
       return { notes, comments: filterComments };
@@ -46,8 +44,9 @@ export function useCommentsData() {
   }, [data]);
 
   useEffect(() => {
-    if (shipmentID) void getCommentsByShipmentID({ shipmentID });
-  }, [comments, shipmentID]);
+    if (shipment?.shipmentID)
+      void CommentsLocalService.getAll({ shipmentId: shipment.shipmentID });
+  }, [comments, shipment?.shipmentID]);
   // --- END: Side Effects -------------------------------------------
 
   return { data, loading };

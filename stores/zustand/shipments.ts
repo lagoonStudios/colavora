@@ -1,8 +1,7 @@
-import {
-  IFetchPiecesByIdData,
-  IFetchShipmentByIdData,
-  IOptionalCommentsProps,
-} from "@constants/types/shipments";
+import { TCommentInsertData } from "@/db/schema/comments";
+import { TPiecesInsertData } from "@/db/schema/pieces";
+import { TShipmentsData } from "@/db/schema/shipments";
+import { IOptionalCommentsProps } from "@constants/types/shipments";
 import { StateCreator } from "zustand";
 
 export interface ShipmentIdsSlice {
@@ -12,8 +11,8 @@ export interface ShipmentIdsSlice {
 }
 
 export interface ShipmentSlice {
-  shipment: IFetchShipmentByIdData;
-  addShipment: (shipment: IFetchShipmentByIdData) => void;
+  shipment: TShipmentsData | null;
+  addShipment: (shipment: TShipmentsData) => void;
   resetShipment: () => void;
 }
 
@@ -24,27 +23,27 @@ export interface PiecesIdsSlice {
 }
 
 export interface PiecesSlice {
-  pieces: IFetchPiecesByIdData[];
-  addPieces: (pieces: IFetchPiecesByIdData[]) => void;
+  pieces: TPiecesInsertData[];
+  addPieces: (pieces: TPiecesInsertData[]) => void;
   resetPieces: () => void;
 }
 
 export interface CommentsSlice {
   comments: Pick<
-    IOptionalCommentsProps,
+    TCommentInsertData,
     "shipmentID" | "comment" | "createdDate"
   >[];
   addComments: (
     comments: Pick<
-      IOptionalCommentsProps,
+      TCommentInsertData,
       "shipmentID" | "comment" | "createdDate"
-    >[],
+    >[]
   ) => void;
   resetCommnets: () => void;
 }
 
 export const createShipmentIdsSlice: StateCreator<ShipmentIdsSlice, [], []> = (
-  set,
+  set
 ) => ({
   shipmentIds: [],
   addShipmentIds: (shipmentIds) =>
@@ -52,17 +51,13 @@ export const createShipmentIdsSlice: StateCreator<ShipmentIdsSlice, [], []> = (
   resetShipmentIds: () => set((state) => ({ ...state, shipmentIds: [] })),
 });
 
-export const createShipmentSlice: StateCreator<ShipmentSlice, [], []> = (
-  set,
-) => ({
-  shipment: {},
+export const createShipmentSlice: StateCreator<ShipmentSlice, [], []> = (set) => ({
+  shipment: null,
   addShipment: (shipment) => set((state) => ({ ...state, shipment })),
-  resetShipment: () => set((state) => ({ ...state, shipment: {} })),
+  resetShipment: () => set((state) => ({ ...state, shipment: null })),
 });
 
-export const createPiecesIdsSlice: StateCreator<PiecesIdsSlice, [], []> = (
-  set,
-) => ({
+export const createPiecesIdsSlice: StateCreator<PiecesIdsSlice, [], []> = (set) => ({
   piecesIds: [],
   addPiecesIds: (piecesIds) => set((state) => ({ ...state, piecesIds })),
   resetPiecesIds: () => set((state) => ({ ...state, piecesIds: [] })),
@@ -74,9 +69,7 @@ export const createPiecesSlice: StateCreator<PiecesSlice, [], []> = (set) => ({
   resetPieces: () => set((state) => ({ ...state, pieces: [] })),
 });
 
-export const createCommentsSlice: StateCreator<CommentsSlice, [], []> = (
-  set,
-) => ({
+export const createCommentsSlice: StateCreator<CommentsSlice, [], []> = (set) => ({
   comments: [],
   addComments: (comments) => set((state) => ({ ...state, comments })),
   resetCommnets: () => set((state) => ({ ...state, comments: [] })),

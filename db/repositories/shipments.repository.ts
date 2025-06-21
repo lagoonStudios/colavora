@@ -38,7 +38,6 @@ class ShipmentRepository {
    */
   async insertMultiple(shipmentsArr: TShipmentInsertData[]): Promise<void> {
     try {
-      console.log("shipment: ", shipmentsArr[0]);
       const { noExisting } = await this.filterDuplicated(shipmentsArr);
       if (noExisting.length === 0) return;
 
@@ -174,7 +173,7 @@ class ShipmentRepository {
   async getShipmentList({
     manifestID,
   }: {
-    manifestID?: string;
+    manifestID?: number;
   }): Promise<TShipmentListData[]> {
     try {
       const baseQuery = db
@@ -206,7 +205,6 @@ class ShipmentRepository {
         .$dynamic();
 
       if (manifestID) {
-        console.log(manifestID);
         const result = await baseQuery.where(
           or(
             eq(shipmentsTable.manifest, manifestID),
@@ -215,12 +213,9 @@ class ShipmentRepository {
           )
         );
 
-        console.log("Result with manifestID: ", result.length);
-
         return result;
       } else {
         const result = await baseQuery;
-        console.log("Result without manifestID: ", result.length);
         return result;
       }
     } catch (error) {
@@ -252,8 +247,6 @@ class ShipmentRepository {
           )
         )
         .where(eq(shipmentsTable.shipmentID, shipmentID));
-
-      console.log("shipment by id: ", { result });
 
       if (!result.length) {
         throw new Error("Shipment not found");
@@ -301,13 +294,15 @@ class ShipmentRepository {
   async getAllShipmentIds({
     manifestID,
   }: {
-    manifestID: string;
+    manifestID?: number;
   }): Promise<{ shipmentIds: number[] }> {
     try {
       const result = await db
         .select()
         .from(shipmentsTable)
-        .where(eq(shipmentsTable.manifest, manifestID));
+        .where(
+          manifestID ? eq(shipmentsTable.manifest, manifestID) : undefined
+        );
       const shipmentIds = result.map((v) => v.shipmentID);
       return { shipmentIds };
     } catch (error) {
@@ -318,7 +313,7 @@ class ShipmentRepository {
 
   async searchShipments({ q }: { q: string }): Promise<TShipmentSearchData[]> {
     try {
-      const result = await db
+      const shipmentsSearchQuery = await db
         .select({
           shipmentID: shipmentsTable.shipmentID,
           consigneeName: shipmentsTable.consigneeName,
@@ -347,10 +342,58 @@ class ShipmentRepository {
             ilike(shipmentsTable.contactPerson, `%${q}%`),
             ilike(shipmentsTable.barcode, `%${q}%`),
             ilike(shipmentsTable.city, `%${q}%`),
-            ilike(shipmentsTable.zip, `%${q}%`)
+            ilike(shipmentsTable.zip, `%${q}%`),
+            ilike(shipmentsTable.phoneNumber, `%${q}%`)
           )
         );
-      return result;
+
+      // Second query - search in pieces table and join with shipments
+      const pieceSearchQuery = db
+        .select({
+          shipmentID: shipmentsTable.shipmentID,
+          consigneeName: shipmentsTable.consigneeName,
+          zip: shipmentsTable.zip,
+          senderName: shipmentsTable.senderName,
+          serviceTypeName: shipmentsTable.serviceTypeName,
+          addressLine1: shipmentsTable.addressLine1,
+          addressLine2: shipmentsTable.addressLine2,
+          referenceNo: shipmentsTable.referenceNo,
+          qty: shipmentsTable.qty,
+          city: shipmentsTable.city,
+          dueDate: shipmentsTable.dueDate,
+          pieceBarcode: piecesTable.barcode,
+        })
+        .from(shipmentsTable)
+        .innerJoin(
+          piecesTable,
+          eq(piecesTable.shipmentID, shipmentsTable.shipmentID)
+        )
+        .where(ilike(piecesTable.barcode, `%${q}%`));
+
+      const [shipments, pieces] = await Promise.all([
+        shipmentsSearchQuery,
+        pieceSearchQuery,
+      ]);
+
+      if (!shipments || !pieces) {
+        return [];
+      }
+
+      const shipmentsMap = new Map<string, TShipmentSearchData>();
+
+      shipments.forEach((shipment) => {
+        if (shipment.shipmentID) {
+          shipmentsMap.set(`${shipment.shipmentID}`, shipment);
+        }
+      });
+
+      pieces.forEach((piece) => {
+        if (piece.shipmentID) {
+          shipmentsMap.set(`${piece.shipmentID}`, piece);
+        }
+      });
+
+      return Array.from(shipmentsMap.values());
     } catch (error) {
       console.error("🚀 ~ searchShipments ~ error:", error);
       throw error;

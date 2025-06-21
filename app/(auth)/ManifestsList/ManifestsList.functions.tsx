@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ManifestListItemProps } from "@molecules/ManifestListItem/ManifestListItem.types";
 import { useStore } from "@stores/zustand";
-import { getManifestsList } from "@hooks/SQLite";
+import { ManifestsLocalService } from "../../../db/repositories/manifests.repository";
 
 export function useManifestsListData() {
   // --- Local state -----------------------------------------------------------
@@ -14,9 +14,9 @@ export function useManifestsListData() {
 
   useEffect(() => {
     const getData = () => {
-      getManifestsList()
-        .then((values: ManifestListItemProps[]) => {
-          setData(values);
+      ManifestsLocalService.getManifestsList()
+        .then(({ value }) => {
+          setData(value);
         })
         .catch((error) => {
           setModalErrorModal(`Error getting Manifest List: ${error}`);
