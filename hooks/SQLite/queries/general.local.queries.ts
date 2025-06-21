@@ -32,6 +32,7 @@ import {
 } from "@constants/types/shipments";
 import { createEventsQueueTable } from "@hooks/eventsQueue";
 import { ManifestsLocalService } from "@/db/repositories/manifests.repository";
+import { ShipmentLocalService } from "@/db/repositories/shipments.repository";
 
 export function createAllDBTables() {
   return new Promise((resolve, reject) => {
@@ -112,6 +113,9 @@ export function resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
                           options?.t?.("MODAL.SAVING_SHIPMENTS") ||
                             "Saving shipments"
                         );
+                      ShipmentLocalService.insertMultiple(
+                        (shipments as any[]) || []
+                      ).then();
                       insertMultipleShipments(shipments)
                         .then(() => {
                           if (options?.setModalMessage)
