@@ -49,9 +49,11 @@ export const shipmentsTable = sqliteTable("shipments", {
   city: text(),
   photoOnEvent: integer({ mode: "boolean" }),
   photoOnDelivery: integer({ mode: "boolean" }),
+  driverAssign: integer(),
+  signatureOnDelivery: integer({ mode: "boolean" }),
 
   ...syncColumns,
 });
 
-
 export type TShipmentsData = typeof shipmentsTable.$inferSelect;
+export type TShipmentInsertData = Omit<TShipmentsData, "isSync" | "lastSync">;

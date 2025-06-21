@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useShipmentsIdData, useShipmentsByIdData } from "@hooks/queries";
 import { insertMultipleShipments } from "@hooks/SQLite/queries/shipments.local.queries";
 import { useStore } from "@stores/zustand";
+import { ShipmentLocalService } from "@/db/repositories/shipments.repository";
 
 export function useShipmentFetch() {
   // --- Local state -----------------------------------------------------------
@@ -12,10 +13,9 @@ export function useShipmentFetch() {
 
   // --- Hooks -----------------------------------------------------------------
   const { manifestIds, addShipmentIds } = useStore();
-  const { data: shipmentIds } =
-    useShipmentsIdData({
-      manifest: todayManifest ? String(todayManifest) : undefined,
-    });
+  const { data: shipmentIds } = useShipmentsIdData({
+    manifest: todayManifest ? String(todayManifest) : undefined,
+  });
 
   const dataShipments = useShipmentsByIdData(shipmentIds ?? []);
   // --- END: Hooks ------------------------------------------------------------
@@ -37,7 +37,7 @@ export function useShipmentFetch() {
           setLoading(false);
           setSuccess(true);
         });
-  }, [dataShipments])
+  }, [dataShipments]);
   // --- END: Side effects -----------------------------------------------------
 
   return { success, loading };
