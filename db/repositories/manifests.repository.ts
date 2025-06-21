@@ -129,7 +129,7 @@ class ManifestsRepository {
   }
 
   /** Returns the count of all rows in the manifests table that has not completed or canceled manifests. */
-  async getCount() {
+  async getCount(): Promise<{ count: number }> {
     try {
       const result = await db
         .select({
@@ -162,7 +162,7 @@ class ManifestsRepository {
 
       // TODO Check the result when inserting shipments
       console.log({ result });
-      return result;
+      return { count: result[0]?.count ?? 0 };
     } catch (error) {
       console.error("🚀 ~ getCount ~ error:", error);
       throw error;

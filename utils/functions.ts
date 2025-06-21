@@ -17,6 +17,10 @@ import {
   fetchShipmentData,
 } from "@services/custom-api";
 import { generalDate } from "@constants/Constants";
+import { TShipmentInsertData } from "@/db/schema/shipments";
+import { TManifestInsertData } from "@/db/schema/manifests";
+import { TPiecesInsertData } from "@/db/schema/pieces";
+import { TCommentInsertData } from "@/db/schema/comments";
 
 export const parserGeneralDate = (date: Date) => {
   date.setDate(new Date().getDate());
@@ -112,18 +116,18 @@ export function parseOfflineData(rawManifests: IFetchManifestByIdData[]) {
 
 export async function fetchData(
   user: IFetchUserData,
-  options: fetchDataOptions,
+  options: fetchDataOptions
 ) {
   return new Promise(
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     (
       resolve: (value: {
-        manifests: IFetchManifestByIdData[];
-        shipments: IFetchShipmentByIdData[];
-        pieces: IFetchPiecesByIdData[];
-        comments: IRequiredCommentsProps[];
+        manifests: TManifestInsertData[];
+        shipments: TShipmentInsertData[];
+        pieces: TPiecesInsertData[];
+        comments: TCommentInsertData[];
       }) => void,
-      reject,
+      reject
     ) => {
       const createdDate = parserGeneralDate(generalDate);
 
@@ -145,7 +149,7 @@ export async function fetchData(
           .catch((error) => {
             console.error(
               "🚀 ~ file: functions.ts:49 ~ fetchManifests ~ error:",
-              error,
+              error
             );
             reject(error);
           });
@@ -154,7 +158,7 @@ export async function fetchData(
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         reject(`🚀 ~ file: functions.ts:12 ~ fetchData ~ error: ${error}`);
       }
-    },
+    }
   );
 }
 
