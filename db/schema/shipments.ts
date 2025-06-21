@@ -71,3 +71,18 @@ export type TShipmentListData = Pick<
   | "qty"
   | "city"
 >;
+
+export type TShipmentSearchData = Pick<
+  TShipmentsData,
+  | "shipmentID"
+  | "consigneeName"
+  | "zip"
+  | "senderName"
+  | "serviceTypeName"
+  | "addressLine1"
+  | "addressLine2"
+  | "referenceNo"
+  | "dueDate"
+  | "qty"
+  | "city"
+>;
