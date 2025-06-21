@@ -16,7 +16,6 @@ class CommentsRepository {
   /** Inserts multiple comments into the database */
   async insertMultiple(commentsArr: TCommentInsertData[]) {
     try {
-      console.log("Inserting comments: ", commentsArr);
       await db.insert(commentsTable).values(
         commentsArr.map((c) => ({
           comment: c.comment,
