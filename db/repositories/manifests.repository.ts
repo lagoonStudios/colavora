@@ -10,7 +10,6 @@ import {
   isNotNull,
   not,
   or,
-  sql,
   desc,
 } from "drizzle-orm";
 import { ShipmentStatus } from "@constants/types/shipments";

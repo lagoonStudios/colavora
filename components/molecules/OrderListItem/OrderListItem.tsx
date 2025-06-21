@@ -20,11 +20,14 @@ export default function OrderListItem(props: IFetchOrderListItem) {
   // --- Data and handlers -----------------------------------------------------
   const setShipmentHandler = () => {
     if (props.shipmentID && props.shipmentID !== null) {
+      // ShipmentLocalService.getShipmenDetailsById({
+      //   shipmentID: props.shipmentID,
+      // }).then();
       getShipmenDetailsById({ shipmentID: props.shipmentID }).then(
         (shipment) => {
           addShipment(shipment);
           push({ pathname: "ShipmentDetails" });
-        },
+        }
       );
     }
   };

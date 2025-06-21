@@ -31,8 +31,6 @@ import {
   IShipmentDataFromAPI,
 } from "@constants/types/shipments";
 import { createEventsQueueTable } from "@hooks/eventsQueue";
-import { ManifestsLocalService } from "@/db/repositories/manifests.repository";
-import { ShipmentLocalService } from "@/db/repositories/shipments.repository";
 
 export function createAllDBTables() {
   return new Promise((resolve, reject) => {
@@ -100,7 +98,6 @@ export function resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
                 .then(() => {
                   const { manifests, shipments, pieces, comments } = data;
                   // @ts-expect-error
-                  ManifestsLocalService.insertMultiple(manifests);
                   if (options?.setModalMessage)
                     options?.setModalMessage(
                       options?.t?.("MODAL.SAVING_MANIFESTS") ||
@@ -113,9 +110,6 @@ export function resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
                           options?.t?.("MODAL.SAVING_SHIPMENTS") ||
                             "Saving shipments"
                         );
-                      ShipmentLocalService.insertMultiple(
-                        (shipments as any[]) || []
-                      ).then();
                       insertMultipleShipments(shipments)
                         .then(() => {
                           if (options?.setModalMessage)
@@ -187,11 +181,7 @@ export function getHomeCounters() {
       resolve: (value: { todayShipments: number; manifests: number }) => void,
       reject
     ) => {
-      Promise.all([
-        getTodaysShipments(),
-        getAllManifestsCount(),
-        ManifestsLocalService.getCount(),
-      ])
+      Promise.all([getTodaysShipments(), getAllManifestsCount()])
         .then((res) => {
           const todayShipments = res[0]?.count ?? 0;
           const manifests = res[1]?.count ?? 0;

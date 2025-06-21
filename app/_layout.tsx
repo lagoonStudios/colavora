@@ -39,8 +39,10 @@ void SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   // --- Hooks -----------------------------------------------------------------
   // Local db initialization
+
   const { success: migrationSuccess, error: migrationError } = useMigrations(
     db,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     migrations
   );
   useDrizzleStudio(expoDb);
@@ -64,7 +66,7 @@ export default function RootLayout() {
       console.log("🚀 ~ RootLayout ~ migrationSuccess:", migrationSuccess);
     }
     if (migrationError) {
-      console.log("🚀 ~ RootLayout ~ migrationError:", migrationError);
+      console.error("🚀 ~ RootLayout ~ migrationError:", migrationError);
     }
   }, [migrationSuccess, migrationError]);
 

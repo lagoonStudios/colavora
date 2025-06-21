@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useShipmentsIdData, useShipmentsByIdData } from "@hooks/queries";
 import { insertMultipleShipments } from "@hooks/SQLite/queries/shipments.local.queries";
 import { useStore } from "@stores/zustand";
-import { ShipmentLocalService } from "@/db/repositories/shipments.repository";
 
 export function useShipmentFetch() {
   // --- Local state -----------------------------------------------------------

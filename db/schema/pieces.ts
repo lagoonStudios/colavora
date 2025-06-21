@@ -16,10 +16,3 @@ export const piecesTable = sqliteTable("pieces", {
 
 export type TPiecesData = typeof piecesTable.$inferSelect;
 export type TPiecesInsertData = Omit<TPiecesData, "isSync" | "lastSync">;
-
-// export const piecesRelations = relations(piecesTable, ({ one }) => ({
-//   shipments: one(shipmentsTable, {
-//     fields: [piecesTable.shipmentID],
-//     references: [shipmentsTable.shipmentID],
-//   }),
-// }));

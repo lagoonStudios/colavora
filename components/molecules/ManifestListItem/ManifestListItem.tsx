@@ -53,7 +53,7 @@ export default function ManifestListItem(props: ManifestListItemProps) {
         setModalErrorModal(`Error Shipment List: ${error}`);
         console.error(
           "🚀 ~ file: ManifestListItem.tsx:32 ~ getShipmentList ~ error:",
-          error,
+          error
         );
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps

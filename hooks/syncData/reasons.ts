@@ -4,7 +4,6 @@ import { useStore } from "@stores/zustand";
 import { insertMultipleExceptions } from "@hooks/SQLite";
 import { IFetchUserData, IReasonsByIdData } from "@constants/types/general";
 import { useReasonsIdData, useReasonsByIdData } from "@hooks/queries";
-import { ExceptionLocalService } from "@/db";
 
 export function useReasonsFetch(user: IFetchUserData | null) {
   // --- Hooks -----------------------------------------------------------------
@@ -37,7 +36,6 @@ export function useReasonsFetch(user: IFetchUserData | null) {
   useEffect(() => {
     if (values.size !== 0) {
       insertMultipleExceptions([...values.values()]);
-      ExceptionLocalService.insertMultiple([...values.values()]);
       setReasons([...values.values()]);
     }
   }, [values]);
