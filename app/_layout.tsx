@@ -25,15 +25,13 @@ import { SQLiteProvider } from "expo-sqlite";
 import migrations from "@/drizzle/migrations";
 import { ActivityIndicator } from "react-native";
 import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
-import { db, expoDb, useMigrations } from "@/db";
+import { DATABASE_NAME, db, expoDb, useMigrations } from "@/db";
 
 export { ErrorBoundary } from "expo-router";
 
 export const unstable_settings = {
   initialRouteName: "(tabs)",
 };
-
-export const DATABASE_NAME = "colavora";
 
 void SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
@@ -66,6 +64,7 @@ export default function RootLayout() {
       console.log("🚀 ~ RootLayout ~ migrationSuccess:", migrationSuccess);
     }
     if (migrationError) {
+      console.log(JSON.stringify(migrationError));
       console.error("🚀 ~ RootLayout ~ migrationError:", migrationError);
     }
   }, [migrationSuccess, migrationError]);
