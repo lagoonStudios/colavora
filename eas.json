@@ -1,7 +1,8 @@
 {
   "cli": {
     "version": ">= 10.1.0",
-    "appVersionSource": "remote"
+    "appVersionSource": "remote",
+    "requireCommit": true
   },
   "build": {
     "development": {
@@ -9,14 +10,14 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease"        
+        "gradleCommand": ":app:assembleRelease"
       },
       "env": {
-        "EXPO_PUBLIC_GOOGLE_CLOUD_API_KEY": "",
-        "EXPO_PUBLIC_BASE_URL": "",
-        "EXPO_PUBLIC_API_KEY": "",
-        "EXPO_PUBLIC_AUTH0_DOMAIN": "",
-        "EXPO_PUBLIC_AUTH0_CLIENT_ID": ""
+        "EXPO_PUBLIC_GOOGLE_CLOUD_API_KEY": "AIzaSyD4abcrpF_DJROmlPxd6DBnYpqtPh0Tx0k",
+        "EXPO_PUBLIC_BASE_URL": "https://advanceapi.colavora.com/loqsea/api",
+        "EXPO_PUBLIC_API_KEY": "gi7$BrA+I$od$_Zi-5DrA4R&S58b",
+        "EXPO_PUBLIC_AUTH0_DOMAIN": "dev-ghex3xcv4jb2pti7.us.auth0.com",
+        "EXPO_PUBLIC_AUTH0_CLIENT_ID": "d7kLct8IHrc3RtrAYhZKa7lX9SecWd5r"
       },
       "autoIncrement": true
     },
@@ -31,11 +32,11 @@
         "gradleCommand": ":app:assembleRelease"
       },
       "env": {
-        "EXPO_PUBLIC_GOOGLE_CLOUD_API_KEY": "",
-        "EXPO_PUBLIC_BASE_URL": "",
-        "EXPO_PUBLIC_API_KEY": "",
-        "EXPO_PUBLIC_AUTH0_DOMAIN": "",
-        "EXPO_PUBLIC_AUTH0_CLIENT_ID": ""
+        "EXPO_PUBLIC_GOOGLE_CLOUD_API_KEY": "AIzaSyD4abcrpF_DJROmlPxd6DBnYpqtPh0Tx0k",
+        "EXPO_PUBLIC_BASE_URL": "https://advanceapi.colavora.com/loqsea/api",
+        "EXPO_PUBLIC_API_KEY": "gi7$BrA+I$od$_Zi-5DrA4R&S58b",
+        "EXPO_PUBLIC_AUTH0_DOMAIN": "dev-ghex3xcv4jb2pti7.us.auth0.com",
+        "EXPO_PUBLIC_AUTH0_CLIENT_ID": "d7kLct8IHrc3RtrAYhZKa7lX9SecWd5r"
       },
       "autoIncrement": true
     }
