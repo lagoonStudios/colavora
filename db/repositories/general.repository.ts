@@ -6,6 +6,10 @@ import { ManifestsLocalService } from "./manifests.repository";
 import { PiecesLocalService } from "./pieces.repository";
 import { ShipmentLocalService } from "./shipments.repository";
 import { fetchData, fetchDataOptions } from "@utils/functions";
+import { TManifestInsertData } from "../schema/manifests";
+import { TShipmentInsertData } from "../schema/shipments";
+import { TPiecesInsertData } from "../schema/pieces";
+import { TCommentInsertData } from "../schema/comments";
 
 class GeneralRepository {
   private static instance: GeneralRepository;
@@ -35,7 +39,15 @@ class GeneralRepository {
     }
   }
 
-  async resetDatabase(user: IFetchUserData, options: fetchDataOptions) {
+  async resetDatabase(
+    user: IFetchUserData,
+    options: fetchDataOptions
+  ): Promise<{
+    manifests: TManifestInsertData[];
+    shipments: TShipmentInsertData[];
+    pieces: TPiecesInsertData[];
+    comments: TCommentInsertData[];
+  }> {
     try {
       const data = await fetchData(user, options);
       try {
