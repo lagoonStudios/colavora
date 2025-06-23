@@ -6,14 +6,12 @@ export const EventsQueueTable = sqliteTable(
   {
     id: integer().primaryKey({ autoIncrement: true }),
     body: text().notNull(),
-    eventType: text().$type<typeof EventsQueueType>().notNull(),
+    eventType: text().$type<EventsQueueType>().notNull(),
     shipmentID: integer().notNull(),
     tries: integer().notNull().default(0),
   },
   (table) => [index("shipment_idx").on(table.shipmentID)]
 );
 
-export type TEventsQueueData = typeof EventsQueueTable.$inferSelect & {
-  eventType: typeof EventsQueueType;
-};
+export type TEventsQueueData = typeof EventsQueueTable.$inferSelect;
 export type TEventsQueueInsertData = Omit<TEventsQueueData, "id" | "tries">;
