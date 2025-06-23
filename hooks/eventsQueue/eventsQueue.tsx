@@ -1,12 +1,5 @@
 import { useIsConnected } from "react-native-offline";
-import { useEffect, useMemo, useState } from "react";
-
-import {
-  insertEvent,
-  removeEvent,
-  getEventsQueue,
-  getEventsQueuedIds,
-} from "./eventsQueue.local.queries";
+import { useEffect, useState } from "react";
 
 import { useStore } from "@stores/zustand";
 
@@ -20,6 +13,7 @@ import {
   useHandleCompleteOrderEvent,
   useHandleOrderExceptionEvent,
 } from "./eventsQueue.functions";
+import { EventsQueueLocalService } from "@/db/repositories/eventsQueue.repository";
 
 export default function useEventsQueue() {
   // --- Hooks -----------------------------------------------------------------
@@ -38,10 +32,9 @@ export default function useEventsQueue() {
   // --- END: Hooks ------------------------------------------------------------
 
   // --- Data and handlers -----------------------------------------------------
-  const queueLength = useMemo(() => queueIds.length, [queueIds]);
 
   const addEventToQueue = async (params: TInsertEventParams) => {
-    return insertEvent(params)
+    return EventsQueueLocalService.insertEvent(params)
       .then((res) => {
         setQueueIds([...queueIds.filter((item) => item !== res.id), res.id]);
       })
@@ -49,7 +42,7 @@ export default function useEventsQueue() {
         setModalErrorModal(`${error}`);
         console.error(
           "🚀 ~ file: eventsQueue.tsx:47 ~ returninsertEvent ~ error:",
-          error,
+          error
         );
       });
   };
@@ -57,7 +50,7 @@ export default function useEventsQueue() {
     setHandledIds((ids) => ids.filter((item) => item !== id));
 
   const removeEventFromQueue = (id: number) => {
-    removeEvent(id)
+    EventsQueueLocalService.removeEvent(id)
       .then(() => {
         // removeIdFromHandleList(id);
         setQueueIds(queueIds.filter((item) => item !== id));
@@ -93,7 +86,7 @@ export default function useEventsQueue() {
       if (user == null) {
         console.error(
           "🚀 ~ file: eventsQueue.tsx:69 ~ orderException ~ user not defined:",
-          user,
+          user
         );
         reject("User not found");
         throw new Error("User not found");
@@ -110,7 +103,7 @@ export default function useEventsQueue() {
           setModalErrorModal(`${error}`);
           console.error(
             "🚀 ~ file: eventsQueue.tsx:144 ~ addCompleteOrderEvent ~ error:",
-            error,
+            error
           );
 
           reject(error);
@@ -126,7 +119,7 @@ export default function useEventsQueue() {
       if (user == null) {
         console.error(
           "🚀 ~ file: eventsQueue.tsx:69 ~ orderException ~ user not defined:",
-          user,
+          user
         );
         reject("User not found");
         throw new Error("User not found");
@@ -143,7 +136,7 @@ export default function useEventsQueue() {
           setModalErrorModal(`${error}`);
           console.error(
             "🚀 ~ file: eventsQueue.tsx:92 ~ orderException ~ error:",
-            error,
+            error
           );
           reject(error);
         });
@@ -153,7 +146,7 @@ export default function useEventsQueue() {
   const handleEventsQueue = () => {
     if (disableActions) return;
     setDisableActions(true);
-    getEventsQueue()
+    EventsQueueLocalService.getEventsQueue()
       .then((events) => {
         events.forEach((event) => {
           // If the event is already handled, skip it
@@ -165,7 +158,7 @@ export default function useEventsQueue() {
             // Order Exception
             case EventsQueueType.ORDER_EXCEPTION: {
               const exceptionBody: TOrderExceptionsProps = JSON.parse(
-                event.body,
+                event.body
               ) as TOrderExceptionsProps;
               sendExceptionToApi({
                 ...exceptionBody,
@@ -176,7 +169,7 @@ export default function useEventsQueue() {
             // Complete Order
             case EventsQueueType.ORDER_COMPLETED: {
               const orderBody: TCompleteOrderProps = JSON.parse(
-                event.body,
+                event.body
               ) as TCompleteOrderProps;
               completeOrderToApi({
                 order: orderBody,
@@ -189,7 +182,7 @@ export default function useEventsQueue() {
               setModalErrorModal(`Event type not found or not handled`);
               console.error(
                 "🚀 ~ file: eventsQueue.tsx ~ handleEventsQueue ~ error:",
-                "Event type not found or not handled",
+                "Event type not found or not handled"
               );
               break;
             }
@@ -201,7 +194,7 @@ export default function useEventsQueue() {
         setModalErrorModal(`${e}`);
         console.error(
           "🚀 ~ file: eventsQueue.tsx:191 ~ getEventsQueue ~ e:",
-          e,
+          e
         );
       })
       .finally(() => setDisableActions(false));
@@ -212,7 +205,7 @@ export default function useEventsQueue() {
   useEffect(() => {
     // To fill the queueIds state when hook is called for the first time.
     const getIds = () => {
-      getEventsQueuedIds()
+      EventsQueueLocalService.getEventsQueuedIds()
         .then((res) => {
           setQueueIds(res);
         })
@@ -220,7 +213,7 @@ export default function useEventsQueue() {
           setModalErrorModal(`${error}`);
           console.error(
             "🚀 ~ file: eventsQueue.tsx:217 ~ getEventsQueuedIds ~ error:",
-            error,
+            error
           );
         });
     };

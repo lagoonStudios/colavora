@@ -14,14 +14,11 @@ import {
   useOrderException,
   useSendCODs,
 } from "@hooks/queries";
-import {
-  deleteShipment,
-  getEventsByID,
-  updateShipmentByException,
-} from "./eventsQueue.local.queries";
 import { CompleteOrderMutationProps } from "@constants/types/shipments";
 import { useStore } from "@stores/zustand";
 import { CommentsLocalService } from "@/db/repositories/comments.repository";
+import { ShipmentLocalService } from "@/db/repositories/shipments.repository";
+import { EventsQueueLocalService } from "../../db/repositories/eventsQueue.repository";
 
 export function useHandleCompleteOrderEvent({
   removeFromQueue,
@@ -107,7 +104,7 @@ export function useHandleCompleteOrderEvent({
         })
           .then(() => {
             setSyncing(true);
-            deleteShipment({
+            ShipmentLocalService.deleteShipment({
               shipmentID: order.shipmentID,
             })
               .then(() => {
@@ -141,7 +138,7 @@ export function useHandleCompleteOrderEvent({
 
   const handleUploadCompleteOrder = useCallback(
     (eventId: number) => {
-      getEventsByID(eventId)
+      EventsQueueLocalService.getEventsByID(eventId)
         .then((res) => {
           const order: Omit<TCompleteOrderProps, "options"> = JSON.parse(
             res.body
@@ -330,7 +327,7 @@ export function useHandleOrderExceptionEvent({
         ];
         //In the local db: Updates the is_sync state, inserts the comments and add the events to the queue.
         Promise.all([
-          updateShipmentByException({
+          ShipmentLocalService.updateShipmentException({
             isSync: false,
             shipmentID: data.shipmentID,
             reasonCode: data.reasonID,

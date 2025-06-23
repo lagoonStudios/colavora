@@ -408,6 +408,45 @@ class ShipmentRepository {
       throw error;
     }
   }
+
+  async updateShipmentException({
+    shipmentID,
+    isSync,
+    reasonCode,
+  }: {
+    shipmentID: number;
+    isSync: boolean;
+    reasonCode: string;
+  }): Promise<{ message: string; changes: number }> {
+    try {
+      const res = await db
+        .update(shipmentsTable)
+        .set({ isSync, reason: reasonCode })
+        .where(eq(shipmentsTable.shipmentID, shipmentID));
+
+      return { message: "Shipment updated successfully", changes: res.changes };
+    } catch (error) {
+      console.error("🚀 ~ updateShipmentException ~ error:", error);
+      throw error;
+    }
+  }
+
+  async deleteShipment({ shipmentID }: { shipmentID: number }) {
+    try {
+      const res = await db
+        .delete(shipmentsTable)
+        .where(eq(shipmentsTable.shipmentID, shipmentID));
+
+      if (res.changes === 0) {
+        throw new Error("Shipment not found");
+      }
+
+      return { message: "Shipment deleted successfully", changes: res.changes };
+    } catch (error) {
+      console.error("🚀 ~ deleteShipment ~ error:", error);
+      throw error;
+    }
+  }
 }
 export type TShipmentRepository = ShipmentRepository;
 export const ShipmentLocalService = ShipmentRepository.getInstance();

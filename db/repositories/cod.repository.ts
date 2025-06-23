@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { codTable, TCODData, TCODInsertData } from "../schema/cod";
+import { codTable, TCODInsertData } from "../schema/cod";
 import { inArray } from "drizzle-orm";
 
 class CODRepository {
