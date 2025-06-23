@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1750690870116,
-      "tag": "0000_calm_triton",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1750288620454,
-      "tag": "0001_goofy_the_fallen",
+      "when": 1750704543391,
+      "tag": "0000_abnormal_gauntlet",
       "breakpoints": true
     }
   ]

@@ -1,32 +1,61 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "aa791764-8c3b-40fe-9a49-403dc2e871fe",
+  "id": "0329c7c1-c45c-4228-a301-020f3265ba87",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "cod": {
-      "name": "cod",
+    "exceptions": {
+      "name": "exceptions",
       "columns": {
-        "codTypeID": {
-          "name": "codTypeID",
+        "reasonID": {
+          "name": "reasonID",
           "type": "integer",
           "primaryKey": true,
           "notNull": true,
           "autoincrement": true
         },
-        "codType": {
-          "name": "codType",
+        "companyID": {
+          "name": "companyID",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "companyID": {
-          "name": "companyID",
+        "customerID": {
+          "name": "customerID",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "reasonCode": {
+          "name": "reasonCode",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
+        },
+        "reasonDesc": {
+          "name": "reasonDesc",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "reasonCodeDesc": {
+          "name": "reasonCodeDesc",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "completeOrder": {
+          "name": "completeOrder",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
         },
         "lang": {
           "name": "lang",
@@ -85,89 +114,6 @@
         "shipmentID": {
           "name": "shipmentID",
           "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "isSync": {
-          "name": "isSync",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": true
-        },
-        "lastSync": {
-          "name": "lastSync",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(current_timestamp)"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "exceptions": {
-      "name": "exceptions",
-      "columns": {
-        "reasonID": {
-          "name": "reasonID",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "companyID": {
-          "name": "companyID",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "customerID": {
-          "name": "customerID",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "reasonCode": {
-          "name": "reasonCode",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "reasonDesc": {
-          "name": "reasonDesc",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "reasonCodeDesc": {
-          "name": "reasonCodeDesc",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "completeOrder": {
-          "name": "completeOrder",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
-        },
-        "lang": {
-          "name": "lang",
-          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -689,6 +635,60 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false,
+          "autoincrement": false
+        },
+        "isSync": {
+          "name": "isSync",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
+        "lastSync": {
+          "name": "lastSync",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(current_timestamp)"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "cod": {
+      "name": "cod",
+      "columns": {
+        "codTypeID": {
+          "name": "codTypeID",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "codType": {
+          "name": "codType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "companyID": {
+          "name": "companyID",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "lang": {
+          "name": "lang",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
           "autoincrement": false
         },
         "isSync": {

@@ -1,7 +1,11 @@
-CREATE TABLE `cod` (
-	`codTypeID` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`codType` text,
-	`companyID` text NOT NULL,
+CREATE TABLE `exceptions` (
+	`reasonID` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`companyID` text,
+	`customerID` integer,
+	`reasonCode` text,
+	`reasonDesc` text,
+	`reasonCodeDesc` text,
+	`completeOrder` integer DEFAULT false NOT NULL,
 	`lang` text NOT NULL,
 	`isSync` integer DEFAULT true NOT NULL,
 	`lastSync` text DEFAULT (current_timestamp) NOT NULL
@@ -12,19 +16,6 @@ CREATE TABLE `comments` (
 	`createdDate` text,
 	`comment` text NOT NULL,
 	`shipmentID` integer NOT NULL,
-	`isSync` integer DEFAULT true NOT NULL,
-	`lastSync` text DEFAULT (current_timestamp) NOT NULL
-);
---> statement-breakpoint
-CREATE TABLE `exceptions` (
-	`reasonID` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`companyID` text,
-	`customerID` integer,
-	`reasonCode` text,
-	`reasonDesc` text,
-	`reasonCodeDesc` text,
-	`completeOrder` integer DEFAULT false NOT NULL,
-	`lang` text NOT NULL,
 	`isSync` integer DEFAULT true NOT NULL,
 	`lastSync` text DEFAULT (current_timestamp) NOT NULL
 );
@@ -103,6 +94,15 @@ CREATE TABLE `shipments` (
 	`templateID` integer,
 	`waybill` text,
 	`zip` text,
+	`isSync` integer DEFAULT true NOT NULL,
+	`lastSync` text DEFAULT (current_timestamp) NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE `cod` (
+	`codTypeID` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`codType` text,
+	`companyID` text NOT NULL,
+	`lang` text NOT NULL,
 	`isSync` integer DEFAULT true NOT NULL,
 	`lastSync` text DEFAULT (current_timestamp) NOT NULL
 );
