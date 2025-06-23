@@ -42,7 +42,6 @@ export function useDriverFetch() {
         if (users && users?.length !== 0) {
           const id = String(users[0]);
           const { data: userData } = await fetchUserData(id);
-
           if (userData && auth0UserInfo) {
             const newUser = {
               ...userData,
@@ -52,7 +51,7 @@ export function useDriverFetch() {
             };
 
             const { data: companyData } = await fetchCompanyData(
-              userData.companyID,
+              userData.companyID
             );
 
             if (companyData) {

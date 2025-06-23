@@ -49,9 +49,10 @@ export default function SyncButton() {
           text: t("COMMON.ACCEPT"),
           onPress: () => {
             if (isSyncing) return;
-            setModal(t("SYNC_BUTTON.CLEANING"));
-            setSyncing(true);
+
             if (user) {
+              setModal(t("SYNC_BUTTON.CLEANING"));
+              setSyncing(true);
               setDisableActions(true);
               GeneralLocalService.resetDatabase(user, {
                 t,
