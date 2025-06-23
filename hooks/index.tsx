@@ -19,7 +19,6 @@ export {
   useCompleteOrder,
 } from "./queries";
 
-export { useSQLite } from "./SQLite";
 export { useSyncData } from "./syncData";
 
 export { useDriverFetch } from "./syncData/user";

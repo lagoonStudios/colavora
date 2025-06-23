@@ -4,7 +4,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import handleErrorMessage from "./ErrorMessage";
 import { AuthContext } from "@stores/AuthContext";
-import { createAllDBTables } from "./SQLite";
 
 const CONNECTION = "Username-Password-Authentication";
 const AUDIENCE = `https://${process.env.EXPO_PUBLIC_AUTH0_DOMAIN}/api/v2/`;
@@ -63,14 +62,12 @@ export default function useAuth() {
         audience: AUDIENCE,
         scope: "openid profile email",
       });
-      void createAllDBTables().then(() => {
-        saveToken(credentials.accessToken, userName);
-        void AsyncStorage.setItem("auth0:token", credentials.accessToken).then(
-          () => {
-            setLoading(false);
-          },
-        );
-      });
+      saveToken(credentials.accessToken, userName);
+      void AsyncStorage.setItem("auth0:token", credentials.accessToken).then(
+        () => {
+          setLoading(false);
+        }
+      );
     } catch (error) {
       handleErrorMessage({ error });
       setLoading(false);
