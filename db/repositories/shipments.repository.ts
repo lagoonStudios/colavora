@@ -2,7 +2,7 @@ import {
   and,
   countDistinct,
   eq,
-  ilike,
+  like,
   inArray,
   isNotNull,
   lte,
@@ -330,20 +330,20 @@ class ShipmentRepository {
         .from(shipmentsTable)
         .where(
           or(
-            ilike(shipmentsTable.consigneeName, `%${q}%`),
-            ilike(shipmentsTable.referenceNo, `%${q}%`),
-            ilike(shipmentsTable.waybill, `%${q}%`),
-            ilike(shipmentsTable.serviceTypeName, `%${q}%`),
-            ilike(shipmentsTable.codType, `%${q}%`),
-            ilike(shipmentsTable.sender, `%${q}%`),
-            ilike(shipmentsTable.senderName, `%${q}%`),
-            ilike(shipmentsTable.addressLine1, `%${q}%`),
-            ilike(shipmentsTable.addressLine2, `%${q}%`),
-            ilike(shipmentsTable.contactPerson, `%${q}%`),
-            ilike(shipmentsTable.barcode, `%${q}%`),
-            ilike(shipmentsTable.city, `%${q}%`),
-            ilike(shipmentsTable.zip, `%${q}%`),
-            ilike(shipmentsTable.phoneNumber, `%${q}%`)
+            like(shipmentsTable.consigneeName, `%${q}%`),
+            like(shipmentsTable.referenceNo, `%${q}%`),
+            like(shipmentsTable.waybill, `%${q}%`),
+            like(shipmentsTable.serviceTypeName, `%${q}%`),
+            like(shipmentsTable.codType, `%${q}%`),
+            like(shipmentsTable.sender, `%${q}%`),
+            like(shipmentsTable.senderName, `%${q}%`),
+            like(shipmentsTable.addressLine1, `%${q}%`),
+            like(shipmentsTable.addressLine2, `%${q}%`),
+            like(shipmentsTable.contactPerson, `%${q}%`),
+            like(shipmentsTable.barcode, `%${q}%`),
+            like(shipmentsTable.city, `%${q}%`),
+            like(shipmentsTable.zip, `%${q}%`),
+            like(shipmentsTable.phoneNumber, `%${q}%`)
           )
         );
 
@@ -368,7 +368,7 @@ class ShipmentRepository {
           piecesTable,
           eq(piecesTable.shipmentID, shipmentsTable.shipmentID)
         )
-        .where(ilike(piecesTable.barcode, `%${q}%`));
+        .where(like(piecesTable.barcode, `%${q}%`));
 
       const [shipments, pieces] = await Promise.all([
         shipmentsSearchQuery,
