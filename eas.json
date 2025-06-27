@@ -1,8 +1,7 @@
 {
   "cli": {
     "version": ">= 10.1.0",
-    "appVersionSource": "remote",
-    "requireCommit": true
+    "appVersionSource": "remote"
   },
   "build": {
     "development": {
@@ -15,7 +14,7 @@
       "env": {
         "EXPO_PUBLIC_GOOGLE_CLOUD_API_KEY": "AIzaSyD4abcrpF_DJROmlPxd6DBnYpqtPh0Tx0k",
         "EXPO_PUBLIC_BASE_URL": "https://advanceapi.colavora.com/loqsea/api/",
-        "EXPO_PUBLIC_API_KEY": "gi7$BrA+I$od$_Zi-5DrA4R&S58b",
+        "EXPO_PUBLIC_API_KEY": "O773sQ0vQ2MBsVnK4r3R3rfOD",
         "EXPO_PUBLIC_AUTH0_DOMAIN": "dev-ghex3xcv4jb2pti7.us.auth0.com",
         "EXPO_PUBLIC_AUTH0_CLIENT_ID": "d7kLct8IHrc3RtrAYhZKa7lX9SecWd5r"
       },
@@ -33,8 +32,8 @@
       },
       "env": {
         "EXPO_PUBLIC_GOOGLE_CLOUD_API_KEY": "AIzaSyD4abcrpF_DJROmlPxd6DBnYpqtPh0Tx0k",
-        "EXPO_PUBLIC_BASE_URL": "https://advanceapi.colavora.com/loqsea/api/",
-        "EXPO_PUBLIC_API_KEY": "gi7$BrA+I$od$_Zi-5DrA4R&S58b",
+        "EXPO_PUBLIC_BASE_URL": "https://advanceapi.colavora.com/api/",
+        "EXPO_PUBLIC_API_KEY": "pgH7QzFHJx4w46fI~5Uzi4RvtTwlEXp",
         "EXPO_PUBLIC_AUTH0_DOMAIN": "dev-ghex3xcv4jb2pti7.us.auth0.com",
         "EXPO_PUBLIC_AUTH0_CLIENT_ID": "d7kLct8IHrc3RtrAYhZKa7lX9SecWd5r"
       },

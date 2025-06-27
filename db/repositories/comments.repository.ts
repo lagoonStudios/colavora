@@ -16,13 +16,15 @@ class CommentsRepository {
   /** Inserts multiple comments into the database */
   async insertMultiple(commentsArr: TCommentInsertData[]) {
     try {
-      await db.insert(commentsTable).values(
-        commentsArr.map((c) => ({
-          comment: c.comment,
-          shipmentID: c.shipmentID,
-          createdDate: c.createdDate,
-        }))
-      );
+      if (commentsArr.length !== 0) {
+        await db.insert(commentsTable).values(
+          commentsArr?.map((c) => ({
+            comment: c.comment,
+            shipmentID: c.shipmentID,
+            createdDate: c.createdDate,
+          })),
+        );
+      }
     } catch (error) {
       console.error("🚀 ~ insertMultipleComments ~ error:", error);
       throw error;
