@@ -42,12 +42,17 @@ export default function CODComponet({
       return;
     }
 
+    if (!cod?.codCheck) {
+      Alert.alert("Error", "Please add document number");
+      return;
+    }
+
     if (!cod?.codAmount) {
       Alert.alert("Error", "Please add amount");
       return;
     }
 
-    addCOD(cod.codTypeID, cod?.codAmount, cod?.codCheck);
+    addCOD(cod.codTypeID, cod.codAmount, cod.codCheck);
     setCod(defaultCODSelected);
     setVisible();
   };
@@ -56,7 +61,13 @@ export default function CODComponet({
     const CODMap = new Map<number, ICODData>();
 
     if (CODs && CODs?.length !== 0)
-      CODs.forEach((COD) => CODMap.set(COD.codTypeID, COD));
+      CODs.forEach((COD) => {
+        if (COD?.codType !== null)
+          CODMap.set(COD.codTypeID, {
+            ...COD,
+            codType: COD.codType,
+          });
+      });
 
     const CODArray = [...CODMap.values()]?.sort(
       (a, b) => a.codTypeID - b.codTypeID,

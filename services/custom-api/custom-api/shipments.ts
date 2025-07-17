@@ -1,7 +1,6 @@
 import { AxiosResponse } from "axios";
 import { axiosClient } from "@config/axios";
 import {
-  IFetchShipmentByIdData,
   IOptionalShipmentProps,
   IOptionalPiecesProps,
   IFetchPiecesByIdData,

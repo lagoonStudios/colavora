@@ -1,7 +1,6 @@
 import { TCommentInsertData } from "@/db/schema/comments";
 import { TPiecesInsertData } from "@/db/schema/pieces";
 import { TShipmentsData } from "@/db/schema/shipments";
-import { IOptionalCommentsProps } from "@constants/types/shipments";
 import { StateCreator } from "zustand";
 
 export interface ShipmentIdsSlice {

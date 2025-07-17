@@ -9,6 +9,7 @@ import {
   not,
   notInArray,
   or,
+  sql,
 } from "drizzle-orm";
 import {
   shipmentsTable,
@@ -20,6 +21,7 @@ import {
 import { db } from "@/db";
 import { ShipmentStatus } from "@constants/types/shipments";
 import { piecesTable } from "../schema/pieces";
+import { SQLiteColumn } from "drizzle-orm/sqlite-core";
 
 class ShipmentRepository {
   private static instance: ShipmentRepository;
@@ -92,7 +94,7 @@ class ShipmentRepository {
           photoOnDelivery: v.photoOnDelivery,
           signatureOnDelivery: v.signatureOnDelivery,
           driverAssign: v.driverAssign,
-        }))
+        })),
       );
       return;
     } catch (error) {
@@ -120,10 +122,10 @@ class ShipmentRepository {
         .where(inArray(shipmentsTable.shipmentID, [...setIncomingIds]));
 
       const noExisting = shipmentsArr.filter(
-        (v) => !existingInDB.some((e) => e.shipmentID === v.shipmentID)
+        (v) => !existingInDB.some((e) => e.shipmentID === v.shipmentID),
       );
       const existing = shipmentsArr.filter((v) =>
-        existingInDB.some((e) => e.shipmentID === v.shipmentID)
+        existingInDB.some((e) => e.shipmentID === v.shipmentID),
       );
 
       return { noExisting, existing };
@@ -152,10 +154,10 @@ class ShipmentRepository {
                 ShipmentStatus.CANCELLED,
                 ShipmentStatus.PARTIAL_DELIVERY,
                 ShipmentStatus.DELIVERED,
-              ])
+              ]),
             ),
-            lte(shipmentsTable.dueDate, endToday.toISOString())
-          )
+            lte(shipmentsTable.dueDate, endToday.toISOString()),
+          ),
         );
       return { count: shipments[0]?.count ?? 0 };
     } catch (error) {
@@ -199,8 +201,8 @@ class ShipmentRepository {
               ShipmentStatus.CANCELLED,
               ShipmentStatus.PARTIAL_DELIVERY,
               ShipmentStatus.DELIVERED,
-            ])
-          )
+            ]),
+          ),
         )
         .$dynamic();
 
@@ -209,8 +211,8 @@ class ShipmentRepository {
           or(
             eq(shipmentsTable.manifest, manifestID),
             eq(shipmentsTable.manifestDL, manifestID),
-            eq(shipmentsTable.manifestPk, manifestID)
-          )
+            eq(shipmentsTable.manifestPk, manifestID),
+          ),
         );
 
         return result;
@@ -243,8 +245,8 @@ class ShipmentRepository {
           piecesTable,
           and(
             eq(shipmentsTable.shipmentID, piecesTable.shipmentID),
-            eq(piecesTable.packageTypeName, "Invoice")
-          )
+            eq(piecesTable.packageTypeName, "Invoice"),
+          ),
         )
         .where(eq(shipmentsTable.shipmentID, shipmentID));
 
@@ -301,7 +303,7 @@ class ShipmentRepository {
         .select()
         .from(shipmentsTable)
         .where(
-          manifestID ? eq(shipmentsTable.manifest, manifestID) : undefined
+          manifestID ? eq(shipmentsTable.manifest, manifestID) : undefined,
         );
       const shipmentIds = result.map((v) => v.shipmentID);
       return { shipmentIds };
@@ -312,6 +314,21 @@ class ShipmentRepository {
   }
 
   async searchShipments({ q }: { q: string }): Promise<TShipmentSearchData[]> {
+    function createPhoneSearchCondition(
+      column: SQLiteColumn,
+      searchValue: string,
+    ) {
+      const normalizedSearch = searchValue.replace(/\D/g, "");
+
+      return sql`(
+        REPLACE(REPLACE(REPLACE(REPLACE(${column}, ' ', ''), '-', ''), '(', ''), ')', '') = ${normalizedSearch}
+        OR 
+        REPLACE(REPLACE(REPLACE(REPLACE(${column}, ' ', ''), '-', ''), '(', ''), ')', '') LIKE '%' || ${normalizedSearch} || '%'
+        OR
+        ${column} LIKE '%' || ${normalizedSearch} || '%'
+      )`;
+    }
+
     try {
       const shipmentsSearchQuery = await db
         .select({
@@ -343,9 +360,24 @@ class ShipmentRepository {
             like(shipmentsTable.barcode, `%${q}%`),
             like(shipmentsTable.city, `%${q}%`),
             like(shipmentsTable.zip, `%${q}%`),
-            like(shipmentsTable.phoneNumber, `%${q}%`)
-          )
+          ),
         );
+      const shipmentsSearcPhoneNumberQuery = await db
+        .select({
+          shipmentID: shipmentsTable.shipmentID,
+          consigneeName: shipmentsTable.consigneeName,
+          zip: shipmentsTable.zip,
+          senderName: shipmentsTable.senderName,
+          serviceTypeName: shipmentsTable.serviceTypeName,
+          addressLine1: shipmentsTable.addressLine1,
+          addressLine2: shipmentsTable.addressLine2,
+          referenceNo: shipmentsTable.referenceNo,
+          qty: shipmentsTable.qty,
+          city: shipmentsTable.city,
+          dueDate: shipmentsTable.dueDate,
+        })
+        .from(shipmentsTable)
+        .where(createPhoneSearchCondition(shipmentsTable.phoneNumber, q));
 
       // Second query - search in pieces table and join with shipments
       const pieceSearchQuery = db
@@ -366,22 +398,29 @@ class ShipmentRepository {
         .from(shipmentsTable)
         .innerJoin(
           piecesTable,
-          eq(piecesTable.shipmentID, shipmentsTable.shipmentID)
+          eq(piecesTable.shipmentID, shipmentsTable.shipmentID),
         )
         .where(like(piecesTable.barcode, `%${q}%`));
 
-      const [shipments, pieces] = await Promise.all([
+      const [shipments, pieces, shipmentsByPhoneNumber] = await Promise.all([
         shipmentsSearchQuery,
         pieceSearchQuery,
+        shipmentsSearcPhoneNumberQuery,
       ]);
 
-      if (!shipments || !pieces) {
+      if (!shipments || !pieces || !shipmentsByPhoneNumber) {
         return [];
       }
 
       const shipmentsMap = new Map<string, TShipmentSearchData>();
 
       shipments.forEach((shipment) => {
+        if (shipment.shipmentID) {
+          shipmentsMap.set(`${shipment.shipmentID}`, shipment);
+        }
+      });
+
+      shipmentsByPhoneNumber.forEach((shipment) => {
         if (shipment.shipmentID) {
           shipmentsMap.set(`${shipment.shipmentID}`, shipment);
         }
